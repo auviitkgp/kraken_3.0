@@ -78,8 +78,8 @@ if __name__ == '__main__':
     # add[5] = '58'
     # add[4] = '60'
     # add[5] = '5C'
-  
-    r = rospy.Rate(1)
+    print len(sys.argv)  
+    r = rospy.Rate((int(sys.argv[1])) if (len(sys.argv) > 1) else 10)
     
     print "Entering While Loop"
     while not rospy.is_shutdown():
