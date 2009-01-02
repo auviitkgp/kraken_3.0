@@ -109,17 +109,16 @@ if __name__ == '__main__':
 	pub6 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER6, thrusterData6Thruster, queue_size = 2)
 	pub = rospy.Publisher('ControlPlot', Float32MultiArray, queue_size=10)
 
-	r = rospy.Rate(10)
+	r = rospy.Rate(1)
 
 	while not rospy.is_shutdown():
 
 		thruster6Data.data[0] = 0.0
 		thruster6Data.data[1] = 0.0
-		thruster6Data.data[2] = 0.0
-		thruster6Data.data[3] = 0.0
-
-		thruster6Data.data[4] = Kp_left*errorP + Kd_left*errorD + Ki_left*errorI
-		thruster6Data.data[5] = Kp_right*errorP + Kd_right*errorD + Ki_right*errorI
+		thruster6Data.data[2] = Kp_left*errorP + Kd_left*errorD + Ki_left*errorI
+		thruster6Data.data[3] = Kp_right*errorP + Kd_right*errorD + Ki_right*errorI
+		thruster6Data.data[4] = 0.0
+		thruster6Data.data[5] = 0.0
 
 		thruster4Data.data[0] = thruster6Data.data[0]
 		thruster4Data.data[1] = thruster6Data.data[1]
