@@ -83,21 +83,19 @@ if __name__ == '__main__':
     #add[4] = '60'
     #add[5] = '5C'
 
-  
-
     r = rospy.Rate(1)
     
     print 'running'
     
-    #print speed
+    # print speed
     
-    
-    print sb.readline()
+    # print sb.readline()
+
     while not rospy.is_shutdown():
 	for i in range(0,6):
 		for j in range(0,3):
 	    		sb.write(str(chr(int(data[i][j]))))
-			print sb.readline()
+			# print sb.readline()
 	
         r.sleep()
         
@@ -106,4 +104,4 @@ if __name__ == '__main__':
 
     print "Running seabotix.py"	
 
-    os.system("python src/t.py")
+    # os.system("python src/t.py")
