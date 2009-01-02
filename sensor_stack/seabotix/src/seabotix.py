@@ -34,12 +34,13 @@ def initSerial():
 	    print 'Error in opening port'
     
 #data to be sent to Arduino
-data = [[0x5A,0,0x64],
-	[0x60,0,0x64],
-	[0x50,0,0x64],
-	[0x5E,0,0x64],
+data = [[0x5A,0,0x64],  #depth Front
+	[0x60,0,0x64],  # depth back
+	[0x50,0,0x64],  # surge left
+	[0x5C,0,0x64],  # surge right
 	[0x52,0,0x64],
-	[0x5C,0,0x64]]
+	[0x5E,0,0x64]]
+
 
 def seabotixCB(dataI):
     global data
@@ -84,7 +85,7 @@ if __name__ == '__main__':
 
   
 
-    r = rospy.Rate(10)
+    r = rospy.Rate(1)
     
     print 'running'
     

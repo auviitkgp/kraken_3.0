@@ -112,7 +112,7 @@ int main(int argc,char** argv)
 //    Serial arduino;
 
 
-    ros::Rate looprate(10);
+    ros::Rate looprate(1);
 
     while(ros::ok())
     {
