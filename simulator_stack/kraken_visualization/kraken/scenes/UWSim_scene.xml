@@ -1,0 +1,209 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE UWSimScene SYSTEM "UWSimScene1.dtd" >
+<UWSimScene>
+  <oceanState>
+    <windx> 0 </windx>
+    <windy> 0 </windy>
+    <windSpeed> 0 </windSpeed>
+    <depth> 1000 </depth>
+    <reflectionDamping> 0.35 </reflectionDamping>
+    <waveScale> 1e-7 </waveScale>
+    <isNotChoppy> 0 </isNotChoppy>
+    <choppyFactor> 2.5 </choppyFactor>
+    <crestFoamHeight> 2.2 </crestFoamHeight>
+    <oceanSurfaceHeight> 0 </oceanSurfaceHeight>
+    <fog>
+      <density> 0.1</density>
+      <color>
+	<r>0</r>
+	<g>0.05</g>
+	<b>0.3</b>
+      </color>
+    </fog>
+    <color>
+      <r>0.0</r>
+      <g>0.05</g>
+      <b>0.3</b>
+    </color>
+    <attenuation>
+      <r>0.015</r>
+      <g>0.0075 </g>
+      <b> 0.005 </b>
+    </attenuation>
+  </oceanState>
+  <simParams>
+    <disableShaders> 0 </disableShaders>
+    <resw> 800 </resw>
+    <resh> 600 </resh>
+    <offsetp>
+      <x>0</x>
+      <y>0</y>
+      <z>0</z>
+    </offsetp>
+    <offsetr>
+      <x> 3.14</x>
+      <y> 0</y>
+      <z> -1.57 </z>
+    </offsetr>
+    <enablePhysics> 1 </enablePhysics>
+	<gravity>
+	  <x>0.0</x>
+	  <y>0.0</y>
+	  <z>-9.8</z>
+	</gravity>
+  </simParams>
+  <camera>
+    <freeMotion> 1 </freeMotion>
+    <objectToTrack>kraken/base_link</objectToTrack>
+    <fov> 60 </fov>
+    <aspectRatio> 1.33 </aspectRatio>
+    <near> 1 </near>
+    <far> 10000 </far>
+    <position>
+      <x>-5</x>
+      <y>-5 </y>
+      <z>9 </z>
+    </position> 
+    <lookAt>
+      <x>0</x>
+      <y>0 </y>
+      <z>0 </z>
+    </lookAt>
+  </camera>
+
+  <vehicle>
+    <name>kraken</name>
+    <file>kraken/scenes/kraken_stripped.urdf</file>
+    <position>
+      <x> 0</x>
+      <y> 0 </y>
+      <z> 0 </z>
+    </position>
+    <orientation>
+      <r>0</r>
+      <p>0</p>
+      <y>0</y>
+    </orientation>
+    <virtualCamera>
+      <name>front</name>
+      <relativeTo>camera_front_optical</relativeTo>
+      <resw> 320</resw>
+      <resh> 240 </resh>
+      <position>
+        <x> 0 </x>
+        <y> 0 </y>
+        <z> 0 </z>
+      </position>  
+      <orientation>
+        <r>0</r>
+        <p>0</p>
+        <y>3.14 </y>
+      </orientation>
+    </virtualCamera>
+    <virtualCamera>
+      <name>bottom</name>
+      <relativeTo>camera_bottom_optical</relativeTo>
+      <resw> 320</resw>
+      <resh> 240 </resh>
+      <position>
+        <x> 0 </x>
+        <y> 0 </y>
+        <z> 0 </z>
+      </position>  
+      <orientation>
+        <r>0</r>
+        <p>0</p>
+        <y>3.14 </y>
+      </orientation>
+    </virtualCamera>
+    <imu>
+      <name>imu</name>
+      <relativeTo>imu_link</relativeTo>
+      <position>
+        <x>0</x>
+        <y>0</y>
+        <z>0</z>
+      </position>  
+      <orientation>
+        <r>0</r>
+        <p>0</p>
+        <y>0</y>
+      </orientation>
+      <std>0.00000001</std>
+    </imu>
+    <pressureSensor>
+      <name>pressureSensor</name>
+      <relativeTo>depth_sensor</relativeTo>
+      <position>
+        <x>0</x>
+        <y>0</y>
+        <z>0.0</z>
+      </position>  
+      <orientation>
+        <r>0</r>
+        <p>0</p>
+        <y>0</y>
+      </orientation>
+      <std>0.02</std>
+    </pressureSensor>
+  </vehicle>
+  <vehicle>
+    <name>scene</name>
+    <file>kraken/scenes/scene.urdf</file>
+    <position>
+      <x> 0 </x>
+      <y> 0 </y>
+      <z> 9 </z>
+    </position>
+    <orientation>
+      <r>0</r>
+      <p>0</p>
+      <y>0</y>
+    </orientation>
+  </vehicle>
+  <rosInterfaces>
+    <ROSOdomToPAT>
+      <topic> /kraken/dataNavigator </topic>
+      <vehicleName> kraken </vehicleName>
+      <visualize> 1 </visualize>
+    </ROSOdomToPAT>
+    <ArmToROSJointState> 
+	<topic>/kraken/joint_state</topic>
+	<vehicleName> kraken </vehicleName>
+    </ArmToROSJointState>
+    <ROSJointStateToArm> 
+      <topic>/kraken/joint_state_command</topic>
+      <vehicleName> kraken </vehicleName>
+      </ROSJointStateToArm>
+    <VirtualCameraToROSImage> 
+      <cameraName>front</cameraName>
+      <imageTopic> /kraken/front_camera </imageTopic>
+      <infoTopic> /kraken/front_camera_info </infoTopic>
+    </VirtualCameraToROSImage>
+    <VirtualCameraToROSImage> 
+      <cameraName>bottom</cameraName>
+      <imageTopic> /kraken/bottom_camera </imageTopic>
+      <infoTopic> /kraken/bottom_camera_info </infoTopic>
+    </VirtualCameraToROSImage>
+    <ImuToROSImu>
+      <name>imu</name>
+      <topic>/kraken/imu_data</topic>
+      <rate>10</rate>
+    </ImuToROSImu>
+    <PressureSensorToROS>
+      <name>pressureSensor</name>
+      <topic>/kraken/depth</topic>
+      <rate>5</rate>
+    </PressureSensorToROS>
+    <ROSTwistToPAT>
+      <topic> /kraken/twist</topic>
+      <vehicleName> kraken </vehicleName>
+    </ROSTwistToPAT>
+    <ROSPoseToPAT>
+      <topic> /kraken/pose</topic>
+      <vehicleName> kraken </vehicleName>
+    </ROSPoseToPAT>
+  </rosInterfaces>
+</UWSimScene>
+

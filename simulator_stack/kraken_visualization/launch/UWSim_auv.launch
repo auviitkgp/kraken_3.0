@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<launch>
+  <node name="uwsim_binary" pkg="uwsim" type="uwsim_binary" args="--disableShaders --configfile /home/vinay/ros_workspace/ikat-auv-packages/auv_visulaization/kraken/scenes/UWSim_scene.xml"/>
+  <!--node name="ideal_controller" pkg="kraken_ideal_controller" type="ideal_controller"/-->
+</launch>

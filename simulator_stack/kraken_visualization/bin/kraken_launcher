@@ -1,0 +1,10 @@
+#!/bin/bash
+#USAGE="simulator scene.xml(must give)";
+#if [ $# -lt 1 ] ; 
+#then 
+#    echo $USAGE;
+#    exit;
+#fi
+#echo $1
+roscd ikat-auv-packages
+rosrun uwsim uwsim_binary --disableShaders --configfile kraken/scenes/UWSim_scene.xml

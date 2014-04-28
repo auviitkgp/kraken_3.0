@@ -1,0 +1,348 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE UWSimScene SYSTEM "UWSimScene1.dtd" >
+<UWSimScene>
+  <oceanState>
+    <windx> 0 </windx>
+    <windy> 0 </windy>
+    <windSpeed> 0 </windSpeed>
+    <depth> 1000 </depth>
+    <reflectionDamping> 0.35 </reflectionDamping>
+    <waveScale> 1e-7 </waveScale>
+    <isNotChoppy> 0 </isNotChoppy>
+    <choppyFactor> 2.5 </choppyFactor>
+    <crestFoamHeight> 2.2 </crestFoamHeight>
+    <oceanSurfaceHeight> 0 </oceanSurfaceHeight>
+    <fog>
+      <density> 0.1</density>
+      <color>
+	<r>0</r>
+	<g>0.05</g>
+	<b>0.3</b>
+      </color>
+    </fog>
+    <color>
+      <r>0.0</r>
+      <g>0.05</g>
+      <b>0.3</b>
+    </color>
+    <attenuation>
+      <r>0.015</r>
+      <g>0.0075 </g>
+      <b> 0.005 </b>
+    </attenuation>
+  </oceanState>
+  <simParams>
+    <disableShaders> 0 </disableShaders>
+    <resw> 800 </resw>
+    <resh> 600 </resh>
+    <offsetp>
+      <x>0</x>
+      <y>0</y>
+      <z>0</z>
+    </offsetp>
+    <offsetr>
+      <x> 3.14</x>
+      <y> 0</y>
+      <z> -1.57 </z>
+    </offsetr>
+    <enablePhysics> 1 </enablePhysics>
+	<gravity>
+	  <x>0.0</x>
+	  <y>0.0</y>
+	  <z>0</z>
+	</gravity>
+	<!--physicsWater>
+	  
+	</physicsWater-->
+  </simParams>
+  <camera>
+    <freeMotion> 1 </freeMotion>
+    <objectToTrack>kraken/base_link</objectToTrack>
+    <fov> 60 </fov>
+    <aspectRatio> 1.33 </aspectRatio>
+    <near> 1 </near>
+    <far> 10000 </far>
+    <position>
+      <x>-5</x>
+      <y>-5 </y>
+      <z>9 </z>
+    </position> 
+    <lookAt>
+      <x>0</x>
+      <y>0 </y>
+      <z>0 </z>
+    </lookAt>
+  </camera>
+
+  <vehicle>
+    <name>kraken</name>
+    <file>kraken/scenes/kraken_stripped.urdf</file>
+    <position>
+      <x> 0</x>
+      <y> 0 </y>
+      <z> 0 </z>
+    </position>
+    <orientation>
+      <r>0</r>
+      <p>3.14</p>
+      <y>0</y>
+    </orientation>
+    <virtualCamera>
+      <name>front</name>
+      <relativeTo>camera_front</relativeTo>
+      <resw> 320</resw>
+      <resh> 240 </resh>
+      <position>
+        <x> 0 </x>
+        <y> 0 </y>
+        <z> 0 </z>
+      </position>  
+      <orientation>
+        <r>0</r>
+        <p>0</p>
+        <y>0 </y>
+      </orientation>
+    </virtualCamera>
+    <virtualCamera>
+      <name>bottom</name>
+      <relativeTo>camera_bottom</relativeTo>
+      <resw> 320</resw>
+      <resh> 240 </resh>
+      <position>
+        <x> 0 </x>
+        <y> 0 </y>
+        <z> 0 </z>
+      </position>  
+      <orientation>
+        <r>0</r>
+        <p>0</p>
+        <y>0 </y>
+      </orientation>
+    </virtualCamera>
+    <imu>
+      <name>imu</name>
+      <relativeTo>camera_bottom</relativeTo>
+      <position>
+        <x>0</x>
+        <y>0</y>
+        <z>0</z>
+      </position>  
+      <orientation>
+        <r>0</r>
+        <p>0</p>
+        <y>0</y>
+      </orientation>
+      <std>0.00000001</std>
+    </imu>
+  </vehicle>
+  <vehicle>
+    <name>scene</name>
+    <file>kraken/scenes/scene.urdf</file>
+    <position>
+      <x> 0</x>
+      <y> 0 </y>
+      <z> 9 </z>
+    </position>
+    <orientation>
+      <r>0</r>
+      <p>0</p>
+      <y>0</y>
+    </orientation>
+  </vehicle>
+  <!--object>
+    <name>marker</name>
+    <file>kraken/objects/marker.osg</file>
+    <position>
+      <x> 3 </x>
+      <y> 3 </y>
+      <z> 9 </z>
+    </position>
+    <orientation>
+      <r>0</r>
+      <p>0</p>
+      <y>0</y>
+    </orientation>
+    <offsetp>
+      <x>0</x>
+      <y>-0</y>
+      <z>0</z>
+    </offsetp>
+    <offsetr>
+      <x> 0</x>
+      <y> 0</y>
+      <z> 0 </z>
+    </offsetr>
+    <physics>
+      <mass> 15 </mass>
+      <inertia> 
+        <x> 0</x>
+        <y> 0 </y>
+        <z> 0 </z>
+      </inertia>
+      <collisionShapeType> box </collisionShapeType>
+    </physics>
+  </object>
+  <object>
+    <name>buoy_red</name>
+    <file>kraken/objects/buoy_red.osg</file>
+    <position>
+      <x> 2 </x>
+      <y> 2 </y>
+      <z> 9 </z>
+    </position>
+    <orientation>
+      <r>0</r>
+      <p>0</p>
+      <y>0</y>
+    </orientation>
+    <offsetp>
+      <x>0</x>
+      <y>-0</y>
+      <z>0</z>
+    </offsetp>
+    <offsetr>
+      <x> 0</x>
+      <y> 0</y>
+      <z> 0 </z>
+    </offsetr>
+    <physics>
+      <mass> 15 </mass>
+      <inertia> 
+        <x> 0</x>
+        <y> 0 </y>
+        <z> 0 </z>
+      </inertia>
+      <collisionShapeType> box </collisionShapeType>
+    </physics>
+  </object>
+  <object>
+    <name>buoy_blue</name>
+    <file>kraken/objects/buoy_blue.osg</file>
+    <position>
+      <x> 1 </x>
+      <y> 1 </y>
+      <z> 9 </z>
+    </position>
+    <orientation>
+      <r>0</r>
+      <p>0</p>
+      <y>0</y>
+    </orientation>
+    <offsetp>
+      <x>0</x>
+      <y>-0</y>
+      <z>0</z>
+    </offsetp>
+    <offsetr>
+      <x> 0</x>
+      <y> 0</y>
+      <z> 0 </z>
+    </offsetr>
+    <physics>
+      <mass> 15 </mass>
+      <inertia> 
+        <x> 0</x>
+        <y> 0 </y>
+        <z> 0 </z>
+      </inertia>
+      <collisionShapeType> box </collisionShapeType>
+    </physics>
+  </object>
+  <object>
+    <name>buoy_green</name>
+    <file>kraken/objects/buoy_green.osg</file>
+    <position>
+      <x> 0 </x>
+      <y> 1 </y>
+      <z> 9 </z>
+    </position>
+    <orientation>
+      <r>0</r>
+      <p>0</p>
+      <y>0</y>
+    </orientation>
+    <offsetp>
+      <x>0</x>
+      <y>0</y>
+      <z>0</z>
+    </offsetp>
+    <offsetr>
+      <x> 0</x>
+      <y> 0</y>
+      <z> 0 </z>
+    </offsetr>
+    <physics>
+      <mass> 15 </mass>
+      <inertia> 
+        <x> 0</x>
+        <y> 0 </y>
+        <z> 0 </z>
+      </inertia>
+      <collisionShapeType> box </collisionShapeType>
+    </physics>
+  </object>
+  <object>
+    <name>terrain</name>
+    <file>kraken/terrain/pool.osg</file>
+    <position>
+      <x> -12.5 </x>
+      <y> -22 </y>
+      <z> 9.0 </z>
+    </position>
+    <orientation>
+      <r>0</r>
+      <p>3.14</p>
+      <y>0</y>
+    </orientation>
+    <offsetp>
+      <x>0</x>
+      <y>-0</y>
+      <z>0</z>
+    </offsetp>
+    <offsetr>
+      <x> 0</x>
+      <y> 0</y>
+      <z> 0 </z>
+    </offsetr>
+  </object-->
+  <rosInterfaces>
+    <ROSOdomToPAT>
+      <topic> /dataNavigator </topic>
+      <vehicleName> kraken </vehicleName>
+      <visualize> 1 </visualize>
+    </ROSOdomToPAT>
+    <ArmToROSJointState> 
+	<topic>/uwsim/joint_state</topic>
+	<vehicleName> kraken </vehicleName>
+    </ArmToROSJointState>
+    <ROSJointStateToArm> 
+      <topic>/uwsim/joint_state_command</topic>
+      <vehicleName> kraken </vehicleName>
+      </ROSJointStateToArm>
+    <VirtualCameraToROSImage> 
+      <cameraName>front</cameraName>
+      <imageTopic> /uwsim/front_camera </imageTopic>
+      <infoTopic> /uwsim/front_camera_info </infoTopic>
+    </VirtualCameraToROSImage>
+    <VirtualCameraToROSImage> 
+      <cameraName>bottom</cameraName>
+      <imageTopic> /uwsim/bottom_camera </imageTopic>
+      <infoTopic> /uwsim/bottom_camera_info </infoTopic>
+    </VirtualCameraToROSImage>
+    <ImuToROSImu>
+      <name>imu</name>
+      <topic>/uwsim/imu_data</topic>
+      <rate>10</rate>
+    </ImuToROSImu>
+    <ROSTwistToPAT>
+      <topic> /g500/twist</topic>
+      <vehicleName> kraken </vehicleName>
+    </ROSTwistToPAT>
+    <ROSPoseToPAT>
+      <topic> /g500/pose</topic>
+      <vehicleName> kraken </vehicleName>
+    </ROSPoseToPAT>
+  </rosInterfaces>
+</UWSimScene>
+

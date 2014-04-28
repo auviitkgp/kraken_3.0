@@ -1,0 +1,17 @@
+<package>
+  <description brief="kraken_visualization">
+
+     kraken_visualization
+
+  </description>
+  <author>Vinay Yadav</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/kraken_visualization</url>
+  <depend package="urdf"/>
+  <depend package="xacro"/>
+  <depend package="uwsim"/>
+
+</package>
+
+

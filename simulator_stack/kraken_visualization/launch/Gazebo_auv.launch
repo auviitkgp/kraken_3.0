@@ -1,0 +1,7 @@
+<?xml version="1.0"?> 
+<launch>
+  <param name="/use_sim_time" value="true" />
+  <node name="gazebo" pkg="gazebo" type="gazebo" args="$(find auv_visulaization)/worlds/empty.world" respawn="false" output="screen"/>
+  <node name="gazebo_gui" pkg="gazebo" type="gui" respawn="false" output="screen"/>
+  <!--node name="delete" pkg="auv_visulaization" type="setSimulator"/-->
+</launch>
