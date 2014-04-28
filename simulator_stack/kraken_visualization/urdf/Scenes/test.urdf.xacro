@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<robot name = "world_hi"
+ 	    xmlns:xi="http://www.w3.org/2001/XInclude"
+  		xmlns:gazebo="http://playerstage.sourceforge.net/gazebo/xmlschema/#gz" 
+  		xmlns:model="http://playerstage.sourceforge.net/gazebo/xmlschema/#model" 
+  		xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor" 
+  		xmlns:window="http://playerstage.sourceforge.net/gazebo/xmlschema/#window" 
+  		xmlns:param="http://playerstage.sourceforge.net/gazebo/xmlschema/#param" 
+  		xmlns:body="http://playerstage.sourceforge.net/gazebo/xmlschema/#body" 
+  		xmlns:geo="http://willowgarage.com/xmlschema/#geo" 
+  		xmlns:geom="http://playerstage.sourceforge.net/gazebo/xmlschema/#geom" 
+  		xmlns:joint="http://playerstage.sourceforge.net/gazebo/xmlschema/#joint" 
+  		xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface" 
+  		xmlns:ui="http://playerstage.sourceforge.net/gazebo/xmlschema/#ui"
+  		xmlns:rendering="http://playerstage.sourceforge.net/gazebo/xmlschema/#rendering" 
+  		xmlns:renderable="http://playerstage.sourceforge.net/gazebo/xmlschema/#renderable" 
+  		xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
+  		xmlns:physics="http://playerstage.sourceforge.net/gazebo/xmlschema/#physics"
+       	xmlns:xacro="http://www.ros.org/wiki/xacro">
+  
+  <include filename="$(find auv_visulaization)/urdf/Scenes/marker.urdf.xacro"/>
+  <link name="world"/>
+  <xacro:marker position = "gate" parent = "world">
+    <origin xyz="20 20 20" rpy="0 3.14 0.0" />
+  </xacro:marker>
+  <gazebo>
+    <static>true</static>
+  </gazebo>
+</robot>

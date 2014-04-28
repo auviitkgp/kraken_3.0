@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<launch>
+  <node name="UWSim" pkg="UWSim" type="UWSim" args="--configfile $(find UWSim)/kraken/scenes/UWSim_scene.xml"/>
+  <node name="ideal_controller" pkg="kraken_ideal_controller" type="ideal_controller"/>
+</launch>

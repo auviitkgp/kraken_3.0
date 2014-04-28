@@ -1,0 +1,8 @@
+<stack>
+  <description brief="iKAT">iKAt</description>
+  <author>Maintained by IIT Kharagpur AUV team</author>
+  <license>BSD</license>  
+  <review status="unreviewed" notes=""/>
+  <url>https://github.com/iit-kgp-auv-team/kraken_3.0/wiki</url>
+  <depend stack="ros" />
+</stack>

@@ -1,0 +1,7 @@
+<?xml version="1.0"?> 
+<launch>
+  <param name="robot_description" command="cat $(find auv_visulaization)/urdf/AUV/kraken.urdf" />
+  <node name="spawn_auv" pkg="gazebo" type="spawn_model" args="-urdf -param robot_description -model auv_model" respawn="false" output="screen" />
+  <!--param name="world_description" command="$(find xacro)/xacro.py $(find auv_visulaization)/urdf/Scenes/test.urdf" />
+  <node name="spawn_world" pkg="gazebo" type="spawn_model" args="-urdf -param world_description -model world_model" respawn="false" output="screen" /-->
+</launch>

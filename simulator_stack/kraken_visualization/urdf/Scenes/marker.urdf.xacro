@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<robot 	xmlns:xi="http://www.w3.org/2001/XInclude"
+  		xmlns:gazebo="http://playerstage.sourceforge.net/gazebo/xmlschema/#gz" 
+  		xmlns:model="http://playerstage.sourceforge.net/gazebo/xmlschema/#model" 
+  		xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor" 
+  		xmlns:window="http://playerstage.sourceforge.net/gazebo/xmlschema/#window" 
+  		xmlns:param="http://playerstage.sourceforge.net/gazebo/xmlschema/#param" 
+  		xmlns:body="http://playerstage.sourceforge.net/gazebo/xmlschema/#body" 
+  		xmlns:geo="http://willowgarage.com/xmlschema/#geo" 
+  		xmlns:geom="http://playerstage.sourceforge.net/gazebo/xmlschema/#geom" 
+  		xmlns:joint="http://playerstage.sourceforge.net/gazebo/xmlschema/#joint" 
+  		xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface" 
+  		xmlns:ui="http://playerstage.sourceforge.net/gazebo/xmlschema/#ui"
+  		xmlns:rendering="http://playerstage.sourceforge.net/gazebo/xmlschema/#rendering" 
+  		xmlns:renderable="http://playerstage.sourceforge.net/gazebo/xmlschema/#renderable" 
+  		xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
+  		xmlns:physics="http://playerstage.sourceforge.net/gazebo/xmlschema/#physics"
+       	xmlns:xacro="http://www.ros.org/wiki/xacro">
+	
+	<xacro:macro name="marker" params="parent position *origin">
+	  <link name="${position}_marker">
+        <inertial>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <mass value="0.3" />
+          <inertia  ixx="1" ixy="0.0"  ixz="0.0"  iyy="1"  iyz="0.0"	izz="1" />
+        </inertial>
+        <visual>
+  		  <geometry>
+		    <mesh filename='$(find auv_visulaization)/../kraken/objects/marker.stl' scale='1.000000 1.000000 1.000000'/>
+  		  </geometry>
+  		  <origin rpy="0 0 0" xyz="0 0 0"/>
+  	    </visual>
+        <collision>
+          <geometry>
+		    <mesh filename='$(find auv_visulaization)/../kraken/objects/marker.stl' scale='1.000000 1.000000 1.000000'/>
+  		  </geometry>
+  		  <origin rpy="0 0 0" xyz="0 0 0"/>
+        </collision>
+      </link>
+      <joint name="${position}_marker_to_${parent}" type="fixed">
+        <parent link="${parent}"/>
+        <child link="${position}_marker"/>
+        <insert_block name="origin" />
+      </joint>
+      <gazebo reference="${position}_marker">
+        <turnGravityOff>true</turnGravityOff>
+        <material>Gazebo/Red</material>
+      </gazebo>
+    </xacro:macro>
+</robot>
