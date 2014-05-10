@@ -4,12 +4,13 @@
 #include "simulator_physics_model/auv_model.hpp"
 #include "geometry_msgs/Transform.h"
 #include "tf/transform_datatypes.h"
+#include "sensor_msgs/Imu.h"
 #include "nav_msgs/Odometry.h"
 
 using namespace ros;
 using namespace ikat_simulator;
 
-float storeforce[]={0.10,-0.10,0,0,-0.05,-0.05};
+float storeforce[]={0.00,-0.00,0,0,-0.075,-0.075};
 void updateAUV(AuvModelSimple6DoF& auv,float force[])
 {
     for(int i=0;i<6;i++)storeforce[i]=force[i];
@@ -20,11 +21,12 @@ void updateAUV(AuvModelSimple6DoF& auv,float force[])
 class Functor{
     NodeHandle &nodeh;
     AuvModelSimple6DoF& auv;
-    Publisher &pose_pub,&twist_pub,odo_pub;
+    Publisher &pose_pub,&twist_pub,odo_pub,&imu_pub;
+    int isLineNeeded;
 
 public:
-    Functor(NodeHandle&n,AuvModelSimple6DoF&a,Publisher &pub,Publisher &t,Publisher &odo)
-        :nodeh(n),auv(a),pose_pub(pub),twist_pub(t),odo_pub(odo){}
+    Functor(NodeHandle&n,AuvModelSimple6DoF&a,Publisher &pub,Publisher &t,Publisher &odo,Publisher &imu,int val=0)
+        :nodeh(n),auv(a),pose_pub(pub),twist_pub(t),odo_pub(odo),imu_pub(imu),isLineNeeded(val){}
 
 
     void operator()(const TimerEvent& t)
@@ -41,7 +43,7 @@ public:
         pos_msg.orientation.z=quat.getZ ();
         pos_msg.orientation.w=quat.getW ();
         //ROS_INFO("%f %f %f ",pos_msg.position.x,pos_msg.position.y,pos_msg.position.z);
-//        pose_pub.publish(pos_msg);
+        pose_pub.publish(pos_msg);
 
         geometry_msgs::TwistStamped twist_msg;
         twist_msg.twist.linear.x=auv._current_velocity_state_to_body[0];
@@ -51,12 +53,22 @@ public:
         twist_msg.twist.angular.y=auv._current_velocity_state_to_body[4];
         twist_msg.twist.angular.z=auv._current_velocity_state_to_body[5];
         twist_msg.header.frame_id='1';
-//        twist_pub.publish(twist_msg);
+        twist_pub.publish(twist_msg);
 
         nav_msgs::Odometry odo_msg;
         odo_msg.pose.pose=pos_msg;
         odo_msg.twist.twist=twist_msg.twist;
-        odo_pub.publish(odo_msg);
+        if(isLineNeeded)
+            odo_pub.publish(odo_msg);
+
+        sensor_msgs::Imu imu_msg;
+        imu_msg.angular_velocity=twist_msg.twist.angular;
+        imu_msg.linear_acceleration.x=auv._current_accelaration_to_body[0];
+        imu_msg.linear_acceleration.y=auv._current_accelaration_to_body[1];
+        imu_msg.linear_acceleration.z=auv._current_accelaration_to_body[2];
+        imu_msg.orientation=pos_msg.orientation;
+        imu_pub.publish(imu_msg);
+
 
 
         auv.updateAuv (storeforce);
@@ -69,20 +81,22 @@ public:
 int main(int argc,char **argv)
 {
     ros::init (argc,argv,"simulator_node_1");
-
+    int type=0;
+    if(argc>=2)
+        type=atoi(argv[1]);
     NodeHandle n;
-
+    ROS_INFO(argv[1]);
     Publisher pose_publisher=n.advertise<geometry_msgs::Pose>("/kraken/pose",100);
     Publisher twistS_publisher= n.advertise <geometry_msgs::TwistStamped>("/kraken/twist",100);
     Publisher odometry_pub= n.advertise <nav_msgs::Odometry>("/kraken/dataNavigator",100);
+    Publisher imu_pub=n.advertise<sensor_msgs::Imu>("/kraken/imu_data",100);
 
 
-    AuvModelSimple6DoF auv(0.08);
+    AuvModelSimple6DoF auv(0.01);
 
-    Functor timerCallback(n,auv,pose_publisher,twistS_publisher,odometry_pub);
-    Timer timer=n.createTimer(ros::Duration(0.08),timerCallback);
+    Functor timerCallback(n,auv,pose_publisher,twistS_publisher,odometry_pub,imu_pub,type);
+    Timer timer=n.createTimer(ros::Duration(0.01),timerCallback);
     timer.start ();
-
 
     spin ();
 
