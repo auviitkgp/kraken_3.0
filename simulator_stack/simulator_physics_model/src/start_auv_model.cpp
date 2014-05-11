@@ -10,7 +10,7 @@
 using namespace ros;
 using namespace ikat_simulator;
 
-float storeforce[]={0.00,-0.00,0,0,-0.075,-0.075};
+float storeforce[]={0.00,0.00,0.0,-0.0,-0.075 + 0.01,-0.075 - 0.01};
 void updateAUV(AuvModelSimple6DoF& auv,float force[])
 {
     for(int i=0;i<6;i++)storeforce[i]=force[i];
