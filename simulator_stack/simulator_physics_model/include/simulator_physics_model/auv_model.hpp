@@ -3,7 +3,7 @@
 #include <math.h>
 #include <cstdlib>
 #include <iostream>
-namespace ikat_simulator{
+namespace kraken_simulator{
 
 class AuvModelSimple6DoF
 {
@@ -54,5 +54,5 @@ class AuvModelSimple6DoF
 
 
 void multiply(float matrix[3][3], float* src_vec,float* dst_vec);
-
+}
 #endif
