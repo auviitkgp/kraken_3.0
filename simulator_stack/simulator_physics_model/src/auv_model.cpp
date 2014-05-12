@@ -67,12 +67,12 @@ void AuvModelSimple6DoF::updateTransformMarixes()
     }
     //////////////////////////////////////////////////////////////
     _current_linear_velocity_body_to_world_matrix[0][0]   = _cos_rpy[2]*_cos_rpy[1];
-    _current_linear_velocity_body_to_world_matrix[0][1]   = _cos_rpy[2]*_sin_rpy[1]*_sin_rpy[0]-_sin_rpy[2]*_cos_rpy[0];
-    _current_linear_velocity_body_to_world_matrix[0][2]   = _cos_rpy[2]*_cos_rpy[0]*_sin_rpy[1]+_sin_rpy[2]*_sin_rpy[0];
+    _current_linear_velocity_body_to_world_matrix[0][1]   = _cos_rpy[2]*_sin_rpy[1]*_sin_rpy[1]-_sin_rpy[2]*_cos_rpy[0];
+    _current_linear_velocity_body_to_world_matrix[0][2]   = _cos_rpy[2]*_sin_rpy[1]*_cos_rpy[0]+_sin_rpy[2]*_sin_rpy[0];
     _current_linear_velocity_body_to_world_matrix[1][0]   = _sin_rpy[2]*_cos_rpy[1];
     _current_linear_velocity_body_to_world_matrix[1][1]   = _sin_rpy[0]*_sin_rpy[1]*_sin_rpy[2]+_cos_rpy[2]*_cos_rpy[0];
-    _current_linear_velocity_body_to_world_matrix[1][2]   = _sin_rpy[1]*_sin_rpy[2]*_cos_rpy[0]-_cos_rpy[2]*_sin_rpy[0];
-    _current_linear_velocity_body_to_world_matrix[2][0]   = -_sin_rpy[2];
+    _current_linear_velocity_body_to_world_matrix[1][2]   = _cos_rpy[0]*_sin_rpy[1]*_sin_rpy[2]-_cos_rpy[2]*_sin_rpy[0];
+    _current_linear_velocity_body_to_world_matrix[2][0]   = -_sin_rpy[1];
     _current_linear_velocity_body_to_world_matrix[2][1]   = _sin_rpy[0]*_cos_rpy[1];
     _current_linear_velocity_body_to_world_matrix[2][2]   = _cos_rpy[0]*_cos_rpy[1];
     //////////////////////////////////////////////////////////////
@@ -110,10 +110,10 @@ void AuvModelSimple6DoF::updateCurrentAccelaration()
 
     }
     updateCurrentVelocity();
-    /*multiply(_current_angular_velocity_body_to_world_matrix,
+    multiply(_current_angular_velocity_body_to_world_matrix,
              &_current_accelaration_to_body[3],&_current_accelaration_to_world[3]);
     multiply(_current_linear_velocity_body_to_world_matrix,
-             &_current_accelaration_to_body[0],&_current_accelaration_to_world[0]);*/
+             &_current_accelaration_to_body[0],&_current_accelaration_to_world[0]);
     for(int i =0;i<6;i++)
     {
         _current_accelaration_to_world[i] = (_current_velocity_state_to_world[i]-_previous_velocity_state_to_world[i])/_time;
@@ -141,11 +141,11 @@ void AuvModelSimple6DoF::updateCurrentPosition()
 
     for(int i =0;i<6;i++)
     {
-        std::cerr<<" "<<(((int)(_current_position_to_body[i]*10000))%((int)(2*3.14*10000)))/10000.0;
+        //std::cerr<<" "<<(((int)(_current_position_to_world[i]*10000))%((int)(2*3.14*10000)))/10000.0;
         _current_position_to_world[i] +=(_current_velocity_state_to_world[i]+_current_accelaration_to_world[i]*_time/2.0)*_time;
         _current_position_to_body[i]  +=(_current_velocity_state_to_body[i]+_current_accelaration_to_body[i]*_time/2.0)*_time;
     }
-    std::cerr<<std::endl;
+    //std::cerr<<std::endl;
 }
 
 void AuvModelSimple6DoF::updateAuv(float force[6])
