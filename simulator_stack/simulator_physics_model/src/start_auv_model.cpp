@@ -8,9 +8,9 @@
 #include "nav_msgs/Odometry.h"
 
 using namespace ros;
-using namespace ikat_simulator;
+using namespace kraken_simulator;
 
-float storeforce[]={0.0,0.0,0,0,-0.075,-0.075};
+float storeforce[]={0.00,0.00,0.0,-0.0,-0.00 + 0.01,-0.00 + 0.01};
 void updateAUV(AuvModelSimple6DoF& auv,float force[])
 {
     for(int i=0;i<6;i++)storeforce[i]=force[i];
@@ -25,8 +25,8 @@ class Functor{
     int isLineNeeded;
 
 public:
-    Functor(NodeHandle&n,AuvModelSimple6DoF&a,Publisher &pub,Publisher &t,Publisher &odo,Publisher &imu,int type)
-        :nodeh(n),auv(a),pose_pub(pub),twist_pub(t),odo_pub(odo),imu_pub(imu),isLineNeeded(type){}
+    Functor(NodeHandle&n,AuvModelSimple6DoF&a,Publisher &pub,Publisher &t,Publisher &odo,Publisher &imu,int val=0)
+        :nodeh(n),auv(a),pose_pub(pub),twist_pub(t),odo_pub(odo),imu_pub(imu),isLineNeeded(val){}
 
 
     void operator()(const TimerEvent& t)
@@ -82,22 +82,21 @@ int main(int argc,char **argv)
 {
     ros::init (argc,argv,"simulator_node_1");
     int type=0;
-    if(argv[1]!=NULL)
+    if(argc>=2)
         type=atoi(argv[1]);
     NodeHandle n;
-
+    ROS_INFO(argv[1]);
     Publisher pose_publisher=n.advertise<geometry_msgs::Pose>("/kraken/pose",100);
     Publisher twistS_publisher= n.advertise <geometry_msgs::TwistStamped>("/kraken/twist",100);
     Publisher odometry_pub= n.advertise <nav_msgs::Odometry>("/kraken/dataNavigator",100);
     Publisher imu_pub=n.advertise<sensor_msgs::Imu>("/kraken/imu_data",100);
 
 
-    AuvModelSimple6DoF auv(0.08);
+    AuvModelSimple6DoF auv(0.01);
 
     Functor timerCallback(n,auv,pose_publisher,twistS_publisher,odometry_pub,imu_pub,type);
-    Timer timer=n.createTimer(ros::Duration(0.08),timerCallback);
+    Timer timer=n.createTimer(ros::Duration(0.01),timerCallback);
     timer.start ();
-
 
     spin ();
 

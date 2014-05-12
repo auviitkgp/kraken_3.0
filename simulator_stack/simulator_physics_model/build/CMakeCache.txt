@@ -162,8 +162,8 @@ CMAKE_SKIP_RPATH:BOOL=NO
 //Path to a program.
 CMAKE_STRIP:FILEPATH=/usr/bin/strip
 
-//No help, variable specified on the command line.
-CMAKE_TOOLCHAIN_FILE:UNINITIALIZED=/opt/ros/hydro/share/ros/core/rosbuild/rostoolchain.cmake
+//The CMake toolchain file
+CMAKE_TOOLCHAIN_FILE:FILEPATH=/opt/ros/hydro/share/ros/core/rosbuild/rostoolchain.cmake
 
 //If true, cmake will use relative paths in makefiles and projects.
 CMAKE_USE_RELATIVE_PATHS:BOOL=OFF
@@ -302,7 +302,7 @@ gtest_main_LIB_DEPENDS:STATIC=general;-lpthread;general;gtest;
 lib:FILEPATH=/opt/ros/hydro/lib/libroslib.so
 
 //Dependencies for the target
-model_lib_LIB_DEPENDS:STATIC=general;roscpp;general;:/usr/lib/libboost_signals-mt.so;general;:/usr/lib/libboost_filesystem-mt.so;general;rosconsole;general;rosconsole_log4cxx;general;rosconsole_backend_interface;general;:/usr/lib/liblog4cxx.so;general;:/usr/lib/libboost_regex-mt.so;general;xmlrpcpp;general;roscpp_serialization;general;rostime;general;:/usr/lib/libboost_date_time-mt.so;general;:/usr/lib/libboost_system-mt.so;general;:/usr/lib/libboost_thread-mt.so;general;pthread;general;cpp_common;general;:/opt/ros/hydro/lib/libconsole_bridge.so;
+lib_LIB_DEPENDS:STATIC=general;roscpp;general;:/usr/lib/libboost_signals-mt.so;general;:/usr/lib/libboost_filesystem-mt.so;general;rosconsole;general;rosconsole_log4cxx;general;rosconsole_backend_interface;general;:/usr/lib/liblog4cxx.so;general;:/usr/lib/libboost_regex-mt.so;general;xmlrpcpp;general;roscpp_serialization;general;rostime;general;:/usr/lib/libboost_date_time-mt.so;general;:/usr/lib/libboost_system-mt.so;general;:/usr/lib/libboost_thread-mt.so;general;pthread;general;cpp_common;general;:/opt/ros/hydro/lib/libconsole_bridge.so;
 
 //The directory containing a CMake configuration file for roslib.
 roslib_DIR:PATH=/opt/ros/hydro/share/roslib/cmake
@@ -484,7 +484,7 @@ PYTHON_EXECUTABLE-ADVANCED:INTERNAL=1
 // it will install things.
 PYTHON_INSTALL_DIR:INTERNAL=lib/python2.7/dist-packages
 _rosbuild_EXPORTS:INTERNAL=
-_rosbuild_cached_flag_time:INTERNAL=1399831686.31
+_rosbuild_cached_flag_time:INTERNAL=1399720201.11
 _roslang_LANGS:INTERNAL=roslisp
 _rospack_deps_manifests_invoke_result:INTERNAL=/opt/ros/hydro/share/genmsg/package.xml;/opt/ros/hydro/share/genpy/package.xml;/opt/ros/hydro/share/catkin/package.xml;/opt/ros/hydro/share/console_bridge/package.xml;/opt/ros/hydro/share/cpp_common/package.xml;/opt/ros/hydro/share/rostime/package.xml;/opt/ros/hydro/share/roscpp_traits/package.xml;/opt/ros/hydro/share/roscpp_serialization/package.xml;/opt/ros/hydro/share/message_runtime/package.xml;/opt/ros/hydro/share/gencpp/package.xml;/opt/ros/hydro/share/genlisp/package.xml;/opt/ros/hydro/share/message_generation/package.xml;/opt/ros/hydro/share/rosbuild/package.xml;/opt/ros/hydro/share/rosconsole/package.xml;/opt/ros/hydro/share/std_msgs/package.xml;/opt/ros/hydro/share/rosgraph_msgs/package.xml;/opt/ros/hydro/share/xmlrpcpp/package.xml;/opt/ros/hydro/share/roscpp/package.xml;/opt/ros/hydro/share/rosgraph/package.xml;/opt/ros/hydro/share/rospack/package.xml;/opt/ros/hydro/share/roslib/package.xml;/opt/ros/hydro/share/rospy/package.xml
 _rospack_msgsrv_gen_invoke_result:INTERNAL=

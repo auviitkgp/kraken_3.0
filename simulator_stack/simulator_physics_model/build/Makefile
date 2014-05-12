@@ -208,19 +208,6 @@ _catkin_empty_exported_target/fast:
 .PHONY : _catkin_empty_exported_target/fast
 
 #=============================================================================
-# Target rules for targets named auv_model
-
-# Build rule for target.
-auv_model: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 auv_model
-.PHONY : auv_model
-
-# fast build rule for target.
-auv_model/fast:
-	$(MAKE) -f CMakeFiles/auv_model.dir/build.make CMakeFiles/auv_model.dir/build
-.PHONY : auv_model/fast
-
-#=============================================================================
 # Target rules for targets named clean_test_results
 
 # Build rule for target.
@@ -247,17 +234,17 @@ doxygen/fast:
 .PHONY : doxygen/fast
 
 #=============================================================================
-# Target rules for targets named model_lib
+# Target rules for targets named lib
 
 # Build rule for target.
-model_lib: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 model_lib
-.PHONY : model_lib
+lib: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 lib
+.PHONY : lib
 
 # fast build rule for target.
-model_lib/fast:
-	$(MAKE) -f CMakeFiles/model_lib.dir/build.make CMakeFiles/model_lib.dir/build
-.PHONY : model_lib/fast
+lib/fast:
+	$(MAKE) -f CMakeFiles/lib.dir/build.make CMakeFiles/lib.dir/build
+.PHONY : lib/fast
 
 #=============================================================================
 # Target rules for targets named rosbuild_clean-test-results
@@ -349,6 +336,19 @@ run_tests: cmake_check_build_system
 run_tests/fast:
 	$(MAKE) -f CMakeFiles/run_tests.dir/build.make CMakeFiles/run_tests.dir/build
 .PHONY : run_tests/fast
+
+#=============================================================================
+# Target rules for targets named start_auv_model
+
+# Build rule for target.
+start_auv_model: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 start_auv_model
+.PHONY : start_auv_model
+
+# fast build rule for target.
+start_auv_model/fast:
+	$(MAKE) -f CMakeFiles/start_auv_model.dir/build.make CMakeFiles/start_auv_model.dir/build
+.PHONY : start_auv_model/fast
 
 #=============================================================================
 # Target rules for targets named test
@@ -446,7 +446,7 @@ src/auv_model.o: src/auv_model.cpp.o
 
 # target to build an object file
 src/auv_model.cpp.o:
-	$(MAKE) -f CMakeFiles/model_lib.dir/build.make CMakeFiles/model_lib.dir/src/auv_model.cpp.o
+	$(MAKE) -f CMakeFiles/lib.dir/build.make CMakeFiles/lib.dir/src/auv_model.cpp.o
 .PHONY : src/auv_model.cpp.o
 
 src/auv_model.i: src/auv_model.cpp.i
@@ -454,7 +454,7 @@ src/auv_model.i: src/auv_model.cpp.i
 
 # target to preprocess a source file
 src/auv_model.cpp.i:
-	$(MAKE) -f CMakeFiles/model_lib.dir/build.make CMakeFiles/model_lib.dir/src/auv_model.cpp.i
+	$(MAKE) -f CMakeFiles/lib.dir/build.make CMakeFiles/lib.dir/src/auv_model.cpp.i
 .PHONY : src/auv_model.cpp.i
 
 src/auv_model.s: src/auv_model.cpp.s
@@ -462,7 +462,7 @@ src/auv_model.s: src/auv_model.cpp.s
 
 # target to generate assembly for a file
 src/auv_model.cpp.s:
-	$(MAKE) -f CMakeFiles/model_lib.dir/build.make CMakeFiles/model_lib.dir/src/auv_model.cpp.s
+	$(MAKE) -f CMakeFiles/lib.dir/build.make CMakeFiles/lib.dir/src/auv_model.cpp.s
 .PHONY : src/auv_model.cpp.s
 
 src/start_auv_model.o: src/start_auv_model.cpp.o
@@ -470,7 +470,7 @@ src/start_auv_model.o: src/start_auv_model.cpp.o
 
 # target to build an object file
 src/start_auv_model.cpp.o:
-	$(MAKE) -f CMakeFiles/auv_model.dir/build.make CMakeFiles/auv_model.dir/src/start_auv_model.cpp.o
+	$(MAKE) -f CMakeFiles/start_auv_model.dir/build.make CMakeFiles/start_auv_model.dir/src/start_auv_model.cpp.o
 .PHONY : src/start_auv_model.cpp.o
 
 src/start_auv_model.i: src/start_auv_model.cpp.i
@@ -478,7 +478,7 @@ src/start_auv_model.i: src/start_auv_model.cpp.i
 
 # target to preprocess a source file
 src/start_auv_model.cpp.i:
-	$(MAKE) -f CMakeFiles/auv_model.dir/build.make CMakeFiles/auv_model.dir/src/start_auv_model.cpp.i
+	$(MAKE) -f CMakeFiles/start_auv_model.dir/build.make CMakeFiles/start_auv_model.dir/src/start_auv_model.cpp.i
 .PHONY : src/start_auv_model.cpp.i
 
 src/start_auv_model.s: src/start_auv_model.cpp.s
@@ -486,7 +486,7 @@ src/start_auv_model.s: src/start_auv_model.cpp.s
 
 # target to generate assembly for a file
 src/start_auv_model.cpp.s:
-	$(MAKE) -f CMakeFiles/auv_model.dir/build.make CMakeFiles/auv_model.dir/src/start_auv_model.cpp.s
+	$(MAKE) -f CMakeFiles/start_auv_model.dir/build.make CMakeFiles/start_auv_model.dir/src/start_auv_model.cpp.s
 .PHONY : src/start_auv_model.cpp.s
 
 # Help Target
@@ -500,15 +500,14 @@ help:
 	@echo "... ROSBUILD_gensrv_cpp"
 	@echo "... ROSBUILD_gensrv_lisp"
 	@echo "... _catkin_empty_exported_target"
-	@echo "... auv_model"
 	@echo "... clean_test_results"
 	@echo "... doxygen"
 	@echo "... edit_cache"
 	@echo "... install"
 	@echo "... install/local"
 	@echo "... install/strip"
+	@echo "... lib"
 	@echo "... list_install_components"
-	@echo "... model_lib"
 	@echo "... rebuild_cache"
 	@echo "... rosbuild_clean-test-results"
 	@echo "... rosbuild_precompile"
@@ -517,6 +516,7 @@ help:
 	@echo "... rospack_genmsg_libexe"
 	@echo "... rospack_gensrv"
 	@echo "... run_tests"
+	@echo "... start_auv_model"
 	@echo "... test"
 	@echo "... test-future"
 	@echo "... test-results"

@@ -2,15 +2,15 @@
 #include "ros/ros.h"
 #include "geometry_msgs/Pose.h"
 using namespace std;
-namespace ikat_simulator{
+namespace kraken_simulator{
 
 
-const float AuvModelSimple6DoF::L[6][6]={ { 1, 1, 0, 0, 0, 0},
-                                          { 0, 0, 1, 1, 0, 0},
-                                          { 0, 0, 0, 0, 1, 1},
-                                          { 0, 0, 1, -1, 0, 0},
-                                          { 0, 0, 0, 0, 1, -1},
-                                          { 1, -1, 0, 0, 0, 0}
+const float AuvModelSimple6DoF::L[6][6]={ { 1,      1,        0,        0,        0,      0},
+                                          { 0,      0,        1,        1,        0,      0},
+                                          { 0,      0,        0,        0,        1,      1},
+                                          { 0,      0,        0,        0,        0,      0},
+                                          { 0,      0,        0,        0,        0.4988, -0.4988},
+                                          { 0.2534, -0.2534,  0.6227,   -0.6227,  0,      0}
                                         };
 const float AuvModelSimple6DoF::D[6][6]={ { 1, 0, 0, 0, 0, 0},
                                           { 0, 1, 0, 0, 0, 0},
@@ -19,14 +19,14 @@ const float AuvModelSimple6DoF::D[6][6]={ { 1, 0, 0, 0, 0, 0},
                                           { 0, 0, 0, 0, 1, 0},
                                           { 0, 0, 0, 0, 0, 1}
                                         };
-const float AuvModelSimple6DoF::mass[6][6] = { { 1, 0, 0, 0, 0, 0},
-                                               { 0, 1, 0, 0, 0, 0},
-                                               { 0, 0, 1, 0, 0, 0},
-                                               { 0, 0, 0, 1, 0, 0},
-                                               { 0, 0, 0, 0, 1, 0},
-                                               { 0, 0, 0, 0, 0, 5}
+const float AuvModelSimple6DoF::mass[6][6] = { { 30.990,  0,      0,      0,            0,            0},
+                                               { 0,       30.990, 0,      0,            0,            0},
+                                               { 0,       0,      30.990, 0,            0,            0},
+                                               { 0,       0,      0,      0.404901658,  -0.002003640,  -0.009554383},
+                                               { 0,       0,      0,      -0.002003640,  2.227703462,  -0.000874039},
+                                               { 0,       0,      0,      -0.009554383, -0.000874039,  2.409260321}
                                              };
-const float AuvModelSimple6DoF::G[6] = {0, 0, -.15, 0, 0, 0};
+const float AuvModelSimple6DoF::G[6] = {0, 0, -.0, 0, 0, 0};
 
 AuvModelSimple6DoF::AuvModelSimple6DoF(float time)
 {
@@ -165,6 +165,7 @@ void multiply(float matrix[][3], float* src_vec, float* dst_vec)
         {
             val+=matrix[i][j]*src_vec[j];
         }
+        dst_vec[i] = val;
     }
 }
 
