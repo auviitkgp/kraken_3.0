@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/prudhvi/ros_ws/kraken_3.0/simulator_stack/simulator_physics_model/build/devel/setup.sh
