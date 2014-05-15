@@ -1,0 +1,12 @@
+#goal
+float32 roll
+float32 pitch
+float32 yaw
+---
+#result
+float32 roll_f
+float32 pitch_f
+float32 yaw_f
+---
+#feedback
+float32 percent_done

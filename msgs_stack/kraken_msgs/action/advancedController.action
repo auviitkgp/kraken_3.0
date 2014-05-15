@@ -1,0 +1,14 @@
+#goal
+float32 x
+float32 y
+float32 depth
+
+---
+#result
+float32 final_x
+float32 final_y
+float32 final_z
+
+---
+#feedback
+float32 percent_done
