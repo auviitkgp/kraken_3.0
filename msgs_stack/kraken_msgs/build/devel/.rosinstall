@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/prudhvi/ros_ws/kraken_msgs/build/devel/setup.sh
