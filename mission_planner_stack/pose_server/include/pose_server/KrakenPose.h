@@ -7,16 +7,20 @@ namespace kraken_core
   enum _state
   {
     _px=0,
-    _vx,
-    _ax,
-    
     _py,
-    _vy,
-    _ay,
-    
     _pz,
+    
+    _vx,
+    _vy,
     _vz,
+    
+    _ax,
+    _ay,
     _az,
+    
+    _w_roll,
+    _w_pitch,
+    _w_yaw,
     
     _roll,
     _pitch,

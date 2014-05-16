@@ -3,6 +3,9 @@
 #include <pose_server/KrakenPose.h>
 #include <boost/circular_buffer.hpp>
 #include <cmath>
+#include <kraken_msgs/imuData.h>
+#include <kraken_msgs/depthData.h>
+#include <kraken_msgs/dvlData.h>
 
 namespace kraken_core
 {
@@ -10,26 +13,38 @@ namespace kraken_core
   {
     private :
       /*
-       * Update time
-       */
-      const int _time;
-      /*
        * transform matrix
        */
       float _body_to_world_matrix[3][3];
     
     public:
+      virtual ~Estimator(){}
       /*
        * Get the estimated pose to be published
        */
       inline KrakenPose& getNextPose()
       {
-        return _next_pose_world;
+        return _next_pose_world;_prev_states_world[0];
       }
+      /*
+       *
+       */
+      inline float getTime()
+      {
+        return _time;
+      }
+
       /*
        * Have to overwrite this function to according to estimation algorithm
        */
-      virtual void updatePose(KrakenPose &)=0;
+      virtual void updatePose(kraken_msgs::imuData &)=0;
+      virtual void updatePose(kraken_msgs::imuData &,kraken_msgs::depthData&)=0;
+      virtual void updatePose(kraken_msgs::imuData &,kraken_msgs::depthData&,kraken_msgs::dvlData&)=0;
+      /*
+       * To reset the vehicle coordinates
+       */
+      virtual void resetPose(KrakenPose &)=0;
+      
     protected:
       /*
        * size is size of the queue
@@ -61,6 +76,10 @@ namespace kraken_core
        * Next calculated pose with respect to world
        */
       KrakenPose _next_pose_world;
+      /*
+       * Update time
+       */
+      const int _time;
       
   };
   

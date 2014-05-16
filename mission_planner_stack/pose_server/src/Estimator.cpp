@@ -6,7 +6,10 @@ namespace kraken_core
   
   Estimator::Estimator(int size,float time):_prev_states_body(size),_prev_states_world(size),_time(time)
   {
-    
+    _prev_states_body.push_back(_next_pose_body);
+    _prev_states_body.push_back(_next_pose_body);
+    _prev_states_world.push_back(_next_pose_world);
+    _prev_states_world.push_back(_next_pose_world);
   }
   
 void  Estimator::updateTransformMatrix()
