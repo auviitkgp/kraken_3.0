@@ -110,10 +110,14 @@ void AuvModelSimple6DoF::updateCurrentAccelaration()
 
     }
     updateCurrentVelocity();
+    //comment this
     multiply(_current_angular_velocity_body_to_world_matrix,
              &_current_accelaration_to_body[3],&_current_accelaration_to_world[3]);
+
     multiply(_current_linear_velocity_body_to_world_matrix,
              &_current_accelaration_to_body[0],&_current_accelaration_to_world[0]);
+
+    //comment this
     for(int i =0;i<6;i++)
     {
         _current_accelaration_to_world[i] = (_current_velocity_state_to_world[i]-_previous_velocity_state_to_world[i])/_time;
