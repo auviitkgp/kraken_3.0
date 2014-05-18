@@ -1,0 +1,19 @@
+<package>
+  <description brief="pose_server">
+
+     pose_server
+
+  </description>
+  <author>Vinay Yadav</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/pose_server</url>
+  <depend package="roscpp"/>
+  <depend package="kraken_msgs"/>
+  <export>
+    <cpp cflags="-I${prefix}/include/" lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib" />
+  </export>
+
+</package>
+
+
