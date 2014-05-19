@@ -6,10 +6,15 @@ namespace kraken_core
   
   Estimator::Estimator(int size,float time):_prev_states_body(size),_prev_states_world(size),_time(time)
   {
-    _prev_states_body.push_back(_next_pose_body);
-    _prev_states_body.push_back(_next_pose_body);
-    _prev_states_world.push_back(_next_pose_world);
-    _prev_states_world.push_back(_next_pose_world);
+    for(int i=0;i<size;i++)
+    {
+      _prev_states_body.push_back(_next_pose_body);
+      //_prev_states_body.push_back(_next_pose_body);
+      _prev_states_world.push_back(_next_pose_world);
+      //_prev_states_world.push_back(_next_pose_world);
+    }
+    //_time  = time;
+    //std::cerr<<_time<<":"<<time<<std::endl;
   }
   
 void  Estimator::updateTransformMatrix()
@@ -42,6 +47,7 @@ void Estimator::transformToWorld()
   {
     float *_data_new = _next_pose_body.getData();
     float *_data_next = _next_pose_world.getData();
+    updateTransformMatrix();
     _data_next[_vx] = _body_to_world_matrix[0][0]*_data_new[_vx]+
                       _body_to_world_matrix[0][1]*_data_new[_vy]+
                       _body_to_world_matrix[0][2]*_data_new[_vz];

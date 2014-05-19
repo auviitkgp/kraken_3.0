@@ -1,6 +1,6 @@
 #ifndef KRAKENPOSE_H
 #define KRAKENPOSE_H
-
+#include <fstream>
 namespace kraken_core
 {
   static const int countState = 15;
@@ -42,6 +42,8 @@ namespace kraken_core
       {
         return &_pose[0];
       }
+      
+      void write(std::ostream &out);
   };
   
 } // end kraken_core

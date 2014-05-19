@@ -10,6 +10,9 @@
   <url>http://ros.org/wiki/pose_server</url>
   <depend package="roscpp"/>
   <depend package="kraken_msgs"/>
+  <depend package="sensor_msgs"/>
+  <depend package="tf"/>
+  <depend package="imu"/>
   <export>
     <cpp cflags="-I${prefix}/include/" lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib" />
   </export>

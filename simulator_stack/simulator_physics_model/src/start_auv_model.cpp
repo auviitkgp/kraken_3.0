@@ -80,7 +80,7 @@ public:
         imu_msg.linear_acceleration.y=auv._current_accelaration_to_body[1];
         imu_msg.linear_acceleration.z=auv._current_accelaration_to_body[2];
         imu_msg.orientation=pos_msg.orientation;
-        //imu_pub.publish(imu_msg);
+        imu_pub.publish(imu_msg);
 
 
 
@@ -110,10 +110,10 @@ int main(int argc,char **argv)
     Publisher imu_pub=n.advertise<sensor_msgs::Imu>("/kraken/imu_data",100);
 
 
-    AuvModelSimple6DoF auv(0.01);
+    AuvModelSimple6DoF auv(0.1);
 
     Functor timerCallback(n,auv,pose_publisher,twistS_publisher,odometry_pub,imu_pub,type);
-    Timer timer=n.createTimer(ros::Duration(0.01),timerCallback);
+    Timer timer=n.createTimer(ros::Duration(0.1),timerCallback);
     timer.start ();
 
     spin ();
