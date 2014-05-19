@@ -208,7 +208,8 @@ namespace kraken_hardware
       port_setting.c_cflag |= _port_flags;
       port_setting.c_iflag |= (IXON | IXOFF | IXANY);
       port_setting.c_cflag &= ~CRTSCTS;
-      port_setting.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG); 
+      port_setting.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG);
+      port_setting.c_cc[VTIME]=10;
       tcsetattr(_file_descriptor,TCSANOW, &port_setting);
       return true;
   }
@@ -227,11 +228,27 @@ namespace kraken_hardware
   int SerialPort::readData(std::string &bytes, int no_of_bytes)
   {
       int byte_read = -1;
+
+      fd_set read_fds,write_fds,except_fds;
+      FD_ZERO(&read_fds);
+      FD_ZERO(&write_fds);
+      FD_ZERO(&except_fds);
+      FD_SET(_file_descriptor,&read_fds);
+      struct timeval time;
+      time.tv_sec = 1;
+      time.tv_usec = 0;
       if(_port_is_open)
       {
           bytes.clear();
-          bytes.resize(no_of_bytes);
-          byte_read = read(_file_descriptor, (char *)bytes.c_str(),no_of_bytes);
+          if(select(_file_descriptor+1,&read_fds,&write_fds,&except_fds,&time)==1)
+          {
+            bytes.resize(no_of_bytes);
+            byte_read = read(_file_descriptor, (char *)bytes.c_str(),no_of_bytes);
+          }
+          else
+          {
+
+          }
       }
       return byte_read;
   }
