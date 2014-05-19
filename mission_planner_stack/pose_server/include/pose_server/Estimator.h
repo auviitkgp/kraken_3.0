@@ -79,7 +79,7 @@ namespace kraken_core
       /*
        * Update time
        */
-      const int _time;
+      const float _time;
       
   };
   

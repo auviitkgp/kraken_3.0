@@ -46,17 +46,17 @@ namespace kraken_core
   {
     float* _data_body_next  = _next_pose_body.getData();
     float* _data_world_next = _next_pose_world.getData();
-    _data_body_next[_ax] = imu.data[0];
-    _data_body_next[_ay] = imu.data[1];
-    _data_body_next[_az] = imu.data[2];
+    _data_body_next[_ax] = imu.data[kraken_sensors::accelX];
+    _data_body_next[_ay] = imu.data[kraken_sensors::accelY];
+    _data_body_next[_az] = imu.data[kraken_sensors::accelZ];
     //
-    _data_world_next[_w_roll]   = _data_body_next[_w_roll]  = imu.data[0];
-    _data_world_next[_w_pitch]  = _data_body_next[_w_pitch] = imu.data[1];
-    _data_world_next[_w_yaw]    = _data_body_next[_w_yaw]   = imu.data[2];
+    _data_world_next[_w_roll]   = _data_body_next[_w_roll]  = imu.data[kraken_sensors::gyroX];
+    _data_world_next[_w_pitch]  = _data_body_next[_w_pitch] = imu.data[kraken_sensors::gyroY];
+    _data_world_next[_w_yaw]    = _data_body_next[_w_yaw]   = imu.data[kraken_sensors::gyroZ];
     //
-    _data_world_next[_roll]   = _data_body_next[_roll]  = imu.data[0];
-    _data_world_next[_pitch]  = _data_body_next[_pitch] = imu.data[1];
-    _data_world_next[_yaw]    = _data_body_next[_yaw]   = imu.data[2];
+    _data_world_next[_roll]   = _data_body_next[_roll]  = imu.data[kraken_sensors::roll];
+    _data_world_next[_pitch]  = _data_body_next[_pitch] = imu.data[kraken_sensors::pitch];
+    _data_world_next[_yaw]    = _data_body_next[_yaw]   = imu.data[kraken_sensors::yaw];
   }
   
   void DeadReckoning::updateCurrentVelocity()
@@ -64,9 +64,9 @@ namespace kraken_core
     boost::circular_buffer<KrakenPose>::iterator start = _prev_states_body.begin();
     float* _data_body_next  = _next_pose_body.getData();
     float* _data = (*start).getData();
-    _data_body_next[_vx] = _data[_ax]*_time;
-    _data_body_next[_vy] = _data[_ay]*_time;
-    _data_body_next[_vz] = _data[_az]*_time;
+    _data_body_next[_vx] = _data[_vx]+_data[_ax]*_time;
+    _data_body_next[_vy] = _data[_vy]+_data[_ay]*_time;
+    _data_body_next[_vz] = _data[_vz]+_data[_az]*_time;
     //
     transformToWorld();
     //
@@ -76,6 +76,7 @@ namespace kraken_core
     _data_world_next[_ax] = (_data_world_next[_vx] - _data[_vx])/_time;
     _data_world_next[_ay] = (_data_world_next[_vy] - _data[_vy])/_time;
     _data_world_next[_az] = (_data_world_next[_vz] - _data[_vz])/_time;
+    //std::cerr<<"Vdiff : "<<(_time/**_data_body_next[_ax]*/)<<std::endl;
   }
   
   void DeadReckoning::updateCurrentPosition(kraken_msgs::depthData & depth)
@@ -95,6 +96,7 @@ namespace kraken_core
     _data_body_next[_py] = _data[_py]+(_data[_vy]+_data[_ay]*_time/0.5)*_time;
     _data_body_next[_pz] = depth.depth;
     _prev_states_body.push_back(_next_pose_body);
+    //_next_pose_world.write(std::cerr);
   }
   
   void DeadReckoning::updateCurrentPosition()
