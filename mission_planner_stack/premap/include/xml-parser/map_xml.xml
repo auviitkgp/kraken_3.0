@@ -1,0 +1,10 @@
+<xml_map>
+
+	<marker_1 x="10" y="100"></marker_1>
+	<marker_2 x="200" y="200"></marker_2>
+	<marker_3 x="300" y="300"></marker_3>
+	<marker_4 x="400" y="400"></marker_4>
+	<marker_5 x="50" y="500"></marker_5>
+        <marker_6 x="60.45" y="45.678"></marker_6>
+
+</xml_map>
