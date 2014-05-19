@@ -1,7 +1,7 @@
 FILE(REMOVE_RECURSE
   "CMakeFiles/gtest.dir/src/gtest-all.cc.o"
-  "/home/prudhvi/ros_ws/kraken_3.0/simulator_stack/simulator_physics_model/lib/libgtest.pdb"
-  "/home/prudhvi/ros_ws/kraken_3.0/simulator_stack/simulator_physics_model/lib/libgtest.so"
+  "/home/vinay/ros_workspace/kraken_3.0/simulator_stack/simulator_physics_model/lib/libgtest.pdb"
+  "/home/vinay/ros_workspace/kraken_3.0/simulator_stack/simulator_physics_model/lib/libgtest.so"
 )
 
 # Per-language clean rules from dependency scanning.

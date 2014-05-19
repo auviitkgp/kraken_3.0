@@ -31,17 +31,11 @@ CMAKE_COMMAND = /usr/bin/cmake
 # The command to remove a file.
 RM = /usr/bin/cmake -E remove -f
 
-# Escaping for special characters.
-EQUALS = =
-
-# The program to use to edit the cache.
-CMAKE_EDIT_COMMAND = /usr/bin/ccmake
-
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/prudhvi/ros_ws/kraken_3.0/simulator_stack/simulator_physics_model
+CMAKE_SOURCE_DIR = /home/vinay/ros_workspace/kraken_3.0/simulator_stack/simulator_physics_model
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/prudhvi/ros_ws/kraken_3.0/simulator_stack/simulator_physics_model/build
+CMAKE_BINARY_DIR = /home/vinay/ros_workspace/kraken_3.0/simulator_stack/simulator_physics_model/build
 
 # Utility rule file for doxygen.
 
@@ -49,7 +43,7 @@ CMAKE_BINARY_DIR = /home/prudhvi/ros_ws/kraken_3.0/simulator_stack/simulator_phy
 include CMakeFiles/doxygen.dir/progress.make
 
 CMakeFiles/doxygen:
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/prudhvi/ros_ws/kraken_3.0/simulator_stack/simulator_physics_model/build/CMakeFiles $(CMAKE_PROGRESS_1)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/vinay/ros_workspace/kraken_3.0/simulator_stack/simulator_physics_model/build/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "doxygen found"
 
 doxygen: CMakeFiles/doxygen
@@ -65,6 +59,6 @@ CMakeFiles/doxygen.dir/clean:
 .PHONY : CMakeFiles/doxygen.dir/clean
 
 CMakeFiles/doxygen.dir/depend:
-	cd /home/prudhvi/ros_ws/kraken_3.0/simulator_stack/simulator_physics_model/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/prudhvi/ros_ws/kraken_3.0/simulator_stack/simulator_physics_model /home/prudhvi/ros_ws/kraken_3.0/simulator_stack/simulator_physics_model /home/prudhvi/ros_ws/kraken_3.0/simulator_stack/simulator_physics_model/build /home/prudhvi/ros_ws/kraken_3.0/simulator_stack/simulator_physics_model/build /home/prudhvi/ros_ws/kraken_3.0/simulator_stack/simulator_physics_model/build/CMakeFiles/doxygen.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/vinay/ros_workspace/kraken_3.0/simulator_stack/simulator_physics_model/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/vinay/ros_workspace/kraken_3.0/simulator_stack/simulator_physics_model /home/vinay/ros_workspace/kraken_3.0/simulator_stack/simulator_physics_model /home/vinay/ros_workspace/kraken_3.0/simulator_stack/simulator_physics_model/build /home/vinay/ros_workspace/kraken_3.0/simulator_stack/simulator_physics_model/build /home/vinay/ros_workspace/kraken_3.0/simulator_stack/simulator_physics_model/build/CMakeFiles/doxygen.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/doxygen.dir/depend
 

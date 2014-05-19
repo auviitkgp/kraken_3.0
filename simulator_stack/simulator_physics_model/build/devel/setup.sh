@@ -8,7 +8,7 @@
 
 # since this file is sourced either use the provided _CATKIN_SETUP_DIR
 # or fall back to the destination set at configure time
-: ${_CATKIN_SETUP_DIR:=/home/prudhvi/ros_ws/kraken_3.0/simulator_stack/simulator_physics_model/build/devel}
+: ${_CATKIN_SETUP_DIR:=/home/vinay/ros_workspace/kraken_3.0/simulator_stack/simulator_physics_model/build/devel}
 _SETUP_UTIL="$_CATKIN_SETUP_DIR/_setup_util.py"
 unset _CATKIN_SETUP_DIR
 

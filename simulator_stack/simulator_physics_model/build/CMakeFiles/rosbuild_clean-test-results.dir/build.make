@@ -31,17 +31,11 @@ CMAKE_COMMAND = /usr/bin/cmake
 # The command to remove a file.
 RM = /usr/bin/cmake -E remove -f
 
-# Escaping for special characters.
-EQUALS = =
-
-# The program to use to edit the cache.
-CMAKE_EDIT_COMMAND = /usr/bin/ccmake
-
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/prudhvi/ros_ws/kraken_3.0/simulator_stack/simulator_physics_model
+CMAKE_SOURCE_DIR = /home/vinay/ros_workspace/kraken_3.0/simulator_stack/simulator_physics_model
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/prudhvi/ros_ws/kraken_3.0/simulator_stack/simulator_physics_model/build
+CMAKE_BINARY_DIR = /home/vinay/ros_workspace/kraken_3.0/simulator_stack/simulator_physics_model/build
 
 # Utility rule file for rosbuild_clean-test-results.
 
@@ -49,7 +43,7 @@ CMAKE_BINARY_DIR = /home/prudhvi/ros_ws/kraken_3.0/simulator_stack/simulator_phy
 include CMakeFiles/rosbuild_clean-test-results.dir/progress.make
 
 CMakeFiles/rosbuild_clean-test-results:
-	if ! rm -rf /home/prudhvi/.ros/test_results/simulator_physics_model; then echo WARNING:\ failed\ to\ remove\ test-results\ directory ; fi
+	if ! rm -rf /home/vinay/.ros/test_results/simulator_physics_model; then echo WARNING:\ failed\ to\ remove\ test-results\ directory ; fi
 
 rosbuild_clean-test-results: CMakeFiles/rosbuild_clean-test-results
 rosbuild_clean-test-results: CMakeFiles/rosbuild_clean-test-results.dir/build.make
@@ -64,6 +58,6 @@ CMakeFiles/rosbuild_clean-test-results.dir/clean:
 .PHONY : CMakeFiles/rosbuild_clean-test-results.dir/clean
 
 CMakeFiles/rosbuild_clean-test-results.dir/depend:
-	cd /home/prudhvi/ros_ws/kraken_3.0/simulator_stack/simulator_physics_model/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/prudhvi/ros_ws/kraken_3.0/simulator_stack/simulator_physics_model /home/prudhvi/ros_ws/kraken_3.0/simulator_stack/simulator_physics_model /home/prudhvi/ros_ws/kraken_3.0/simulator_stack/simulator_physics_model/build /home/prudhvi/ros_ws/kraken_3.0/simulator_stack/simulator_physics_model/build /home/prudhvi/ros_ws/kraken_3.0/simulator_stack/simulator_physics_model/build/CMakeFiles/rosbuild_clean-test-results.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/vinay/ros_workspace/kraken_3.0/simulator_stack/simulator_physics_model/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/vinay/ros_workspace/kraken_3.0/simulator_stack/simulator_physics_model /home/vinay/ros_workspace/kraken_3.0/simulator_stack/simulator_physics_model /home/vinay/ros_workspace/kraken_3.0/simulator_stack/simulator_physics_model/build /home/vinay/ros_workspace/kraken_3.0/simulator_stack/simulator_physics_model/build /home/vinay/ros_workspace/kraken_3.0/simulator_stack/simulator_physics_model/build/CMakeFiles/rosbuild_clean-test-results.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/rosbuild_clean-test-results.dir/depend
 

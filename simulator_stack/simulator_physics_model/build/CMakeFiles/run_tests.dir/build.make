@@ -31,17 +31,11 @@ CMAKE_COMMAND = /usr/bin/cmake
 # The command to remove a file.
 RM = /usr/bin/cmake -E remove -f
 
-# Escaping for special characters.
-EQUALS = =
-
-# The program to use to edit the cache.
-CMAKE_EDIT_COMMAND = /usr/bin/ccmake
-
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/prudhvi/ros_ws/kraken_3.0/simulator_stack/simulator_physics_model
+CMAKE_SOURCE_DIR = /home/vinay/ros_workspace/kraken_3.0/simulator_stack/simulator_physics_model
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/prudhvi/ros_ws/kraken_3.0/simulator_stack/simulator_physics_model/build
+CMAKE_BINARY_DIR = /home/vinay/ros_workspace/kraken_3.0/simulator_stack/simulator_physics_model/build
 
 # Utility rule file for run_tests.
 
@@ -63,6 +57,6 @@ CMakeFiles/run_tests.dir/clean:
 .PHONY : CMakeFiles/run_tests.dir/clean
 
 CMakeFiles/run_tests.dir/depend:
-	cd /home/prudhvi/ros_ws/kraken_3.0/simulator_stack/simulator_physics_model/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/prudhvi/ros_ws/kraken_3.0/simulator_stack/simulator_physics_model /home/prudhvi/ros_ws/kraken_3.0/simulator_stack/simulator_physics_model /home/prudhvi/ros_ws/kraken_3.0/simulator_stack/simulator_physics_model/build /home/prudhvi/ros_ws/kraken_3.0/simulator_stack/simulator_physics_model/build /home/prudhvi/ros_ws/kraken_3.0/simulator_stack/simulator_physics_model/build/CMakeFiles/run_tests.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/vinay/ros_workspace/kraken_3.0/simulator_stack/simulator_physics_model/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/vinay/ros_workspace/kraken_3.0/simulator_stack/simulator_physics_model /home/vinay/ros_workspace/kraken_3.0/simulator_stack/simulator_physics_model /home/vinay/ros_workspace/kraken_3.0/simulator_stack/simulator_physics_model/build /home/vinay/ros_workspace/kraken_3.0/simulator_stack/simulator_physics_model/build /home/vinay/ros_workspace/kraken_3.0/simulator_stack/simulator_physics_model/build/CMakeFiles/run_tests.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/run_tests.dir/depend
 
