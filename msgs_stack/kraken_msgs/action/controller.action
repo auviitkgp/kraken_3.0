@@ -1,19 +1,11 @@
 #goal
-float32 heading_setpoint
-float32 forward_setpoint
-float32 rightmove_setpoint
-float32 depth_setpoint
+float32 r
+float32 p
+float32 y
+float32 d
 ---
 #result
-float32 heading_final
-float32 forward_final
-float32 rightmove_final
-float32 depth_final
-
-
+float32 time_taken
 ---
 #feedback
-float32 heading_error
-float32 forward_error
-float32 rightmove_error
-float32 depth_error
+float32 running_time

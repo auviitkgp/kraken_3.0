@@ -1,0 +1,16 @@
+<package>
+  <description brief="actionmsg">
+
+     actionmsg
+
+  </description>
+  <author>Madhukar</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/actionmsg</url>
+  <depend package="actionlib"/>
+  <depend package="actionlib_msgs"/>
+
+</package>
+
+
