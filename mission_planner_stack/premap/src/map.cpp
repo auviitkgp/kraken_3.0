@@ -25,7 +25,6 @@ bool Map::getObjectLocation(premap::getLocation::Request &req, premap::getLocati
     int _id=req.id;
     if(_id>=_nMarkers||_id<0)
         return false;
-    ROS_INFO("requesting loaction of marker %d",req.id);
     res.x=MARKERS[_id].x;
     res.y=MARKERS[_id].y;
     return true;
@@ -36,7 +35,6 @@ void Map::updateVehiclePosition(const Point2f &new_position)
     _vehicle_Pos.x=roundOff (new_position.x);
     _vehicle_Pos.y=roundOff (new_position.y);
     Point p(new_position.x*10,new_position.y*10);
-    ROS_INFO("vehicle at %f %f",_vehicle_Pos.x,_vehicle_Pos.y);
     updateMapVideo (p);
 }
 
