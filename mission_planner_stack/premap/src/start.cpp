@@ -31,6 +31,8 @@ int main(int argc,char**argv)
 
 }
 
+
+//Parses the xml-file
 Point2f * returnArray(int &n){
     int size = 0;
 
