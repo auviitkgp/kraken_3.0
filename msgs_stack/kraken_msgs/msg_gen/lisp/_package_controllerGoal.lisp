@@ -1,10 +1,10 @@
 (cl:in-package kraken_msgs-msg)
-(cl:export '(R-VAL
-          R
-          P-VAL
-          P
-          Y-VAL
-          Y
-          D-VAL
-          D
+(cl:export '(HEADING_SETPOINT-VAL
+          HEADING_SETPOINT
+          FORWARD_SETPOINT-VAL
+          FORWARD_SETPOINT
+          RIGHTMOVE_SETPOINT-VAL
+          RIGHTMOVE_SETPOINT
+          DEPTH_SETPOINT-VAL
+          DEPTH_SETPOINT
 ))

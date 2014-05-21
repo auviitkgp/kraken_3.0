@@ -5,8 +5,10 @@ float32 depth
 
 ---
 #result
-float32 time_taken
+float32 final_x
+float32 final_y
+float32 final_z
 
 ---
 #feedback
-float32 running_time
+float32 percent_done

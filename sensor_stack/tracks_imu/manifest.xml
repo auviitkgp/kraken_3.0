@@ -12,6 +12,9 @@
   <depend package="kraken_msgs"/>
   <depend package="SerialPort"/>
   <depend package="std_msgs"/>
+  <export>
+  	<cpp cflags="-I${prefix}/include/" lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -ltracks_imu" />
+  </export>
 
 </package>
 
