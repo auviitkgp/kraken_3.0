@@ -4,4 +4,13 @@
 **/**/lib
 **/**/msg_gen
 **/**/srv_gen
-msgs_stack/ip_msgs/src/ip_msgs
+**/**/msg/*Action.msg
+**/**/msg/*ActionFeedback.msg
+**/**/msg/*ActionGoal.msg
+**/**/msg/*ActionResult.msg
+**/**/msg/*Feedback.msg
+**/**/msg/*Goal.msg
+**/**/msg/*Result.msg
+**/**/msg/_*.py
+**/**/src/**/srv
+**/**/src/**/msg
