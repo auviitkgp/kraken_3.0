@@ -6,7 +6,7 @@ from ._orientControllerFeedback import *
 from ._orientFeedback import *
 from ._advancedControllerActionResult import *
 from ._orientControllerActionGoal import *
-from ._advancedControllerFeedback import *
+from ._advancedControllerGoal import *
 from ._controllerActionGoal import *
 from ._controllerFeedback import *
 from ._orientControllerActionResult import *
@@ -17,7 +17,8 @@ from ._advancedControllerResult import *
 from ._orientActionFeedback import *
 from ._depthData import *
 from ._orientControllerGoal import *
-from ._advancedControllerGoal import *
+from ._advancedControllerFeedback import *
+from ._ipControllererror import *
 from ._imuData import *
 from ._orientGoal import *
 from ._controllerGoal import *
