@@ -1,0 +1,17 @@
+<package>
+  <description brief="thruster_force_converter">
+
+     thrsuter_force_converter
+
+  </description>
+  <author>Vinay Yadav</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/thrsuter_force_converter</url>
+  <depend package="roscpp"/>
+  <depend package="kraken_msgs"/>
+  <depend package="simulator_physics_model"/>
+
+</package>
+
+
