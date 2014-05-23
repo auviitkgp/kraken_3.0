@@ -1,0 +1,19 @@
+<package>
+  <description brief="controller_basic">
+
+     controller_basic
+
+  </description>
+  <author>Vinay Yadav</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/controller_basic</url>
+  <depend package="roscpp"/>
+  <depend package="kraken_msgs"/>
+  <export>
+      <cpp cflags="-I${prefix}/include/" lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -lPIDController -lStateController -lControlParameters" />
+  </export>
+
+</package>
+
+
