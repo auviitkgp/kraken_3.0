@@ -6,9 +6,14 @@
 #include "tf/transform_datatypes.h"
 #include "sensor_msgs/Imu.h"
 #include "nav_msgs/Odometry.h"
+#include "kraken_msgs/thrusterData4Thruster.h"
+#include "kraken_msgs/thrusterData6Thruster.h"
+
 
 using namespace ros;
 using namespace kraken_simulator;
+
+
 
 float storeforce[]={1.00,1.00,1,-1,-0.00 + 0.10,-0.10 + 0.00};
 void updateAUV(AuvModelSimple6DoF& auv,float force[])
@@ -88,6 +93,26 @@ public:
     }
 };
 
+void fourThrustCb(const kraken_msgs::thrusterData4ThrusterConstPtr &msg)
+{
+    storeforce[0]=msg->data[0];
+    storeforce[1]=msg->data[1];
+    storeforce[2]=0;
+    storeforce[3]=0;
+    storeforce[4]=msg->data[2];
+    storeforce[5]=msg->data[3];
+}
+
+void sixThrustCb(const kraken_msgs::thrusterData6ThrusterConstPtr &msg)
+{
+    storeforce[0]=msg->data[0];
+    storeforce[1]=msg->data[1];
+    storeforce[2]=msg->data[2];
+    storeforce[3]=msg->data[3];
+    storeforce[4]=msg->data[4];
+    storeforce[5]=msg->data[5];
+}
+
 
 
 
@@ -103,12 +128,14 @@ int main(int argc,char **argv)
     for(int i=1;i<argc&&i<7;i++)
             storeforce[i-1]=atof(argv[i]);
     NodeHandle n;
-    ROS_INFO(argv[1]);
+
     Publisher pose_publisher=n.advertise<geometry_msgs::Pose>("/kraken/pose",100);
     Publisher twistS_publisher= n.advertise <geometry_msgs::TwistStamped>("/kraken/twist",100);
     Publisher odometry_pub= n.advertise <nav_msgs::Odometry>("/kraken/dataNavigator",100);
     Publisher imu_pub=n.advertise<sensor_msgs::Imu>("/kraken/imu_data",100);
 
+    Subscriber thrust4sub=n.subscribe<kraken_msgs::thrusterData4Thruster>("/kraken/forceData4Thruster",100,fourThrustCb);
+    Subscriber thrust6sub=n.subscribe<kraken_msgs::thrusterData6Thruster>("/kraken/forceData6Thruster",100,sixThrustCb);
 
     AuvModelSimple6DoF auv(0.1);
 

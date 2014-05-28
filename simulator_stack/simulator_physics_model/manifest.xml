@@ -11,6 +11,7 @@
   <depend package="rospy"/>
   <depend package="roscpp"/>
   <depend package="std_msgs"/>
+  <depend package="kraken_msgs"/>
 
 </package>
 
