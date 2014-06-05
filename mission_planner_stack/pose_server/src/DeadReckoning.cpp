@@ -31,7 +31,7 @@ namespace kraken_core
   
   void DeadReckoning::resetPose(KrakenPose & pose)
   {
-    boost::circular_buffer<KrakenPose>::iterator start = _prev_states_world.begin();
+    boost::circular_buffer<KrakenPose>::iterator start = _prev_states_world.end()-1;
     float* _data = (*start).getData();
     float* _pos = pose.getData();
     _data[_px] = _pos[_px];
@@ -61,7 +61,7 @@ namespace kraken_core
   
   void DeadReckoning::updateCurrentVelocity()
   {
-    boost::circular_buffer<KrakenPose>::iterator start = _prev_states_body.begin();
+    boost::circular_buffer<KrakenPose>::iterator start = _prev_states_body.end()-1;
     float* _data_body_next  = _next_pose_body.getData();
     float* _data = (*start).getData();
     _data_body_next[_vx] = _data[_vx]+_data[_ax]*_time;
@@ -71,7 +71,7 @@ namespace kraken_core
     transformToWorld();
     //
     float* _data_world_next  = _next_pose_world.getData();
-    start = _prev_states_world.begin();
+    start = _prev_states_world.end()-1;
     _data = (*start).getData();
     _data_world_next[_ax] = (_data_world_next[_vx] - _data[_vx])/_time;
     _data_world_next[_ay] = (_data_world_next[_vy] - _data[_vy])/_time;
@@ -82,39 +82,41 @@ namespace kraken_core
   void DeadReckoning::updateCurrentPosition(kraken_msgs::depthData & depth)
   {
     float* _data_world_next  = _next_pose_world.getData();
-    boost::circular_buffer<KrakenPose>::iterator start = _prev_states_world.begin();
+    boost::circular_buffer<KrakenPose>::iterator start = _prev_states_world.end()-1;
     float* _data = (*start).getData();
-    _data_world_next[_px] = _data[_px]+(_data[_vx]+_data[_ax]*_time/0.5)*_time;
-    _data_world_next[_py] = _data[_py]+(_data[_vy]+_data[_ay]*_time/0.5)*_time;
+    _data_world_next[_px] = _data[_px]+(_data[_vx]+_data[_ax]*_time/2.0)*_time;
+    _data_world_next[_py] = _data[_py]+(_data[_vy]+_data[_ay]*_time/2.0)*_time;
     _data_world_next[_pz] = depth.depth;
     _prev_states_world.push_back(_next_pose_world);
     //
     float* _data_body_next  = _next_pose_body.getData();
-    start = _prev_states_body.begin();
+    start = _prev_states_body.end()-1;
      _data = (*start).getData();
-    _data_body_next[_px] = _data[_px]+(_data[_vx]+_data[_ax]*_time/0.5)*_time;
-    _data_body_next[_py] = _data[_py]+(_data[_vy]+_data[_ay]*_time/0.5)*_time;
+    _data_body_next[_px] = _data[_px]+(_data[_vx]+_data[_ax]*_time/2.0)*_time;
+    _data_body_next[_py] = _data[_py]+(_data[_vy]+_data[_ay]*_time/2.0)*_time;
     _data_body_next[_pz] = depth.depth;
     _prev_states_body.push_back(_next_pose_body);
+    //std::cerr<<"Size : "<<_prev_states_world.size()<<std::endl;
+    _prev_states_world[1].write(std::cerr);
     //_next_pose_world.write(std::cerr);
   }
   
   void DeadReckoning::updateCurrentPosition()
   {
     float* _data_world_next  = _next_pose_world.getData();
-    boost::circular_buffer<KrakenPose>::iterator start = _prev_states_world.begin();
+    boost::circular_buffer<KrakenPose>::iterator start = _prev_states_world.end()-1;
     float* _data = (*start).getData();
-    _data_world_next[_px] = _data[_px]+(_data[_vx]+_data[_ax]*_time/0.5)*_time;
-    _data_world_next[_py] = _data[_py]+(_data[_vy]+_data[_ay]*_time/0.5)*_time;
-    _data_world_next[_pz] = _data[_pz]+(_data[_vz]+_data[_az]*_time/0.5)*_time;
+    _data_world_next[_px] = _data[_px]+(_data[_vx]+_data[_ax]*_time/2.0)*_time;
+    _data_world_next[_py] = _data[_py]+(_data[_vy]+_data[_ay]*_time/2.0)*_time;
+    _data_world_next[_pz] = _data[_pz]+(_data[_vz]+_data[_az]*_time/2.0)*_time;
     _prev_states_world.push_back(_next_pose_world);
     //
     float* _data_body_next  = _next_pose_body.getData();
-    start = _prev_states_body.begin();
+    start = _prev_states_body.end()-1;
      _data = (*start).getData();
-    _data_body_next[_px] = _data[_px]+(_data[_vx]+_data[_ax]*_time/0.5)*_time;
-    _data_body_next[_py] = _data[_py]+(_data[_vy]+_data[_ay]*_time/0.5)*_time;
-    _data_body_next[_pz] = _data[_pz]+(_data[_vz]+_data[_az]*_time/0.5)*_time;
+    _data_body_next[_px] = _data[_px]+(_data[_vx]+_data[_ax]*_time/2.0)*_time;
+    _data_body_next[_py] = _data[_py]+(_data[_vy]+_data[_ay]*_time/2.0)*_time;
+    _data_body_next[_pz] = _data[_pz]+(_data[_vz]+_data[_az]*_time/2.0)*_time;
     _prev_states_body.push_back(_next_pose_body);
   }
   

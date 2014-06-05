@@ -9,7 +9,8 @@ namespace kraken_core
     ros::NodeHandle n;
     //_imu = n.subscribe<kraken_msgs::imuData>("/kraken/imu_data",2,&PoseServer::imuCallBack,this);
     _imu = n.subscribe<sensor_msgs::Imu>("/kraken/imu_data",2,&PoseServer::imuCallBack,this);
-    _depth = n.subscribe<kraken_msgs::depthData>("/kraken/depth",2,&PoseServer::depthCallBack,this);
+    _depth = n.subscribe<underwater_sensor_msgs::Pressure>("/kraken/depth",2,&PoseServer::depthCallBack,this);
+    //_depth = n.subscribe<kraken_msgs::depthData>("/kraken/depth",2,&PoseServer::depthCallBack,this);
     //_dvl = n.subscribe<kraken_msgs::dvlData>("",2,&PoseServer::dvlCallBack,this);
     _pose = n.advertise<kraken_msgs::krakenPose>("/kraken/pose_estimated",2);
     _timer = n.createTimer(ros::Duration(estimator->getTime()),&PoseServer::timerCallBack,this);
@@ -54,11 +55,12 @@ namespace kraken_core
     }
     _pose.publish(pose);
   }
-  
-  void PoseServer::depthCallBack(const kraken_msgs::depthData::ConstPtr &msg)
+  void PoseServer::depthCallBack(const underwater_sensor_msgs::Pressure::ConstPtr &msg)
+  //void PoseServer::depthCallBack(const kraken_msgs::depthData::ConstPtr &msg)
   {
     boost::mutex::scoped_lock lock(io_mutex);
-    _depthData.depth = msg->depth;
+    //_depthData.depth = msg->depth;
+    _depthData.depth = msg->pressure;
   }
   
   //void PoseServer::imuCallBack(const kraken_msgs::imuData::ConstPtr &msg)

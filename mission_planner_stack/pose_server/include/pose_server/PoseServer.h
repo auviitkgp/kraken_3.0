@@ -12,6 +12,7 @@
 #include <kdl/kdl.hpp>
 #include <bullet/LinearMath/btMatrix3x3.h>
 #include <bullet/LinearMath/btQuaternion.h>
+#include <underwater_sensor_msgs/Pressure.h>
 
 namespace kraken_core
 {
@@ -37,7 +38,8 @@ namespace kraken_core
                          kraken_msgs::krakenResetPose::Response &res);
       void timerCallBack(const ros::TimerEvent&);
       void dvlCallBack(const kraken_msgs::dvlData::ConstPtr &msg);
-      void depthCallBack(const kraken_msgs::depthData::ConstPtr &msg);
+      void depthCallBack(const underwater_sensor_msgs::Pressure::ConstPtr &msg);
+      //void depthCallBack(const kraken_msgs::depthData::ConstPtr &msg);
       //void imuCallBack(const kraken_msgs::imuData::ConstPtr &msg);
       void imuCallBack(const sensor_msgs::Imu::ConstPtr &msg);
   };

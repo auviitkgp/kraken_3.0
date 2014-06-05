@@ -137,7 +137,7 @@ int main(int argc,char **argv)
     Subscriber thrust4sub=n.subscribe<kraken_msgs::thrusterData4Thruster>("/kraken/forceData4Thruster",100,fourThrustCb);
     Subscriber thrust6sub=n.subscribe<kraken_msgs::thrusterData6Thruster>("/kraken/forceData6Thruster",100,sixThrustCb);
 
-    AuvModelSimple6DoF auv(0.1);
+    AuvModelSimple6DoF auv(.1);
 
     Functor timerCallback(n,auv,pose_publisher,twistS_publisher,odometry_pub,imu_pub,type);
     Timer timer=n.createTimer(ros::Duration(0.1),timerCallback);
