@@ -20,28 +20,76 @@ namespace kraken_core
   class PoseServer
   {
     private:
+      /*
+       * abstract Estimator. Can be different type of estimators
+       */
       Estimator* _estimator;
+      /*
+       * Has data from accurate sensor has arrived
+       */
       bool _good_sensor;
+      /*
+       * Has data from faster sensor has arrived
+       */
       bool _fast_sensor;
+      /*
+       * Datastructure for depth data
+       */
       kraken_msgs::depthData _depthData;
+      /*
+       * Datastructure for IMU data
+       */
       kraken_msgs::imuData _imuData;
+      /*
+       * Datastructure for DVL data
+       */
       kraken_msgs::dvlData _dvlData;
+      /*
+       * Subscribers for different sensors
+       */
       ros::Subscriber _imu;
       ros::Subscriber _depth;
       ros::Subscriber _dvl;
+      /*
+       * Publisher of position
+       */
       ros::Publisher _pose;
+      /*
+       * Timer
+       */
       ros::Timer _timer;
+      /*
+       * Lock for syncronization
+       */
       boost::mutex io_mutex;
     public:
+      /*
+       * Constructor takes an estimator
+       */
       PoseServer(Estimator * estimator);
+      /*
+       * function to reset server using service
+       */
       bool resetPosition(kraken_msgs::krakenResetPose::Request  &req,
                          kraken_msgs::krakenResetPose::Response &res);
+      /*
+       * Timer Callback
+       */
       void timerCallBack(const ros::TimerEvent&);
+      /*
+       * DVL Callback
+       */
       void dvlCallBack(const kraken_msgs::dvlData::ConstPtr &msg);
-      void depthCallBack(const underwater_sensor_msgs::Pressure::ConstPtr &msg);
+      /*
+       * Depth Callback with different input data type
+       */
       //void depthCallBack(const kraken_msgs::depthData::ConstPtr &msg);
-      //void imuCallBack(const kraken_msgs::imuData::ConstPtr &msg);
+      void depthCallBack(const underwater_sensor_msgs::Pressure::ConstPtr &msg);
+      /*
+       * IMU Callback with different input data type
+       */
       void imuCallBack(const sensor_msgs::Imu::ConstPtr &msg);
+      //void imuCallBack(const kraken_msgs::imuData::ConstPtr &msg);
   };
   
 } // end kraken_core

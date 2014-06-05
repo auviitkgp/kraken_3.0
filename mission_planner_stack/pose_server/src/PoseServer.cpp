@@ -67,6 +67,7 @@ namespace kraken_core
   void PoseServer::imuCallBack(const sensor_msgs::Imu::ConstPtr &msg)
   {
     boost::mutex::scoped_lock lock(io_mutex);
+    // convert data to our format
     _imuData.data[kraken_sensors::accelX] = msg->linear_acceleration.x;
     _imuData.data[kraken_sensors::accelY] = msg->linear_acceleration.y;
     _imuData.data[kraken_sensors::accelZ] = msg->linear_acceleration.z;

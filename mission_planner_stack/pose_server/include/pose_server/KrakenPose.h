@@ -29,8 +29,14 @@ namespace kraken_core
   class KrakenPose
   {
     private:
+      /*
+       * Vehicle state. For index see the enum
+       */
       float _pose[countState];
     public:
+      /*
+       * Constructor
+       */
       KrakenPose()
       {
         for(int i=0;i<countState;i++)
@@ -42,7 +48,9 @@ namespace kraken_core
       {
         return &_pose[0];
       }
-      
+      /*
+       * Write vehicle pose to stream
+       */
       void write(std::ostream &out);
   };
   
