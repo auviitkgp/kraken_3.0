@@ -11,7 +11,7 @@ namespace kraken_sensors
 {
   enum{
        roll=0, pitch, yaw, accelX, accelY, accelZ, magX, magY, magZ, gyroX, gyroY, gyroZ, temp
-  } dataType;
+  };
   const char componentId[13] = {0x19, 0x18, 0x05, 0x15, 0x16, 0x17, 0x1B, 0x1C, 0x1D, 0x4A, 0x4B, 0x4C, 0x07};
   class Tracks:public kraken_hardware::SerialPort
   {

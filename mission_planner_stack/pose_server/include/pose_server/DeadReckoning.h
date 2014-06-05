@@ -1,7 +1,7 @@
 #ifndef DEADRECKONING_H
 #define DEADRECKONING_H
 #include <pose_server/Estimator.h>
-#include <imu/Tracks.h>
+#include <tracks_imu/Tracks.h>
 
 namespace kraken_core
 {

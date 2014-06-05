@@ -7,7 +7,7 @@
 #include <ros/ros.h>
 #include <boost/thread/mutex.hpp>
 #include "sensor_msgs/Imu.h"
-#include <imu/Tracks.h>
+#include <tracks_imu/Tracks.h>
 #include <tf/tf.h>
 #include <kdl/kdl.hpp>
 #include <bullet/LinearMath/btMatrix3x3.h>

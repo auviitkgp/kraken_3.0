@@ -17,7 +17,7 @@ int main(int argc,char** argv)
     }
     if (client.call(srv))
     {
-      ROS_INFO("Sum: %ld", srv.response.check);
+      ROS_INFO("Sum: %d", srv.response.check);
     }
     else
     {
