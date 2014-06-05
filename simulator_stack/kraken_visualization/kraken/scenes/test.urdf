@@ -13,13 +13,13 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="/home/vinay/ros_workspace/ikat-auv-packages/auv_visulaization/kraken/objects/marker.stl" scale="1.000000 1.000000 1.000000"/>
+        <mesh filename="/home/vinay/ros_workspace/ikat-auv-packages/kraken_visualization/kraken/objects/marker.stl" scale="1.000000 1.000000 1.000000"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="/home/vinay/ros_workspace/ikat-auv-packages/auv_visulaization/kraken/objects/marker.stl" scale="1.000000 1.000000 1.000000"/>
+        <mesh filename="/home/vinay/ros_workspace/ikat-auv-packages/kraken_visualization/kraken/objects/marker.stl" scale="1.000000 1.000000 1.000000"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
