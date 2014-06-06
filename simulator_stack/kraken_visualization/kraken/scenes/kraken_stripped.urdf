@@ -4,13 +4,13 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://auv_visulaization/kraken/robot/new_model_kraken.3ds"/>
+        <mesh filename="package://kraken_visualization/kraken/robot/new_model_kraken.3ds"/>
       </geometry>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://auv_visulaization/kraken/robot/new_model_kraken.3ds"/>
+        <mesh filename="package://kraken_visualization/kraken/robot/new_model_kraken.3ds"/>
       </geometry>
     </collision>
   </link>
