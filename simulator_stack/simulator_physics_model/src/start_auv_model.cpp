@@ -8,6 +8,8 @@
 #include "nav_msgs/Odometry.h"
 #include "kraken_msgs/thrusterData4Thruster.h"
 #include "kraken_msgs/thrusterData6Thruster.h"
+#include <kraken_msgs/forceData4Thruster.h>
+#include <kraken_msgs/forceData6Thruster.h>
 
 
 using namespace ros;
@@ -93,7 +95,7 @@ public:
     }
 };
 
-void fourThrustCb(const kraken_msgs::thrusterData4ThrusterConstPtr &msg)
+void fourThrustCb(const kraken_msgs::forceData4ThrusterConstPtr &msg)
 {
     storeforce[0]=msg->data[0];
     storeforce[1]=msg->data[1];
@@ -101,9 +103,10 @@ void fourThrustCb(const kraken_msgs::thrusterData4ThrusterConstPtr &msg)
     storeforce[3]=0;
     storeforce[4]=msg->data[2];
     storeforce[5]=msg->data[3];
+    //std::cerr<<"callback"<<std::endl;
 }
 
-void sixThrustCb(const kraken_msgs::thrusterData6ThrusterConstPtr &msg)
+void sixThrustCb(const kraken_msgs::forceData6ThrusterConstPtr &msg)
 {
     storeforce[0]=msg->data[0];
     storeforce[1]=msg->data[1];
@@ -133,11 +136,10 @@ int main(int argc,char **argv)
     Publisher twistS_publisher= n.advertise <geometry_msgs::TwistStamped>("/kraken/twist",100);
     Publisher odometry_pub= n.advertise <nav_msgs::Odometry>("/kraken/dataNavigator",100);
     Publisher imu_pub=n.advertise<sensor_msgs::Imu>("/kraken/imu_data",100);
+    Subscriber thrust4sub=n.subscribe<kraken_msgs::forceData4Thruster>("/kraken/forceData4Thruster",100,fourThrustCb);
+    Subscriber thrust6sub=n.subscribe<kraken_msgs::forceData6Thruster>("/kraken/forceData6Thruster",100,sixThrustCb);
 
-    Subscriber thrust4sub=n.subscribe<kraken_msgs::thrusterData4Thruster>("/kraken/forceData4Thruster",100,fourThrustCb);
-    Subscriber thrust6sub=n.subscribe<kraken_msgs::thrusterData6Thruster>("/kraken/forceData6Thruster",100,sixThrustCb);
-
-    AuvModelSimple6DoF auv(.1);
+    AuvModelSimple6DoF auv(.05);
 
     Functor timerCallback(n,auv,pose_publisher,twistS_publisher,odometry_pub,imu_pub,type);
     Timer timer=n.createTimer(ros::Duration(0.1),timerCallback);

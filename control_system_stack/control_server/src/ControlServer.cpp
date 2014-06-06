@@ -123,6 +123,7 @@ namespace kraken_controller
   void ControlServer::loadParams(const std::vector<std::string> &filenames)
   {
     _controller.loadParams(filenames);
+    _controller.pause();
   }
   
 }

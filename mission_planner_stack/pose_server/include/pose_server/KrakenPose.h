@@ -9,22 +9,22 @@ namespace kraken_core
     _px=0,
     _py,
     _pz,
-    
+
     _vx,
     _vy,
     _vz,
-    
+
     _ax,
     _ay,
     _az,
-    
-    _w_roll,
-    _w_pitch,
-    _w_yaw,
-    
+
     _roll,
     _pitch,
-    _yaw
+    _yaw,
+
+    _w_roll,
+    _w_pitch,
+    _w_yaw
   };
   class KrakenPose
   {

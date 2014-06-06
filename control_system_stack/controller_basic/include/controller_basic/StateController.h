@@ -27,12 +27,14 @@ namespace kraken_controller
       }
       virtual ~ StateController();
     private:
-        float** _gain;
-        float* _offset;
-        kraken_msgs::krakenPose _setpoint;
-        kraken_msgs::thrusterData4Thruster _thruster_data4;
-        kraken_msgs::thrusterData6Thruster _thruster_data6;
     protected:
+      float** _gain;
+      float* _offset;
+      float  _setPoint[21];
+      float  _error[21];
+      kraken_msgs::krakenPose _feedback;
+      kraken_msgs::thrusterData4Thruster _thruster_data4;
+      kraken_msgs::thrusterData6Thruster _thruster_data6;
       
   };
 }
