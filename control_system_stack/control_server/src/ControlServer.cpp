@@ -120,4 +120,9 @@ namespace kraken_controller
     //_server2->setSucceeded(0);
   }
   
+  void ControlServer::loadParams(const std::vector<std::string> &filenames)
+  {
+    _controller.loadParams(filenames);
+  }
+  
 }

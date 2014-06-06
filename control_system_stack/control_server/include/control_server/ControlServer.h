@@ -14,6 +14,7 @@
 #include <kraken_msgs/ipControllererror.h>
 #include <actionlib/server/simple_action_server.h>
 #include <kraken_msgs/switchControllers.h>
+#include <controller_basic/ControlParameters.h>
 
 namespace kraken_controller
 {
@@ -21,6 +22,7 @@ namespace kraken_controller
   {
     public:
       ControlServer(float freq=10);
+      void loadParams(const std::vector<std::string> &filenames);
       void timeCallBack(const ros::TimerEvent&);
       void setServers(actionlib::SimpleActionServer<kraken_msgs::advancedControllerAction>*,actionlib::SimpleActionServer<kraken_msgs::controllerAction>*);
       void poseFeedBack(const kraken_msgs::krakenPose::ConstPtr &msg);
@@ -35,6 +37,7 @@ namespace kraken_controller
     protected:
       
     private:
+      
       ros::Publisher _pub;
       ros::Subscriber _sub_pose;
       ros::Subscriber _sub_ip_error;

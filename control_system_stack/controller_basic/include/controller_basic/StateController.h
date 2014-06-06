@@ -4,12 +4,14 @@
 #include <kraken_msgs/thrusterData4Thruster.h>
 #include <kraken_msgs/thrusterData6Thruster.h>
 #include <kraken_msgs/krakenPose.h>
+#include <controller_basic/ControlParameters.h>
+
 namespace kraken_controller
 {
   class StateController
   {
     public:
-      StateController(){}
+      StateController();
       void resetController(float** gain,float* offset);
       virtual void updateState()=0;
       virtual void doControlIteration(const kraken_msgs::krakenPose feedback)=0;
@@ -23,7 +25,7 @@ namespace kraken_controller
       {
         return _thruster_data6;
       }
-      virtual ~ StateController(){}
+      virtual ~ StateController();
     private:
         float** _gain;
         float* _offset;

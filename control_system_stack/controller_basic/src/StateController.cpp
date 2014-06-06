@@ -2,7 +2,7 @@
 
 namespace kraken_controller
 {
-  StateController::StateController(int size):_size(size)
+  StateController::StateController()
   {
     
   }

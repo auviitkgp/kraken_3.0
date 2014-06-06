@@ -2,6 +2,7 @@
 #define AUVCONTROLLER_H
 #include <controller_basic/StateController.h>
 
+
 namespace kraken_controller
 {
   
@@ -16,8 +17,10 @@ namespace kraken_controller
       void moveForward();
       void moveBack();
       void pause();
+      void loadParams(const std::vector<std::string> &filenames);
     private:
-      
+      std::vector<ControlParameters*> _control_parameters;
+      std::map<std::string,int> _control_parameters_index;
     protected:
   };
 }
