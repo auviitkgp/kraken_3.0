@@ -8,7 +8,7 @@ namespace kraken_core
     _good_sensor = _fast_sensor = false;
     ros::NodeHandle n;
     //_imu = n.subscribe<kraken_msgs::imuData>("/kraken/imu_data",2,&PoseServer::imuCallBack,this);
-    _imu = n.subscribe<sensor_msgs::Imu>("/kraken/imu_data",2,&PoseServer::imuCallBack,this);
+    _imu = n.subscribe<sensor_msgs::Imu>("/kraken/imuData",2,&PoseServer::imuCallBack,this);
     _depth = n.subscribe<underwater_sensor_msgs::Pressure>("/kraken/depth",2,&PoseServer::depthCallBack,this);
     //_depth = n.subscribe<kraken_msgs::depthData>("/kraken/depth",2,&PoseServer::depthCallBack,this);
     //_dvl = n.subscribe<kraken_msgs::dvlData>("",2,&PoseServer::dvlCallBack,this);
