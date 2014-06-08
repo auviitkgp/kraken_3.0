@@ -7,13 +7,13 @@
   <link name="pool">
     <visual>
       <geometry>
-        <mesh filename="package://auv_visulaization/kraken/terrain/pool.osg"/>
+        <mesh filename="package://kraken_visualization/kraken/terrain/pool.osg"/>
       </geometry>
       <origin rpy="0 0 0.0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://auv_visulaization/kraken/terrain/pool.osg"/>
+        <mesh filename="package://kraken_visualization/kraken/terrain/pool.osg"/>
       </geometry>
       <origin rpy="0 0 0.0" xyz="0 0 0"/>
     </collision>
@@ -22,13 +22,13 @@
   <link name="gate_marker">
     <visual>
       <geometry>
-        <mesh filename="package://auv_visulaization/kraken/objects/marker.osg"/>
+        <mesh filename="package://kraken_visualization/kraken/objects/marker.osg"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://auv_visulaization/kraken/objects/marker.osg"/>
+        <mesh filename="package://kraken_visualization/kraken/objects/marker.osg"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -42,13 +42,13 @@
 <link name="gate_marker2">
     <visual>
       <geometry>
-        <mesh filename="package://auv_visulaization/kraken/objects/marker.osg"/>
+        <mesh filename="package://kraken_visualization/kraken/objects/marker.osg"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://auv_visulaization/kraken/objects/marker.osg"/>
+        <mesh filename="package://kraken_visualization/kraken/objects/marker.osg"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -61,13 +61,13 @@
   <link name="gate_buoy_blue">
     <visual>
       <geometry>
-        <mesh filename="package://auv_visulaization/kraken/objects/buoy_blue.osg"/>
+        <mesh filename="package://kraken_visualization/kraken/objects/buoy_blue.osg"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://auv_visulaization/kraken/objects/buoy_blue.osg"/>
+        <mesh filename="package://kraken_visualization/kraken/objects/buoy_blue.osg"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -80,13 +80,13 @@
   <link name="gate_buoy_green">
     <visual>
       <geometry>
-        <mesh filename="package://auv_visulaization/kraken/objects/buoy_green.osg"/>
+        <mesh filename="package://kraken_visualization/kraken/objects/buoy_green.osg"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://auv_visulaization/kraken/objects/buoy_green.osg"/>
+        <mesh filename="package://kraken_visualization/kraken/objects/buoy_green.osg"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -99,13 +99,13 @@
   <link name="gate_buoy_red">
     <visual>
       <geometry>
-        <mesh filename="package://auv_visulaization/kraken/objects/buoy_red.osg"/>
+        <mesh filename="package://kraken_visualization/kraken/objects/buoy_red.osg"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 -0.75"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://auv_visulaization/kraken/objects/buoy_red.osg"/>
+        <mesh filename="package://kraken_visualization/kraken/objects/buoy_red.osg"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -119,13 +119,13 @@
 <link name="gate_marker3">
     <visual>
       <geometry>
-        <mesh filename="package://auv_visulaization/kraken/objects/marker.osg"/>
+        <mesh filename="package://kraken_visualization/kraken/objects/marker.osg"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://auv_visulaization/kraken/objects/marker.osg"/>
+        <mesh filename="package://kraken_visualization/kraken/objects/marker.osg"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -140,13 +140,13 @@
 <link name="gate_marker4">
     <visual>
       <geometry>
-        <mesh filename="package://auv_visulaization/kraken/objects/marker.osg"/>
+        <mesh filename="package://kraken_visualization/kraken/objects/marker.osg"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://auv_visulaization/kraken/objects/marker.osg"/>
+        <mesh filename="package://kraken_visualization/kraken/objects/marker.osg"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -160,13 +160,13 @@
 <link name="gate_marker5">
     <visual>
       <geometry>
-        <mesh filename="package://auv_visulaization/kraken/objects/marker.osg"/>
+        <mesh filename="package://kraken_visualization/kraken/objects/marker.osg"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://auv_visulaization/kraken/objects/marker.osg"/>
+        <mesh filename="package://kraken_visualization/kraken/objects/marker.osg"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -179,32 +179,32 @@
   <link name="gate_shooter">
     <visual>
       <geometry>
-        <mesh filename="package://auv_visulaization/kraken/objects/shooter.osg"/>
+        <mesh filename="package://kraken_visualization/kraken/objects/torp_board.osg"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://auv_visulaization/kraken/objects/shooter.osg"/>
+        <mesh filename="package://kraken_visualization/kraken/objects/torp_board.osg"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
   </link>
-  <joint name="gate_shoote5 sin(1.7-(pi/2))r_to_pool" type="fixed">
+  <joint name="gate_shooter_to_pool" type="fixed">
     <parent link="pool"/>
     <child link="gate_shooter"/>
-    <origin rpy="0 0 0.0" xyz="3.36 21.95 0"/>
+    <origin rpy="4.71 0 0.4" xyz="3.36 21.95 0"/>
   </joint>
   <link name="gate_dropper">
     <visual>
       <geometry>
-        <mesh filename="package://auv_visulaization/kraken/objects/dropper.osg"/>
+        <mesh filename="package://kraken_visualization/kraken/objects/bins.osg"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://auv_visulaization/kraken/objects/dropper.osg"/>
+        <mesh filename="package://kraken_visualization/kraken/objects/bins.osg"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -212,19 +212,19 @@
   <joint name="gate_dropper_to_pool" type="fixed">
     <parent link="pool"/>
     <child link="gate_dropper"/>
-    <origin rpy="0 0 0.0" xyz="8.62 20.44 0"/>
+    <origin rpy="0 3.14 0.0" xyz="8.62 20.44 0"/>
   </joint>
 
   <link name="gate_L_rod">
     <visual>
       <geometry>
-        <mesh filename="package://auv_visulaization/kraken/objects/L_rod.osg"/>
+        <mesh filename="package://kraken_visualization/kraken/objects/gate.osg"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://auv_visulaization/kraken/objects/L_rod.osg"/>
+        <mesh filename="package://kraken_visualization/kraken/objects/gate.osg"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -232,6 +232,6 @@
   <joint name="gate_L_rod_to_pool" type="fixed">
     <parent link="pool"/>
     <child link="gate_L_rod"/>
-    <origin rpy="0 0 0" xyz="4.5 15 0"/>
+    <origin rpy="0 3.14 0" xyz="4.5 15 -1.0"/>
   </joint>
 </robot>
