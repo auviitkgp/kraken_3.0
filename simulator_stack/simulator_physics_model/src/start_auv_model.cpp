@@ -17,7 +17,7 @@ using namespace kraken_simulator;
 
 
 
-float storeforce[]={1.00,1.00,1,-1,-0.00 + 0.10,-0.10 + 0.00};
+float storeforce[]={0,0,0,0,0,0};
 void updateAUV(AuvModelSimple6DoF& auv,float force[])
 {
     for(int i=0;i<6;i++)storeforce[i]=force[i];
@@ -125,7 +125,7 @@ int main(int argc,char **argv)
     int type=0;
     if(argc>=8)
     {
-        type=atoi(argv[7]);
+        type=atoi(argv[8]);
 
     }
     for(int i=1;i<argc&&i<7;i++)
@@ -135,7 +135,7 @@ int main(int argc,char **argv)
     Publisher pose_publisher=n.advertise<geometry_msgs::Pose>("/kraken/pose",100);
     Publisher twistS_publisher= n.advertise <geometry_msgs::TwistStamped>("/kraken/twist",100);
     Publisher odometry_pub= n.advertise <nav_msgs::Odometry>("/kraken/dataNavigator",100);
-    Publisher imu_pub=n.advertise<sensor_msgs::Imu>("/kraken/imu_data",100);
+    Publisher imu_pub=n.advertise<sensor_msgs::Imu>("/kraken/imuData",100);
     Subscriber thrust4sub=n.subscribe<kraken_msgs::forceData4Thruster>("/kraken/forceData4Thruster",100,fourThrustCb);
     Subscriber thrust6sub=n.subscribe<kraken_msgs::forceData6Thruster>("/kraken/forceData6Thruster",100,sixThrustCb);
 
