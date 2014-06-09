@@ -4,6 +4,7 @@
 using namespace std;
 namespace kraken_simulator{
 
+const double  AuvModelSimple6DoF::pi = 3.1415926;
 
 const float AuvModelSimple6DoF::L[6][6]={ { 1,      1,        0,        0,        0,      0},
                                           { 0,      0,        1,        1,        0,      0},
@@ -145,6 +146,12 @@ void AuvModelSimple6DoF::updateCurrentPosition()
         _current_position_to_world[i] +=(_current_velocity_state_to_world[i]+_current_accelaration_to_world[i]*_time/2.0)*_time;
         _current_position_to_body[i]  +=(_current_velocity_state_to_body[i]+_current_accelaration_to_body[i]*_time/2.0)*_time;
     }
+    _current_position_to_world[5]=(((int)(_current_position_to_world[5]*10000))%((int)(2*pi*10000)))/10000.0; 
+    _current_position_to_world[4]=(((int)(_current_position_to_world[4]*10000))%((int)(2*3.14*10000)))/10000.0;
+    _current_position_to_world[3]=(((int)(_current_position_to_world[3]*10000))%((int)(2*3.14*10000)))/10000.0;
+    _current_position_to_body[5] =(((int)(_current_position_to_body[5]*10000))%((int)(2*3.14*10000)))/10000.0; 
+    _current_position_to_body[4] =(((int)(_current_position_to_body[4]*10000))%((int)(2*3.14*10000)))/10000.0; 
+    _current_position_to_body[3] =(((int)(_current_position_to_body[3]*10000))%((int)(2*3.14*10000)))/10000.0; 
     //std::cerr<<std::endl;
 }
 

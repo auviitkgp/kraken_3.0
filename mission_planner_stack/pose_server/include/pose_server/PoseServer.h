@@ -13,10 +13,11 @@
 #include <bullet/LinearMath/btMatrix3x3.h>
 #include <bullet/LinearMath/btQuaternion.h>
 #include <underwater_sensor_msgs/Pressure.h>
+#include <math.h>
 
 namespace kraken_core
 {
-  
+  const double pi = 3.1415926;
   class PoseServer
   {
     private:
@@ -88,8 +89,8 @@ namespace kraken_core
       /*
        * IMU Callback with different input data type
        */
-      void imuCallBack(const sensor_msgs::Imu::ConstPtr &msg);
-      //void imuCallBack(const kraken_msgs::imuData::ConstPtr &msg);
+      //void imuCallBack(const sensor_msgs::Imu::ConstPtr &msg);
+      void imuCallBack(const kraken_msgs::imuData::ConstPtr &msg);
   };
   
 } // end kraken_core

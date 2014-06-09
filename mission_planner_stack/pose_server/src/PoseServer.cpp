@@ -7,12 +7,12 @@ namespace kraken_core
   {
     _good_sensor = _fast_sensor = false;
     ros::NodeHandle n;
-    //_imu = n.subscribe<kraken_msgs::imuData>("/kraken/imu_data",2,&PoseServer::imuCallBack,this);
-    _imu = n.subscribe<sensor_msgs::Imu>("/kraken/imuData",2,&PoseServer::imuCallBack,this);
-    _depth = n.subscribe<underwater_sensor_msgs::Pressure>("/kraken/depth",2,&PoseServer::depthCallBack,this);
+    _imu = n.subscribe<kraken_msgs::imuData>("/kraken/imuData",1,&PoseServer::imuCallBack,this);
+    //_imu = n.subscribe<sensor_msgs::Imu>("/kraken/imuData",2,&PoseServer::imuCallBack,this);
+    _depth = n.subscribe<underwater_sensor_msgs::Pressure>("/kraken/depth",1,&PoseServer::depthCallBack,this);
     //_depth = n.subscribe<kraken_msgs::depthData>("/kraken/depth",2,&PoseServer::depthCallBack,this);
     //_dvl = n.subscribe<kraken_msgs::dvlData>("",2,&PoseServer::dvlCallBack,this);
-    _pose = n.advertise<kraken_msgs::krakenPose>("/kraken/pose_estimated",2);
+    _pose = n.advertise<kraken_msgs::krakenPose>("/kraken/pose_estimated",1);
     _timer = n.createTimer(ros::Duration(estimator->getTime()),&PoseServer::timerCallBack,this);
   }
   
@@ -63,8 +63,19 @@ namespace kraken_core
     _depthData.depth = msg->pressure;
   }
   
-  //void PoseServer::imuCallBack(const kraken_msgs::imuData::ConstPtr &msg)
-  void PoseServer::imuCallBack(const sensor_msgs::Imu::ConstPtr &msg)
+  void PoseServer::imuCallBack(const kraken_msgs::imuData::ConstPtr &msg)
+  {
+    boost::mutex::scoped_lock lock(io_mutex);
+    // convert data to our format
+    for(int i=0;i<13;i++)
+    {
+        _imuData.data[i] = msg->data[i];
+    }
+    //_imuData.data[kraken_sensors::yaw]+=180;
+    _fast_sensor = true;
+  }
+  
+  /*void PoseServer::imuCallBack(const sensor_msgs::Imu::ConstPtr &msg)
   {
     boost::mutex::scoped_lock lock(io_mutex);
     // convert data to our format
@@ -74,9 +85,12 @@ namespace kraken_core
     btMatrix3x3(btQuaternion(msg->orientation.x,msg->orientation.y,
                              msg->orientation.z,msg->orientation.w)).getEulerYPR(
           _imuData.data[kraken_sensors::yaw],_imuData.data[kraken_sensors::pitch],_imuData.data[kraken_sensors::roll]);
+    _imuData.data[kraken_sensors::yaw]+=180;
+    //_imuData.data[kraken_sensors::roll]+=180;
+    //_imuData.data[kraken_sensors::pit]+=180;
     _fast_sensor = true;
   }
-  
+  */
   void PoseServer::dvlCallBack(const kraken_msgs::dvlData::ConstPtr &msg)
   {
     boost::mutex::scoped_lock lock(io_mutex);
