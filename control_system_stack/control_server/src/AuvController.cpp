@@ -80,15 +80,15 @@ namespace kraken_controller
 
     //new part
     error[kraken_core::_px] = _setPoint[kraken_core::_px] - feedback.data[kraken_core::_px];
-    if(fabs(error[kraken_core::_px]) > 0.3) {multiplier[0] = multiplier[1] = (error[kraken_core::_px])/fabs(error[kraken_core::_px]);}
+    if(fabs(error[kraken_core::_px]) > 0.05) {multiplier[0] = multiplier[1] = (error[kraken_core::_px])/fabs(error[kraken_core::_px]);}
     else { multiplier[0] = multiplier[1] = 0;}
 
     error[kraken_core::_py] = _setPoint[kraken_core::_py] - feedback.data[kraken_core::_py];
-    if(fabs(error[kraken_core::_py]) > 0.3) {multiplier[4] = multiplier[5] = (error[kraken_core::_py])/fabs(error[kraken_core::_py]);}
+    if(fabs(error[kraken_core::_py]) > 0.05) {multiplier[4] = multiplier[5] = (error[kraken_core::_py])/fabs(error[kraken_core::_py]);}
     else { multiplier[4] = multiplier[5] = 0;}
 
     error[kraken_core::_pz] = _setPoint[kraken_core::_pz] - feedback.data[kraken_core::_pz];
-    if(fabs(error[kraken_core::_pz]) > 0.3) {multiplier[2] = multiplier[3] = (error[kraken_core::_pz])/fabs(error[kraken_core::_pz]);}
+    if(fabs(error[kraken_core::_pz]) > 0.05) {multiplier[2] = multiplier[3] = (error[kraken_core::_pz])/fabs(error[kraken_core::_pz]);}
     else { multiplier[2] = multiplier[3] = 0;}
 
     error[kraken_core::_roll] = _setPoint[kraken_core::_roll] - feedback.data[kraken_core::_roll];
@@ -166,12 +166,12 @@ namespace kraken_controller
 
       bool result;
 
-      thresh[kraken_core::_px] = 0.2;
-      thresh[kraken_core::_py] = 0.2;
-      thresh[kraken_core::_pz] = 0.2;
-      thresh[kraken_core::_roll] = 0.2;
-      thresh[kraken_core::_pitch] = 0.2;
-      thresh[kraken_core::_yaw] = 0.2;
+      thresh[kraken_core::_px] = 0.05;
+      thresh[kraken_core::_py] = 0.05;
+      thresh[kraken_core::_pz] = 0.05;
+      thresh[kraken_core::_roll] = 0.05;
+      thresh[kraken_core::_pitch] = 0.05;
+      thresh[kraken_core::_yaw] = 0.05;
 
       curState[kraken_core::_px] = msg.data[kraken_core::_px];
       curState[kraken_core::_py] = msg.data[kraken_core::_py];

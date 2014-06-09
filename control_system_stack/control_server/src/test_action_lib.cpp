@@ -20,9 +20,10 @@ int main(int argc,char** argv)
     ROS_INFO("Action server started, sending goal.");
     // send a goal to the action
     kraken_msgs::advancedControllerGoal goal;
-    goal.depth = atoi(argv[1]);
-    goal.x = 1.0;
-    goal.y = 2.0;
+    goal.x = atof(argv[1]);
+    goal.y = atof(argv[2]);
+    goal.depth = atof(argv[3]);
+
     ac.sendGoal(goal);
     //ac.sendGoal(goal);
     ROS_INFO("Goal sent");
