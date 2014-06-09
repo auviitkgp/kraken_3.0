@@ -96,7 +96,44 @@ namespace kraken_controller
   
   void ControlServer::executePoseChange(const kraken_msgs::advancedControllerGoalConstPtr &msg)
   {
-    
+    _do_control = false;
+    kraken_msgs::krakenPose _pose;
+    _pose.data[kraken_core::_px] = msg->x;
+    _pose.data[kraken_core::_py] = msg->y;
+
+    _pose.data[kraken_core::_pz] = msg->depth;
+    _controller.setSetPoint(_pose);
+    _controller.moveTest();
+    ros::Rate looprate(10);
+
+    kraken_msgs::advancedControllerFeedback feedback;
+    kraken_msgs::advancedControllerResult result;
+    while(ros::ok())
+    {
+        if (_server1->isPreemptRequested() || !ros::ok())
+        {
+            _server1->setPreempted();
+             break;
+        }
+        feedback.running_time = _controller.checkError(_feedBack);
+        std::cout<<feedback.running_time<<std::endl;
+        _server1->publishFeedback(feedback);
+        if (feedback.running_time)
+        {
+            result.time_taken = 30;
+            _server1->setSucceeded(result);
+            _controller.pause();
+            break;
+        }
+
+        _controller.doControlIteration(_feedBack);
+        _controller.updateState();
+        _pub.publish(_controller.getThruster4Value());
+        ros::spinOnce();
+        //std::cerr<<"looping"<<std::endl;
+        looprate.sleep();
+    }
+    _do_control = true;
   }
   
   void ControlServer::executeOrientationChange(const kraken_msgs::controllerGoalConstPtr &msg)
@@ -108,6 +145,10 @@ namespace kraken_controller
     _pose.data[kraken_core::_pitch] = msg->p;
     _pose.data[kraken_core::_yaw] = msg->y;
     _controller.setSetPoint(_pose);
+    _controller.moveTest();
+    ros::Rate looprate(10);
+    kraken_msgs::controllerFeedback feedback;
+    kraken_msgs::controllerResult result;
     while(ros::ok())
     {
         if (_server2->isPreemptRequested() || !ros::ok())
@@ -115,9 +156,24 @@ namespace kraken_controller
             _server2->setPreempted();
             break;
         }
-        //_server2->publishFeedback(0);
+        feedback.running_time = _controller.checkError(_feedBack);
+        std::cout<<feedback.running_time<<std::endl;
+        _server2->publishFeedback(feedback);
+        if (feedback.running_time)
+        {
+            result.time_taken = 30;
+            _server2->setSucceeded(result);
+            _controller.pause();
+            break;
+        }
+
+        _controller.doControlIteration(_feedBack);
+        _controller.updateState();
+        _pub.publish(_controller.getThruster4Value());
+         ros::spinOnce();
+         looprate.sleep();
     }
-    //_server2->setSucceeded(0);
+    _do_control = true;
   }
   
   void ControlServer::loadParams(const std::vector<std::string> &filenames)

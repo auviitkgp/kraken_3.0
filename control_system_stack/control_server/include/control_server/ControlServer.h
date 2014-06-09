@@ -1,15 +1,21 @@
 #ifndef CONTROLSERVER_H
 #define CONTROLSERVER_H
 #include <ros/ros.h>
+#include <ros/rate.h>
 #include <kraken_msgs/krakenPose.h>
 #include <kraken_msgs/thrusterData4Thruster.h>
 #include <kraken_msgs/thrusterData6Thruster.h>
 #include <control_server/AuvController.h>
 #include <kraken_msgs/moveAlongLine.h>
 #include <kraken_msgs/advancedControllerAction.h>
+#include <kraken_msgs/advancedControllerActionResult.h>
+#include <kraken_msgs/advancedControllerActionFeedback.h>
+#include <kraken_msgs/advancedControllerFeedback.h>
 #include <kraken_msgs/advancedControllerGoal.h>
+#include <kraken_msgs/advancedControllerResult.h>
 #include <kraken_msgs/controllerGoal.h>
 #include <kraken_msgs/controllerAction.h>
+#include <kraken_msgs/controllerActionResult.h>
 #include <pose_server/KrakenPose.h>
 #include <kraken_msgs/ipControllererror.h>
 #include <actionlib/server/simple_action_server.h>
@@ -33,6 +39,7 @@ namespace kraken_controller
                          kraken_msgs::switchControllers::Response &res);
       void executePoseChange(const kraken_msgs::advancedControllerGoalConstPtr &msg);
       void executeOrientationChange(const kraken_msgs::controllerGoalConstPtr &msg);
+
       virtual ~ControlServer();
     protected:
       
