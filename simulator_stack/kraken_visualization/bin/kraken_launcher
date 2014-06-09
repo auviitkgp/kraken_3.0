@@ -1,10 +1,7 @@
 #!/bin/bash
-#USAGE="simulator scene.xml(must give)";
-#if [ $# -lt 1 ] ; 
-#then 
-#    echo $USAGE;
-#    exit;
-#fi
-#echo $1
-roscd ikat-auv-packages
+WS=$ROS_WORKSPACE 
+source /opt/ros/hydro/setup.bash
+export ROS_WORKSPACE=$WS
+export ROS_PACKAGE_PATH=$ROS_WORKSPACE:$ROS_PACKAGE_PATH
+roscd kraken_visualization
 rosrun uwsim uwsim_binary --disableShaders --configfile kraken/scenes/UWSim_scene.xml
