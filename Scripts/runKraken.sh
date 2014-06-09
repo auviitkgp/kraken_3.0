@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd ~/hydro_workspace/sandbox
+#cd ~/hydro_workspace/sandbox
 
 #Launcing simulator GUI. Depth will not work without it
 rosrun kraken_isualisationkraken_launcher &
