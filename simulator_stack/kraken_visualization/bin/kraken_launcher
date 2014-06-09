@@ -7,4 +7,4 @@
 #fi
 #echo $1
 roscd ikat-auv-packages
-rosrun uwsim uwsim_binary --disableShaders --configfile kraken/scenes/UWSim_scene.xml
+rosrun uwsim uwsim_binary --configfile kraken/scenes/UWSim_scene.xml

@@ -45,7 +45,7 @@ namespace kraken_controller
       
     private:
       
-      ros::Publisher _pub;
+      ros::Publisher _pub,_pub6;
       ros::Subscriber _sub_pose;
       ros::Subscriber _sub_ip_error;
       ros::Timer _time;

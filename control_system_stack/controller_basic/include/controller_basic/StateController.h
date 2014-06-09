@@ -25,6 +25,7 @@ namespace kraken_controller
       {
         return _thruster_data6;
       }
+      virtual void getState(kraken_msgs::krakenPose &state);
       virtual ~ StateController();
     private:
     protected:

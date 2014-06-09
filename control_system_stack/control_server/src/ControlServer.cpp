@@ -7,6 +7,7 @@ namespace kraken_controller
     ros::NodeHandle n;
     _time = n.createTimer(ros::Duration(1.0/freq),&ControlServer::timeCallBack,this);
     _pub = n.advertise<kraken_msgs::thrusterData4Thruster>("/kraken/thrusterData4Thruster",2);
+    _pub6 = n.advertise<kraken_msgs::thrusterData6Thruster>("/kraken/thrusterData6Thruster",2);
     _sub_pose = n.subscribe<kraken_msgs::krakenPose>("/kraken/pose_estimated",2,&ControlServer::poseFeedBack,this);
     _sub_ip_error  = n.subscribe<kraken_msgs::ipControllererror>("/kraken/ip_error_data",2,&ControlServer::ipErrorFeedBack,this);
     _do_control = true;
@@ -23,7 +24,7 @@ namespace kraken_controller
       {
         _controller.doControlIteration(_feedBack);
         _controller.updateState();
-        _pub.publish(_controller.getThruster4Value());
+        _pub6.publish(_controller.getThruster6Value());
       }
   }
   
@@ -98,9 +99,9 @@ namespace kraken_controller
   {
     _do_control = false;
     kraken_msgs::krakenPose _pose;
+    _controller.getState(_pose);
     _pose.data[kraken_core::_px] = msg->x;
     _pose.data[kraken_core::_py] = msg->y;
-
     _pose.data[kraken_core::_pz] = msg->depth;
     _controller.setSetPoint(_pose);
     _controller.moveTest();
@@ -128,11 +129,12 @@ namespace kraken_controller
 
         _controller.doControlIteration(_feedBack);
         _controller.updateState();
-        _pub.publish(_controller.getThruster4Value());
+        _pub6.publish(_controller.getThruster6Value());
         ros::spinOnce();
         //std::cerr<<"looping"<<std::endl;
         looprate.sleep();
     }
+    _controller.pause();
     _do_control = true;
   }
   
@@ -140,7 +142,8 @@ namespace kraken_controller
   {
     _do_control = false;
     kraken_msgs::krakenPose _pose;
-    _pose.data[kraken_core::_pz] = msg->d;
+    _controller.getState(_pose);
+    //_pose.data[kraken_core::_pz] = msg->d;
     _pose.data[kraken_core::_roll] = msg->r;
     _pose.data[kraken_core::_pitch] = msg->p;
     _pose.data[kraken_core::_yaw] = msg->y;
@@ -169,10 +172,11 @@ namespace kraken_controller
 
         _controller.doControlIteration(_feedBack);
         _controller.updateState();
-        _pub.publish(_controller.getThruster4Value());
+        _pub6.publish(_controller.getThruster6Value());
          ros::spinOnce();
          looprate.sleep();
     }
+    _controller.pause();
     _do_control = true;
   }
   

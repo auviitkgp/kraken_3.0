@@ -4,6 +4,11 @@ namespace kraken_controller
 {
   AuvController::AuvController():StateController()
   {
+      for(int i=0;i<21;i++)
+      {
+          _setPoint[i]=0;
+          _error[i]=0;
+      }
   }
   
   AuvController::~AuvController()
@@ -75,7 +80,7 @@ namespace kraken_controller
   {
     _feedback = feedback;
 
-    float error[kraken_core::_yaw +1 ];
+    /*float error[kraken_core::_yaw +1 ];
     int multiplier[6] = {1,1,1,1,1,1};
 
     //new part
@@ -93,44 +98,73 @@ namespace kraken_controller
 
     error[kraken_core::_roll] = _setPoint[kraken_core::_roll] - feedback.data[kraken_core::_roll];
     error[kraken_core::_pitch] = _setPoint[kraken_core::_pitch] - feedback.data[kraken_core::_pitch];
-    error[kraken_core::_yaw] = _setPoint[kraken_core::_yaw] - feedback.data[kraken_core::_yaw];
+    error[kraken_core::_yaw] = _setPoint[kraken_core::_yaw] - feedback.data[kraken_core::_yaw];*/
     //end of new part
 
     for(int row = 0;row < 6; row++)
     {
-        _thruster_data6.data[row] =  _offset[row] * multiplier[row];
+        _thruster_data6.data[row] =  _offset[row];// * multiplier[row];
 
         for(int col = 0; col<21; col++)
         {
 
             _thruster_data6.data[row] +=  _gain[row][col] * _error[col];
+
         }
     }
-
-    for(int row = 0;row < 4; row++)
-    {
-        _thruster_data4.data[row] =  _thruster_data6.data[row];
-
-    }
+    _thruster_data4.data[0] =  _thruster_data6.data[0];
+    _thruster_data4.data[1] =  _thruster_data6.data[1];
+    _thruster_data4.data[2] =  _thruster_data6.data[4];
+    _thruster_data4.data[3] =  _thruster_data6.data[5];
   }
   
   void AuvController::updateState()
   {
-      _error[0] = _setPoint[0];// - _feedback.data[0];
-      _error[1] = _setPoint[1];// - _feedback.data[1];
-      _error[2] = _setPoint[2];// - _feedback.data[2];
+      float _cos_rpy[3];
+      float _sin_rpy[3];
 
-      _error[kraken_core::_px+3] = _setPoint[kraken_core::_px+3] - _feedback.data[kraken_core::_px];
-      _error[kraken_core::_py+3] = _setPoint[kraken_core::_py+3] - _feedback.data[kraken_core::_py];
-      _error[kraken_core::_pz+3] = _setPoint[kraken_core::_pz+3] - _feedback.data[kraken_core::_pz];
 
-      _error[kraken_core::_vx+3] = _setPoint[kraken_core::_vx+3] - _feedback.data[kraken_core::_vx];
-      _error[kraken_core::_vy+3] = _setPoint[kraken_core::_vy+3] - _feedback.data[kraken_core::_vy];
-      _error[kraken_core::_vz+3] = _setPoint[kraken_core::_vz+3] - _feedback.data[kraken_core::_vz];
+      _cos_rpy[0]   = cos(_feedback.data[kraken_core::_roll]);
+      _sin_rpy[0] = sin(_feedback.data[kraken_core::_roll]);
 
-      _error[kraken_core::_ax+3] = _setPoint[kraken_core::_ax+3] - _feedback.data[kraken_core::_ax];
-      _error[kraken_core::_ay+3] = _setPoint[kraken_core::_ay+3] - _feedback.data[kraken_core::_ay];
-      _error[kraken_core::_az+3] = _setPoint[kraken_core::_az+3] - _feedback.data[kraken_core::_az];
+      _cos_rpy[1]   = cos(_feedback.data[kraken_core::_pitch]);
+      _sin_rpy[1] = sin(_feedback.data[kraken_core::_pitch]);
+
+      _cos_rpy[2]   = cos(_feedback.data[kraken_core::_yaw]);
+      _sin_rpy[2] = sin(_feedback.data[kraken_core::_yaw]);
+
+
+      //////////////////////////////////////////////////////////////
+      float _body_to_world_matrix[3][3];
+      _body_to_world_matrix[0][0]   = _cos_rpy[2]*_cos_rpy[1];
+      _body_to_world_matrix[1][0]   = _cos_rpy[2]*_sin_rpy[1]*_sin_rpy[1]-_sin_rpy[2]*_cos_rpy[0];
+      _body_to_world_matrix[2][0]   = _cos_rpy[2]*_sin_rpy[1]*_cos_rpy[0]+_sin_rpy[2]*_sin_rpy[0];
+      _body_to_world_matrix[0][1]   = _sin_rpy[2]*_cos_rpy[1];
+      _body_to_world_matrix[1][1]   = _sin_rpy[0]*_sin_rpy[1]*_sin_rpy[2]+_cos_rpy[2]*_cos_rpy[0];
+      _body_to_world_matrix[2][1]   = _cos_rpy[0]*_sin_rpy[1]*_sin_rpy[2]-_cos_rpy[2]*_sin_rpy[0];
+      _body_to_world_matrix[0][2]   = -_sin_rpy[1];
+      _body_to_world_matrix[1][2]   = _sin_rpy[0]*_cos_rpy[1];
+      _body_to_world_matrix[2][2]   = _cos_rpy[0]*_cos_rpy[1];
+      float _error1[21];
+      _error1[0] = _setPoint[0];// - _feedback.data[0];
+      _error1[1] = _setPoint[1];// - _feedback.data[1];
+      _error1[2] = _setPoint[2];// - _feedback.data[2];
+
+      _error1[kraken_core::_px+3] = _setPoint[kraken_core::_px+3] - _feedback.data[kraken_core::_px];
+      _error1[kraken_core::_py+3] = _setPoint[kraken_core::_py+3] - _feedback.data[kraken_core::_py];
+      _error1[kraken_core::_pz+3] = _setPoint[kraken_core::_pz+3] - _feedback.data[kraken_core::_pz];
+
+      _error1[kraken_core::_vx+3] = _setPoint[kraken_core::_vx+3] - _feedback.data[kraken_core::_vx];
+      _error1[kraken_core::_vy+3] = _setPoint[kraken_core::_vy+3] - _feedback.data[kraken_core::_vy];
+      _error1[kraken_core::_vz+3] = _setPoint[kraken_core::_vz+3] - _feedback.data[kraken_core::_vz];
+
+      _error1[kraken_core::_ax+3] = _setPoint[kraken_core::_ax+3] - _feedback.data[kraken_core::_ax];
+      _error1[kraken_core::_ay+3] = _setPoint[kraken_core::_ay+3] - _feedback.data[kraken_core::_ay];
+      _error1[kraken_core::_az+3] = _setPoint[kraken_core::_az+3] - _feedback.data[kraken_core::_az];
+
+      multiply(_body_to_world_matrix,&_error1[kraken_core::_px+3],&_error[kraken_core::_px+3]);
+      multiply(_body_to_world_matrix,&_error1[kraken_core::_vx+3],&_error[kraken_core::_vx+3]);
+      multiply(_body_to_world_matrix,&_error1[kraken_core::_ax+3],&_error[kraken_core::_ax+3]);
 
 
       _error[kraken_core::_roll+3] = _setPoint[kraken_core::_roll+3];// - _feedback.data[kraken_core::_roll];
@@ -181,27 +215,62 @@ namespace kraken_controller
       curState[kraken_core::_yaw] = msg.data[kraken_core::_yaw];
 
 
-      error[kraken_core::_px] = fabs(curState[kraken_core::_px] - _setPoint[kraken_core::_px]);
-      error[kraken_core::_py] = fabs(curState[kraken_core::_py] - _setPoint[kraken_core::_py]);
-      error[kraken_core::_pz] = fabs(curState[kraken_core::_pz] - _setPoint[kraken_core::_pz]);
-      error[kraken_core::_roll] = fabs(curState[kraken_core::_roll] - _setPoint[kraken_core::_roll]);
-      error[kraken_core::_pitch] = fabs(curState[kraken_core::_pitch] - _setPoint[kraken_core::_pitch]);
-      error[kraken_core::_yaw] = fabs(curState[kraken_core::_yaw] - _setPoint[kraken_core::_yaw]);
+      error[kraken_core::_px] = fabs(curState[kraken_core::_px] - _setPoint[kraken_core::_px+3]);
+      error[kraken_core::_py] = fabs(curState[kraken_core::_py] - _setPoint[kraken_core::_py+3]);
+      error[kraken_core::_pz] = fabs(curState[kraken_core::_pz] - _setPoint[kraken_core::_pz+3]);
+      error[kraken_core::_roll] = fabs(curState[kraken_core::_roll] - _setPoint[kraken_core::_roll+6]);
+      error[kraken_core::_pitch] = fabs(curState[kraken_core::_pitch] - _setPoint[kraken_core::_pitch+6]);
+      error[kraken_core::_yaw] = fabs(curState[kraken_core::_yaw] - _setPoint[kraken_core::_yaw+6]);
 
-      result =((error[kraken_core::_px] < thresh[kraken_core::_px ]) & (error[kraken_core::_py] < thresh[kraken_core::_py]) & (error[kraken_core::_pz] < thresh[kraken_core::_pz]) & (error[kraken_core::_roll] < thresh[kraken_core::_roll ]) & (error[kraken_core::_pitch] < thresh[kraken_core::_pitch]) & (error[kraken_core::_yaw] < thresh[kraken_core::_yaw ]));
+      result =((error[kraken_core::_px] < thresh[kraken_core::_px ]) && (error[kraken_core::_py] < thresh[kraken_core::_py]) && (error[kraken_core::_pz] < thresh[kraken_core::_pz]) && (error[kraken_core::_roll] < thresh[kraken_core::_roll ]) && (error[kraken_core::_pitch] < thresh[kraken_core::_pitch]) && (error[kraken_core::_yaw] < thresh[kraken_core::_yaw ]));
 
-      std::cout<<"error 1 : "<< (error[kraken_core::_px]<thresh[0]) <<std::endl;
-      std::cout<<"error 2 : "<< (error[kraken_core::_py]< thresh[1]) <<std::endl;
-      std::cout<<"error 3 : "<< (error[kraken_core::_pz]<thresh[2]) <<std::endl;
-      std::cout<<"error 4 : "<< (error[kraken_core::_roll]<thresh[3]) <<std::endl;
-      std::cout<<"error 5 : "<< (error[kraken_core::_pitch]< thresh[4]) <<std::endl;
-      std::cout<<"error 6 : "<< (error[kraken_core::_yaw]< thresh[5]) <<std::endl;
+      /*std::cout<<"error 1 : "<< (error[kraken_core::_px])/fabs(error[kraken_core::_px]) <<std::endl;
+      std::cout<<"error 2 : "<< (error[kraken_core::_py])/fabs(error[kraken_core::_py]) <<std::endl;
+      std::cout<<"error 3 : "<< (error[kraken_core::_pz])/fabs(error[kraken_core::_pz]) <<std::endl;
+      std::cout<<"error 4 : "<< (error[kraken_core::_roll])/fabs(error[kraken_core::_yaw]) <<std::endl;
+      std::cout<<"error 5 : "<< (error[kraken_core::_pitch])/fabs(error[kraken_core::_pitch]) <<std::endl;
+      std::cout<<"error 6 : "<< (error[kraken_core::_yaw])/fabs(error[kraken_core::_yaw]) <<std::endl;*/
 
-      std::cout<<" "<<curState[kraken_core::_roll]<<" : "<<_setPoint[kraken_core::_px]<<" : "<<error[kraken_core::_px]<<" : "<< kraken_core::_roll <<std::endl;
+      std::cout<<" "<<curState[kraken_core::_yaw]<<" : "<<_setPoint[kraken_core::_yaw+6]<<" : "<<error[kraken_core::_yaw] <<std::endl;
       std::cout<<"result : "<<result<<std::endl;
+      std::cout<<"kd : "<<_gain[0][5]<<std::endl;
       return result;
   }
 
+  void AuvController::getState(kraken_msgs::krakenPose &state)
+  {
+      state.data[kraken_core::_px] = _setPoint[kraken_core::_px+3];
+      state.data[kraken_core::_py] = _setPoint[kraken_core::_py+3];
+      state.data[kraken_core::_pz] = _setPoint[kraken_core::_pz+3];
 
+      state.data[kraken_core::_vx] = _setPoint[kraken_core::_vx+3];
+      state.data[kraken_core::_vy] = _setPoint[kraken_core::_vy+3];
+      state.data[kraken_core::_vz] = _setPoint[kraken_core::_vz+3];
+
+      state.data[kraken_core::_ax] = _setPoint[kraken_core::_ax+3];
+      state.data[kraken_core::_ay] =  _setPoint[kraken_core::_ay+3];
+      state.data[kraken_core::_az] = _setPoint[kraken_core::_az+3];
+
+      state.data[kraken_core::_roll] = _setPoint[kraken_core::_roll+6];
+      state.data[kraken_core::_pitch] = _setPoint[kraken_core::_pitch+6];
+      state.data[kraken_core::_yaw] = _setPoint[kraken_core::_yaw+6];
+
+      state.data[kraken_core::_w_roll] = _setPoint[kraken_core::_w_roll+6];
+      state.data[kraken_core::_w_pitch] = _setPoint[kraken_core::_w_pitch+6];
+      state.data[kraken_core::_w_yaw] = _setPoint[kraken_core::_w_yaw+6];
+  }
+  void AuvController::multiply(float matrix[][3], float* src_vec, float* dst_vec)
+  {
+      for(int i=0; i<3; i++)
+      {
+          float val=0;
+          for(int j =0; j<3; j++)
+          {
+              val+=matrix[i][j]*src_vec[j];
+          }
+          dst_vec[i] = val;
+      }
+  }
   
 }
+

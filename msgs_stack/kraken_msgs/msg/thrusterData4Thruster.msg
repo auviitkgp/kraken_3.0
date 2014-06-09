@@ -1,2 +1,2 @@
 Header header
-int32[4] data
+float32[4] data
