@@ -1,9 +1,8 @@
 #!/bin/bash
-
-cd ~/hydro_workspace/sandbox
-
-#Launcing simulator GUI. Depth will not work without it
-rosrun kraken_isualisationkraken_launcher &
+WS=$ROS_WORKSPACE 
+source /opt/ros/hydro/setup.bash
+export ROS_WORKSPACE=$WS
+export ROS_PACKAGE_PATH=$ROS_WORKSPACE:$ROS_PACKAGE_PATH
 
 #Starting Pose Server.  Returns estimated position of vehicle
 rosrun pose_server server &
@@ -20,6 +19,7 @@ rosrun thruster_force_converter converter 3 &
 
 #Starting Ccontrol Server. Arguments are frequency and files from which
 #parameters are read
+roscd control_server
 rosrun control_server controlServer 10 parameters/MoveBack.cp parameters/MoveForward.cp parameters/Pause.cp &
 
 #Starting control server. Argument is height
