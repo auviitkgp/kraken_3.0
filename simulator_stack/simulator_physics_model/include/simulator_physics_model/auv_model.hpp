@@ -43,6 +43,8 @@ class AuvModelSimple6DoF
         static const float mass[6][6];
         /***** Damping matrix ****/
         static const float D[6][6];
+        /************************************/
+        static const double pi;
         /* initialize the vehicle parameters*/
         void initAuv();
         void updateCurrentPosition();

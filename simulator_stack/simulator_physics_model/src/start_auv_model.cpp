@@ -10,7 +10,8 @@
 #include "kraken_msgs/thrusterData6Thruster.h"
 #include <kraken_msgs/forceData4Thruster.h>
 #include <kraken_msgs/forceData6Thruster.h>
-
+#include <kraken_msgs/imuData.h>
+#include <tracks_imu/Tracks.h>
 
 using namespace ros;
 using namespace kraken_simulator;
@@ -39,7 +40,10 @@ public:
 
     void operator()(const TimerEvent& t)
     {
+        auv.updateAuv (storeforce);
         geometry_msgs::Pose pos_msg;
+        kraken_msgs::imuData imu;
+        /*************************************/
         pos_msg.position.x=auv._current_position_to_world[0];
         pos_msg.position.y=auv._current_position_to_world[1];
         pos_msg.position.z=auv._current_position_to_world[2];
@@ -51,47 +55,34 @@ public:
         pos_msg.orientation.y=quat.getY ();
         pos_msg.orientation.z=quat.getZ ();
         pos_msg.orientation.w=quat.getW ();
-        //ROS_INFO("%f %f %f ",pos_msg.position.x,pos_msg.position.y,pos_msg.position.z);
-        pose_pub.publish(pos_msg);
-        /*if(count ==100)
-        {
-            storeforce[2]=0;
-            storeforce[3]=0;
-            storeforce[4]=0;
-            storeforce[5]=0;
-        }
-        else
-        {
-            count++;
-        }
-        */
+        /*************************************/
         geometry_msgs::TwistStamped twist_msg;
         twist_msg.twist.linear.x=auv._current_velocity_state_to_body[0];
         twist_msg.twist.linear.y=auv._current_velocity_state_to_body[1];
         twist_msg.twist.linear.z=auv._current_velocity_state_to_body[2];
-        twist_msg.twist.angular.x=auv._current_velocity_state_to_body[3];
-        twist_msg.twist.angular.y=auv._current_velocity_state_to_body[4];
-        twist_msg.twist.angular.z=auv._current_velocity_state_to_body[5];
+        imu.data[kraken_sensors::gyroX] = twist_msg.twist.angular.x=auv._current_velocity_state_to_body[3];
+        imu.data[kraken_sensors::gyroY]= twist_msg.twist.angular.y=auv._current_velocity_state_to_body[4];
+        imu.data[kraken_sensors::gyroZ]  = twist_msg.twist.angular.z=auv._current_velocity_state_to_body[5];
         twist_msg.header.frame_id='1';
-        //twist_pub.publish(twist_msg);
-
+        /*************************************/
         nav_msgs::Odometry odo_msg;
         odo_msg.pose.pose=pos_msg;
         odo_msg.twist.twist=twist_msg.twist;
-        if(isLineNeeded)
-            odo_pub.publish(odo_msg);
-
+        /*************************************/
         sensor_msgs::Imu imu_msg;
         imu_msg.angular_velocity=twist_msg.twist.angular;
-        imu_msg.linear_acceleration.x=auv._current_accelaration_to_body[0];
-        imu_msg.linear_acceleration.y=auv._current_accelaration_to_body[1];
-        imu_msg.linear_acceleration.z=auv._current_accelaration_to_body[2];
+        imu.data[kraken_sensors::accelX] = imu_msg.linear_acceleration.x=auv._current_accelaration_to_body[0];
+        imu.data[kraken_sensors::accelY] = imu_msg.linear_acceleration.y=auv._current_accelaration_to_body[1];
+        imu.data[kraken_sensors::accelZ] = imu_msg.linear_acceleration.z=auv._current_accelaration_to_body[2];
         imu_msg.orientation=pos_msg.orientation;
-        imu_pub.publish(imu_msg);
-
-
-
-        auv.updateAuv (storeforce);
+        //imu_pub.publish(imu_msg);
+        imu.data[kraken_sensors::roll] = auv._current_position_to_body[3];
+        imu.data[kraken_sensors::pitch] = auv._current_position_to_body[4];
+        imu.data[kraken_sensors::yaw] = auv._current_position_to_body[5];
+        imu_pub.publish(imu);
+        pose_pub.publish(pos_msg);
+        if(isLineNeeded)
+            odo_pub.publish(odo_msg);
     }
 };
 
@@ -132,12 +123,12 @@ int main(int argc,char **argv)
             storeforce[i-1]=atof(argv[i]);
     NodeHandle n;
 
-    Publisher pose_publisher=n.advertise<geometry_msgs::Pose>("/kraken/pose",100);
-    Publisher twistS_publisher= n.advertise <geometry_msgs::TwistStamped>("/kraken/twist",100);
-    Publisher odometry_pub= n.advertise <nav_msgs::Odometry>("/kraken/dataNavigator",100);
-    Publisher imu_pub=n.advertise<sensor_msgs::Imu>("/kraken/imuData",100);
-    Subscriber thrust4sub=n.subscribe<kraken_msgs::forceData4Thruster>("/kraken/forceData4Thruster",100,fourThrustCb);
-    Subscriber thrust6sub=n.subscribe<kraken_msgs::forceData6Thruster>("/kraken/forceData6Thruster",100,sixThrustCb);
+    Publisher pose_publisher=n.advertise<geometry_msgs::Pose>("/kraken/pose",1);
+    Publisher twistS_publisher= n.advertise <geometry_msgs::TwistStamped>("/kraken/twist",1);
+    Publisher odometry_pub= n.advertise <nav_msgs::Odometry>("/kraken/dataNavigator",1);
+    Publisher imu_pub=n.advertise<kraken_msgs::imuData>("/kraken/imuData",1);
+    Subscriber thrust4sub=n.subscribe<kraken_msgs::forceData4Thruster>("/kraken/forceData4Thruster",1,fourThrustCb);
+    Subscriber thrust6sub=n.subscribe<kraken_msgs::forceData6Thruster>("/kraken/forceData6Thruster",1,sixThrustCb);
 
     AuvModelSimple6DoF auv(.05);
 
