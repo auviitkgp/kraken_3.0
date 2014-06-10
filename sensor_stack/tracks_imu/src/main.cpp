@@ -4,7 +4,7 @@
 int main(int argc,char** argv)
 {
   ros::init(argc,argv,"Tracks_imu_node");
-  kraken_sensors::Tracks _imu("/dev/ttyUSB5",100);
+  kraken_sensors::Tracks _imu("/dev/ttyUSB0",50);
   std::string info = _imu.getInfo();
   for(int j = 0; j< info.length(); j++)
       printf(" %x",(unsigned char)info[j]);

@@ -23,21 +23,25 @@ namespace kraken_sensors
       void setMag();
       void setGyro();
       void setTemp();
-      void getRPY();
-      void getAccel();
-      void getMag();
-      void getGyro();
-      void getTemp();
+      bool getRPY();
+      bool getAccel();
+      bool getMag();
+      bool getGyro();
+      bool getTemp();
       unsigned short getCRC16(const std::string &data);
       void getData(const int dataLength);
       ///float dataToFloat32(const std::string &data);
-      void getValue(const std::string &data, const int length);
+      bool getValue(const std::string &data, const int length);
       void setAllMode();
-      void getAllData();
+      void setContinousMode();
+      bool getAllData();
       ros::Publisher _publisher;
       ros::Timer _timer;
       int sensor_used;
       int _delay;
+      int count;
+      kraken_msgs::imuData _offset;
+      static const double pi;
     protected:
     public:
       Tracks(const std::string &name,int freq=20, int rate=38400);

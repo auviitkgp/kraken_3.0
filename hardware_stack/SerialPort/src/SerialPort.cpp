@@ -205,9 +205,11 @@ namespace kraken_hardware
       port_setting.c_cflag &= ~CSTOPB;
       port_setting.c_cflag &= ~CSIZE;
       port_setting.c_cflag |= CS8;
+      port_setting.c_cflag &= ~(CRTSCTS);
       port_setting.c_cflag |= _port_flags;
       port_setting.c_iflag |= (IXON | IXOFF | IXANY);
-      port_setting.c_cflag &= ~CRTSCTS;
+      port_setting.c_iflag &= ~(ICRNL);
+      //port_setting.c_oflag &= ~(ONLCR | OCRNL | ONOCR  | ONLRET);
       port_setting.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG);
       port_setting.c_cc[VTIME]=10;
       tcsetattr(_file_descriptor,TCSANOW, &port_setting);
