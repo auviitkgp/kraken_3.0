@@ -27,7 +27,7 @@ namespace kraken_controller
   class ControlServer
   {
     public:
-      ControlServer(float freq=10);
+      ControlServer(float freq=10.0);
       void loadParams(const std::vector<std::string> &filenames);
       void timeCallBack(const ros::TimerEvent&);
       void setServers(actionlib::SimpleActionServer<kraken_msgs::advancedControllerAction>*,actionlib::SimpleActionServer<kraken_msgs::controllerAction>*);
