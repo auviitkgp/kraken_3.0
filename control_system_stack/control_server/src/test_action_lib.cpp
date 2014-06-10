@@ -57,7 +57,7 @@ int main(int argc,char** argv)
         ROS_INFO("Goal sent");
         std::cerr <<"r:"<<goal1.p<<"\tp:"<<goal1.r<<"\ty:"<<goal1.y<<std::endl;
         //wait for the action to return
-        bool finished_before_timeout = ac1.waitForResult(ros::Duration(30.0));
+        bool finished_before_timeout = ac1.waitForResult(ros::Duration(20.0));
 
         if (finished_before_timeout)
         {

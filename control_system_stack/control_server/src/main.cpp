@@ -8,7 +8,8 @@ int main(int argc,char** argv)
   ros::NodeHandle n;
   if(argc>2)
   {
-      int freq = atoi(argv[1]) ;
+      std::cerr<<atoi(argv[1])<<std::endl;
+      float freq = atof(argv[1]) ;
       kraken_controller::ControlServer _server(freq);
       std::vector<std::string> _files;
       for(int i=2;i<argc;i++)

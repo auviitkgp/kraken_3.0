@@ -5,10 +5,10 @@ namespace kraken_simulator
   ForceConverter::ForceConverter(float gain):_gain(gain)
   {
     ros::NodeHandle n;
-    _thrus4_pub = n.advertise<kraken_msgs::forceData4Thruster>("/kraken/forceData4Thruster",2);
-    _thrus6_pub = n.advertise<kraken_msgs::forceData6Thruster>("/kraken/forceData6Thruster",2);
-    _thrus4_sub = n.subscribe<kraken_msgs::thrusterData4Thruster>("/kraken/thrusterData4Thruster",2,&ForceConverter::thrusterData4ThrusterCallback,this);
-    _thrus6_sub = n.subscribe<kraken_msgs::thrusterData6Thruster>("/kraken/thrusterData6Thruster",2,&ForceConverter::thrusterData6ThrusterCallback,this);
+    _thrus4_pub = n.advertise<kraken_msgs::forceData4Thruster>("/kraken/forceData4Thruster",1);
+    _thrus6_pub = n.advertise<kraken_msgs::forceData6Thruster>("/kraken/forceData6Thruster",1);
+    _thrus4_sub = n.subscribe<kraken_msgs::thrusterData4Thruster>("/kraken/thrusterData4Thruster",1,&ForceConverter::thrusterData4ThrusterCallback,this);
+    _thrus6_sub = n.subscribe<kraken_msgs::thrusterData6Thruster>("/kraken/thrusterData6Thruster",1,&ForceConverter::thrusterData6ThrusterCallback,this);
   }
   
   void ForceConverter::thrusterData4ThrusterCallback(const kraken_msgs::thrusterData4Thruster::ConstPtr &msg)

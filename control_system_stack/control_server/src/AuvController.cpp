@@ -78,7 +78,10 @@ namespace kraken_controller
   
   void AuvController::doControlIteration(const kraken_msgs::krakenPose feedback)
   {
-    _feedback = feedback;
+    for(int i=0;i<kraken_core::countState;i++)
+    {
+      _feedback.data[i] = feedback.data[i];
+    }
 
     /*float error[kraken_core::_yaw +1 ];
     int multiplier[6] = {1,1,1,1,1,1};

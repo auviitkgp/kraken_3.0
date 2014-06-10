@@ -12,6 +12,10 @@ namespace kraken_controller
     _sub_ip_error  = n.subscribe<kraken_msgs::ipControllererror>("/kraken/ip_error_data",2,&ControlServer::ipErrorFeedBack,this);
     _do_control = true;
     _ip_controller = false;
+    for(int i=0;i<kraken_core::countState;i++)
+    {
+      _feedBack.data[i] = 0;
+    }
   }
   ControlServer::~ControlServer()
   {
@@ -20,6 +24,7 @@ namespace kraken_controller
   
   void ControlServer::timeCallBack(const ros::TimerEvent &)
   {
+    //std::cerr<<"calling"<<std::endl;
     if(_do_control)
       {
         _controller.doControlIteration(_feedBack);
@@ -165,9 +170,9 @@ namespace kraken_controller
         if (feedback.running_time)
         {
             result.time_taken = 30;
-            _server2->setSucceeded(result);
-            _controller.pause();
-            break;
+            //_server2->setSucceeded(result);
+            //_controller.pause();
+            //break;
         }
 
         _controller.doControlIteration(_feedBack);
