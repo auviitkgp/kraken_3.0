@@ -103,6 +103,7 @@ namespace kraken_controller
   void ControlServer::executePoseChange(const kraken_msgs::advancedControllerGoalConstPtr &msg)
   {
     _do_control = false;
+
     kraken_msgs::krakenPose _pose;
     _controller.getState(_pose);
     _pose.data[kraken_core::_px] = msg->x;
@@ -133,7 +134,13 @@ namespace kraken_controller
         }
 
         _controller.doControlIteration(_feedBack);
-        _controller.updateState();
+
+        if(_ip_controller)
+            _controller.updateIPState();
+        else
+            _controller.updateState();
+
+
         _pub6.publish(_controller.getThruster6Value());
         ros::spinOnce();
         //std::cerr<<"looping"<<std::endl;
@@ -176,7 +183,13 @@ namespace kraken_controller
         }
 
         _controller.doControlIteration(_feedBack);
-        _controller.updateState();
+
+        if(_ip_controller)
+            _controller.updateIPState();
+        else
+            _controller.updateState();
+
+
         _pub6.publish(_controller.getThruster6Value());
          ros::spinOnce();
          looprate.sleep();

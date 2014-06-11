@@ -78,6 +78,7 @@ namespace kraken_controller
   
   void AuvController::doControlIteration(const kraken_msgs::krakenPose feedback)
   {
+
     for(int i=0;i<kraken_core::countState;i++)
     {
       _feedback.data[i] = feedback.data[i];
@@ -121,6 +122,39 @@ namespace kraken_controller
     _thruster_data4.data[3] =  _thruster_data6.data[5];
   }
   
+
+  void AuvController::updateIPState()
+  {
+
+      _error[0] = _setPoint[0];// - _feedback.data[0];
+      _error[1] = _setPoint[1];// - _feedback.data[1];
+      _error[2] = _setPoint[2];// - _feedback.data[2];
+
+      _error[kraken_core::_px+3] = _feedback.data[kraken_core::_px];
+      _error[kraken_core::_py+3] = _feedback.data[kraken_core::_py];
+      _error[kraken_core::_pz+3] = _feedback.data[kraken_core::_pz];
+
+      _error[kraken_core::_vx+3] = _feedback.data[kraken_core::_vx];
+      _error[kraken_core::_vy+3] = _feedback.data[kraken_core::_vy];
+      _error[kraken_core::_vz+3] = _feedback.data[kraken_core::_vz];
+
+      _error[kraken_core::_ax+3] = _feedback.data[kraken_core::_ax];
+      _error[kraken_core::_ay+3] = _feedback.data[kraken_core::_ay];
+      _error[kraken_core::_az+3] = _feedback.data[kraken_core::_az];
+
+      _error[kraken_core::_roll+3] = _setPoint[kraken_core::_roll+3];// - _feedback.data[kraken_core::_roll];
+      _error[kraken_core::_pitch+3] = _setPoint[kraken_core::_pitch+3];// - _feedback.data[kraken_core::_pitch];
+      _error[kraken_core::_yaw+3] = _setPoint[kraken_core::_yaw+3];// - _feedback.data[kraken_core::_yaw];
+
+      _error[kraken_core::_roll+6] =  _feedback.data[kraken_core::_roll];
+      _error[kraken_core::_pitch+6] = _feedback.data[kraken_core::_pitch];
+      _error[kraken_core::_yaw+6] = _feedback.data[kraken_core::_yaw];
+
+      _error[kraken_core::_w_roll+6] =  _feedback.data[kraken_core::_w_roll];
+      _error[kraken_core::_w_pitch+6] = _feedback.data[kraken_core::_w_pitch];
+      _error[kraken_core::_w_yaw+6] =   _feedback.data[kraken_core::_w_yaw];
+  }
+
   void AuvController::updateState()
   {
       float _cos_rpy[3];
@@ -148,6 +182,8 @@ namespace kraken_controller
       _body_to_world_matrix[0][2]   = -_sin_rpy[1];
       _body_to_world_matrix[1][2]   = _sin_rpy[0]*_cos_rpy[1];
       _body_to_world_matrix[2][2]   = _cos_rpy[0]*_cos_rpy[1];
+
+
       float _error1[21];
       _error1[0] = _setPoint[0];// - _feedback.data[0];
       _error1[1] = _setPoint[1];// - _feedback.data[1];
@@ -262,6 +298,58 @@ namespace kraken_controller
       state.data[kraken_core::_w_pitch] = _setPoint[kraken_core::_w_pitch+6];
       state.data[kraken_core::_w_yaw] = _setPoint[kraken_core::_w_yaw+6];
   }
+
+  void AuvController::local2gloabal(kraken_msgs::krakenPose &local, kraken_msgs::krakenPose &global)
+  {
+      float _cos_rpy[3];
+      float _sin_rpy[3];
+
+
+      _cos_rpy[0]   = cos(local.data[kraken_core::_roll]);
+      _sin_rpy[0]   = sin(local.data[kraken_core::_roll]);
+
+      _cos_rpy[1]   = cos(local.data[kraken_core::_pitch]);
+      _sin_rpy[1]   = sin(local.data[kraken_core::_pitch]);
+
+      _cos_rpy[2]   = cos(local.data[kraken_core::_yaw]);
+      _sin_rpy[2]   = sin(local.data[kraken_core::_yaw]);
+
+
+      //////////////////////////////////////////////////////////////
+      float _body_to_world_matrix[3][3];
+      _body_to_world_matrix[0][0]   = _cos_rpy[2]*_cos_rpy[1];
+      _body_to_world_matrix[1][0]   = _cos_rpy[2]*_sin_rpy[1]*_sin_rpy[1]-_sin_rpy[2]*_cos_rpy[0];
+      _body_to_world_matrix[2][0]   = _cos_rpy[2]*_sin_rpy[1]*_cos_rpy[0]+_sin_rpy[2]*_sin_rpy[0];
+      _body_to_world_matrix[0][1]   = _sin_rpy[2]*_cos_rpy[1];
+      _body_to_world_matrix[1][1]   = _sin_rpy[0]*_sin_rpy[1]*_sin_rpy[2]+_cos_rpy[2]*_cos_rpy[0];
+      _body_to_world_matrix[2][1]   = _cos_rpy[0]*_sin_rpy[1]*_sin_rpy[2]-_cos_rpy[2]*_sin_rpy[0];
+      _body_to_world_matrix[0][2]   = -_sin_rpy[1];
+      _body_to_world_matrix[1][2]   = _sin_rpy[0]*_cos_rpy[1];
+      _body_to_world_matrix[2][2]   = _cos_rpy[0]*_cos_rpy[1];
+
+
+      float _local[kraken_core::countState];
+      _local[kraken_core::_px] = local.data[kraken_core::_px];// - _feedback.data[0];
+      _local[kraken_core::_px] = local.data[kraken_core::_py];// - _feedback.data[1];
+      _local[kraken_core::_px] = local.data[kraken_core::_pz];// - _feedback.data[2];
+
+      float _global[kraken_core::countState];
+      multiply(_body_to_world_matrix,&_local[kraken_core::_px],&_global[kraken_core::_px]);
+      //multiply(_body_to_world_matrix,&_local[kraken_core::_vx+3],&_error[kraken_core::_vx+3]);
+      //multiply(_body_to_world_matrix,&_local[kraken_core::_ax+3],&_error[kraken_core::_ax+3]);
+
+      global.data[kraken_core::_px] += _global[kraken_core::_px];
+      global.data[kraken_core::_py] += _global[kraken_core::_py];
+      global.data[kraken_core::_pz] += _global[kraken_core::_pz];
+
+      /*
+      global.data[kraken_core::_roll] = local.data[kraken_core::_roll];
+      global.data[kraken_core::_pitch] = local.data[kraken_core::_pitch];
+      global.data[kraken_core::_yaw] = local.data[kraken_core::_yaw];
+      */
+
+  }
+
   void AuvController::multiply(float matrix[][3], float* src_vec, float* dst_vec)
   {
       for(int i=0; i<3; i++)
@@ -274,6 +362,7 @@ namespace kraken_controller
           dst_vec[i] = val;
       }
   }
+
   
 }
 

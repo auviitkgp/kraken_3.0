@@ -16,6 +16,7 @@ namespace kraken_controller
       AuvController();
       virtual ~AuvController();
       void updateState();
+      void updateIPState();
       void doControlIteration(const kraken_msgs::krakenPose feedback);
       void setSetPoint(const kraken_msgs::krakenPose &setpoint);
       void getState(kraken_msgs::krakenPose &state);
@@ -23,6 +24,7 @@ namespace kraken_controller
       void moveBack();
       void pause();
       void moveTest();
+      void local2gloabal(kraken_msgs::krakenPose &local, kraken_msgs::krakenPose &global);
       void loadParams(const std::vector<std::string> &filenames);
       bool checkError(const kraken_msgs::krakenPose &msg);
     private:
