@@ -54,6 +54,7 @@ bool QNode::init()
     _ros_subscriber_kraken_current_pose = n.subscribe<kraken_msgs::krakenPose>(_ros_topic_kraken_current_pose.c_str(),1,&QNode::callBackKrakenCurrentPose,this);
     _ros_subscriber_set_pose = n.subscribe<kraken_msgs::krakenPose>(_ros_topic_kraken_set_pose.c_str(),1,&QNode::callBackKrakenSetPose,this);
     // Add your ros communications here.
+    ROS_INFO("Telemetry Started");
     start();
     return true;
 }

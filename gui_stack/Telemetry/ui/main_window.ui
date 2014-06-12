@@ -119,6 +119,9 @@
              <height>600</height>
             </size>
            </property>
+           <property name="toolTip">
+            <string>Premap</string>
+           </property>
            <property name="text">
             <string/>
            </property>
@@ -158,6 +161,9 @@
               <height>600</height>
              </size>
             </property>
+            <property name="toolTip">
+             <string>Target Depth</string>
+            </property>
             <property name="maxValue">
              <double>5.000000000000000</double>
             </property>
@@ -180,6 +186,9 @@
               <width>50</width>
               <height>600</height>
              </size>
+            </property>
+            <property name="toolTip">
+             <string>Current Depth</string>
             </property>
             <property name="scalePosition">
              <enum>QwtThermo::RightScale</enum>
@@ -228,6 +237,9 @@
                <height>100</height>
               </size>
              </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Current Pitch&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
              <property name="lineWidth">
               <number>4</number>
              </property>
@@ -248,6 +260,9 @@
                <height>100</height>
               </size>
              </property>
+             <property name="toolTip">
+              <string>Target yaw</string>
+             </property>
              <property name="lineWidth">
               <number>4</number>
              </property>
@@ -264,6 +279,9 @@
                <width>100</width>
                <height>100</height>
               </size>
+             </property>
+             <property name="toolTip">
+              <string>Current Yaw</string>
              </property>
              <property name="lineWidth">
               <number>4</number>
@@ -304,6 +322,9 @@
                <width>350</width>
                <height>16777215</height>
               </size>
+             </property>
+             <property name="toolTip">
+              <string>Velocity Plot</string>
              </property>
             </widget>
             <widget class="QwtPlot" name="qwtPlot_2">

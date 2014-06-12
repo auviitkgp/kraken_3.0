@@ -18,6 +18,10 @@
 #include <QMetaType>
 #include <qwt/qwt_dial_needle.h>
 #include <qwt/qwt_compass_rose.h>
+#include <qwt/qwt_plot.h>
+#include <qwt/qwt_plot_curve.h>
+#include <qwt/qwt_scale_engine.h>
+#include <opencv/cv.h>
 
 /*****************************************************************************
 ** Namespace
@@ -65,9 +69,27 @@ private:
 	void updateCurrentDepth(const float val);
 	void updateSetDepth(const float val);
 	void updateCurrentPitch(const float val);
-	void premap();
+	void updateVelocityCurve(const float vx,const float vy,const float vz);
+	void premap(const float x,const float y,const float z);
 	Ui::MainWindowDesign ui;
 	QNode qnode;
+	int _count_velocity;
+	const int  _max_history;
+	// Velocity x
+	QwtPlotCurve* _velocity_x_curve;
+	QwtPointSeriesData _velocity_x_data;
+	QVector<QPointF> _velocity_x_vec;
+	// Velocity y
+	QwtPlotCurve* _velocity_y_curve;
+	QwtPointSeriesData _velocity_y_data;
+	QVector<QPointF> _velocity_y_vec;
+	// Velocity z
+	QwtPlotCurve* _velocity_z_curve;
+	QwtPointSeriesData _velocity_z_data;
+	QVector<QPointF> _velocity_z_vec;
+	// Pre map
+	QImage _premap_image;
+	cv::Rect _pre_rec;
 };
 
 }  // namespace App
