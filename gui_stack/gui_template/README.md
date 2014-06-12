@@ -1,4 +1,9 @@
-kraken_3.0
+gui_template
 ==========
 
-This is repository for new codes of IIT Kharagpur AUV team
+Use this package to create you gui package.
+
+To make your package :
+    1. copy this packare to desired location
+    2. rename gui_template to your package name
+    3. replace gui_template to your package name in every file
