@@ -1,0 +1,29 @@
+<package>
+  <description brief="Telemetry">
+
+     Telemetry
+
+  </description>
+  <author>Vinay Yadav</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/App</url>
+
+
+  <rosdep name="qt4"/>
+
+  <!-- rosbuild1 -->
+  <depend package="qt_build"/>
+  <depend package="roscpp"/>
+  <depend package="kraken_msgs"/>
+  <depend package="premap"/>
+  <depend package="opencv2"/>
+  <depend package="pose_server"/>
+  <depend package="cv_bridge"/>
+  
+  <rosbuild2>
+    <depend package="qt_build"/>
+    <depend package="roscpp"/>
+  </rosbuild2>
+  
+</package>
