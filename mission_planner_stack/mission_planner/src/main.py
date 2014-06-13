@@ -80,7 +80,7 @@ class Interaction(object):
 
         rospy.loginfo("succesfully got all publishers and subsrcibers to mission planner !! ")
     
-    def postitionCallback(self,msg):
+    def positionCallback(self,msg):
         self.pose=msg.data
         self.pose.header=msg.header
 

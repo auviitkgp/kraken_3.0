@@ -26,7 +26,7 @@ class DetectingBuoy(smach.State):
         self.resources=resources
     def execute(self, ud):
         #comment this at last
-        self.resources=Interaction()
+        #self.resources=Interaction()
         #-------------
         
         
@@ -133,7 +133,7 @@ class AligningVehicle(smach.State):
         self.resources=resources
     def execute(self, ud):
         #comment this at last
-        self.resources=Interaction()
+        #self.resources=Interaction()
         #-------------
         
         

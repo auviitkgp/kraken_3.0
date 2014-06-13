@@ -1,18 +1,17 @@
 
-############################CONSTANTS AND SERVICES NAMES##################################3
-from enum import Enum
+############################CONSTANTS AND SERVICES NAMES##################################
 import rospy
 
-ADVANCED_CONTROLLER_SERVER='advanced'
-CONTROLLER_SERVER='CONTROLLER'
-RESET_POSE_SERVICE='POSE_RESET'
+ADVANCED_CONTROLLER_SERVER='/kraken/advance_controller_action'
+CONTROLLER_SERVER='/kraken/controller_action'
+RESET_POSE_SERVICE='/kraken/pos_set'
 ESTIMATED_POSE_TOPIC_NAME='/kraken/pose_estimated'
 MARKER_DETECT_ACTION_SERVER='MARKER_SERVER'
 BUOY_DETECT_ACTION_SERVER='BUOY'
 VALIDATION_GATE_ACTION_SERVER='VALIDATE'
 PREMAP_LOCATION_SERVICE='LOCATION'
-IP_CONTROLLER_PUBLISHING_TOPIC='TOPIC'
-MOVE_ALONG_SERVICE_NAME='MOVE-ALONG'
+IP_CONTROLLER_PUBLISHING_TOPIC='/kraken/ip_error_data'
+MOVE_ALONG_SERVICE_NAME='/kraken/translate_auv'
 class PoseEnum():
     x=0
     y=1

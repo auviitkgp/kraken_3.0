@@ -57,7 +57,7 @@ class MovingVehicle(smach.State):
 		self.resources=resources
 	def execute(self, ud):
 		#comment this at last
-		self.resources=Interaction()
+		#self.resources=Interaction()
 		#-------------
 		
 		goal=advancedControllerGoal()
@@ -89,7 +89,7 @@ class MarkerDetect(smach.State):
 		self.resources=resources
 	def execute(self, ud):
 		#comment this at last
-		self.resources=Interaction()
+		#self.resources=Interaction()
 		#-------------
 		ipClient=SimpleActionClient(header.MARKER_DETECT_ACTION_SERVER, markerAction)
 		goal=markerGoal()
@@ -240,11 +240,14 @@ def main():
 		cm.userdata.y=res.y	
 		cm.userdata.depth=10
 		cm.userdata.time=10
+		cm.userdata.ex=None
+		cm.userdata.ey=None
 		with cm:
 			smach.Concurrence.add('MOVING_STATE',
 								 MovingVehicle(),
 								 remapping={'x':'x','y':'y','depth':'depth','time_out':'time'})
-			smach.Concurrence.add('DETECTING_STATE',MarkerDetect())
+			smach.Concurrence.add('DETECTING_STATE',MarkerDetect(),
+									remapping={'e_x':'ex','e_y':'ey'})
 		
 		outcome=cm.execute()
 		
@@ -258,13 +261,14 @@ def main():
 		smach.StateMachine.add('ALIGINING_VEHICLE',
 								AligningVehicle(),
 								transitions={'aligned':'succeeded','timed_out':'marker_unalligned'}, 
-								remapping#dont forget to do this remapping
+								remapping={'time_out':'time','e_x':'ex','e_y':'ey'}
 								)
 			
 				
 	outcome=sm_nextTaskMarker.execute()
-	
+#	if outcome=='succeeded':
+		
 		
 if __name__=='__main__':
-	rospy.loginfo(PoseEnum.ax);
+	main();
 	
