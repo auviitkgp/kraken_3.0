@@ -24,9 +24,10 @@ int main(int argc,char** argv)
     kraken_msgs::controllerGoal goal1;
     if(atoi(argv[1])==1)
     {
-        goal.x = atof(argv[2]);
-        goal.y = atof(argv[3]);
-        goal.depth = atof(argv[4]);
+        goal.flag = atof(argv[2]);
+        goal.x = atof(argv[3]);
+        goal.y = atof(argv[4]);
+        goal.depth = atof(argv[5]);
 
         ac.sendGoal(goal);
         //ac.sendGoal(goal);
@@ -48,9 +49,9 @@ int main(int argc,char** argv)
     }
     else
     {
-        goal1.p = atof(argv[2]);
-        goal1.r = atof(argv[3]);
-        goal1.y = atof(argv[4]);
+        goal1.p = atof(argv[3]);
+        goal1.r = atof(argv[4]);
+        goal1.y = atof(argv[5]);
         goal1.d = 0.0;
         ac1.sendGoal(goal1);
         //ac.sendGoal(goal);

@@ -37,7 +37,7 @@ namespace kraken_controller
                          kraken_msgs::moveAlongLine::Response &res);
       bool changeController(kraken_msgs::switchControllers::Request  &req,
                          kraken_msgs::switchControllers::Response &res);
-      void executePoseChange(const kraken_msgs::advancedControllerGoalConstPtr &msg);
+      void executePoseChange( const kraken_msgs::advancedControllerGoalConstPtr &msg);
       void executeOrientationChange(const kraken_msgs::controllerGoalConstPtr &msg);
 
       virtual ~ControlServer();
@@ -45,7 +45,7 @@ namespace kraken_controller
       
     private:
       
-      ros::Publisher _pub,_pub6;
+      ros::Publisher _pub,_pub6,_set_point;
       ros::Subscriber _sub_pose;
       ros::Subscriber _sub_ip_error;
       ros::Timer _time;
