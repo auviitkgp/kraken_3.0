@@ -1,9 +1,11 @@
-**/**/bin
-**/**/CMakeLists.txt.user
-**/**/build
-**/**/lib
-**/**/msg_gen
-**/**/srv_gen
+*/bin
+*/build
+*/lib
+*.pyc
+*/CMakeLists.txt.user
+*/msg_gen
+*/srv_gen
+
 **/**/msg/*Action.msg
 **/**/msg/*ActionFeedback.msg
 **/**/msg/*ActionGoal.msg
@@ -11,6 +13,7 @@
 **/**/msg/*Feedback.msg
 **/**/msg/*Goal.msg
 **/**/msg/*Result.msg
+
 **/**/msg/_*.py
 **/**/src/**/srv
 **/**/src/**/msg
