@@ -1,0 +1,17 @@
+<package>
+  <description brief="marker_client">
+
+     marker_client
+
+  </description>
+  <author>Madhukar</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/marker_client</url>
+  <depend package="roscpp"/>
+  <depend package="actionlib"/>
+  <depend package="actionmsg"/>
+
+</package>
+
+

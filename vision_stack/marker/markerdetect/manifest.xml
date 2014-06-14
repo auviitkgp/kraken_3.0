@@ -1,0 +1,19 @@
+<package>
+  <description brief="markerdetect">
+
+     markerdetect
+
+  </description>
+  <author>Madhukar</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/markerdetect</url>
+  <depend package="roscpp"/>
+  <depend package="opencv2"/>
+  <depend package="blob"/>
+  <depend package="cv_bridge"/>
+  <depend package="image_transport"/>
+
+</package>
+
+

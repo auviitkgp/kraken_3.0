@@ -1,0 +1,23 @@
+<package>
+  <description brief="marker_server">
+
+     marker_server
+
+  </description>
+  <author>Madhukar</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/marker_server</url>
+  <depend package="roscpp"/>
+  <depend package="opencv2"/>
+  <depend package="sensor_msgs"/>
+  <depend package="actionlib"/>
+  <depend package="image_transport"/>
+  <depend package="cv_bridge"/>
+  <depend package="actionmsg"/>
+  <depend package="blob"/>
+  <depend package-"taskheader"/>
+
+</package>
+
+

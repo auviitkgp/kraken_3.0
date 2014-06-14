@@ -1,0 +1,18 @@
+<package>
+  <description brief="image_subscribe">
+
+     image_subscribe
+
+  </description>
+  <author>Madhukar</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/image_subscribe</url>
+  <depend package="image_transport"/>
+  <depend package="roscpp"/>
+  <depend package="cv_bridge"/>
+  <depend package="opencv2"/>
+
+</package>
+
+

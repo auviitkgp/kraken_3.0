@@ -1,0 +1,19 @@
+<package>
+  <description brief="frontcam">
+
+     frontcam
+
+  </description>
+  <author>Madhukar</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/frontcam</url>
+  <depend package="roscpp"/>
+  <depend package="opencv2"/>
+  <depend package="cv_bridge"/>
+  <depend package="image_transport"/>
+  <depend package="std_msgs"/>
+
+</package>
+
+

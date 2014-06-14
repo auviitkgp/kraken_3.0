@@ -1,0 +1,17 @@
+<package>
+  <description brief="vgateclient">
+
+     vgateclient
+
+  </description>
+  <author>Madhukar</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/vgateclient</url>
+  <depend package="roscpp"/>
+  <depend package="actionlib"/>
+  <depend package="actionmsg"/>
+
+</package>
+
+
