@@ -1,0 +1,21 @@
+<package>
+  <description brief="buoyserver">
+
+     buoyserver
+
+  </description>
+  <author>Madhukar</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/buoyserver</url>
+  <depend package="roscpp"/>
+  <depend package="opencv2"/>
+  <depend package="actionlib"/>
+  <depend package="actionmsg"/>
+  <depend package="blob"/>
+  <depend package="image_transport"/>
+  <depend package="cv_bridge"/>
+
+</package>
+
+

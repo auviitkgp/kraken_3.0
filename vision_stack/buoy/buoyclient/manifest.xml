@@ -1,0 +1,17 @@
+<package>
+  <description brief="buoyclient">
+
+     buoyclient
+
+  </description>
+  <author>Madhukar</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/buoyclient</url>
+  <depend package="roscpp"/>
+  <depend package="actionlib"/>
+  <depend package="actionmsg"/>
+
+</package>
+
+

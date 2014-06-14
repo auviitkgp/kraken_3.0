@@ -1,0 +1,18 @@
+<package>
+  <description brief="buoy_detect">
+
+     buoy_detect
+
+  </description>
+  <author>Madhukar</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/buoy_detect</url>
+  <depend package="roscpp"/>
+  <depend package="opencv2"/>
+  <depend package="image_transport"/>
+  <depend package="cv_bridge"/>
+  <depend package="blob"/>
+</package>
+
+
