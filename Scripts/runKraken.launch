@@ -1,0 +1,39 @@
+<!-- WS=$ROS_WORKSPACE 
+source /opt/ros/hydro/setup.bash
+export ROS_WORKSPACE=$WS
+export ROS_PACKAGE_PATH=$ROS_WORKSPACE:$ROS_PACKAGE_PATH
+
+#Starting Pose Server.  Returns estimated position of vehicle
+
+rosrun pose_server server &
+
+Starting model. Arguments are forces in 6 direction
+rosrun simulator_physics_model start_auv_model 0.0 0.0 0.0 0.0 0.0 0.0 &
+
+#######
+#Model should be run only after Pose Server to avoid initial position error
+#######
+
+#Starting Force Converter. Argument is force converter
+rosrun thruster_force_converter converter 3 &
+
+#Starting Ccontrol Server. Arguments are frequency and files from which
+#parameters are read
+roscd control_server
+rosrun control_server controlServer 10 parameters/MoveBack.cp parameters/MoveForward.cp parameters/Pause.cp &
+
+#Starting control server. Argument is height
+rosrun control_server client_action 3.0 -->
+
+
+<launch>
+	<node name="pose_server" pkg="pose_server" type="server"/>
+
+	<node name="auv_model" pkg="simulator_physics_model" type="start_auv_model" args="0.0 0.0 0.0 0.0 0.0 0.0"/>
+	<node name="thruster" pkg="thruster_force_converter" type="converter" args="3"/>
+	<node name="control_node" pkg="control_server" type="controlServer" args="10 $(find control_server)/parameters/MoveBack.cp 
+		$(find control_server)/parameters/MoveForward.cp $(find control_server)/parameters/Pause.cp"/>
+
+	<node name="premap_node" pkg="premap" type="premap" args="$(find premap)/map_xml.xml"/>
+	<!-- <node name="server_pose" pkg="pose_server" type="PoseServer"/> -->
+</launch>
