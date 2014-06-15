@@ -61,6 +61,7 @@ class MovingVehicle(smach.State):
 		#-------------
 		
 		goal=advancedControllerGoal()
+		goal.flag=0;
 		goal.x=ud.x
 		goal.y=ud.y
 		goal.depth=ud.depth
@@ -68,8 +69,9 @@ class MovingVehicle(smach.State):
 		self.resources.advancedControllerClient.cancel_all_goals();
 		self.resources.advancedControllerClient.send_goal(goal)
 		rospy.loginfo("moving to next marker at (%f, %f) and to depth %f",ud.x,ud.y,ud.depth)
-		result=self.resources.advancedControllerClient.wait_for_result(ud.time_out)
+		result=self.resources.advancedControllerClient.wait_for_result(rospy.Duration(20))
 		
+		print result
 		
 		if self.resources.advancedControllerClient.get_state()==GoalStatus.SUCCEEDED:
 			rospy.loginfo("successfully moved to destination")
@@ -92,6 +94,8 @@ class MarkerDetect(smach.State):
 		#self.resources=Interaction()
 		#-------------
 		ipClient=SimpleActionClient(header.MARKER_DETECT_ACTION_SERVER, markerAction)
+		rospy.loginfo("Waiting for IP marker action server")
+		ipClient.wait_for_server()
 		goal=markerGoal()
 		goal.order=ip_header.DETECT_MARKER
 		ipClient.cancel_all_goals()
@@ -222,7 +226,7 @@ def main():
 	sm_nextTaskMarker=smach.StateMachine(outcomes=['succeeded','failed','marker_undetected','marker_unalligned'])
 	
 	
-	#initalize these parameters
+	#initialize these parameters
 	resources=Interaction()
 	premapClient=resources.premapMarkerLocationService
 	req=getLocationRequest()
@@ -244,28 +248,33 @@ def main():
 		cm.userdata.ey=None
 		with cm:
 			smach.Concurrence.add('MOVING_STATE',
-								 MovingVehicle(),
+								 MovingVehicle(resources),
 								 remapping={'x':'x','y':'y','depth':'depth','time_out':'time'})
-			smach.Concurrence.add('DETECTING_STATE',MarkerDetect(),
+			smach.Concurrence.add('DETECTING_STATE',MarkerDetect(resources),
 									remapping={'e_x':'ex','e_y':'ey'})
-		
+		sis = smach_ros.IntrospectionServer('server_name', cm, '/SM_CM')
+		sis.start()
 		outcome=cm.execute()
 		
 		smach.StateMachine.add('CONCURRENCE_MACHINE', 
 								cm,
 								transitions={'marker_detected':'ALIGINING_VEHICLE','vehicle_reached':'SEARCHING_MARKER'})
 		smach.StateMachine.add('SEARCHING_MARKER',
-								SearchingMarker(),
+								SearchingMarker(resources),
 								transitions={'found':'ALIGINING_VEHICLE','time_out':'marker_undetected'})
 		
 		smach.StateMachine.add('ALIGINING_VEHICLE',
-								AligningVehicle(),
+								AligningVehicle(resources),
 								transitions={'aligned':'succeeded','timed_out':'marker_unalligned'}, 
 								remapping={'time_out':'time','e_x':'ex','e_y':'ey'}
 								)
 			
-				
+	sis = smach_ros.IntrospectionServer('server_name', sm_nextTaskMarker, '/SM_ROOT')
+	sis.start()
+	
 	outcome=sm_nextTaskMarker.execute()
+	rospy.spin()
+	sis.stop()
 #	if outcome=='succeeded':
 		
 		

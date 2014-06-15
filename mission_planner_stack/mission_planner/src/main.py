@@ -50,6 +50,7 @@ class Interaction(object):
         rospy.loginfo("Waiting for advancedController action server")
         self.advancedControllerClient.wait_for_server()
         rospy.loginfo("Got advanced Controller Action Server ..")
+        
 
         
         self.ipControllerPublisher=rospy.Publisher(name=header.IP_CONTROLLER_PUBLISHING_TOPIC,
