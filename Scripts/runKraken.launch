@@ -35,5 +35,6 @@ rosrun control_server client_action 3.0 -->
 		$(find control_server)/parameters/MoveForward.cp $(find control_server)/parameters/Pause.cp"/>
 
 	<node name="premap_node" pkg="premap" type="premap" args="$(find premap)/map_xml.xml"/>
+	<node name="marker_node" pkg="marker_server" type="markerserver"/>
 	<!-- <node name="server_pose" pkg="pose_server" type="PoseServer"/> -->
 </launch>
