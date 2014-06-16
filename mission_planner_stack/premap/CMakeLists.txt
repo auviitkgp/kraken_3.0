@@ -20,7 +20,7 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 rosbuild_genmsg()
 #uncomment if you have defined services
 rosbuild_gensrv()
-
+include_directories(${kraken_msgs_INCLUDE_DIRS})
 #common commands for building c++ executables and libraries
 rosbuild_add_library(lib  include/premap/map.hpp src/map.cpp include/xml-parser/map_parse.cpp)
 target_link_libraries(lib ${OpenCV_LIBS})
@@ -29,5 +29,3 @@ rosbuild_add_boost_directories()
 
 rosbuild_add_executable(premap src/start.cpp )
 target_link_libraries(premap ${OpenCV_LIBS} lib)
-
-

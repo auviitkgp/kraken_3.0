@@ -1,23 +1,22 @@
 #include "premap/map.hpp"
-#include "premap/getLocation.h"
-#include "geometry_msgs/Pose.h"
-#include "cstdio"
-#include "cstring"
-#include "opencv2/highgui/highgui.hpp"
+using namespace premap_module;
+
+
 Map::Map(NodeHandle &node,Point2f* ptr,int nsize):
-    _n(node),MARKERS(ptr),_nMarkers(nsize)
+    _node_handle(node),MARKERS(ptr),_nMarkers(nsize)
 {
+    memset(_map_data,UNKNOWN,sizeof(_map_data));
     initMap ();
 }
 void Map::initMap()
 {
     showMap ();
-
 }
 
-void Map::updateVehiclePosition(const geometry_msgs::PoseConstPtr& pos_msg)
+void Map::updateVehiclePosition(const kraken_msgs::krakenPoseConstPtr &est_pose_msg)
 {
-    updateVehiclePosition (Point2f(pos_msg->position.x,pos_msg->position.y));
+    updateVehiclePosition (Point3f(est_pose_msg->data[kraken_core::_px],est_pose_msg->data[kraken_core::_py],
+                                   est_pose_msg->data[kraken_core::_py]));
 }
 
 bool Map::getObjectLocation(premap::getLocation::Request &req, premap::getLocation::Response &res)
@@ -30,12 +29,32 @@ bool Map::getObjectLocation(premap::getLocation::Request &req, premap::getLocati
     return true;
 }
 
-void Map::updateVehiclePosition(const Point2f &new_position)
+void Map::updateVehiclePosition(const Point3f &new_position)
 {
-    _vehicle_Pos.x=roundOff (new_position.x);
-    _vehicle_Pos.y=roundOff (new_position.y);
-    Point p(new_position.x*10,new_position.y*10);
-    updateMapVideo (p);
+    _vehicle_Pos.position.x=roundOff (new_position.x);
+    _vehicle_Pos.position.y=roundOff (new_position.y);
+    _vehicle_Pos.position.z=roundOff(new_position.z);
+    Point3i p(new_position.x*10,new_position.y*10,new_position.z);
+
+    //set the current position as travelled
+    _map_data[p.x][p.y][p.z]=TRAVELLED;
+
+
+
+    for (int depth = 1,z; depth< CAM_DEPTH_MAX*10; ++z) {
+        z=p.z-depth;
+        float radius=depth*sin(CAMERA_ANGLE/2);
+
+        for (int x = p.x-radius; x < p.x+radius ; ++x) {
+            for (int y = p.y-radius; y < p.y+radius; ++y) {
+                if(cv::norm(cv::Mat(Point(x,y)),cv::Mat(Point(p.x,p.y))) <= radius )
+                    _map_data[x][y][z]=SEEN;
+            }
+        }
+    }
+
+    Point p2(p.x,p.y);
+    updateMapVideo (p2);
 }
 
 float Map::roundOff(float f)
@@ -48,21 +67,21 @@ float Map::roundOff(float f)
 void Map::showMap()
 {
     vector<Point2f> center;
-    image=Mat::ones(Size(700,700),CV_8UC3);
+    _image=Mat::ones(Size(700,700),CV_8UC3);
     cv::namedWindow ("win");
 
     for(int i=0; i<_nMarkers; i++)
     {
-        circle(image,Point(MARKERS[i].x*10,MARKERS[i].y*10),5,Scalar(255,0,0));
+        circle(_image,Point(MARKERS[i].x*10,MARKERS[i].y*10),5,Scalar(255,0,0));
     }
 
-    imshow("win",image);
+    imshow("win",_image);
 }
 
 void Map::updateMapVideo(Point &position)
 {
     Mat disp;
-    disp=image.clone ();
+    disp=_image.clone ();
     circle(disp,position,5,Scalar(0,255,0));
     imshow ("win",disp);
     waitKey (40);

@@ -6,12 +6,14 @@
 #include <fstream>
 #include <vector>
 #include "xml-parser/rapidxml-1.13/rapidxml.hpp"
-
 #include "opencv/cv.h"
+
+
+
 using namespace rapidxml;
 using namespace std;
-using namespace cv;
 
+using namespace premap_module;
 using namespace ros;
 using namespace std;
 const char* ESTIMATED_POSE="/kraken/pose_estimated",*SERVICE_NAME="getLocation";
@@ -37,7 +39,7 @@ Point2f * returnArray(int &n){
     int size = 0;
 
     xml_document<> doc;
-    xml_node<> *root_node, *subNode, *sub1Node;
+    xml_node<> *root_node, *subNode;
     ifstream theFile ("map_xml.xml");
 
 
