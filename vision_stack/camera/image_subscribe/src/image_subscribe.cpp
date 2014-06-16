@@ -30,14 +30,14 @@ int main(int argc, char ** argv)
 	ros::init(argc, argv, "image_subscribe");
     ros::NodeHandle _n;
     image_transport::ImageTransport _it(_n);
-    image_transport::Subscriber _sub = _it.subscribe("frontcamimage", 1, imageCallBack);
+    image_transport::Subscriber _sub = _it.subscribe("/kraken/debug/video_disk_image", 1, imageCallBack);
 
     ros::Rate _looprate(10);
 
     while(ros::ok())
     {
         if(!_image.empty())
-            imshow("Image", _image);
+            imshow("FrontCam Live VideoFeed", _image);
         if(waitKey(33) == 27)
             break;
         ros::spinOnce();
