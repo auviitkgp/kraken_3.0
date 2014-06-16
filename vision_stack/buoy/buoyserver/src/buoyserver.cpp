@@ -3,9 +3,16 @@
 
 Buoy::Buoy(std::string name) : _it(_n), _s(_n, name, boost::bind(&Buoy::executCB, this, _1), false), _actionName(name)
 {
-    _sub = _it.subscribe("videoimage", 1, &Buoy::imageCallBack, this);
-    _pub = _it.advertise("bottomcamprocessed", 1);
-    ifstream _thresholdVal("/home/madhukar/threshold.th");
+    _sub = _it.subscribe("/kraken/frontcam/raw_image", 1, &Buoy::imageCallBack, this);
+    _pub = _it.advertise("/kraken/frontcam/buoydetect_image", 1);
+
+    if(argc != 2)
+    {
+        cout << "buoyserver : Requires threshold file path as argument." << endl;
+        ros::shutdown();
+    }
+
+    ifstream _thresholdVal(argv[1]);
     if(_thresholdVal.is_open())
     {
         for(int i = 0; i < 3; i++)
@@ -19,7 +26,7 @@ Buoy::Buoy(std::string name) : _it(_n), _s(_n, name, boost::bind(&Buoy::executCB
     }
     else
     {
-        ROS_ERROR("Threshold file was not opened");
+        ROS_ERROR("Unable to open threshold file.");
         ros::shutdown();
     }
     _kernelDilateErode = getStructuringElement(MORPH_RECT, Size(3,3));

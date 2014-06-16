@@ -14,21 +14,27 @@ int main(int argc, char ** argv)
 	ros::init(argc, argv, "videoread");
     ros::NodeHandle _n;
     image_transport::ImageTransport _it(_n);
-    image_transport::Publisher _pub = _it.advertise("videofeed", 1);
+    image_transport::Publisher _pub = _it.advertise("/kraken/debug/videoread_image", 1);
     sensor_msgs::ImagePtr _publishImage;
     cv_bridge::CvImage _image;
     ros::Rate _looprate(10);
 
-    std::string _videopath = "/home/madhukar/videolog/forward-buoys-11_13_09.avi";
+    if(argc != 2)
+    {
+        cout << "videoread : Requires video file path as argument." << endl;
+        ros::shutdown();
+    }
+
+    std::string _videopath = argv[1];
 
     VideoCapture _camera(_videopath.c_str());
     if(_camera.isOpened())
     {
-        ROS_INFO("The video file is opened successfully");
+        ROS_INFO("Video file opened successfully");
     }
     else
     {
-        ROS_ERROR("The video file did not open successfully");
+        ROS_ERROR("Video file not opened.");
         ros::shutdown();
     }
 

@@ -10,32 +10,31 @@ using namespace std;
 using namespace cv;
 
 int camMsg = 0;  // 0 : front cam   1:  bottom cam
+int camId = 1;
 
 bool camOpen = false;
 int flag = 0;
 
 VideoCapture cam;
-int cameraNo = 1;
 
 void msgCallback(const std_msgs::String::ConstPtr& msg)
 {
     camMsg = atoi(msg->data.c_str());
-    if(!camOpen && camMsg == cameraNo)
+    if(camMsg == camId && !camOpen)
     {
         if(cam.open(camMsg))
         {
-            cout << "The bottom camera is opened successfully" << endl;
+            cout << "BottomCam opened successfully." << endl;
             camOpen = true;
         }
     }
-    else if(camMsg != cameraNo && camOpen)
+    else if(camMsg != camId && camOpen)
     {
         cam.release();
+        cout << "BottomCam closed successfully." << endl;
         camOpen = false;
     }
-
 }
-
 
 int main(int argc, char** argv)
 {
@@ -43,9 +42,8 @@ int main(int argc, char** argv)
 
     ros::NodeHandle _nh;
     image_transport::ImageTransport _it(_nh);
-    image_transport::Publisher _image_pub = _it.advertise("bottomcamimage", 1);
-    ros::Subscriber _sub = _nh.subscribe("cameraswitch", 1, msgCallback);
-
+    image_transport::Publisher _image_pub = _it.advertise("/kraken/bottomcam/raw_image", 1);
+    ros::Subscriber _sub = _nh.subscribe("/kraken/camera_switch", 1, msgCallback);
 
     sensor_msgs::ImagePtr _publishImage;
     cv_bridge::CvImage _image;
