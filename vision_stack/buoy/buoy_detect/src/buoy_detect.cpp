@@ -37,21 +37,20 @@ int main(int argc, char ** argv)
 {
 	ros::init(argc, argv, "buoydetect");
 
-    // VideoCapture _camera("/home/madhukar/videolog/forward-buoys-15_56_53.avi");
     ros::NodeHandle _n;
     image_transport::ImageTransport _it(_n);
-    image_transport::Subscriber _sub = _it.subscribe("videofeed", 1, imageCallBack);    
+    image_transport::Subscriber _sub = _it.subscribe("/kraken/frontcam/raw_image", 1, imageCallBack);    
 
     ros::Rate _looprate(10);
 
     Mat _imageHSV, _imageBW;
     vector<vector<Point> > _contours;
     Mat _kernelDilateErode = getStructuringElement(MORPH_RECT, Size(3,3));
+
     while(ros::ok())
     {
-
-        if(!_image.empty()){
-
+        if(!_image.empty())
+        {
             cvtColor(_image, _imageHSV, CV_BGR2HSV_FULL);
             inRange(_imageHSV, Scalar(0,0,0),Scalar(20,255,255), _imageBW);
             medianBlur(_imageBW, _imageBW, 3);
@@ -91,7 +90,7 @@ int main(int argc, char ** argv)
                 }
             }
 
-            imshow("final image", _image);
+            imshow("Final Image - Buoy", _image);
         }
 
         if(waitKey(33) == 27)

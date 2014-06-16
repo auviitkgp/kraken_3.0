@@ -28,16 +28,21 @@ void imageCallBack(const sensor_msgs::ImageConstPtr &_msg)
 int main(int argc, char ** argv)
 {
 	ros::init(argc, argv, "image_subscribe");
+    if(argc !=2)
+    {
+        cout << "image_subscribe: Requires subscribing topic name as parameter." << endl;
+        ros::shutdown();
+    }
     ros::NodeHandle _n;
     image_transport::ImageTransport _it(_n);
-    image_transport::Subscriber _sub = _it.subscribe("/kraken/debug/video_disk_image", 1, imageCallBack);
-
+    image_transport::Subscriber _sub = _it.subscribe(argv[1], 1, imageCallBack);
+    
     ros::Rate _looprate(10);
 
     while(ros::ok())
     {
         if(!_image.empty())
-            imshow("FrontCam Live VideoFeed", _image);
+            imshow("Subscribed Topic VideoFeed", _image);
         if(waitKey(33) == 27)
             break;
         ros::spinOnce();

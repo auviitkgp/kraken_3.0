@@ -11,9 +11,9 @@ int main(int argc, char ** argv)
 {
     ros::init(argc, argv, "buoyclient");
     Client _client("buoy", true);
-    ROS_INFO("The Client has started and waiting for server to start ....");
+    ROS_INFO("BuoyClient started. Waiting for BuoyServer.");
     _client.waitForServer();
-    ROS_INFO("The server has started ...");
+    ROS_INFO("BuoyServer has started.");
     actionmsg::buoyGoal _goal;
     _goal.order = DETECT_BUOY;
     _client.sendGoal(_goal);
@@ -21,11 +21,11 @@ int main(int argc, char ** argv)
     if(_actionStatus == true)
     {
         actionlib::SimpleClientGoalState _state = _client.getState();
-        ROS_INFO("Action finished: %s",_state.toString().c_str());
+        ROS_INFO("Buoy : Action finished - %s",_state.toString().c_str());
     }
     else
     {
-        ROS_INFO("The action did not finish within the specified time");
+        ROS_INFO("Buoy : Action did not finish within the specified time.");
         _client.cancelGoal();
     }
     _goal.order = ALLIGN_BUOY;
@@ -34,11 +34,11 @@ int main(int argc, char ** argv)
     if(_actionStatus == true)
     {
         actionlib::SimpleClientGoalState _state = _client.getState();
-        ROS_INFO("Action finished: %s",_state.toString().c_str());
+        ROS_INFO("Buoy : Action finished - %s",_state.toString().c_str());
     }
     else
     {
-        ROS_INFO("The action did not finish within the specified time");
+        ROS_INFO("Buoy : Action did not finish within the specified time.");
         _client.cancelGoal();
     }
 
