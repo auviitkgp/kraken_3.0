@@ -36,12 +36,12 @@ int main(int argc, char ** argv)
 
     while(ros::ok())
     {
-        _looprate.sleep();
-        ros::spinOnce();
         if(!_image.empty())
             imshow("Image", _image);
         if(waitKey(33) == 27)
             break;
+        ros::spinOnce();
+        _looprate.sleep();
     }
 
 	return 0;

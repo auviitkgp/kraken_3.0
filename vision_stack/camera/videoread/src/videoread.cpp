@@ -14,7 +14,7 @@ int main(int argc, char ** argv)
 	ros::init(argc, argv, "videoread");
     ros::NodeHandle _n;
     image_transport::ImageTransport _it(_n);
-    image_transport::Publisher _pub = _it.advertise("videoimage", 1);
+    image_transport::Publisher _pub = _it.advertise("videofeed", 1);
     sensor_msgs::ImagePtr _publishImage;
     cv_bridge::CvImage _image;
     ros::Rate _looprate(10);
