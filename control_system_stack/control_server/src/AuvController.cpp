@@ -174,7 +174,7 @@ namespace kraken_controller
       //////////////////////////////////////////////////////////////
       float _body_to_world_matrix[3][3];
       _body_to_world_matrix[0][0]   = _cos_rpy[2]*_cos_rpy[1];
-      _body_to_world_matrix[1][0]   = _cos_rpy[2]*_sin_rpy[1]*_sin_rpy[1]-_sin_rpy[2]*_cos_rpy[0];
+      _body_to_world_matrix[1][0]   = _cos_rpy[2]*_sin_rpy[1]*_sin_rpy[0]-_sin_rpy[2]*_cos_rpy[0];
       _body_to_world_matrix[2][0]   = _cos_rpy[2]*_sin_rpy[1]*_cos_rpy[0]+_sin_rpy[2]*_sin_rpy[0];
       _body_to_world_matrix[0][1]   = _sin_rpy[2]*_cos_rpy[1];
       _body_to_world_matrix[1][1]   = _sin_rpy[0]*_sin_rpy[1]*_sin_rpy[2]+_cos_rpy[2]*_cos_rpy[0];
@@ -233,9 +233,9 @@ namespace kraken_controller
 
   bool AuvController::checkError(const kraken_msgs::krakenPose &msg)
   {
-      float curState[kraken_core::_yaw + 1];
-      float error[kraken_core::_yaw + 1];
-      float thresh[kraken_core::_yaw + 1];
+      float curState[kraken_core::countState + 1];
+      float error[kraken_core::countState + 1];
+      float thresh[kraken_core::countState + 1];
 
       bool result;
 
@@ -370,13 +370,13 @@ namespace kraken_controller
       //////////////////////////////////////////////////////////////
       float _body_to_world_matrix[3][3];
       _body_to_world_matrix[0][0]   = _cos_rpy[2]*_cos_rpy[1];
-      _body_to_world_matrix[1][0]   = _cos_rpy[2]*_sin_rpy[1]*_sin_rpy[1]-_sin_rpy[2]*_cos_rpy[0];
-      _body_to_world_matrix[2][0]   = _cos_rpy[2]*_sin_rpy[1]*_cos_rpy[0]+_sin_rpy[2]*_sin_rpy[0];
-      _body_to_world_matrix[0][1]   = _sin_rpy[2]*_cos_rpy[1];
+      _body_to_world_matrix[0][1]   = _cos_rpy[2]*_sin_rpy[1]*_sin_rpy[0]-_sin_rpy[2]*_cos_rpy[0];
+      _body_to_world_matrix[0][2]   = _cos_rpy[2]*_sin_rpy[1]*_cos_rpy[0]+_sin_rpy[2]*_sin_rpy[0];
+      _body_to_world_matrix[1][0]   = _sin_rpy[2]*_cos_rpy[1];
       _body_to_world_matrix[1][1]   = _sin_rpy[0]*_sin_rpy[1]*_sin_rpy[2]+_cos_rpy[2]*_cos_rpy[0];
-      _body_to_world_matrix[2][1]   = _cos_rpy[0]*_sin_rpy[1]*_sin_rpy[2]-_cos_rpy[2]*_sin_rpy[0];
-      _body_to_world_matrix[0][2]   = -_sin_rpy[1];
-      _body_to_world_matrix[1][2]   = _sin_rpy[0]*_cos_rpy[1];
+      _body_to_world_matrix[1][2]   = _cos_rpy[0]*_sin_rpy[1]*_sin_rpy[2]-_cos_rpy[2]*_sin_rpy[0];
+      _body_to_world_matrix[2][0]   = -_sin_rpy[1];
+      _body_to_world_matrix[2][1]   = _sin_rpy[0]*_cos_rpy[1];
       _body_to_world_matrix[2][2]   = _cos_rpy[0]*_cos_rpy[1];
 
 

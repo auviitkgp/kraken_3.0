@@ -18,3 +18,8 @@ arg1, arg2, arg3 :
            arg1 = x
            arg2 = y
            arg3 = z       (do not forget localFlag)
+
+Bugs:
+1.In /kraken/pose, yaw is sum of 'z' and 'w'.Motion stops when z + w =yaw, but 'Pause' command is not passed 
+
+

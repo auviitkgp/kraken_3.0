@@ -8,7 +8,7 @@ namespace kraken_controller
     _time = n.createTimer(ros::Duration(1.0/freq),&ControlServer::timeCallBack,this);
     _pub = n.advertise<kraken_msgs::thrusterData4Thruster>("/kraken/thrusterData4Thruster",2);
     _pub6 = n.advertise<kraken_msgs::thrusterData6Thruster>("/kraken/thrusterData6Thruster",2);
-    _set_point = n.advertise<kraken_msgs::krakenPose>("/kraken/setPoint",2);
+    _set_point = n.advertise<kraken_msgs::krakenPose>("/kraken/pos_set",2);
     _sub_pose = n.subscribe<kraken_msgs::krakenPose>("/kraken/pose_estimated",2,&ControlServer::poseFeedBack,this);
     _sub_ip_error  = n.subscribe<kraken_msgs::ipControllererror>("/kraken/ip_error_data",2,&ControlServer::ipErrorFeedBack,this);
 
@@ -121,6 +121,8 @@ namespace kraken_controller
 
     if (msg->flag)   
         _controller.local2global(_pose,_currPos);
+    else
+        _currPos = _pose;
 
     _controller.setSetPoint(_currPos);
     _controller.moveTest();
@@ -149,7 +151,7 @@ namespace kraken_controller
         _controller.doControlIteration(_feedBack);
         _controller.updateState();
 
-        _set_point.publish(_pose);
+        _set_point.publish(_currPos);
         _pub6.publish(_controller.getThruster6Value());
 
 
