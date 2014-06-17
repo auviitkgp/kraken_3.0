@@ -14,9 +14,9 @@ int main(int argc, char ** argv)
 {
 	ros::init(argc, argv, "vgateclient");
     Client _client("vgate");
-    ROS_INFO("The Client has started and waiting for server to start ....");
+    ROS_INFO("vgatenclient started : waiting for server to start.");
     _client.waitForServer();
-    ROS_INFO("The server has started ...");
+    ROS_INFO("vgateserver started.");
     actionmsg::vgateGoal _goal;
     _goal.order = DETECT_VGATE;
     _client.sendGoal(_goal);
@@ -24,11 +24,11 @@ int main(int argc, char ** argv)
     if(_actionStatus)
     {
         actionlib::SimpleClientGoalState _state = _client.getState();
-        ROS_INFO("Action finished: %s",_state.toString().c_str());
+        ROS_INFO("vgateclient : Action finished: %s",_state.toString().c_str());
     }
     else
     {
-        ROS_INFO("The action did not finish within the specified time");
+        ROS_INFO("vgateclient : Action did not finish within specified time.");
         _client.cancelGoal();
     }
 
@@ -38,11 +38,11 @@ int main(int argc, char ** argv)
     if(_actionStatus == true)
     {
         actionlib::SimpleClientGoalState _state = _client.getState();
-        ROS_INFO("Action finished: %s",_state.toString().c_str());
+        ROS_INFO("vgateclient : Action finished: %s",_state.toString().c_str());
     }
     else
     {
-        ROS_INFO("The action did not finish within the specified time");
+        ROS_INFO("vgateclient : Action did not finish within specified time.");
         _client.cancelGoal();
     }
 	return 0;

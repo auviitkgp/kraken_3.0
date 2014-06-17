@@ -22,10 +22,10 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 #rosbuild_gensrv()
 
 #common commands for building c++ executables and libraries
-rosbuild_add_library(${PROJECT_NAME} src/markerserver.cpp)
+rosbuild_add_library(${PROJECT_NAME} src/marker_server.cpp)
 #target_link_libraries(${PROJECT_NAME} another_library)
 #rosbuild_add_boost_directories()
-rosbuild_add_executable(markerserver src/test.cpp)
-target_link_libraries(markerserver ${PROJECT_NAME})
-rosbuild_link_boost(markerserver thread)
+rosbuild_add_executable(servertest src/test.cpp)
+target_link_libraries(servertest ${PROJECT_NAME})
+rosbuild_link_boost(marker_server thread)
 

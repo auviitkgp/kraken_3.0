@@ -4,7 +4,7 @@
      marker_server
 
   </description>
-  <author>Madhukar</author>
+  <author>Nevin Valsaraj</author>
   <license>BSD</license>
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/marker_server</url>
@@ -16,7 +16,6 @@
   <depend package="cv_bridge"/>
   <depend package="actionmsg"/>
   <depend package="blob"/>
-  <depend package="taskheader"/>
 
 </package>
 

@@ -21,7 +21,7 @@ void imageCallBack(const sensor_msgs::ImageConstPtr &_msg)
     }
     catch (cv_bridge::Exception& e)
     {
-        ROS_ERROR("Could not convert from '%s' to 'bgr8'.", _msg->encoding.c_str());
+        ROS_ERROR("vgatedetect : Could not convert from '%s' to 'bgr8'.", _msg->encoding.c_str());
     }
     _image = _imagePtr->image;
 }
@@ -76,7 +76,7 @@ int main(int argc, char ** argv)
     while(ros::ok())
     {
         if(_image.empty())
-            ROS_ERROR("The image is empty");
+            ROS_ERROR("vgatedetect : The image is empty");
         else
         {
             cvtColor(_image, _imageHSV, CV_BGR2HSV_FULL);
@@ -161,7 +161,7 @@ int main(int argc, char ** argv)
             line(_image, _coordinate[0], _coordinate[2], Scalar(255,0,0),3,8);
             _rodB.x=(_coordinate[0].x + _coordinate[2].x)/2;
             _rodB.y=(_coordinate[0].y + _coordinate[2].y)/2;
-            imshow("Final Image", _image);
+            imshow("vgatedetect : Final Image", _image);
             if(waitKey(33) == 27)
                 break;
         }

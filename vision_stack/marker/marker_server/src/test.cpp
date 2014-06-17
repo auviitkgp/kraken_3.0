@@ -1,5 +1,5 @@
 #include <ros/ros.h>
-#include <marker_server/markerserver.h>
+#include <marker_server/marker_server.h>
 
 int main(int argc, char ** argv)
 {

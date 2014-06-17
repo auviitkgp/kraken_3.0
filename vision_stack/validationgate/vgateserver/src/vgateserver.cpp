@@ -3,9 +3,10 @@
 
 Vgate::Vgate(std::string name) : _it(_n), _s(_n, name, boost::bind(&Vgate::executCB, this, _1), false), _actionName(name)
 {
-    _sub = _it.subscribe("videoimage", 1, &Vgate::imageCallBack, this);
-    _pub = _it.advertise("bottomcamprocessed", 1);
-    ifstream _thresholdVal("/home/madhukar/threshold.th");
+    _sub = _it.subscribe("/kraken/bottomcam/raw_image", 1, &Vgate::imageCallBack, this);
+    _pub = _it.advertise("/kraken/bottomcam/validationgate_image", 1);
+    
+    ifstream _thresholdVal("threshold.th");
     if(_thresholdVal.is_open())
     {
         for(int i = 0; i < 3; i++)
@@ -19,7 +20,7 @@ Vgate::Vgate(std::string name) : _it(_n), _s(_n, name, boost::bind(&Vgate::execu
     }
     else
     {
-        ROS_ERROR("Threshold file was not opened");
+        ROS_ERROR("Unable to open threshold.th file.");
         ros::shutdown();
     }
     _kernelDilateErode = getStructuringElement(MORPH_RECT, Size(3,3));
@@ -36,7 +37,7 @@ void Vgate::imageCallBack(const sensor_msgs::ImageConstPtr &_msg)
     }
     catch (cv_bridge::Exception& e)
     {
-        ROS_ERROR("Could not convert from '%s' to 'bgr8'.", _msg->encoding.c_str());
+        ROS_ERROR("validationgate : Could not convert from '%s' to 'bgr8'.", _msg->encoding.c_str());
     }
     _image = _imagePtr->image;
 }

@@ -6,13 +6,7 @@ Buoy::Buoy(std::string name) : _it(_n), _s(_n, name, boost::bind(&Buoy::executCB
     _sub = _it.subscribe("/kraken/frontcam/raw_image", 1, &Buoy::imageCallBack, this);
     _pub = _it.advertise("/kraken/frontcam/buoydetect_image", 1);
 
-    if(argc != 2)
-    {
-        cout << "buoyserver : Requires threshold file path as argument." << endl;
-        ros::shutdown();
-    }
-
-    ifstream _thresholdVal(argv[1]);
+    ifstream _thresholdVal("threshold.th");
     if(_thresholdVal.is_open())
     {
         for(int i = 0; i < 3; i++)
