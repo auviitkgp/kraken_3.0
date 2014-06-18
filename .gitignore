@@ -15,8 +15,6 @@ msg/*Goal.msg
 msg/*Result.msg
 msg/_*.py
 
-*.dox
-
 CMakeLists.txt.user
 ./*/srv/_*.py
 *.pcd

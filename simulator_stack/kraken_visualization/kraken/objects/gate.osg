@@ -24,11 +24,11 @@ MatrixTransform {
         GL_LIGHTING ON
         Material {
           ColorMode DIFFUSE
-          ambientColor 0 0 1 1
-          diffuseColor 0 0 1 1
-          specularColor 0 0 1 1
+          ambientColor 0.247059 1 0.313726 1
+          diffuseColor 0.247059 1 0.313726 1
+          specularColor 0 0 0 1
           emissionColor 0 0 0 1
-          shininess 39.68
+          shininess 12.8
         }
         LightModel {
           ambientIntensity 0.2 0.2 0.2 1

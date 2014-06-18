@@ -2,7 +2,7 @@
 
 Marker::Marker(std::string name) : _it(_n), _s(_n, name, boost::bind(&Marker::executCB, this, _1), false), _actionName(name)
 {
-    _sub = _it.subscribe("/kraken/bottomcam/raw_image", 1, &Marker::imageCallBack, this);
+    _sub = _it.subscribe("/kraken/bottom_camera", 1, &Marker::imageCallBack, this);
     _pub = _it.advertise("/kraken/bottomcam/marker_image", 1);
 
     ifstream _thresholdVal("threshold.th");
