@@ -48,13 +48,13 @@ namespace kraken_core
       /*
        * Subscribers for different sensors
        */
-      ros::Subscriber _imu;
-      ros::Subscriber _depth;
-      ros::Subscriber _dvl;
+      ros::Subscriber _imu_sub;
+      ros::Subscriber _depth_sub;
+      ros::Subscriber _dvl_sub;
       /*
        * Publisher of position
        */
-      ros::Publisher _pose;
+      ros::Publisher _pose_pub;
       /*
        * Timer
        */

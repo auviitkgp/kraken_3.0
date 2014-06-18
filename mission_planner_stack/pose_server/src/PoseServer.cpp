@@ -7,12 +7,12 @@ namespace kraken_core
   {
     _good_sensor = _fast_sensor = false;
     ros::NodeHandle n;
-    _imu = n.subscribe<kraken_msgs::imuData>("/kraken/imuData",1,&PoseServer::imuCallBack,this);
+    _imu_sub = n.subscribe<kraken_msgs::imuData>("/kraken/imuData",1,&PoseServer::imuCallBack,this);
     //_imu = n.subscribe<sensor_msgs::Imu>("/kraken/imuData",2,&PoseServer::imuCallBack,this);
-    _depth = n.subscribe<underwater_sensor_msgs::Pressure>("/kraken/depth",1,&PoseServer::depthCallBack,this);
+    _depth_sub = n.subscribe<underwater_sensor_msgs::Pressure>("/kraken/depth",1,&PoseServer::depthCallBack,this);
     //_depth = n.subscribe<kraken_msgs::depthData>("/kraken/depth",2,&PoseServer::depthCallBack,this);
     //_dvl = n.subscribe<kraken_msgs::dvlData>("",2,&PoseServer::dvlCallBack,this);
-    _pose = n.advertise<kraken_msgs::krakenPose>("/kraken/pose_estimated",1);
+    _pose_pub = n.advertise<kraken_msgs::krakenPose>("/kraken/pose_estimated",1);
     _timer = n.createTimer(ros::Duration(estimator->getTime()),&PoseServer::timerCallBack,this);
   }
   
@@ -53,7 +53,7 @@ namespace kraken_core
     {
         pose.data[i] = _data[i];
     }
-    _pose.publish(pose);
+    _pose_pub.publish(pose);
   }
   void PoseServer::depthCallBack(const underwater_sensor_msgs::Pressure::ConstPtr &msg)
   //void PoseServer::depthCallBack(const kraken_msgs::depthData::ConstPtr &msg)
