@@ -129,7 +129,7 @@
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
-  </link>
+  </link>gate
   <joint name="gate_marker3_to_pool" type="fixed">
     <parent link="pool"/>
     <child link="gate_marker3"/>
@@ -179,13 +179,13 @@
   <link name="gate_shooter">
     <visual>
       <geometry>
-        <mesh filename="package://kraken_visualization/kraken/objects/torp_board.osg"/>
+        <mesh filename="package://kraken_visualization/kraken/objects/gate_obstacle.osg"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://kraken_visualization/kraken/objects/torp_board.osg"/>
+        <mesh filename="package://kraken_visualization/kraken/objects/gate_obstacle.osg"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -218,13 +218,13 @@
   <link name="gate_L_rod">
     <visual>
       <geometry>
-        <mesh filename="package://kraken_visualization/kraken/objects/gate.osg"/>
+        <mesh filename="package://kraken_visualization/kraken/objects/gate_obstacle.osg"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://kraken_visualization/kraken/objects/gate.osg"/>
+        <mesh filename="package://kraken_visualization/kraken/objects/gate_obstacle.osg"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
