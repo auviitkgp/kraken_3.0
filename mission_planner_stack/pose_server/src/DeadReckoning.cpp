@@ -25,7 +25,7 @@ namespace kraken_core
   void DeadReckoning::updatePose(kraken_msgs::imuData &imu, kraken_msgs::depthData &depth, kraken_msgs::dvlData &dvl)
   {
     updateCurrentAccelaration(imu);
-    updateCurrentVelocity();
+    updateCurrentVelocity(dvl);
     updateCurrentPosition(depth);
   }
   
@@ -80,6 +80,27 @@ namespace kraken_core
     _data_world_next[_ax] = (_data_world_next[_vx] - _data[_vx])/_time;
     _data_world_next[_ay] = (_data_world_next[_vy] - _data[_vy])/_time;
     _data_world_next[_az] = (_data_world_next[_vz] - _data[_vz])/_time;
+  }
+
+  void DeadReckoning::updateCurrentVelocity(kraken_msgs::dvlData &dvl_data)
+  {
+      boost::circular_buffer<KrakenPose>::iterator start = _prev_states_body.end()-1;
+      float* _data_body_next  = _next_pose_body.getData();
+      float* _data = (*start).getData();
+      // Calculate body velocities
+      _data_body_next[_vx] = dvl_data.data[kraken_sensors::_dvl_vx];
+      _data_body_next[_vy] = dvl_data.data[kraken_sensors::_dvl_vy];
+      _data_body_next[_vz] = dvl_data.data[kraken_sensors::_dvl_vy];
+      // Transform to world velocities
+      transformToWorld();
+      //
+      float* _data_world_next  = _next_pose_world.getData();
+      start = _prev_states_world.end()-1;
+      _data = (*start).getData();
+      // Calculate world accelaration
+      _data_world_next[_ax] = (_data_world_next[_vx] - _data[_vx])/_time;
+      _data_world_next[_ay] = (_data_world_next[_vy] - _data[_vy])/_time;
+      _data_world_next[_az] = (_data_world_next[_vz] - _data[_vz])/_time;
   }
   
   void DeadReckoning::updateCurrentPosition(kraken_msgs::depthData & depth)

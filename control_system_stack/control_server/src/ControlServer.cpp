@@ -1,5 +1,4 @@
 #include <control_server/ControlServer.h>
-
 namespace kraken_controller
 {
   ControlServer::ControlServer(float freq)

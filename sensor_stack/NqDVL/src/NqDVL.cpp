@@ -10,8 +10,9 @@ char *b;
 std::string bytes;
 
 
-namespace kraken_sensor
+namespace kraken_sensors
 {
+
   NqDVL::NqDVL(const string &name, int freq, int baudrate):SerialPort(name,baudrate),_freq(freq)
   {
     ros::NodeHandle n;

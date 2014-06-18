@@ -1,13 +1,13 @@
 <package>
-  <description brief="actionServerType">
+  <description brief="kraken_msgs">
 
-     actionServerType
+     kraken_msgs
 
   </description>
   <author>Prudhvi</author>
   <license>BSD</license>
   <review status="unreviewed" notes=""/>
-  <url>http://ros.org/wiki/actionServerType</url>
+  <url>http://ros.org/wiki/kraken_msgs</url>
   <depend package="actionlib"/>
   <depend package="actionlib_msgs"/>
   <depend package="std_msgs"/>

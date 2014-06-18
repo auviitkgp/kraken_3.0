@@ -9,15 +9,14 @@ namespace kraken_core
     for(int i=0;i<size;i++)
     {
       _prev_states_body.push_back(_next_pose_body);
-      //_prev_states_body.push_back(_next_pose_body);
+
       _prev_states_world.push_back(_next_pose_world);
-      //_prev_states_world.push_back(_next_pose_world);
+
     }
-    //_time  = time;
-    //std::cerr<<_time<<":"<<time<<std::endl;
+
   }
   
-void  Estimator::updateTransformMatrix()
+  void  Estimator::updateTransformMatrix()
   {
     float _cos_rpy[3];
     float _sin_rpy[3];

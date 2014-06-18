@@ -3,7 +3,7 @@
 
 
 
-namespace kraken_sensor
+namespace kraken_sensors
 {
   enum
   {

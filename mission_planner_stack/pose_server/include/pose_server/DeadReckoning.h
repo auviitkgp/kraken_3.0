@@ -2,6 +2,7 @@
 #define DEADRECKONING_H
 #include <pose_server/Estimator.h>
 #include <tracks_imu/Tracks.h>
+#include <NqDVL/NqDVL.h>
 
 namespace kraken_core
 {
@@ -39,9 +40,12 @@ namespace kraken_core
      * Function to update current velocity 
      */
     void updateCurrentVelocity();
+    void updateCurrentVelocity(kraken_msgs::dvlData & dvl_data);
+
     /*
      * Function to update current accelaration
      */
+
     void updateCurrentAccelaration(kraken_msgs::imuData &);
     protected:
   };
