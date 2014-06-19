@@ -1,0 +1,10 @@
+<launch>
+	<node name="simulator_physics_model" pkg="simulator_physics_model" type="start_auv_model" args="0.0 0.0 0.0 0.0 0.0 0.0"/>
+
+	<node name="uwsim_launcher_script" pkg="kraken_visualization" type="kraken_visualization_launcher"/>
+
+	<node name="joy_node" pkg="joy" type="joy_node"/>
+	
+	<node name="joystick_control" pkg="joystick_control" type="joystick_control"/>
+
+</launch>
