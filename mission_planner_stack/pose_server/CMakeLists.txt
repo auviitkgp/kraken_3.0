@@ -33,5 +33,6 @@ rosbuild_add_library(${PROJECT_NAME} src/PoseServer.cpp src/Estimator.cpp src/Kr
 rosbuild_add_executable(server src/main.cpp)
 rosbuild_add_executable(testkalman src/test_kalman.cpp)
 target_link_libraries(server ${PROJECT_NAME})
+target_link_libraries(testkalman ${PROJECT_NAME})
 
 rosbuild_add_executable(client src/test.cpp)

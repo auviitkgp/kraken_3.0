@@ -1,13 +1,15 @@
-#include "iostream"
-#include "eigen3/Eigen/Dense"
-#include "eigen3/Eigen/Geometry"
-
-
-using namespace Eigen;
-int main()
+#include <pose_server/PoseServer.h>
+#include <pose_server/DeadReckoning.h>
+#include <pose_server/KalmanEstimator.h>
+int main(int argc,char** argv)
 {
-    Vector2d U(2,3);
-    RowVector2d V(4,5);
-    V*U;
-    return 0;
+  ros::init(argc,argv,"PoseServer");
+  ros::NodeHandle n;
+  kraken_core::KalmanEstimator estimator(2,0.05);
+  kraken_core::PoseServer server(&estimator);
+  ros::ServiceServer service = n.advertiseService("kraken_pose_change",&kraken_core::PoseServer::resetPosition,&server);
+  ROS_INFO("POSE SERVER STARTED");
+  ros::spin();
+
+  return 0;
 }

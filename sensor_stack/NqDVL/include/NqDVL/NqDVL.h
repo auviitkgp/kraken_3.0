@@ -1,3 +1,6 @@
+#ifndef _SENSORS_NQDVL_H
+#define _SENSORS_NQDVL_H
+
 #include <SerialPort/SerialPort.h>
 #include <kraken_msgs/dvlData.h>
 
@@ -53,3 +56,5 @@ namespace kraken_sensors
       void timerCallBack(const ros::TimerEvent &);
 };
 }
+
+#endif
