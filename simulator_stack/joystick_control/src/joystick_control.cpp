@@ -33,8 +33,8 @@ int main(int argc, char *argv[]){
 
     while(ros::ok())
     {
-        _force_sent.data[0] = _received[1] * 16.0;
-        _force_sent.data[1] = _received[1] * 16.0;
+        _force_sent.data[0] = _received[1] * 32.0;
+        _force_sent.data[1] = _received[1] * 32.0;
         _force_sent.data[2] = - _received[3] * 16.0 - _received[0];
         _force_sent.data[3] = - _received[3] * 16.0 + _received[0];
         _force_sent.data[4] = _received[4] * 12;

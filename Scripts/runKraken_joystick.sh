@@ -8,7 +8,7 @@ export ROS_PACKAGE_PATH=$ROS_WORKSPACE:$ROS_PACKAGE_PATH
 #Run kraken_visualisation module
 roscd
 cd kraken_3.0/Scripts/
-./kraken_launcher &
+./kraken_visualization_launcher &
 
 #Run simulator physics model
 rosrun simulator_physics_model start_auv_model &

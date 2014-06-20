@@ -14,6 +14,7 @@ msg/*Feedback.msg
 msg/*Goal.msg
 msg/*Result.msg
 msg/_*.py
+msgs_stack/ip_msgs/msg/
 
 CMakeLists.txt.user
 ./*/srv/_*.py

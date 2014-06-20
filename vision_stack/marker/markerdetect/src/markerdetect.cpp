@@ -72,14 +72,14 @@ int main(int argc, char ** argv)
 
     else
     {
-        if(_camera.open("/home/madhukar/videolog/downward-pipe-15_56_17.avi"))
+        if(_camera.open("/home/routeaccess/Videos/log.avi"))
             ROS_INFO("The camera opened successfully\n");
         else
             ROS_ERROR("The camera was not able to open");
     }
 
     Mat _ihsv, _ithresh;
-    Scalar _lowerThresh(0, 0, 0),_upperThresh(20, 255, 255);
+    Scalar _lowerThresh(3, 75, 75),_upperThresh(20, 255, 255);
 
     Mat _dilateKernel = getStructuringElement(MORPH_RECT, Size(3, 3));
     CBlobResult _blobs, _blobsclutter;
@@ -98,6 +98,7 @@ int main(int argc, char ** argv)
         else
         {
             cvtColor(_I, _ihsv, CV_BGR2HSV_FULL);
+            imshow("hsv", _ihsv);
             inRange(_ihsv, _lowerThresh, _upperThresh, _ithresh);
 
             medianBlur(_ithresh, _ithresh, 5);
@@ -121,10 +122,12 @@ int main(int argc, char ** argv)
                 _currentBlob->FillBlob(&_iipl,Scalar(0));
             }
 
+            Mat _ithreshb = _ithresh.clone();
+
             vector<vector<Point> > _contours;
             vector<RotatedRect> _minRect;
 
-            findContours(_ithresh, _contours, CV_RETR_CCOMP, CV_CHAIN_APPROX_SIMPLE);
+            findContours(_ithreshb, _contours, CV_RETR_CCOMP, CV_CHAIN_APPROX_SIMPLE);
 
             for(int i=0; i < _contours.size(); i++)
             {
@@ -133,15 +136,16 @@ int main(int argc, char ** argv)
                    _minRect.push_back(minAreaRect( Mat(_contours[i])));
                 }
             }
+            imshow("two", _ithresh);
 
             for( int i = 0; i< _minRect.size(); i++ )
             {
-                Scalar _color = Scalar(  Scalar(0,0,255) );
+                Scalar _color = Scalar(  Scalar(255,0,0) );
                 Point2f _rectPoints[4];
                 _minRect[i].points( _rectPoints );
                 for( int j = 0; j < 4; j++ )
                 {
-                    line( _I, _rectPoints[j], _rectPoints[(j+1)%4], _color, 1, 8 );
+                    line( _ithresh, _rectPoints[j], _rectPoints[(j+1)%4], _color, 2, 8 );
                     cout << _minRect[i].center.x << ";" << _minRect[i].center.y << endl;
                     cout << _minRect[i].angle << endl;
                 }
@@ -149,7 +153,7 @@ int main(int argc, char ** argv)
 
         }
 
-        imshow("Processed Image", _I);
+        imshow("Processed Image", _ithresh);
 
         ros::spinOnce();
         looprate.sleep();

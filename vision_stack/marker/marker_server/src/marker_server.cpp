@@ -23,7 +23,7 @@ Marker::Marker(std::string name) : _it(_n), _s(_n, name, boost::bind(&Marker::ex
         ros::shutdown();
     }
     _kernelDilateErode = getStructuringElement(MORPH_RECT, Size(3,3));
-    _finalImage.encoding = "bgr8";
+    _finalImage.encoding = "mono8";
     _s.start();
 }
 
@@ -61,7 +61,7 @@ void Marker::executCB(const actionmsg::markerGoalConstPtr &_goal)
                     break;
                 }
                 detectMarker();
-                _finalImage.image = I;
+                _finalImage.image = I_bw;
                 _finalImagemsg = _finalImage.toImageMsg();
                 _pub.publish(_finalImagemsg);
 
@@ -82,7 +82,7 @@ void Marker::executCB(const actionmsg::markerGoalConstPtr &_goal)
                 }
                 detectMarker();
                 getAllignment();
-                _finalImage.image = I;
+                _finalImage.image = I_bw;
                 _finalImagemsg = _finalImage.toImageMsg();
                 _pub.publish(_finalImagemsg);
                 if(_feedback.errorangle == 0)
@@ -137,11 +137,12 @@ void Marker::detectMarker()
     vector<vector<Point> > _contours;
     _minRect.clear();
 
-    findContours(I_bw, _contours, CV_RETR_CCOMP, CV_CHAIN_APPROX_SIMPLE);
+    Mat I_bw2 = I_bw.clone();
+    findContours(I_bw2, _contours, CV_RETR_CCOMP, CV_CHAIN_APPROX_SIMPLE);
 
     for(int i=0; i < _contours.size(); i++)
     {
-        if(contourArea(_contours[i])>2000)
+        if(contourArea(_contours[i])>400)
         {
            _minRect.push_back(minAreaRect( Mat(_contours[i])));
         }
@@ -152,12 +153,12 @@ void Marker::getAllignment()
 {
     for( int i = 0; i< _minRect.size(); i++ )
     {
-        Scalar _color = Scalar(  Scalar(0,0,255) );
+        Scalar _color = Scalar(  Scalar(255,0,0) );
         Point2f _rectPoints[4];
         _minRect[i].points( _rectPoints );
         for( int j = 0; j < 4; j++ )
         {
-            line( I, _rectPoints[j], _rectPoints[(j+1)%4], _color, 1, 8 );
+            line( I_bw, _rectPoints[j], _rectPoints[(j+1)%4], _color, 3, 8 );
             cout << _minRect[i].center.x << ";" << _minRect[i].center.y << endl;
             cout << _minRect[i].angle << endl;
             _feedback.errorx = I.rows/2 - _minRect[i].center.x;
