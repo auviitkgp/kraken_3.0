@@ -179,13 +179,13 @@
   <link name="gate_shooter">
     <visual>
       <geometry>
-        <mesh filename="package://kraken_visualization/kraken/objects/ship.osg"/>
+        <mesh filename="package://kraken_visualization/kraken/objects/shooter.osg"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://kraken_visualization/kraken/objects/ship.osg"/>
+        <mesh filename="package://kraken_visualization/kraken/objects/shooter.osg"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>

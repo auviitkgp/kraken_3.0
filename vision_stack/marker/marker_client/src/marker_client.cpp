@@ -15,9 +15,9 @@ int main(int argc, char ** argv)
     _client.waitForServer();
     ROS_INFO("markerserver started.");
     actionmsg::markerGoal _goal;
-    _goal.order = DETECT_MARKER;
+    _goal.order = ALLIGN_MARKER;
     _client.sendGoal(_goal);
-    bool _actionStatus = _client.waitForResult(ros::Duration(15.0));
+    bool _actionStatus = _client.waitForResult(ros::Duration(300.0));
     if(_actionStatus == true)
     {
         actionlib::SimpleClientGoalState _state = _client.getState();
@@ -28,9 +28,9 @@ int main(int argc, char ** argv)
         ROS_INFO("marker_client : Action did not finish within specified time.");
         _client.cancelGoal();
     }
-    _goal.order = ALLIGN_MARKER;
+    _goal.order = DETECT_MARKER;
     _client.sendGoal(_goal);
-    _actionStatus = _client.waitForResult(ros::Duration(15.0));
+    _actionStatus = _client.waitForResult(ros::Duration(300.0));
     if(_actionStatus == true)
     {
         actionlib::SimpleClientGoalState _state = _client.getState();
