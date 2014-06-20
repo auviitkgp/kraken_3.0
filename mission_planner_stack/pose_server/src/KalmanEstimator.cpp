@@ -107,7 +107,11 @@ void KalmanEstimator::kalmanmeasurementUpdate(double vx, double vy)
 
 void KalmanEstimator::kalmanUpdateStateFromMatrix(const Vector4d &stateVector)
 {
-
+    float *current_state_array=_next_pose_world.getData();
+    current_state_array[kraken_core::_px]=stateVector(0);
+    current_state_array[kraken_core::_py]=stateVector(1);
+    current_state_array[kraken_core::_vx]=stateVector(2);
+    current_state_array[kraken_core::_vy]=stateVector(3);
 }
 
 void KalmanEstimator::updateState(kraken_msgs::imuData &imu)

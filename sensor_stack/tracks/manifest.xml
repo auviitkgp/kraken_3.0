@@ -9,9 +9,11 @@
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/tracks</url>
   <depend package="rospy"/>
+  <depend package="roslib"/>
   <depend package="std_msgs"/>
   <depend package="kraken_msgs"/>
   <rosdep name="python-numpy" />
+  
 
 </package>
 
