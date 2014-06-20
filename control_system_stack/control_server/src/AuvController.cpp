@@ -299,8 +299,8 @@ namespace kraken_controller
       state.data[kraken_core::_w_yaw] = _setPoint[kraken_core::_w_yaw+6];
   }
 
-/*
-  void AuvController::local2global(kraken_msgs::krakenPose &local)
+
+  void AuvController::local2globalAll(kraken_msgs::krakenPose &local, kraken_msgs::krakenPose &global)
   {
       float _cos_rpy[3];
       float _sin_rpy[3];
@@ -319,38 +319,61 @@ namespace kraken_controller
       //////////////////////////////////////////////////////////////
       float _body_to_world_matrix[3][3];
       _body_to_world_matrix[0][0]   = _cos_rpy[2]*_cos_rpy[1];
-      _body_to_world_matrix[1][0]   = _cos_rpy[2]*_sin_rpy[1]*_sin_rpy[1]-_sin_rpy[2]*_cos_rpy[0];
-      _body_to_world_matrix[2][0]   = _cos_rpy[2]*_sin_rpy[1]*_cos_rpy[0]+_sin_rpy[2]*_sin_rpy[0];
-      _body_to_world_matrix[0][1]   = _sin_rpy[2]*_cos_rpy[1];
+      _body_to_world_matrix[0][1]   = _cos_rpy[2]*_sin_rpy[1]*_sin_rpy[0]-_sin_rpy[2]*_cos_rpy[0];
+      _body_to_world_matrix[0][2]   = _cos_rpy[2]*_sin_rpy[1]*_cos_rpy[0]+_sin_rpy[2]*_sin_rpy[0];
+      _body_to_world_matrix[1][0]   = _sin_rpy[2]*_cos_rpy[1];
       _body_to_world_matrix[1][1]   = _sin_rpy[0]*_sin_rpy[1]*_sin_rpy[2]+_cos_rpy[2]*_cos_rpy[0];
-      _body_to_world_matrix[2][1]   = _cos_rpy[0]*_sin_rpy[1]*_sin_rpy[2]-_cos_rpy[2]*_sin_rpy[0];
-      _body_to_world_matrix[0][2]   = -_sin_rpy[1];
-      _body_to_world_matrix[1][2]   = _sin_rpy[0]*_cos_rpy[1];
+      _body_to_world_matrix[1][2]   = _cos_rpy[0]*_sin_rpy[1]*_sin_rpy[2]-_cos_rpy[2]*_sin_rpy[0];
+      _body_to_world_matrix[2][0]   = -_sin_rpy[1];
+      _body_to_world_matrix[2][1]   = _sin_rpy[0]*_cos_rpy[1];
       _body_to_world_matrix[2][2]   = _cos_rpy[0]*_cos_rpy[1];
 
 
       float _local[kraken_core::countState];
+      std::cout<<"global x "<<global.data[kraken_core::_px]<<" : "<<global.data[kraken_core::_px]<<std::endl;
+      std::cout<<"global y "<<global.data[kraken_core::_py]<<" : "<<global.data[kraken_core::_py]<<std::endl;
+      std::cout<<"global z "<<global.data[kraken_core::_pz]<<" : "<<global.data[kraken_core::_pz]<<std::endl;
       _local[kraken_core::_px] = local.data[kraken_core::_px];// - _feedback.data[0];
-      _local[kraken_core::_px] = local.data[kraken_core::_py];// - _feedback.data[1];
-      _local[kraken_core::_px] = local.data[kraken_core::_pz];// - _feedback.data[2];
+      _local[kraken_core::_py] = local.data[kraken_core::_py];// - _feedback.data[1];
+      _local[kraken_core::_pz] = local.data[kraken_core::_pz];// - _feedback.data[2];
 
       float _global[kraken_core::countState];
       multiply(_body_to_world_matrix,&_local[kraken_core::_px],&_global[kraken_core::_px]);
-      //multiply(_body_to_world_matrix,&_local[kraken_core::_vx+3],&_error[kraken_core::_vx+3]);
-      //multiply(_body_to_world_matrix,&_local[kraken_core::_ax+3],&_error[kraken_core::_ax+3]);
+      multiply(_body_to_world_matrix,&_local[kraken_core::_vx+3],&_error[kraken_core::_vx+3]);
+      multiply(_body_to_world_matrix,&_local[kraken_core::_ax+3],&_error[kraken_core::_ax+3]);
 
-      local.data[kraken_core::_px] += _global[kraken_core::_px];
-      local.data[kraken_core::_py] += _global[kraken_core::_py];
-      local.data[kraken_core::_pz] += _global[kraken_core::_pz];
+      global.data[kraken_core::_px] += _global[kraken_core::_px];
+      global.data[kraken_core::_py] += _global[kraken_core::_py];
+      global.data[kraken_core::_pz] += _global[kraken_core::_pz];
+
+      global.data[kraken_core::_vx] += _global[kraken_core::_vx];
+      global.data[kraken_core::_vy] += _global[kraken_core::_vy];
+      global.data[kraken_core::_vz] += _global[kraken_core::_vz];
+
+      global.data[kraken_core::_ax] += _global[kraken_core::_ax];
+      global.data[kraken_core::_ay] += _global[kraken_core::_ay];
+      global.data[kraken_core::_az] += _global[kraken_core::_az];
 
 
-      //global.data[kraken_core::_roll] = local.data[kraken_core::_roll];
-      //global.data[kraken_core::_pitch] = local.data[kraken_core::_pitch];
-      //global.data[kraken_core::_yaw] = local.data[kraken_core::_yaw];
+      std::cout<<"global x "<<_global[kraken_core::_px]<<" : "<<global.data[kraken_core::_px]<<std::endl;
+      std::cout<<"global y "<<_global[kraken_core::_py]<<" : "<<global.data[kraken_core::_py]<<std::endl;
+      std::cout<<"global z "<<_global[kraken_core::_pz]<<" : "<<global.data[kraken_core::_pz]<<std::endl;
 
+      std::cout<<"global vx "<<_global[kraken_core::_vx]<<" : "<<global.data[kraken_core::_vx]<<std::endl;
+      std::cout<<"global vy "<<_global[kraken_core::_vy]<<" : "<<global.data[kraken_core::_vy]<<std::endl;
+      std::cout<<"global vz "<<_global[kraken_core::_vz]<<" : "<<global.data[kraken_core::_vz]<<std::endl;
+
+      std::cout<<"global ax "<<_global[kraken_core::_ax]<<" : "<<global.data[kraken_core::_ax]<<std::endl;
+      std::cout<<"global ay "<<_global[kraken_core::_ay]<<" : "<<global.data[kraken_core::_ay]<<std::endl;
+      std::cout<<"global az "<<_global[kraken_core::_az]<<" : "<<global.data[kraken_core::_az]<<std::endl;
+
+
+      global.data[kraken_core::_roll] = local.data[kraken_core::_roll];
+      global.data[kraken_core::_pitch] = local.data[kraken_core::_pitch];
+      global.data[kraken_core::_yaw] = local.data[kraken_core::_yaw];
 
   }
-*/
+
   void AuvController::local2global(kraken_msgs::krakenPose &local, kraken_msgs::krakenPose &global)
   {
       float _cos_rpy[3];
@@ -396,10 +419,26 @@ namespace kraken_controller
       global.data[kraken_core::_px] += _global[kraken_core::_px];
       global.data[kraken_core::_py] += _global[kraken_core::_py];
       global.data[kraken_core::_pz] += _global[kraken_core::_pz];
+     /*
+      global.data[kraken_core::_vx] += _global[kraken_core::_vx];
+      global.data[kraken_core::_vy] += _global[kraken_core::_vy];
+      global.data[kraken_core::_vz] += _global[kraken_core::_vz];
+      global.data[kraken_core::_ax] += _global[kraken_core::_ax];
+      global.data[kraken_core::_ay] += _global[kraken_core::_ay];
+      global.data[kraken_core::_az] += _global[kraken_core::_az];
+     */
 
       std::cout<<"global x "<<_global[kraken_core::_px]<<" : "<<global.data[kraken_core::_px]<<std::endl;
       std::cout<<"global y "<<_global[kraken_core::_py]<<" : "<<global.data[kraken_core::_py]<<std::endl;
       std::cout<<"global z "<<_global[kraken_core::_pz]<<" : "<<global.data[kraken_core::_pz]<<std::endl;
+     /*
+      std::cout<<"global x "<<_global[kraken_core::_vx]<<" : "<<global.data[kraken_core::_vx]<<std::endl;
+      std::cout<<"global y "<<_global[kraken_core::_vy]<<" : "<<global.data[kraken_core::_vy]<<std::endl;
+      std::cout<<"global z "<<_global[kraken_core::_vz]<<" : "<<global.data[kraken_core::_vz]<<std::endl;
+      std::cout<<"global x "<<_global[kraken_core::_ax]<<" : "<<global.data[kraken_core::_ax]<<std::endl;
+      std::cout<<"global y "<<_global[kraken_core::_ay]<<" : "<<global.data[kraken_core::_ay]<<std::endl;
+      std::cout<<"global z "<<_global[kraken_core::_az]<<" : "<<global.data[kraken_core::_az]<<std::endl;
+     */
       /*
       global.data[kraken_core::_roll] = local.data[kraken_core::_roll];
       global.data[kraken_core::_pitch] = local.data[kraken_core::_pitch];
