@@ -4,6 +4,7 @@ Marker::Marker(std::string name) : _it(_n), _s(_n, name, boost::bind(&Marker::ex
 {
     _sub = _it.subscribe("/kraken/bottom_camera", 1, &Marker::imageCallBack, this);
     _pub = _it.advertise("/kraken/bottomcam/marker_image", 1);
+    marker_detect_status=false;
 
     ifstream _thresholdVal("threshold.th");
     if(_thresholdVal.is_open())
@@ -50,7 +51,6 @@ void Marker::executCB(const actionmsg::markerGoalConstPtr &_goal)
     switch(_goal->order)
     {
         case DETECT_MARKER:
-        {
             while(ros::ok())
             {
                 if (_s.isPreemptRequested() || !ros::ok())
@@ -61,16 +61,16 @@ void Marker::executCB(const actionmsg::markerGoalConstPtr &_goal)
                     break;
                 }
                 detectMarker();
+
                 _finalImage.image = I_bw;
                 _finalImagemsg = _finalImage.toImageMsg();
                 _pub.publish(_finalImagemsg);
-
+                if(marker_detect_status)
+                    break;
                 looprate.sleep();
             }
             break;
-        }
         case ALLIGN_MARKER:
-        {
             while(ros::ok())
             {
                 if (_s.isPreemptRequested() || !ros::ok())
@@ -94,13 +94,18 @@ void Marker::executCB(const actionmsg::markerGoalConstPtr &_goal)
                 looprate.sleep();
             }
             break;
-        }
+
     }
 
     if(success)
     {
+        ROS_INFO("goal succeeded");
         _result.sequence.push_back(_goal->order);
         _s.setSucceeded(_result);
+
+    }
+    else{
+        _s.setPreempted();
     }
 }
 
@@ -145,6 +150,7 @@ void Marker::detectMarker()
         if(contourArea(_contours[i])>400)
         {
            _minRect.push_back(minAreaRect( Mat(_contours[i])));
+            marker_detect_status=true;
         }
     }
 }

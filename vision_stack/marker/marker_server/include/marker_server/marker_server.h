@@ -44,6 +44,8 @@ private:
     cv_bridge::CvImage _finalImage;
     sensor_msgs::ImagePtr _finalImagemsg;
 
+
+    bool marker_detect_status;
 public:
     Marker(std::string _name);
     void executCB(const actionmsg::markerGoalConstPtr &_goal);
