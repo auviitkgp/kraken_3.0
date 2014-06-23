@@ -1,12 +1,13 @@
+#include <ros/ros.h>
 #include <task_marker/marker_server.h>
 
-Marker::Marker(std::string name) : _it(_n), _s(_n, name, boost::bind(&Marker::executCB, this, _1), false), _actionName(name)
+Marker::Marker(std::string name, std::string _threshold_filepath) : _it(_n), _s(_n, name, boost::bind(&Marker::executCB, this, _1), false), _actionName(name)
 {
     _sub = _it.subscribe("/kraken/bottom_camera", 1, &Marker::imageCallBack, this);
     _pub = _it.advertise("/kraken/bottomcam/marker_image", 1);
     marker_detect_status=false;
 
-    ifstream _thresholdVal("threshold.th");
+    ifstream _thresholdVal(_threshold_filepath.c_str());
     if(_thresholdVal.is_open())
     {
         for(int i = 0; i < 3; i++)
@@ -175,4 +176,17 @@ void Marker::getAllignment()
 
 Marker::~Marker()
 {
+}
+
+int main(int argc, char ** argv)
+{
+    ros::init(argc, argv, "markerserver");
+    if(argc < 2)
+    {
+        ROS_INFO("marker_server : provide threshold file as input parameter");
+        ros::shutdown();
+    }
+    Marker _markerAction("marker", argv[1]);
+    ros::spin();
+    return 0;
 }

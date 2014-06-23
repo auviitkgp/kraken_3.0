@@ -47,7 +47,7 @@ private:
 
     bool marker_detect_status;
 public:
-    Marker(std::string _name);
+    Marker(std::string _name, std::string _threshold_filepath);
     void executCB(const actionmsg::markerGoalConstPtr &_goal);
     void imageCallBack(const sensor_msgs::ImageConstPtr &msg);
     void detectMarker();
