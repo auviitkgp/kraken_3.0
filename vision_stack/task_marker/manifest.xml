@@ -1,20 +1,20 @@
 <package>
-  <description brief="marker_server">
+  <description brief="task_marker">
 
-     marker_server
+     task_marker
 
   </description>
   <author>Nevin Valsaraj</author>
   <license>BSD</license>
   <review status="unreviewed" notes=""/>
-  <url>http://ros.org/wiki/marker_server</url>
+  <url>http://ros.org/wiki/task_marker</url>
   <depend package="roscpp"/>
   <depend package="opencv2"/>
-  <depend package="sensor_msgs"/>
   <depend package="actionlib"/>
+  <depend package="actionmsg"/>
+  <depend package="sensor_msgs"/>
   <depend package="image_transport"/>
   <depend package="cv_bridge"/>
-  <depend package="actionmsg"/>
   <depend package="blob"/>
 
 </package>

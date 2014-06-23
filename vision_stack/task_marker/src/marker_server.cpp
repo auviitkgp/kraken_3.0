@@ -1,11 +1,13 @@
-#include <marker_server/marker_server.h>
+#include <ros/ros.h>
+#include <task_marker/marker_server.h>
 
-Marker::Marker(std::string name) : _it(_n), _s(_n, name, boost::bind(&Marker::executCB, this, _1), false), _actionName(name)
+Marker::Marker(std::string name, std::string _threshold_filepath) : _it(_n), _s(_n, name, boost::bind(&Marker::executeCB, this, _1), false), _actionName(name)
 {
     _sub = _it.subscribe("/kraken/bottom_camera", 1, &Marker::imageCallBack, this);
     _pub = _it.advertise("/kraken/bottomcam/marker_image", 1);
+    marker_detect_status=false;
 
-    ifstream _thresholdVal("threshold.th");
+    ifstream _thresholdVal(_threshold_filepath.c_str());
     if(_thresholdVal.is_open())
     {
         for(int i = 0; i < 3; i++)
@@ -19,7 +21,7 @@ Marker::Marker(std::string name) : _it(_n), _s(_n, name, boost::bind(&Marker::ex
     }
     else
     {
-        ROS_ERROR("markerserver : Unable to open threshold file.");
+        ROS_ERROR("marker_server : Unable to open threshold file.");
         ros::shutdown();
     }
     _kernelDilateErode = getStructuringElement(MORPH_RECT, Size(3,3));
@@ -37,12 +39,12 @@ void Marker::imageCallBack(const sensor_msgs::ImageConstPtr &_msg)
     }
     catch (cv_bridge::Exception& e)
     {
-        ROS_ERROR("markerserver : Could not convert from '%s' to 'bgr8'.", _msg->encoding.c_str());
+        ROS_ERROR("marker_server : Could not convert from '%s' to 'bgr8'.", _msg->encoding.c_str());
     }
     I = _imagePtr->image;
 }
 
-void Marker::executCB(const actionmsg::markerGoalConstPtr &_goal)
+void Marker::executeCB(const actionmsg::markerGoalConstPtr &_goal)
 {
     ros::Rate looprate(10);
     bool success = true;
@@ -50,7 +52,6 @@ void Marker::executCB(const actionmsg::markerGoalConstPtr &_goal)
     switch(_goal->order)
     {
         case DETECT_MARKER:
-        {
             while(ros::ok())
             {
                 if (_s.isPreemptRequested() || !ros::ok())
@@ -61,16 +62,16 @@ void Marker::executCB(const actionmsg::markerGoalConstPtr &_goal)
                     break;
                 }
                 detectMarker();
+
                 _finalImage.image = I_bw;
                 _finalImagemsg = _finalImage.toImageMsg();
                 _pub.publish(_finalImagemsg);
-
+                if(marker_detect_status)
+                    break;
                 looprate.sleep();
             }
             break;
-        }
-        case ALLIGN_MARKER:
-        {
+        case ALIGN_MARKER:
             while(ros::ok())
             {
                 if (_s.isPreemptRequested() || !ros::ok())
@@ -87,20 +88,25 @@ void Marker::executCB(const actionmsg::markerGoalConstPtr &_goal)
                 _pub.publish(_finalImagemsg);
                 if(_feedback.errorangle == 0)
                 {
-                    _result.sequence.push_back(MARKER_ALLIGNED);
+                    _result.sequence.push_back(MARKER_ALIGNED);
                     break;
                 }
                 _s.publishFeedback(_feedback);
                 looprate.sleep();
             }
             break;
-        }
+
     }
 
     if(success)
     {
+        ROS_INFO("goal succeeded");
         _result.sequence.push_back(_goal->order);
         _s.setSucceeded(_result);
+
+    }
+    else{
+        _s.setPreempted();
     }
 }
 
@@ -145,6 +151,7 @@ void Marker::detectMarker()
         if(contourArea(_contours[i])>400)
         {
            _minRect.push_back(minAreaRect( Mat(_contours[i])));
+            marker_detect_status=true;
         }
     }
 }
@@ -169,4 +176,17 @@ void Marker::getAllignment()
 
 Marker::~Marker()
 {
+}
+
+int main(int argc, char ** argv)
+{
+    ros::init(argc, argv, "markerserver");
+    if(argc < 2)
+    {
+        ROS_INFO("marker_server : Requires threshold file as input parameter");
+        ros::shutdown();
+    }
+    Marker _markerAction("marker", argv[1]);
+    ros::spin();
+    return 0;
 }

@@ -18,8 +18,8 @@
 #include <blob/BlobProperties.h>
 #include <blob/BlobResult.h>
 #include <blob/ComponentLabeling.h>
-#include <marker_server/taskheader.h>
-#include <marker_server/resultheader.h>
+#include <task_marker/taskheader.h>
+#include <task_marker/resultheader.h>
 
 using namespace std;
 using namespace cv;
@@ -44,9 +44,11 @@ private:
     cv_bridge::CvImage _finalImage;
     sensor_msgs::ImagePtr _finalImagemsg;
 
+
+    bool marker_detect_status;
 public:
-    Marker(std::string _name);
-    void executCB(const actionmsg::markerGoalConstPtr &_goal);
+    Marker(std::string _name, std::string _threshold_filepath);
+    void executeCB(const actionmsg::markerGoalConstPtr &_goal);
     void imageCallBack(const sensor_msgs::ImageConstPtr &msg);
     void detectMarker();
     void getAllignment();
