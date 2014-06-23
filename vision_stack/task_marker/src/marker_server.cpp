@@ -6,6 +6,7 @@ Marker::Marker(std::string name, std::string _threshold_filepath) : _it(_n), _s(
     _sub = _it.subscribe("/kraken/bottom_camera", 1, &Marker::imageCallBack, this);
     _pub = _it.advertise("/kraken/bottomcam/marker_image", 1);
     marker_detect_status=false;
+    marker_align_status=false;
 
     ifstream _thresholdVal(_threshold_filepath.c_str());
     if(_thresholdVal.is_open())
@@ -86,12 +87,10 @@ void Marker::executeCB(const actionmsg::markerGoalConstPtr &_goal)
                 _finalImage.image = I_bw;
                 _finalImagemsg = _finalImage.toImageMsg();
                 _pub.publish(_finalImagemsg);
-                if(_feedback.errorangle == 0)
-                {
-                    _result.sequence.push_back(MARKER_ALIGNED);
-                    break;
-                }
+                
                 _s.publishFeedback(_feedback);
+                if(marker_align_status)
+                    break;
                 looprate.sleep();
             }
             break;
@@ -166,10 +165,13 @@ void Marker::getAllignment()
         for( int j = 0; j < 4; j++ )
         {
             line( I_bw, _rectPoints[j], _rectPoints[(j+1)%4], _color, 3, 8 );
-            cout << _minRect[i].center.x << ";" << _minRect[i].center.y << endl;
-            cout << _minRect[i].angle << endl;
-            _feedback.errorx = I.rows/2 - _minRect[i].center.x;
-            _feedback.errorangle = 180 - _minRect[i].angle;
+            // cout << "[" << _minRect[i].center.x << ";" << _minRect[i].center.y << "]" << "[" << _minRect[i].angle << "]" << endl;
+            _feedback.errorx = I_bw.rows/2 - _minRect[i].center.x;
+            _feedback.errorangle = _minRect[i].angle;
+            cout << "[" << _feedback.errorx << " -- " << _feedback.errorangle << "]" << endl;
+
+            if(_feedback.errorangle < 3 && _feedback.errorangle > -3 && _feedback.errorx < 5)
+                marker_align_status = true;
         }
     }
 }

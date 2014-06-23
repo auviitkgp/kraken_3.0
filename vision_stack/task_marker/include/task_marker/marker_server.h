@@ -46,6 +46,7 @@ private:
 
 
     bool marker_detect_status;
+    bool marker_align_status;
 public:
     Marker(std::string _name, std::string _threshold_filepath);
     void executeCB(const actionmsg::markerGoalConstPtr &_goal);
