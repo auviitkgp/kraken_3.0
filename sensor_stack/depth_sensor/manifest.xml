@@ -1,0 +1,20 @@
+<package>
+  <description brief="depth_sensor">
+
+     depth_sensor
+
+  </description>
+  <author>vds</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/depth_sensor</url>
+  <depend package="rospy"/>
+  <depend package="std_msgs"/>
+  <depend package="roslib"/>
+  <depend package="kraken_msgs"/>
+  <rosdep name="python-numpy" />
+
+
+</package>
+
+
