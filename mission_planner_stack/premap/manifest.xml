@@ -13,7 +13,6 @@
   <depend package="std_msgs"/>
   <depend package="kraken_msgs"/>
   <depend package="pose_server"/>
-  <depend package="test_pkg"/>
 </package>
 
 

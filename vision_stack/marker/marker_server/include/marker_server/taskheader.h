@@ -1,3 +1,0 @@
-#define DETECT_MARKER 0
-#define ALLIGN_MARKER 1
-

@@ -18,8 +18,8 @@
 #include <blob/BlobProperties.h>
 #include <blob/BlobResult.h>
 #include <blob/ComponentLabeling.h>
-#include <marker_server/taskheader.h>
-#include <marker_server/resultheader.h>
+#include <task_marker/taskheader.h>
+#include <task_marker/resultheader.h>
 
 using namespace std;
 using namespace cv;
