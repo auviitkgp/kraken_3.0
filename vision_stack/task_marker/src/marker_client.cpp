@@ -9,7 +9,7 @@ typedef actionlib::SimpleActionClient<actionmsg::markerAction> Client;
 
 void done_cb(const actionlib::SimpleClientGoalState& state,const actionmsg::markerResultConstPtr& result)
 {
-    ROS_INFO("alignment action server process complete");
+    ROS_INFO("Action server process complete");
 }
 
 void feedback_cb(const actionmsg::markerFeedbackConstPtr& feedback_msg)
@@ -48,7 +48,7 @@ int main(int argc, char ** argv)
         ROS_INFO("marker_client : Action did not finish within specified time.");
         _client.cancelGoal();
     }
-    _goal.order = DETECT_MARKER;
+    _goal.order = ALIGN_MARKER;
     _client.sendGoal(_goal);
     _actionStatus = _client.waitForResult(ros::Duration(300.0));
     if(_actionStatus == true)
