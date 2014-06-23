@@ -24,4 +24,9 @@ qtcreator-*
 *.user
 
 */**/src/*/srv/
-*/**/src/*/msg/
+*/**/src/*/msg//sensor_stack/2014-06-18-03-02-53.bag
+/sensor_stack/2014-06-18-03-08-14.bag
+/control_system_stack/control_server/parameters/Untitled Document
+/sensor_stack/tracks_imu/data.txt
+/sensor_stack/tracks_imu/src/test.cpp
+/sensor_stack/2014-06-18-03-02-53.bag
