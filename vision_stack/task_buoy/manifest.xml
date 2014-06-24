@@ -1,0 +1,21 @@
+<package>
+  <description brief="task_buoy">
+
+     task_buoy
+
+  </description>
+  <author>Nevin Valsaraj</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/task_buoy</url>
+  <depend package="roscpp"/>
+  <depend package="opencv2"/>
+  <depend package="actionlib"/>
+  <depend package="actionmsg"/>
+  <depend package="blob"/>
+  <depend package="image_transport"/>
+  <depend package="cv_bridge"/>
+
+</package>
+
+
