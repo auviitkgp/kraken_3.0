@@ -92,7 +92,7 @@ void Buoy::executeCB(const actionmsg::buoyGoalConstPtr &_goal)
                 _finalImage.image = _imageBW;
                 _finalImagemsg = _finalImage.toImageMsg();
                 _pub.publish(_finalImagemsg);
-                if((_feedback.errorx < 10 && _feedback.errorx >> -10) && (_feedback.errory > -10 && _feedback.errory < 10))
+                if((_feedback.errorx < 5 && _feedback.errorx > -5) && (_feedback.errory > -5 && _feedback.errory < 5))
                 {
                     _result.sequence.push_back(BUOY_ALIGNED);
                     break;
@@ -115,22 +115,26 @@ bool Buoy::detectBuoy()
 {
     if(!_image.empty())
     {
-        cvtColor(_image, _imageHSV, CV_BGR2HSV_FULL);
-        inRange(_imageHSV, Scalar(0,0,0),Scalar(20,255,255), _imageBW);
+        cvtColor(_image, _imageHSV, CV_BGR2HSV);
+        inRange(_imageHSV,_lowerThresh,_upperThresh, _imageBW);
         medianBlur(_imageBW, _imageBW, 3);
         erode(_imageBW, _imageBW, _kernelDilateErode);
         CBlobResult _blobs,_blobsClutter;
         CBlob * _currentBlob;
         IplImage _imageBWipl = _imageBW;
+
         _blobs = CBlobResult(&_imageBWipl, NULL, 0);
-        _blobs.Filter(_blobs, B_EXCLUDE, CBlobGetArea(), B_LESS, 2000);
+        _blobs.Filter(_blobs, B_INCLUDE, CBlobGetArea(), B_INSIDE, 1, 1000);
+
+        _blobsClutter = CBlobResult(&_imageBWipl, NULL, 255);
+        _blobsClutter.Filter(_blobsClutter, B_INCLUDE, CBlobGetArea(), B_INSIDE, 25, 1000);
+
         for(int i = 0; i < _blobs.GetNumBlobs(); i++)
         {
             _currentBlob = _blobs.GetBlob(i);
-            _currentBlob->FillBlob(&_imageBWipl, Scalar(0));
+            _currentBlob->FillBlob(&_imageBWipl, Scalar(255));
         }
-        _blobsClutter = CBlobResult(&_imageBWipl, NULL, 0);
-        _blobsClutter.Filter(_blobsClutter, B_EXCLUDE, CBlobGetArea(), B_GREATER, 50);
+        
         for(int i = 0; i < _blobsClutter.GetNumBlobs(); i++)
         {
             _currentBlob = _blobsClutter.GetBlob(i);
@@ -139,6 +143,7 @@ bool Buoy::detectBuoy()
 
         Mat _imageBW2 = _imageBW.clone();
 
+        _contours.clear();
         medianBlur(_imageBW2, _imageBW2, 5);
         findContours(_imageBW2, _contours, CV_RETR_CCOMP, CV_CHAIN_APPROX_SIMPLE);
 
@@ -151,7 +156,7 @@ bool Buoy::detectBuoy()
 
         for(int i=0; i < _contours.size(); i++)
         {
-            if(contourArea(_contours[i])>100)
+            if(contourArea(_contours[i])>50)
             {
                approxPolyDP(_contours[i],_contoursPolyBuff,3,true);
                minEnclosingCircle((Mat)_contoursPolyBuff,_centerBuff,_radiusBuff);
@@ -175,8 +180,8 @@ void Buoy::getAllignment()
 {
     for(int i = 0; i < _center.size(); i++)
     {
-        _feedback.errorx = _image.rows/2 - _center[i].x;
-        _feedback.errory = _image.cols/2 - _center[i].y;
+        _feedback.errorx = _image.cols/2 - _center[i].x;
+        _feedback.errory = _image.rows/2 - _center[i].y;
         cout<< _feedback.errorx << " : " << _feedback.errory << endl;
     }
 }
@@ -189,7 +194,7 @@ Buoy::~Buoy()
 int main(int argc, char ** argv)
 {
     ros::init(argc, argv, "buoy_server");
-    Buoy _buoyserver("buoyserver");
+    Buoy _buoyserver("buoy");
     ros::spin();
     return 0;
 }

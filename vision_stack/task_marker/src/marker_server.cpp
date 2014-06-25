@@ -111,7 +111,7 @@ void Marker::executeCB(const actionmsg::markerGoalConstPtr &_goal)
 
 void Marker::detectMarker()
 {
-    cvtColor(I, I_hsv, CV_BGR2HSV_FULL);
+    cvtColor(I, I_hsv, CV_BGR2HSV);
     inRange(I_hsv, _lowerThresh, _upperThresh, I_bw);
     medianBlur(I_bw, I_bw, 3);
     erode(I_bw, I_bw, _kernelDilateErode);
