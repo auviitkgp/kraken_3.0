@@ -4,7 +4,7 @@
 
 Buoy::Buoy(std::string name) : _it(_n), _s(_n, name, boost::bind(&Buoy::executeCB, this, _1), false), _actionName(name)
 {
-    _sub = _it.subscribe("/kraken/frontcam_image", 1, &Buoy::imageCallBack, this);
+    _sub = _it.subscribe("/kraken/front_camera", 1, &Buoy::imageCallBack, this);
     _pub = _it.advertise("/kraken/processed/buoy_image", 1);
 
     ifstream _thresholdVal("threshold.th");
@@ -25,7 +25,7 @@ Buoy::Buoy(std::string name) : _it(_n), _s(_n, name, boost::bind(&Buoy::executeC
         ros::shutdown();
     }
     _kernelDilateErode = getStructuringElement(MORPH_RECT, Size(3,3));
-    _finalImage.encoding = "bgr8";
+    _finalImage.encoding = "mono8";
     _s.start();
 }
 
@@ -63,7 +63,7 @@ void Buoy::executeCB(const actionmsg::buoyGoalConstPtr &_goal)
                     break;
                 }
                 _detected = detectBuoy();
-                _finalImage.image = _image;
+                _finalImage.image = _imageBW;
                 _finalImagemsg = _finalImage.toImageMsg();
                 _pub.publish(_finalImagemsg);
 
@@ -89,7 +89,7 @@ void Buoy::executeCB(const actionmsg::buoyGoalConstPtr &_goal)
                 }
                 detectBuoy();
                 getAllignment();
-                _finalImage.image = _image;
+                _finalImage.image = _imageBW;
                 _finalImagemsg = _finalImage.toImageMsg();
                 _pub.publish(_finalImagemsg);
                 if((_feedback.errorx < 10 && _feedback.errorx >> -10) && (_feedback.errory > -10 && _feedback.errory < 10))
@@ -137,8 +137,10 @@ bool Buoy::detectBuoy()
             _currentBlob->FillBlob(&_imageBWipl, Scalar(0));
         }
 
-        medianBlur(_imageBW, _imageBW, 5);
-        findContours(_imageBW, _contours, CV_RETR_CCOMP, CV_CHAIN_APPROX_SIMPLE);
+        Mat _imageBW2 = _imageBW.clone();
+
+        medianBlur(_imageBW2, _imageBW2, 5);
+        findContours(_imageBW2, _contours, CV_RETR_CCOMP, CV_CHAIN_APPROX_SIMPLE);
 
         Point2f _centerBuff;
         float _radiusBuff;
@@ -153,7 +155,7 @@ bool Buoy::detectBuoy()
             {
                approxPolyDP(_contours[i],_contoursPolyBuff,3,true);
                minEnclosingCircle((Mat)_contoursPolyBuff,_centerBuff,_radiusBuff);
-               circle(_image,_centerBuff,_radiusBuff,Scalar(255,0,0));
+               circle(_imageBW,_centerBuff,_radiusBuff,Scalar(0,255,0));
                _center.push_back(_centerBuff);
                _radius.push_back(_radiusBuff);
                _contoursPoly.push_back(_contoursPolyBuff);
@@ -175,6 +177,7 @@ void Buoy::getAllignment()
     {
         _feedback.errorx = _image.rows/2 - _center[i].x;
         _feedback.errory = _image.cols/2 - _center[i].y;
+        cout<< _feedback.errorx << " : " << _feedback.errory << endl;
     }
 }
 
@@ -186,7 +189,7 @@ Buoy::~Buoy()
 int main(int argc, char ** argv)
 {
     ros::init(argc, argv, "buoy_server");
-    Buoy _buoyserver("buoy");
+    Buoy _buoyserver("buoyserver");
     ros::spin();
     return 0;
 }
