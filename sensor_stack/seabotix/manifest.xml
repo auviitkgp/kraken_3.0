@@ -1,0 +1,18 @@
+<package>
+  <description brief="seabotix">
+
+     seabotix
+
+  </description>
+  <author>vds</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/seabotix</url>
+  <depend package="rospy"/>
+  <depend package="roslib"/>
+  <depend package="std_msgs"/>
+  <depend package="kraken_msgs"/>
+
+</package>
+
+

@@ -1,0 +1,17 @@
+<package>
+  <description brief="thruster_converter">
+
+     thruster_converter
+
+  </description>
+  <author>vds</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/thruster_converter</url>
+  <depend package="roscpp"/>
+  <depend package="std_msgs"/>
+  <depend package="kraken_msgs"/>
+
+</package>
+
+

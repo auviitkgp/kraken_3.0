@@ -1,5 +1,6 @@
 from ._controllerResult import *
 from ._dvlData import *
+from ._seabotix import *
 from ._battery import *
 from ._advancedControllerActionResult import *
 from ._advancedControllerFeedback import *
