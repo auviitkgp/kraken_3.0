@@ -5,6 +5,7 @@
 #include "eigen3/Eigen/Geometry"
 #include <iostream>
 #include "pose_server/Estimator.h"
+#include "pose_server/DeadReckoning.h"
 #include "NqDVL/NqDVL.h"
 #include "tracks_imu/Tracks.h"
 
@@ -33,9 +34,7 @@ namespace kraken_core{
 
 
         void kalmanUpdateState(double ax,double ay);
-        void kalmanmeasurementUpdate(double vx,double vy);
-
-
+        void kalmanMeasurementUpdate(double vx,double vy);
         void kalmanUpdateStateFromMatrix(const Vector4d &stateVector);
 
         inline Vector4d getStateMatrix(){
@@ -48,18 +47,23 @@ namespace kraken_core{
 
 
         inline void updateZvalues(float vz,float az){
-            float *data=_next_pose_world.getData();
-            data[kraken_core::_vz]=az*_time;
-            data[kraken_core::_pz]=vz*_time+az*_time*_time*0.5;
+            float *world_data=_next_pose_world.getData();
+            world_data[kraken_core::_vz]+=az*_time;
+            world_data[kraken_core::_pz]+=vz*_time+az*_time*_time*0.5;
         }
+
 
         void updateState(kraken_msgs::imuData &imu);
         void updateState(kraken_msgs::depthData &depth_data_msg);
         void updateState(kraken_msgs::dvlData&);
-        void updateCurrentAccelaration(kraken_msgs::imuData &imu);
+
+
+
+        void accelerationToWorld();
+        void velocityToWorld();
         KrakenPose _current_state_world;
 
-        void initalizeState();
+
 
         bool _isStateInitiaized;
     };
