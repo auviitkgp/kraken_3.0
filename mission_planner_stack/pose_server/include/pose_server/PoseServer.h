@@ -33,6 +33,11 @@ namespace kraken_core
        * Has data from faster sensor has arrived
        */
       bool _fast_sensor;
+
+      /*
+       * Has data from depth sensor has arrived
+       */
+      bool _depth_sensor;
       /*
        * Datastructure for depth data
        */

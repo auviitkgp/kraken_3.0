@@ -29,9 +29,9 @@ KalmanEstimator::KalmanEstimator(int size, float time):Estimator(size,time),_isS
 
 }
 
-void KalmanEstimator::initalizeState()
+/*void KalmanEstimator::initalizeState()
 {
-    float* data=_current_state_world.getData();
+    float* data=_next_pose_world.getData();
     data[kraken_core::_px]=0;
     data[kraken_core::_py]=0;
     data[kraken_core::_vx]=0;
@@ -39,22 +39,23 @@ void KalmanEstimator::initalizeState()
     data[kraken_core::_ax]=0;
     data[kraken_core::_ay]=0;
     data[kraken_core::_az]=0;
-}
+}*/
 
 
 void KalmanEstimator::updatePose(kraken_msgs::imuData &imu_msg)
 {
     updateState(imu_msg);
-    kalmanUpdateState(imu_msg.data[kraken_core::_ax],imu_msg.data[kraken_core::_ay]);
-    float *current_state_array=_next_pose_world.getData();
-    updateZvalues(current_state_array[kraken_core::_az],current_state_array[kraken_core::_vz]);
+    float* world_data=_next_pose_world.getData();
+    kalmanUpdateState(world_data[kraken_core::_ax],world_data[kraken_core::_ay]);
+    updateZvalues(world_data[kraken_core::_vz],world_data[kraken_core::_az]);
 }
 
 void KalmanEstimator::updatePose(kraken_msgs::imuData &imu_msg, kraken_msgs::depthData &depth_msg)
 {
     updateState(imu_msg);
     updateState(depth_msg);
-    kalmanUpdateState(imu_msg.data[kraken_core::_ax],imu_msg.data[kraken_core::_ay]);
+    float* world_data=_next_pose_world.getData();
+    kalmanUpdateState(world_data[kraken_core::_ax],world_data[kraken_core::_ay]);
 }
 
 void KalmanEstimator::updatePose(kraken_msgs::imuData &imu_msg, kraken_msgs::depthData &dep_msg, kraken_msgs::dvlData &dvl_msg)
@@ -62,8 +63,9 @@ void KalmanEstimator::updatePose(kraken_msgs::imuData &imu_msg, kraken_msgs::dep
     updateState(imu_msg);
     updateState(dep_msg);
     updateState(dvl_msg);
-    kalmanUpdateState(imu_msg.data[kraken_core::_ax],imu_msg.data[kraken_core::_ay]);
-    kalmanmeasurementUpdate(dvl_msg.data[kraken_sensors::_dvl_vx],dvl_msg.data[kraken_sensors::_dvl_vy]);
+    float* world_data=_next_pose_world.getData();
+    kalmanUpdateState(world_data[kraken_core::_ax],world_data[kraken_core::_ay]);
+    kalmanMeasurementUpdate(world_data[kraken_core::_vx],world_data[kraken_core::_vy]);
 
 }
 
@@ -76,13 +78,17 @@ void KalmanEstimator::resetPose(KrakenPose &pose_msg)
 void KalmanEstimator::kalmanUpdateState(double ax, double ay)
 {
     Vector2d U(ax,ay);
-    Vector4d X=_Fmatrix*getStateMatrix()+_Bmatrix*U;
+    Vector4d Xi=getStateMatrix();
+    std::cout<<"Xi\n"<<Xi<<std::endl;
+    Vector4d X=_Fmatrix*Xi+_Bmatrix*U;
+    std::cout<<"Xf\n"<<X<<std::endl;
     _Pmatrix=_Fmatrix*_Pmatrix*_Fmatrix.transpose();
+    std::cout<<_Pmatrix<<std::endl;
     kalmanUpdateStateFromMatrix(X);
 
 }
 
-void KalmanEstimator::kalmanmeasurementUpdate(double vx, double vy)
+void KalmanEstimator::kalmanMeasurementUpdate(double vx, double vy)
 {
     Vector2d Z(vx,vy);
     Vector2d y;
@@ -117,7 +123,7 @@ void KalmanEstimator::kalmanUpdateStateFromMatrix(const Vector4d &stateVector)
 void KalmanEstimator::updateState(kraken_msgs::imuData &imu)
 {
     //should be called at first for updating all the required imu values
-
+    /*
     float *current_state_array=_next_pose_world.getData();
 
     current_state_array[kraken_core::_ax]=imu.data[kraken_sensors::accelX];
@@ -129,40 +135,101 @@ void KalmanEstimator::updateState(kraken_msgs::imuData &imu)
 
     current_state_array[_roll]   = imu.data[kraken_sensors::roll];
     current_state_array[_pitch]  = imu.data[kraken_sensors::pitch];
-    current_state_array[_yaw]    = imu.data[kraken_sensors::yaw];
+    current_state_array[_yaw]    = imu.data[kraken_sensors::yaw];*/
+
+
+    float* _data_body_next  = _next_pose_body.getData();
+    float* _data_world_next = _next_pose_world.getData();
+    // Update body accelaration buffer
+    _data_body_next[_ax] = imu.data[kraken_sensors::accelX];
+    _data_body_next[_ay] = imu.data[kraken_sensors::accelY];
+    _data_body_next[_az] = imu.data[kraken_sensors::accelZ];
+    // Update body angular velocity buffer
+    _data_world_next[_w_roll]   = _data_body_next[_w_roll]  = imu.data[kraken_sensors::gyroX];
+    _data_world_next[_w_pitch]  = _data_body_next[_w_pitch] = imu.data[kraken_sensors::gyroY];
+    _data_world_next[_w_yaw]    = _data_body_next[_w_yaw]   = imu.data[kraken_sensors::gyroZ];
+    // Update body angular position buffer
+    _data_world_next[_roll]   = _data_body_next[_roll]  = imu.data[kraken_sensors::roll];
+    _data_world_next[_pitch]  = _data_body_next[_pitch] = imu.data[kraken_sensors::pitch];
+    _data_world_next[_yaw]    = _data_body_next[_yaw]   = imu.data[kraken_sensors::yaw];
+    accelerationToWorld();
 }
 
 void KalmanEstimator::updateState(kraken_msgs::depthData &depth_data_msg)
 {
-    float *current_state_array=_next_pose_world.getData();
-    current_state_array[kraken_core::_vz]=(depth_data_msg.depth-current_state_array[kraken_core::_pz])/_time;
-    current_state_array[kraken_core::_pz]=depth_data_msg.depth;
+    float *world_data=_next_pose_world.getData();
+    world_data[kraken_core::_vz]=(depth_data_msg.depth-world_data[kraken_core::_pz])/_time;
+    world_data[kraken_core::_pz]=depth_data_msg.depth;
 }
 
 void KalmanEstimator::updateState(kraken_msgs::dvlData& dvl_data)
 {
-    float *current_state_array=_next_pose_world.getData();
-    current_state_array[kraken_core::_pz]=dvl_data.data[kraken_sensors::_dvl_vz];
+    float* body_data=_next_pose_body.getData();
+//    world_data[kraken_core::_pz]=dvl_data.data[kraken_sensors::_dvl_vz];
+    body_data[kraken_core::_vx]=dvl_data.data[kraken_sensors::_dvl_vx];
+    body_data[kraken_core::_vy]=dvl_data.data[kraken_sensors::_dvl_vy];
+    body_data[kraken_core::_vz]=dvl_data.data[kraken_sensors::_dvl_vz];
+    velocityToWorld();
 }
 
-void KalmanEstimator::updateCurrentAccelaration(kraken_msgs::imuData & imu)
+
+
+void KalmanEstimator::accelerationToWorld()
 {
-  float* _data_body_next  = _next_pose_body.getData();
-  float* _data_world_next = _next_pose_world.getData();
-  // Update body accelaration buffer
-  _data_body_next[_ax] = imu.data[kraken_sensors::accelX];
-  _data_body_next[_ay] = imu.data[kraken_sensors::accelY];
-  _data_body_next[_az] = imu.data[kraken_sensors::accelZ];
-  // Update body angular velocity buffer
-  _data_world_next[_w_roll]   = _data_body_next[_w_roll]  = imu.data[kraken_sensors::gyroX];
-  _data_world_next[_w_pitch]  = _data_body_next[_w_pitch] = imu.data[kraken_sensors::gyroY];
-  _data_world_next[_w_yaw]    = _data_body_next[_w_yaw]   = imu.data[kraken_sensors::gyroZ];
-  // Update body angular position buffer
-  _data_world_next[_roll]   = _data_body_next[_roll]  = imu.data[kraken_sensors::roll];
-  _data_world_next[_pitch]  = _data_body_next[_pitch] = imu.data[kraken_sensors::pitch];
-  _data_world_next[_yaw]    = _data_body_next[_yaw]   = imu.data[kraken_sensors::yaw];
+    //gets acceleration in world frame in _next_pose_world
+    float* world_data=_next_pose_world.getData();
+    float *body_data=_next_pose_body.getData();
+
+
+    float ax=body_data[kraken_core::_ax];
+    float ay=body_data[kraken_core::_ay];
+    float az=body_data[kraken_core::_az];
+    float r=body_data[kraken_core::_roll];
+    float p=body_data[kraken_core::_pitch];
+    float y=body_data[kraken_core::_yaw];
+
+
+    Matrix3d RWB;
+    RWB<<cos(p)*cos(y),     sin(r)*sin(p)*cos(y)-cos(r)*sin(y),            cos(r)*sin(p)*cos(y)+sin(r)*sin(y),
+            cos(p)*sin(y),   sin(r)*sin(p)*sin(y)+cos(r)*cos(y),           cos(r)*sin(p)*sin(y)-sin(r)*cos(y),
+            -sin(p)  ,        sin(r)*cos(y),                                 cos(r)*cos(p);
+
+    Vector3d Aw=RWB*Vector3d(ax,ay,az);
+
+    world_data[kraken_core::_ax]=Aw(0);
+    world_data[kraken_core::_ay]=Aw(1);
+    world_data[kraken_core::_az]=Aw(2);
+
 }
 
+
+void KalmanEstimator::velocityToWorld()
+{
+    //gets velocity in world frame in _next_pose_world
+    float* world_data=_next_pose_world.getData();
+    float *body_data=_next_pose_body.getData();
+
+
+    float vx=body_data[kraken_core::_vx];
+    float vy=body_data[kraken_core::_vy];
+    float vz=body_data[kraken_core::_vz];
+    float r=body_data[kraken_core::_roll];
+    float p=body_data[kraken_core::_pitch];
+    float y=body_data[kraken_core::_yaw];
+
+
+    Matrix3d RWB;
+    RWB<<cos(p)*cos(y),     sin(r)*sin(p)*cos(y)-cos(r)*sin(y),            cos(r)*sin(p)*cos(y)+sin(r)*sin(y),
+            cos(p)*sin(y),   sin(r)*sin(p)*sin(y)+cos(r)*cos(y),           cos(r)*sin(p)*sin(y)-sin(r)*cos(y),
+            -sin(p)  ,        sin(r)*cos(y),                                 cos(r)*cos(p);
+
+    Vector3d Vw=RWB*Vector3d(vx,vy,vz);
+
+    world_data[kraken_core::_vx]=Vw(0);
+    world_data[kraken_core::_vy]=Vw(1);
+    world_data[kraken_core::_vz]=Vw(2);
+
+}
 
 
 

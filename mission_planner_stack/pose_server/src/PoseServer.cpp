@@ -38,13 +38,16 @@ namespace kraken_core
       _estimator->updatePose(_imuData,_depthData,_dvlData);
       _good_sensor = false;
     }
-    else if(_fast_sensor)
+    else if(_fast_sensor && _depth_sensor)
     {
       _estimator->updatePose(_imuData,_depthData);
       _fast_sensor = false;
+      _depth_sensor=false;
     }
-    else
+    else if(_fast_sensor)
       {
+        _estimator->updatePose(_imuData);
+        _fast_sensor = false;
         return ;
       }
     kraken_msgs::krakenPose pose;
@@ -61,6 +64,7 @@ namespace kraken_core
     boost::mutex::scoped_lock lock(io_mutex);
     //_depthData.depth = msg->depth;
     _depthData.depth = msg->pressure;
+    _depth_sensor=true;
   }
   
   void PoseServer::imuCallBack(const kraken_msgs::imuData::ConstPtr &msg)
