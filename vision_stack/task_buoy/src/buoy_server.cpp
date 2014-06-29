@@ -12,11 +12,27 @@ Buoy::Buoy(std::string name) : _it(_n), _s(_n, name, boost::bind(&Buoy::executeC
     {
         for(int i = 0; i < 3; i++)
         {
-            _thresholdVal >> _lowerThresh[i];
+            _thresholdVal >> _lowerThreshRed1[i];
         }
         for(int i = 0; i < 3; i++)
         {
-            _thresholdVal >> _upperThresh[i];
+            _thresholdVal >> _upperThreshRed1[i];
+        }
+        for(int i = 0; i < 3; i++)
+        {
+            _thresholdVal >> _lowerThreshRed2[i];
+        }
+        for(int i = 0; i < 3; i++)
+        {
+            _thresholdVal >> _upperThreshRed2[i];
+        }
+        for(int i = 0; i < 3; i++)
+        {
+            _thresholdVal >> _lowerThreshGreen[i];
+        }
+        for(int i = 0; i < 3; i++)
+        {
+            _thresholdVal >> _upperThreshGreen[i];
         }
     }
     else
@@ -116,7 +132,13 @@ bool Buoy::detectBuoy()
     if(!_image.empty())
     {
         cvtColor(_image, _imageHSV, CV_BGR2HSV);
-        inRange(_imageHSV,_lowerThresh,_upperThresh, _imageBW);
+
+        inRange(_imageHSV,_lowerThreshRed1,_upperThreshRed1, _imageBW);
+        inRange(_imageHSV,_lowerThreshRed2,_upperThreshRed2, _imageBWRed);
+        add(_imageBW, _imageBWRed, _imageBW);
+        
+        inRange(_imageHSV,_lowerThreshGreen,_upperThreshGreen, _imageBWGreen);
+        add(_imageBW, _imageBWGreen, _imageBW);
         medianBlur(_imageBW, _imageBW, 3);
         erode(_imageBW, _imageBW, _kernelDilateErode);
         CBlobResult _blobs,_blobsClutter;
