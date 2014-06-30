@@ -139,6 +139,9 @@ bool Buoy::detectBuoy()
         
         inRange(_imageHSV,_lowerThreshGreen,_upperThreshGreen, _imageBWGreen);
         add(_imageBW, _imageBWGreen, _imageBW);
+        imshow("_imageBW", _imageBW);
+        waitKey(33);
+
         medianBlur(_imageBW, _imageBW, 3);
         erode(_imageBW, _imageBW, _kernelDilateErode);
         CBlobResult _blobs,_blobsClutter;
@@ -146,24 +149,22 @@ bool Buoy::detectBuoy()
         IplImage _imageBWipl = _imageBW;
 
         _blobs = CBlobResult(&_imageBWipl, NULL, 0);
-        _blobs.Filter(_blobs, B_INCLUDE, CBlobGetArea(), B_INSIDE, 1, 1000);
+        _blobs.Filter(_blobs, B_INCLUDE, CBlobGetArea(), B_INSIDE, 50, 1000);
 
-        _blobsClutter = CBlobResult(&_imageBWipl, NULL, 255);
-        _blobsClutter.Filter(_blobsClutter, B_INCLUDE, CBlobGetArea(), B_INSIDE, 25, 1000);
-
+        _imageBW = Scalar(0, 0, 0);
         for(int i = 0; i < _blobs.GetNumBlobs(); i++)
         {
             _currentBlob = _blobs.GetBlob(i);
             _currentBlob->FillBlob(&_imageBWipl, Scalar(255));
         }
         
-        for(int i = 0; i < _blobsClutter.GetNumBlobs(); i++)
-        {
-            _currentBlob = _blobsClutter.GetBlob(i);
-            _currentBlob->FillBlob(&_imageBWipl, Scalar(0));
-        }
-
         Mat _imageBW2 = _imageBW.clone();
+        Mat src;
+        vector<Mat> channels;
+        channels.push_back(_imageBW);
+        channels.push_back(_imageBW);
+        channels.push_back(_imageBW);
+        merge( channels, src);
 
         _contours.clear();
         medianBlur(_imageBW2, _imageBW2, 5);
@@ -176,18 +177,49 @@ bool Buoy::detectBuoy()
         _radius.clear();
         _contoursPoly.clear();
 
+        _imageBW = Scalar(0, 0, 0);
+
         for(int i=0; i < _contours.size(); i++)
         {
             if(contourArea(_contours[i])>50)
             {
                approxPolyDP(_contours[i],_contoursPolyBuff,3,true);
                minEnclosingCircle((Mat)_contoursPolyBuff,_centerBuff,_radiusBuff);
-               circle(_imageBW,_centerBuff,_radiusBuff,Scalar(0,255,0));
+               circle(_imageBW,_centerBuff,_radiusBuff,Scalar(255), -1);
                _center.push_back(_centerBuff);
                _radius.push_back(_radiusBuff);
                _contoursPoly.push_back(_contoursPolyBuff);
             }
         }
+
+        
+        Mat src_gray;
+        cvtColor( src, src_gray, CV_BGR2GRAY );
+        src = Scalar(0, 0, 0);
+
+        GaussianBlur( src_gray, src_gray, Size(9, 9), 2, 2 );
+        imshow("src_gray", src_gray);
+
+          vector<Vec3f> circles;
+
+          /// Apply the Hough Transform to find the circles
+          HoughCircles( src_gray, circles, CV_HOUGH_GRADIENT, 1, src_gray.rows/16, 150, 25, 0, 0 );
+
+          /// Draw the circles detected
+          if(circles.size() == 0)
+            cout<<"NOTHING CIRCULAR" << endl;
+
+          for( size_t i = 0; i < circles.size(); i++ )
+          {
+              Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
+              int radius = cvRound(circles[i][2]);
+              // circle center
+              circle( src, center, 3, Scalar(0, 255, 0), 3, 8, 0 );
+              // circle outline
+              circle( src, center, radius, Scalar(0, 0, 255), 1, 8, 0 );
+           }
+
+        imshow("src", src);
 
         if(_center.size() > 0)
             return true;
