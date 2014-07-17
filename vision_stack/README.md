@@ -1,14 +1,6 @@
-AUV Vision Stack
-===
-
-This is the repository that contains the vision stack of AUV IIT Kharagpur.
-
-Vehicle Name : Kraken
-
-Managed by : Madhukar
-
-Overall Architecture
-----
+Vision Stack
+============
+##Overall Architecture
 
 With the use of actionlib, we hope to optimize the whole communication protocol between the main task planner and the vision module. When the task/mission planner, which is always running, throughout
 the mission, invokes one of the tasks of the Vision stack, then, this is fixed up in such a way that, the IP code is present in an Action Server,
@@ -16,8 +8,7 @@ and the Task Planner acts as the Action Client. The client sends a goal to the s
 execution of the goal, the server sends feedback to the client. And at the successful completion of the goal or at the end of the timeout, set by
 the client, the server sends a Final Result.
 
-Folders
-----
+##Folders
 
 ###actionmsg/###
 
@@ -41,17 +32,9 @@ that they recieve from these two topics.
 
 This module depends on `image_transport` and `cv_bridge`.
 
-###extrapackages/###
-
-Misc Compressed packages.
-
-###marker###
+###task_marker/###
 
 This folder houses code for the marker detection part. In this part of a task, we detect a marker and then send feedback to the task planner as to the status of completion and alignment changes that need to be made, in order to match the heading of the vehicle with the alignment of the marker, placed on the floor of the tank.
-
-###taskheader/###
-  
-  TO DO
 
 ###validationgate/###
 

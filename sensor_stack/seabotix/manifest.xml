@@ -1,18 +1,18 @@
 <package>
-  <description brief="premap">
+  <description brief="seabotix">
 
-     premap
+     seabotix
 
   </description>
-  <author>Prudhvi</author>
+  <author>vds</author>
   <license>BSD</license>
   <review status="unreviewed" notes=""/>
-  <url>http://ros.org/wiki/premap</url>
-  <depend package="roscpp"/>
+  <url>http://ros.org/wiki/seabotix</url>
   <depend package="rospy"/>
+  <depend package="roslib"/>
   <depend package="std_msgs"/>
   <depend package="kraken_msgs"/>
-  <depend package="pose_server"/>
+
 </package>
 
 

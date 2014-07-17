@@ -1,0 +1,22 @@
+<package>
+  <description brief="task_marker">
+
+     task_marker
+
+  </description>
+  <author>Nevin Valsaraj</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/task_marker</url>
+  <depend package="roscpp"/>
+  <depend package="opencv2"/>
+  <depend package="actionlib"/>
+  <depend package="actionmsg"/>
+  <depend package="sensor_msgs"/>
+  <depend package="image_transport"/>
+  <depend package="cv_bridge"/>
+  <depend package="blob"/>
+
+</package>
+
+

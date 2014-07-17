@@ -1,18 +1,20 @@
 <package>
-  <description brief="premap">
+  <description brief="depth_sensor">
 
-     premap
+     depth_sensor
 
   </description>
-  <author>Prudhvi</author>
+  <author>vds</author>
   <license>BSD</license>
   <review status="unreviewed" notes=""/>
-  <url>http://ros.org/wiki/premap</url>
-  <depend package="roscpp"/>
+  <url>http://ros.org/wiki/depth_sensor</url>
   <depend package="rospy"/>
   <depend package="std_msgs"/>
+  <depend package="roslib"/>
   <depend package="kraken_msgs"/>
-  <depend package="pose_server"/>
+  <rosdep name="python-numpy" />
+
+
 </package>
 
 
