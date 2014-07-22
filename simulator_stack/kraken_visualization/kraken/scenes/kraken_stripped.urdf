@@ -34,6 +34,11 @@
   </link>
   <link name= "depth_sensor">
   </link>
+
+  <!--adding DVL sensor-->
+  <link name= "dvl_link">
+  </link>
+
   <joint name="depth_sensor_to_base_link" type="fixed">
     <parent link="base_link"/>
     <child link="depth_sensor"/>
@@ -69,6 +74,12 @@
     <child link="imu_link"/>
     <axis xyz="0 0 1"/>
     <origin rpy="0 0 0" xyz="-0.602 0.00 -0.03"/>
+  </joint>
+  <joint name="dvl_to_base_link" type="fixed">
+    <parent link="base_link"/>
+    <child link="dvl_link"/>
+    <axis xyz="0 0 1"/>
+    <origin rpy="0 0 0" xyz="-0.602 0.00 -0.3"/>
   </joint>
   <joint name="right_heave_thruster_to_base_link" type="fixed">
     <parent link="base_link"/>

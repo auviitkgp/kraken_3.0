@@ -132,6 +132,7 @@
       </orientation>
       <std>0.00000001</std>
     </imu>
+    
     <pressureSensor>
       <name>pressureSensor</name>
       <relativeTo>depth_sensor</relativeTo>
@@ -147,6 +148,22 @@
       </orientation>
       <std>0.02</std>
     </pressureSensor>
+
+    <dvlSensor>
+      <name>DVLSensor</name>
+      <relativeTo>dvl_link</relativeTo>
+      <position>
+        <x>-0.75</x>
+        <y>0</y>
+        <z>0</z>
+      </position>  
+      <orientation>
+        <r>0</r>
+        <p>0</p>
+        <y>3.9269908169872414</y>
+      </orientation>
+      <std>0.0015</std>
+    </dvlSensor>
   </vehicle>
   <vehicle>
     <name>scene</name>
@@ -196,6 +213,12 @@
       <topic>/kraken/depth</topic>
       <rate>5</rate>
     </PressureSensorToROS>
+    <DVLSensorToROS>
+      <name>DVLSensor</name>
+      <topic>/kraken/dvl</topic>
+      <rate>5</rate>
+    </DVLSensorToROS>
+
     <ROSTwistToPAT>
       <topic> /kraken/twist</topic>
       <vehicleName> kraken </vehicleName>
