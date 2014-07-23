@@ -221,7 +221,7 @@ namespace kraken_controller
   
   void AuvController::loadParams(const std::vector<std::string> &filenames)
   {
-    for(int i=0;i<filenames.size();i++)
+    for(unsigned int i=0;i<filenames.size();i++)
     {
         ControlParameters *param = new ControlParameters();
         param->load(filenames[i]);

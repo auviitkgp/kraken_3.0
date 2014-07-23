@@ -10,7 +10,7 @@
 <!ELEMENT pressureSensor (name,relativeTo,position?,orientation?, std?)>
 <!ELEMENT dvlSensor (name,relativeTo,position?,orientation?, std?)>
 <!ELEMENT object (name,file,position,orientation,offsetp?,offsetr?,physics?)>
-<!ELEMENT rosInterfaces ((ROSOdomToPAT*)?, (PATToROSOdom*)?, (ArmToROSJointState*)?, (ROSJointStateToArm*)?,(VirtualCameraToROSImage*)?,(ImuToROSImu)?, (PressureSensorToROS*)?,(DVLSensorToROS*)?,(ROSImageToHUD*)?,(ROSTwistToPAT*)?, (ROSPoseToPAT*)?)>
+<!ELEMENT rosInterfaces ((ROSOdomToPAT*)?, (PATToROSOdom*)?, (ArmToROSJointState*)?, (ROSJointStateToArm*)?,(VirtualCameraToROSImage*)?,(ImuToROSImu*)?, (PressureSensorToROS*)?,(DVLSensorToROS*)?,(ROSImageToHUD*)?,(ROSTwistToPAT*)?, (ROSPoseToPAT*)?)>
 
 <!-- elementos comunes -->
 <!ELEMENT position (x,y,z)>

@@ -71,7 +71,7 @@ class Interaction(object):
         
         self.premapMarkerLocationService=rospy.ServiceProxy(name=header.PREMAP_LOCATION_SERVICE, service_class=getLocation)
         rospy.loginfo("waiting for premap location Service")
-        self.moveAlongService.wait_for_service()
+        self.premapMarkerLocationService.wait_for_service()
         rospy.loginfo("Got move premap location  service !!")
         
         #also do on and off camera services--To be implemented
