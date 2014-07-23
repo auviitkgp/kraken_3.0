@@ -1,0 +1,19 @@
+<package>
+  <description brief="resources">
+
+     resources
+
+  </description>
+  <author>Prudhvi</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/resources</url>
+  <depend package="roscpp"/>
+  <depend package="rospy"/>
+  <depend package="std_msgs"/>
+	<export>
+  	<cpp cflags="-I${prefix}/include/" />
+  </export>
+</package>
+
+

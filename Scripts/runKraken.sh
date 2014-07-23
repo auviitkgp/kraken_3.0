@@ -8,7 +8,7 @@ export ROS_PACKAGE_PATH=$ROS_WORKSPACE:$ROS_PACKAGE_PATH
 
 rosrun pose_server server &
 
-Starting model. Arguments are forces in 6 direction
+# Starting model. Arguments are forces in 6 direction
 rosrun simulator_physics_model start_auv_model 0.0 0.0 0.0 0.0 0.0 0.0 &
 
 #######
@@ -24,4 +24,6 @@ roscd control_server
 rosrun control_server controlServer 10 parameters/MoveBack.cp parameters/MoveForward.cp parameters/Pause.cp &
 
 #Starting control server. Argument is height
-rosrun control_server client_action 3.0
+# rosrun control_server client_action 3.0
+
+echo "hello world"

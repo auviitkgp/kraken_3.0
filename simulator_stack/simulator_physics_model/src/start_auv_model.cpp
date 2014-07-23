@@ -12,6 +12,7 @@
 #include <kraken_msgs/forceData6Thruster.h>
 #include <kraken_msgs/imuData.h>
 #include <tracks_imu/Tracks.h>
+#include "resources/topicHeader.h"
 
 using namespace ros;
 using namespace kraken_simulator;
@@ -79,7 +80,7 @@ public:
         imu.data[kraken_sensors::roll] = auv._current_position_to_body[3];
         imu.data[kraken_sensors::pitch] = auv._current_position_to_body[4];
         imu.data[kraken_sensors::yaw] = auv._current_position_to_body[5];
-        imu_pub.publish(imu);
+//        imu_pub.publish(imu);
         pose_pub.publish(pos_msg);
         if(isLineNeeded)
             odo_pub.publish(odo_msg);
@@ -123,12 +124,12 @@ int main(int argc,char **argv)
             storeforce[i-1]=atof(argv[i]);
     NodeHandle n;
 
-    Publisher pose_publisher=n.advertise<geometry_msgs::Pose>("/kraken/pose",1);
-    Publisher twistS_publisher= n.advertise <geometry_msgs::TwistStamped>("/kraken/twist",1);
-    Publisher odometry_pub= n.advertise <nav_msgs::Odometry>("/kraken/dataNavigator",1);
-    Publisher imu_pub=n.advertise<kraken_msgs::imuData>("/kraken/imuData",1);
-    Subscriber thrust4sub=n.subscribe<kraken_msgs::forceData4Thruster>("/kraken/forceData4Thruster",1,fourThrustCb);
-    Subscriber thrust6sub=n.subscribe<kraken_msgs::forceData6Thruster>("/kraken/forceData6Thruster",1,sixThrustCb);
+    Publisher pose_publisher=n.advertise<geometry_msgs::Pose>(topics::SIMULATOR_MODEL_POSE,1);
+    Publisher twistS_publisher= n.advertise <geometry_msgs::TwistStamped>(topics::SIMULATOR_MODEL_TWIST,1);
+    Publisher odometry_pub= n.advertise <nav_msgs::Odometry>(topics::SIMULATOR_MODEL_DATA_NAVIGATOR,1);
+    Publisher imu_pub=n.advertise<kraken_msgs::imuData>(topics::SIMULATOR_MODEL_IMU_DATA,1);
+    Subscriber thrust4sub=n.subscribe<kraken_msgs::forceData4Thruster>(topics::SIMULATOR_MODEL_FORCE_DATA_4_THRUSTERS,1,fourThrustCb);
+    Subscriber thrust6sub=n.subscribe<kraken_msgs::forceData6Thruster>(topics::SIMULATOR_MODEL_FORCE_DATA_6_THRUSTERS,1,sixThrustCb);
 
     AuvModelSimple6DoF auv(.05);
 
