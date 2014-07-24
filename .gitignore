@@ -91,3 +91,5 @@ msgs_stack/ip_msgs/msg/
 */**/src/*/srv/
 */**/src/*/msg/
 ./*/srv/_*.py
+/sensor_stack/nqDVL/.pydevproject
+/sensor_stack/tracks/.pydevproject

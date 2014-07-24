@@ -6,3 +6,4 @@
 - `runKraken.sh` - 
 - `runKraken_joystick.sh` - Script to run kraken simulator with joystick control
 - `stopKraken.sh` - Script to stop runKraken.sh script
+- 'makeKraken.sh' - Script to make all the project packages at once
