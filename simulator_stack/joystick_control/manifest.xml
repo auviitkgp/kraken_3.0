@@ -13,6 +13,7 @@
   <depend package="simulator_physics_model"/>
   <depend package="kraken_visualization"/>
   <depend package="joy"/>
+  <depend package="resources"/>
 
 </package>
 

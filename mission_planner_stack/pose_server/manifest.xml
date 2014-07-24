@@ -14,6 +14,7 @@
   <depend package="tf"/>
   <depend package="tracks_imu"/>
   <depend package="NqDVL"/>
+  <depend package="resources"/>
   <export>
     <cpp cflags="-I${prefix}/include/" lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib" />
   </export>

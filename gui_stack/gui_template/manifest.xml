@@ -15,6 +15,7 @@
   <!-- rosbuild1 -->
   <depend package="qt_build"/>
   <depend package="roscpp"/>
+  <depend package="resources"/>
   
   <rosbuild2>
     <depend package="qt_build"/>

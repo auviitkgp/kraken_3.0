@@ -15,7 +15,7 @@
   <depend package="tracks_imu"/>
   <depend package="resources"/>
   <export>
-    <cpp cflags="-I${prefix}/include/" lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -lsimulator_physics_model"/>
+    <cpp cflags="-I${prefix}/include/" lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib"/>
   </export>
 </package>
 

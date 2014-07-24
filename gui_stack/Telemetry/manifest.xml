@@ -20,6 +20,7 @@
   <depend package="opencv2"/>
   <depend package="pose_server"/>
   <depend package="cv_bridge"/>
+  <depend package="resources"/>
   
   <rosbuild2>
     <depend package="qt_build"/>

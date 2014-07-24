@@ -15,6 +15,7 @@
   <depend package="pose_server"/>
   <depend package="actionlib"/>
   <depend package="actionlib_msgs"/>
+  <depend package="resources"/>
 
 </package>
 

@@ -14,7 +14,7 @@
   <depend package="std_msgs"/>
   <depend package="kraken_msgs"/>
   <rosdep name="python-numpy" />
-
+  <depend package="resources"/>
 </package>
 
 
