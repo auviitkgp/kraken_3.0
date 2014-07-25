@@ -3,6 +3,8 @@
 #include <kraken_msgs/forceData6Thruster.h>
 #include <sensor_msgs/Joy.h>
 
+#include <resources/topicHeader.h>
+
 using namespace std;
 kraken_msgs::forceData6Thruster _force_sent;
 float _received[11];
@@ -27,7 +29,7 @@ void joyCB(const sensor_msgs::JoyConstPtr &msg)
 int main(int argc, char *argv[]){
     ros::init(argc, argv, "joystick_control");
 	ros::NodeHandle _nh;
-    ros::Publisher _force_pub = _nh.advertise<kraken_msgs::forceData6Thruster>("/kraken/forceData6Thruster", 100);
+    ros::Publisher _force_pub = _nh.advertise<kraken_msgs::forceData6Thruster>(topics::CONTROL_PID_THRUSTER6, 100);
     ros::Subscriber _joy_sub = _nh.subscribe<sensor_msgs::Joy>("/joy", 100, joyCB);
     ros::Rate _looprate(10);
 
