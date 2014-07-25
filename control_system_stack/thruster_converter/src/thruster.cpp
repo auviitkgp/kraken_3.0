@@ -16,6 +16,8 @@
 #include <kraken_msgs/thrusterData4Thruster.h>
 #include <kraken_msgs/thrusterData6Thruster.h>
 
+#include <resources/topicHeader.h>
+
 float converter = 1.0;
 uint8_t offset = 0x80;
 uint8_t max = 0x60;   //Maximum forward thrust
@@ -79,9 +81,9 @@ int main(int argc,char** argv)
     ros::init(argc ,argv, "seabotix");
 
     ros::NodeHandle n;
-    ros::Subscriber _sub4 = n.subscribe<kraken_msgs::thrusterData4Thruster>("/kraken/thrusterData4Thruster",2,thruster4callback);
-    ros::Subscriber _sub6 = n.subscribe<kraken_msgs::thrusterData6Thruster>("/kraken/thrusterData6Thruster",2,thruster6callback);
-    ros::Publisher _pub = n.advertise<kraken_msgs::seabotix>("/kraken/seabotixData",2);
+    ros::Subscriber _sub4 = n.subscribe<kraken_msgs::thrusterData4Thruster>(topics::CONTROL_PID_THRUSTER4,2,thruster4callback);
+    ros::Subscriber _sub6 = n.subscribe<kraken_msgs::thrusterData6Thruster>(topics::CONTROL_PID_THRUSTER6,2,thruster6callback);
+    ros::Publisher _pub = n.advertise<kraken_msgs::seabotix>(topics::CONTROL_SEABOTIX,2);
 
     ros::Rate looprate(10);
     while(ros::ok())
