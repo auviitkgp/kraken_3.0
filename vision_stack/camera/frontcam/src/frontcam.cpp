@@ -10,7 +10,7 @@ using namespace std;
 using namespace cv;
 
 int camMsg = 0;  // 0 : front cam   1:  bottom cam
-int camId = 0;
+int cameraNo = 0;
 
 bool camOpen = false;
 int flag = 0;
@@ -20,7 +20,7 @@ VideoCapture cam;
 void msgCallback(const std_msgs::String::ConstPtr& msg)
 {
     camMsg = atoi(msg->data.c_str());
-    if(camMsg == camId && !camOpen)
+    if(camMsg == cameraNo && !camOpen)
     {
         if(cam.open(camMsg))
         {
@@ -28,7 +28,7 @@ void msgCallback(const std_msgs::String::ConstPtr& msg)
             camOpen = true;
         }
     }
-    else if(camMsg != camId && camOpen)
+    else if(camMsg != cameraNo && camOpen)
     {
         cam.release();
         cout << "FrontCam closed successfully." << endl;
