@@ -47,7 +47,10 @@ const char* HARDWARE_BATTERY2="/kraken/hardware/bat2";
 const char* HARDWARE_MISSION_SWITCH_SERV="/kraken/hardware/mission_switch_serv";
 const char* HARDWARE_KILL_SWITCH="/kraken/hardware/kill_switch_serv";
 
+// vision stack topics
 
+const char* CAMERA_BOTTOM_RAW_IMAGE='kraken/camera/bottomcam/raw_image';
+const char* CAMERA_BOTTOM_CAM_SWITCH='kraken/camera/bottomcam/camera_switch';
 
 //navigation
 
