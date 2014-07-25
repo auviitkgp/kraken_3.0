@@ -32,7 +32,7 @@ const char* CONTROL_MOVEALONG_SERV="/kraken/control/move_along_serv";
 const char* CONTROL_IP_ERROR="/kraken/control/ip_error";
 const char* CONTROL_SWITCH_CONTROL="/kraken/control/switch_srv";
 
-const char* CONTROL_SEABOTIX="kraken/control/seabotixData";
+const char* CONTROL_SEABOTIX="/kraken/control/seabotixData";
 
 
 //sensor topics
@@ -49,8 +49,10 @@ const char* HARDWARE_KILL_SWITCH="/kraken/hardware/kill_switch_serv";
 
 // vision stack topics
 
-const char* CAMERA_BOTTOM_RAW_IMAGE='kraken/camera/bottomcam/raw_image';
-const char* CAMERA_CAM_SWITCH='kraken/camera/bottomcam/camera_switch';
+const char* CAMERA_BOTTOM_RAW_IMAGE='/kraken/camera/bottomcam/raw_image';
+const char* CAMERA_CAM_SWITCH='/kraken/camera/bottomcam/camera_switch';
+
+const char* CAMERA_FRONT_RAW_IMAGE='/kraken/camera/frontcam/raw_image';
 
 //navigation
 
