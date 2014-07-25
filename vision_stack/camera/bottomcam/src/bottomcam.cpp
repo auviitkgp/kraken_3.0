@@ -45,7 +45,7 @@ int main(int argc, char** argv)
     ros::NodeHandle _nh;
     image_transport::ImageTransport _it(_nh);
     image_transport::Publisher _image_pub = _it.advertise(topics::CAMERA_BOTTOM_RAW_IMAGE, 1);
-    ros::Subscriber _sub = _nh.subscribe(topics::CAMERA_BOTTOM_CAM_SWITCH, 1, msgCallback);
+    ros::Subscriber _sub = _nh.subscribe(topics::CAMERA_CAM_SWITCH, 1, msgCallback);
 
     sensor_msgs::ImagePtr _publishImage;
     cv_bridge::CvImage _image;

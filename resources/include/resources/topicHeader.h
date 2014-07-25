@@ -50,7 +50,7 @@ const char* HARDWARE_KILL_SWITCH="/kraken/hardware/kill_switch_serv";
 // vision stack topics
 
 const char* CAMERA_BOTTOM_RAW_IMAGE='kraken/camera/bottomcam/raw_image';
-const char* CAMERA_BOTTOM_CAM_SWITCH='kraken/camera/bottomcam/camera_switch';
+const char* CAMERA_CAM_SWITCH='kraken/camera/bottomcam/camera_switch';
 
 //navigation
 
