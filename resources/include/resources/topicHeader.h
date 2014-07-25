@@ -32,6 +32,7 @@ const char* CONTROL_MOVEALONG_SERV="/kraken/control/move_along_serv";
 const char* CONTROL_IP_ERROR="/kraken/control/ip_error";
 const char* CONTROL_SWITCH_CONTROL="/kraken/control/switch_srv";
 
+const char* CONTROL_SEABOTIX="kraken/control/seabotixData";
 
 
 //sensor topics
