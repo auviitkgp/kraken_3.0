@@ -12,7 +12,7 @@
   <depend package="rospy"/>
   <depend package="std_msgs"/>
 	<export>
-  	<cpp cflags="-I${prefix}/include/" />
+  	<cpp cflags="-I${prefix}/include/" lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -lresources"/>
   </export>
 </package>
 
