@@ -33,7 +33,9 @@ extern const char* CONTROL_IP_ERROR;
 extern const char* CONTROL_SWITCH_CONTROL;
 
 
+
 extern const char* CONTROL_SEABOTIX;
+
 
 
 //sensor topics
