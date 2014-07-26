@@ -6,7 +6,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <std_msgs/String.h>
 
-#include <resource/topicHeader.h>
+#include <resources/topicHeader.h>
 
 using namespace std;
 using namespace cv;

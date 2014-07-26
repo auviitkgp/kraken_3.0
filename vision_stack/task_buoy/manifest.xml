@@ -15,6 +15,7 @@
   <depend package="blob"/>
   <depend package="image_transport"/>
   <depend package="cv_bridge"/>
+  <depend package="resources"/>
 
 </package>
 

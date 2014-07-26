@@ -14,6 +14,7 @@
   <depend package="image_transport"/>
   <depend package="blob"/>
   <depend package="actionmsg"/>
+  <depend package="resources"/>
 
 </package>
 

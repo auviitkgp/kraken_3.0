@@ -6,4 +6,4 @@ export ROS_PACKAGE_PATH=$ROS_WORKSPACE:$ROS_PACKAGE_PATH
 
 roscd resources
 make -j4
-./bin/getPythonHeader include/resources/topicHeader.h src/resources/topicHeader.py
+./bin/getPythonHeader src/topicHeader.cpp src/resources/topicHeader.py

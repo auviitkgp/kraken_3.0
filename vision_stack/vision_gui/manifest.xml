@@ -11,6 +11,7 @@
   <depend package="roscpp"/>
   <depend package="opencv2"/>
   <depend package="blob"/>
+  <depend package="resources"/>
 
 </package>
 
