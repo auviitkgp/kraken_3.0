@@ -52,6 +52,7 @@ extern const char* HARDWARE_KILL_SWITCH;
 
 // vision stack topics
 
+
 extern const char* CAMERA_BOTTOM_RAW_IMAGE;
 extern const char* CAMERA_CAM_SWITCH;
 extern const char* CAMERA_FRONT_RAW_IMAGE;
