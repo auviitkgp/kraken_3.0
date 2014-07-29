@@ -1,0 +1,9 @@
+<launch>
+	
+
+	
+	<node name="buoy_server" pkg="task_buoy" type="server" args="$(find task_buoy)/threshold.th"/>
+
+	
+	
+</launch>

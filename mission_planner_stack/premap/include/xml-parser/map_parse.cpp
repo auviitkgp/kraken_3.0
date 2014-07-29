@@ -13,57 +13,54 @@ using namespace rapidxml;
 using namespace std;
 using namespace cv;
 
-Point2f * returnArray(int &n){
-    int size = 0;
+Point2f * returnArray(int &n, string file_name){
+        int size = 0;
 
-    xml_document<> doc;
-    xml_node<> *root_node, *subNode, *sub1Node;
-    ifstream theFile ("map_xml.xml");
-    vector<char> buffer((istreambuf_iterator<char>(theFile)), istreambuf_iterator<char>());
-    buffer.push_back('\0');
-    doc.parse<0>(&buffer[0]);
+        xml_document<> doc;
+        xml_node<> *root_node, *subNode;
+        ifstream theFile (file_name.c_str());
 
-    root_node = doc.first_node();
 
-//    cout << "\n The first node is :- " << root_node->name() << "\n";
+        vector<char> buffer((istreambuf_iterator<char>(theFile)), istreambuf_iterator<char>());
 
-    subNode = root_node->first_node();
 
-    for( ; subNode ; subNode = subNode->next_sibling(), ++size);
 
-    Point2f * marker_array = new Point2f[size];
 
-    subNode = root_node->first_node();
-    string g;
+        buffer.push_back('\0');
+        doc.parse<0>(&buffer[0]);
 
-    for( int i = 0 ; subNode ; ++i, subNode = subNode->next_sibling()){
+        root_node = doc.first_node();
 
-        g = std::string(subNode->first_attribute("x")->value());
-        int x = atoi(g.c_str());
-        g = std::string(subNode->first_attribute("y")->value());
-        int y = atoi(g.c_str());
-        Point2f pt(x, y);
-        marker_array[i] = pt;
-    }
+        if(root_node==NULL)
+            cout<<("theres no xml file loaded");
+        subNode = root_node->first_node();
 
-//    cout << "The size of the array returned is :- " << size << "\n";
+        for( ; subNode ; subNode = subNode->next_sibling(), ++size);
+        size=6;
 
-//    cout << "The points are :- \n";
+        Point2f * marker_array = new Point2f[size];
 
-//    for(int j = 0; j < size; ++j)
+        subNode = root_node->first_node();
+        string g;
 
-//        cout << marker_array[j].x << ", " << marker_array[j].y << "\n";
+        for( int i = 0 ; subNode ; ++i, subNode = subNode->next_sibling()){
 
-    n = size;
-
-    return marker_array;
+            g = std::string(subNode->first_attribute("x")->value());
+            int x = atoi(g.c_str());
+            g = std::string(subNode->first_attribute("y")->value());
+            int y = atoi(g.c_str());
+            Point2f pt(x, y);
+            marker_array[i] = pt;
+        }
+        n = size;
+        return marker_array;
 }
 
 int main()
 {
 
     int size;
-    Point2f * printer = returnArray(size);
+    Point2f * printer = returnArray(size,"map_xml.xml");
 
     cout << size << "\n";
 

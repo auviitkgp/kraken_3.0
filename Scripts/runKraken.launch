@@ -34,7 +34,7 @@ rosrun control_server client_action 3.0 -->
 	<node name="control_node" pkg="control_server" type="controlServer" args="10 $(find control_server)/parameters/MoveBack.cp 
 		$(find control_server)/parameters/MoveForward.cp $(find control_server)/parameters/Pause.cp"/>
 
-	<node name="premap_node" pkg="premap" type="premap" args="$(find premap)/map_xml.xml"/>
-	<node name="marker_node" pkg="marker_server" type="servertest"/>
+	<include file="$(find premap)/launch/start_premap.launch"/>
+	<include file="$(find task_marker)/launch/run_server.launch"/>
 	<!-- <node name="server_pose" pkg="pose_server" type="PoseServer"/> -->
 </launch>

@@ -1,0 +1,16 @@
+<package>
+  <description brief="Scripts">
+
+     Scripts
+
+  </description>
+  <author>Prudhvi</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/resources</url>
+  <depend package="roscpp"/>
+  <depend package="rospy"/>
+  <depend package="std_msgs"/>
+</package>
+
+

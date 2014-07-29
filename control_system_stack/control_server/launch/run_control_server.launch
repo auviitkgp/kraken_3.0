@@ -1,0 +1,10 @@
+<launch>
+	
+
+	
+	<node name="control_node" pkg="control_server" type="controlServer" args="10 $(find control_server)/parameters/MoveBack.cp 
+		$(find control_server)/parameters/MoveForward.cp $(find control_server)/parameters/Pause.cp"/>
+
+	
+	<!-- <node name="server_pose" pkg="pose_server" type="PoseServer"/> -->
+</launch>
