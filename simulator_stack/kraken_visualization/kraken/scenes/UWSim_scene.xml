@@ -181,16 +181,16 @@
   </vehicle>
   <rosInterfaces>
     <ROSOdomToPAT>
-      <topic> /kraken/dataNavigator </topic>
+      <topic> /kraken/simulator/dataNavigator </topic>
       <vehicleName> kraken </vehicleName>
       <visualize> 1 </visualize>
     </ROSOdomToPAT>
     <ArmToROSJointState> 
-	<topic>/kraken/joint_state</topic>
+	<topic>/kraken/simulator/joint_state</topic>
 	<vehicleName> kraken </vehicleName>
     </ArmToROSJointState>
     <ROSJointStateToArm> 
-      <topic>/kraken/joint_state_command</topic>
+      <topic>/kraken/simulator/joint_state_command</topic>
       <vehicleName> kraken </vehicleName>
       </ROSJointStateToArm>
     <VirtualCameraToROSImage> 
@@ -205,26 +205,26 @@
     </VirtualCameraToROSImage>
     <ImuToROSImu>
       <name>imu</name>
-      <topic>/kraken/imu_data</topic>
+      <topic>/kraken/sensor/imu</topic>
       <rate>10</rate>
     </ImuToROSImu>
     <PressureSensorToROS>
       <name>pressureSensor</name>
-      <topic>/kraken/depth</topic>
+      <topic>/kraken/sensor/depth</topic>
       <rate>5</rate>
     </PressureSensorToROS>
     <DVLSensorToROS>
       <name>DVLSensor</name>
-      <topic>/kraken/dvl</topic>
+      <topic>/kraken/sensor/dvl</topic>
       <rate>5</rate>
     </DVLSensorToROS>
 
     <ROSTwistToPAT>
-      <topic> /kraken/twist</topic>
+      <topic> /kraken/simulator/twist</topic>
       <vehicleName> kraken </vehicleName>
     </ROSTwistToPAT>
     <ROSPoseToPAT>
-      <topic> /kraken/pose</topic>
+      <topic> /kraken/simulator/pose</topic>
       <vehicleName> kraken </vehicleName>
     </ROSPoseToPAT>
   </rosInterfaces>

@@ -9,7 +9,7 @@ namespace kraken_controller
     _pub = n.advertise<kraken_msgs::thrusterData4Thruster>(topics::CONTROL_PID_THRUSTER4,2);
     _pub6 = n.advertise<kraken_msgs::thrusterData6Thruster>(topics::CONTROL_PID_THRUSTER6,2);
     _set_point = n.advertise<kraken_msgs::krakenPose>("/kraken/pos_set",2);
-    _sub_pose = n.subscribe<kraken_msgs::krakenPose>(topics::CONTROL_POSE_ESTIMATED,2,&ControlServer::poseFeedBack,this);
+    _sub_pose = n.subscribe<kraken_msgs::krakenPose>(topics::NAV_POSE_ESTIMATED,2,&ControlServer::poseFeedBack,this);
     _sub_ip_error  = n.subscribe<kraken_msgs::ipControllererror>(topics::CONTROL_IP_ERROR,2,&ControlServer::ipErrorFeedBack,this);
 
     _do_control = true;

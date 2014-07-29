@@ -28,6 +28,7 @@
 #include <cv_bridge/cv_bridge.h>
 #include <pose_server/KrakenPose.h>
 #include <cv.h>
+#include "resources/topicHeader.h"
 
 /*****************************************************************************
 ** Namespaces
@@ -41,11 +42,11 @@ namespace Telemetry {
 ** Class
 *****************************************************************************/
 
-  const std::string  _ros_topic_front_image="/kraken/front_camera";
-  const std::string  _ros_topic_bottom_image="/kraken/bottom_camera";
-  const std::string  _ros_topic_thruster_6_data="/kraken/thrusterData6Thruster";
-  const std::string  _ros_topic_thruster_4_data="/kraken/thrusterData4Thruster";
-  const std::string  _ros_topic_kraken_current_pose="/kraken/pose_estimated";
+  const std::string  _ros_topic_front_image=topics::CAMERA_FRONT_RAW_IMAGE;
+  const std::string  _ros_topic_bottom_image=topics::CAMERA_BOTTOM_RAW_IMAGE;
+  const std::string  _ros_topic_thruster_6_data=topics::CONTROL_PID_THRUSTER6;
+  const std::string  _ros_topic_thruster_4_data=topics::CONTROL_PID_THRUSTER4;
+  const std::string  _ros_topic_kraken_current_pose=topics::NAV_POSE_ESTIMATED;
   const std::string  _ros_topic_kraken_set_pose="/kraken/pose_set";
   
 class QNode : public QThread {

@@ -1,0 +1,9 @@
+<launch>
+	
+
+	
+	<node ns="simulator" name="simulator_node" pkg="Scripts" type="kraken_visualization_launcher"/>
+
+	
+	
+</launch>
