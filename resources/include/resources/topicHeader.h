@@ -22,6 +22,9 @@ extern const char* SIMULATOR_JOINT_STATE_CMD;
 extern const char* SIMULATOR_TWIST;
 extern const char* SIMULATOR_POSE;
 extern const char* SIMULATOR_DATA_NAVIGATOR;
+extern const char* SIMULATOR_IMU;
+extern const char* SIMULATOR_DVL;
+extern const char* SIMULATOR_DEPTH;
 
 
 

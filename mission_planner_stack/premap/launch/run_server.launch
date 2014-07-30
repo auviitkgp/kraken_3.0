@@ -1,0 +1,9 @@
+<launch>
+	
+
+	
+	<node name="premap" pkg="premap" type="premap" args="$(find premap)/map_xml.xml"/>
+
+	
+	
+</launch>

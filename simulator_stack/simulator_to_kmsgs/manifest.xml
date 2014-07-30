@@ -1,0 +1,19 @@
+<package>
+  <description brief="simulator_to_kmsgs">
+
+     simulator_to_kmsgs
+
+  </description>
+  <author>Prudhvi</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/simulator_to_kmsgs</url>
+  <depend package="roscpp"/>
+  <depend package="kraken_msgs"/>
+  <depend package="resources"/>
+  <depend package="std_msgs"/>
+  <depend package="pose_server"/>
+
+</package>
+
+

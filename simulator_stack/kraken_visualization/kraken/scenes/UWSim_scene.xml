@@ -205,17 +205,17 @@
     </VirtualCameraToROSImage>
     <ImuToROSImu>
       <name>imu</name>
-      <topic>/kraken/sensor/imu</topic>
+      <topic>/kraken/simulator/imu</topic>
       <rate>10</rate>
     </ImuToROSImu>
     <PressureSensorToROS>
       <name>pressureSensor</name>
-      <topic>/kraken/sensor/depth</topic>
+      <topic>/kraken/simulator/depth</topic>
       <rate>5</rate>
     </PressureSensorToROS>
     <DVLSensorToROS>
       <name>DVLSensor</name>
-      <topic>/kraken/sensor/dvl</topic>
+      <topic>/kraken/simulator/dvl</topic>
       <rate>5</rate>
     </DVLSensorToROS>
 

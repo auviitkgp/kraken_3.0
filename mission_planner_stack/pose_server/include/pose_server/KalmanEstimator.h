@@ -9,6 +9,11 @@
 #include "NqDVL/NqDVL.h"
 #include "tracks_imu/Tracks.h"
 
+
+/*
+This class implements the kalmanFilter to estimate the AUV pose and then publishes it
+It is assumed that imu,dvl data's it subscribes to are wrt the vehicle and it calcutes and publishes pose wrt earth
+*/
 using namespace Eigen;
 namespace kraken_core{
 
@@ -30,10 +35,30 @@ namespace kraken_core{
         Matrix2d _Rmatrix;
         Matrix<double,4,2> _Bmatrix;
 
+        /*
+          The state we assume here is X(t)=(x,y,vx,vy)
+          F-- state transition matrix
+          P-- covariance Matrix
 
-
-
+          The predict step in kalman filter.
+          X(t)=X(t-1)*F+ U
+          P(t)=F*P(t-1)*F.transpose
+        */
         void kalmanUpdateState(double ax,double ay);
+
+        /*
+          Z-- measurement
+          H-- measurement function
+          R-- measurement noise
+
+
+          Kalman Measurement step (measurement is velocity from dvl)
+          Y=Z-H*X
+          S=H*P*H.tran+R
+          K=P*H.tran*S.inv
+          X=X+K*Y
+          P=(I-K*H)*P
+        */
         void kalmanMeasurementUpdate(double vx,double vy);
         void kalmanUpdateStateFromMatrix(const Vector4d &stateVector);
 

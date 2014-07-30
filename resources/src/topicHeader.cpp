@@ -22,7 +22,9 @@ const char* SIMULATOR_JOINT_STATE_CMD="/kraken/simulator/joint_state_command";
 const char* SIMULATOR_TWIST="/kraken/simulator/twist";
 const char* SIMULATOR_POSE="/kraken/simulator/pose";
 const char* SIMULATOR_DATA_NAVIGATOR="/kraken/simulator/dataNavigator";
-
+const char* SIMULATOR_IMU="/kraken/simulator/imu";
+const char* SIMULATOR_DVL="/kraken/simulator/dvl";
+const char* SIMULATOR_DEPTH="/kraken/simulator/depth";
 
 
 
