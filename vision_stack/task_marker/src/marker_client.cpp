@@ -1,18 +1,18 @@
 #include <ros/ros.h>
-#include <actionmsg/markerAction.h>
+#include <ip_msgs/markerAction.h>
 #include <actionlib/client/simple_action_client.h>
 #include <actionlib/client/terminal_state.h>
 #include <task_marker/resultheader.h>
 #include <task_marker/taskheader.h>
 
-typedef actionlib::SimpleActionClient<actionmsg::markerAction> Client;
+typedef actionlib::SimpleActionClient<ip_msgs::markerAction> Client;
 
-void done_cb(const actionlib::SimpleClientGoalState& state,const actionmsg::markerResultConstPtr& result)
+void done_cb(const actionlib::SimpleClientGoalState& state,const ip_msgs::markerResultConstPtr& result)
 {
     ROS_INFO("Action server process complete");
 }
 
-void feedback_cb(const actionmsg::markerFeedbackConstPtr& feedback_msg)
+void feedback_cb(const ip_msgs::markerFeedbackConstPtr& feedback_msg)
 {
     ROS_INFO("feed back %f %d",feedback_msg->errorangle,feedback_msg->errorx);
 }
@@ -29,7 +29,7 @@ int main(int argc, char ** argv)
     ROS_INFO("marker_client started - waiting for server to start.");
     _client.waitForServer();
     ROS_INFO("markerserver started.");
-    actionmsg::markerGoal _goal;
+    ip_msgs::markerGoal _goal;
     _goal.order = DETECT_MARKER;
 
     _client.sendGoal(_goal,&done_cb,

@@ -9,6 +9,8 @@ include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
 #  MinSizeRel     : w/o debug symbols, w/ optimization, stripped binaries
 #set(ROS_BUILD_TYPE RelWithDebInfo)
 
+find_package(OpenCV)
+include_directories(${OpenCV_INCLUDE_DIRS})
 rosbuild_init()
 
 #set the default path for built executables to the "bin" directory
@@ -29,6 +31,8 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 #rosbuild_add_executable(example examples/example.cpp)
 #target_link_libraries(example ${PROJECT_NAME})
 rosbuild_add_library(${PROJECT_NAME} src/blob.cpp src/BlobContour.cpp src/BlobOperators.cpp src/BlobProperties.cpp src/BlobResult.cpp src/ComponentLabeling.cpp src/testblob.cpp)
+target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBRARIES})
+
 #rosbuild_add_library(blobcontour src/BlobContour.cpp)
 #rosbuild_add_library(bloboperators src/BlobOperators.cpp)
 #rosbuild_add_library(blobprop src/BlobProperties.cpp)
@@ -36,6 +40,9 @@ rosbuild_add_library(${PROJECT_NAME} src/blob.cpp src/BlobContour.cpp src/BlobOp
 #rosbuild_add_library(component src/ComponentLabeling.cpp)
 rosbuild_add_executable(testblob src/testblob.cpp)
 target_link_libraries(testblob ${PROJECT_NAME})
+
+target_link_libraries(testblob ${OpenCV_LIBRARIES})
+
 #target_link_libraries(testblob blobcontour)
 #target_link_libraries(testblob bloboperators)
 #target_link_libraries(testblob blobprop)
