@@ -11,8 +11,8 @@ int main(int argc, char const *argv[])
 	cout<<"destination="<<argv[2]<<endl;
 
 
-    FILE* fp1=freopen(argv[1], "r", stdin);
-    FILE* fp2=freopen(argv[2], "w", stdout);
+    freopen(argv[1], "r", stdin);
+    freopen(argv[2], "w", stdout);
 	std::string input;
 	while(cin>>input){
 		// cout<<input<<endl;
@@ -29,7 +29,6 @@ int main(int argc, char const *argv[])
 			}
 		}
 	}
-    fclose(fp1);
-    fclose(fp2);
+    
 	return 0;
 }

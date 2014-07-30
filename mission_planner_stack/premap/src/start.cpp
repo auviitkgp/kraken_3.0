@@ -7,7 +7,7 @@
 #include <vector>
 #include "xml-parser/rapidxml-1.13/rapidxml.hpp"
 #include "opencv/cv.h"
-
+#include "resources/topicHeader.h"
 
 
 using namespace rapidxml;
@@ -16,7 +16,8 @@ using namespace std;
 using namespace premap_module;
 using namespace ros;
 using namespace std;
-const char* ESTIMATED_POSE="/kraken/pose_estimated",*SERVICE_NAME="getLocation";
+const char* ESTIMATED_POSE=topics::NAV_POSE_ESTIMATED,
+*SERVICE_NAME=topics::PREMAP_LOCATION_SERVICE;
 
 Point2f* returnArray (int &n,std::string file_name);
 int main(int argc,char**argv)

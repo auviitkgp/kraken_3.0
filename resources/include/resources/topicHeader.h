@@ -119,6 +119,7 @@ extern const char* CAMERA_CAM_SWITCH;
 
 //navigation
 extern const char* NAV_POSE_ESTIMATED;
-
+extern const char* PREMAP_LOCATION_SERVICE;
+extern const char* RESET_POSITION_SERVICE;
 }
 #endif

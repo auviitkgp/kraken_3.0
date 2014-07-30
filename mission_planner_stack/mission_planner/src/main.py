@@ -14,8 +14,7 @@ from kraken_msgs.srv._moveAlongLine import moveAlongLine
 from kraken_msgs.srv._krakenResetPose import krakenResetPose
 from premap.srv._getLocation import getLocation
 from jinja2._stringdefs import No
-
-
+from resources import topicHeader
 class Interaction(object):
     """
     this is the entry point for interaction with outside resources to the state
@@ -37,39 +36,39 @@ class Interaction(object):
         
         
 
-        rospy.Subscriber(name=header.ESTIMATED_POSE_TOPIC_NAME,data_class= krakenPose , callback=self.positionCallback, queue_size=100)
+        rospy.Subscriber(name=topicHeader.NAV_POSE_ESTIMATED,data_class= krakenPose , callback=self.positionCallback, queue_size=100)
         
         
-        self.setPointController=SimpleActionClient(header.CONTROLLER_SERVER, controllerAction)
+        self.setPointController=SimpleActionClient(topicHeader.CONTROL_SETPOINT_ACTION, controllerAction)
         rospy.loginfo("waiting for setPoint controller action Server")
         self.setPointController.wait_for_server()
         rospy.loginfo("Got controller server ")
     
         
-        self.advancedControllerClient=SimpleActionClient(header.ADVANCED_CONTROLLER_SERVER, advancedControllerAction)
+        self.advancedControllerClient=SimpleActionClient(topicHeader.CONTROL_ADVANCEDCONTROLLER_ACTION, advancedControllerAction)
         rospy.loginfo("Waiting for advancedController action server")
         self.advancedControllerClient.wait_for_server()
         rospy.loginfo("Got advanced Controller Action Server ..")
         
 
         
-        self.ipControllerPublisher=rospy.Publisher(name=header.IP_CONTROLLER_PUBLISHING_TOPIC,
+        self.ipControllerPublisher=rospy.Publisher(name=topicHeader.CONTROL_IP_ERROR,
                                            data_class=ipControllererror, queue_size=100)
         
         
-        self.moveAlongService=rospy.ServiceProxy(name=header.MOVE_ALONG_SERVICE_NAME,
+        self.moveAlongService=rospy.ServiceProxy(name=topicHeader.CONTROL_MOVEALONG_SERV,
                                                  service_class=moveAlongLine)
         rospy.loginfo("waiting for MoveAlongLine Service")
         self.moveAlongService.wait_for_service()
         rospy.loginfo("Got move along line service !!")
         
         
-        self.resetPoseService=rospy.ServiceProxy(name=header.RESET_POSE_SERVICE, service_class=krakenResetPose)
+        self.resetPoseService=rospy.ServiceProxy(name=topicHeader.RESET_POSITION_SERVICE, service_class=krakenResetPose)
         rospy.loginfo("waiting for Reset Position Service")
         self.resetPoseService.wait_for_service()
         rospy.loginfo("Got move reser pose service !!")
         
-        self.premapMarkerLocationService=rospy.ServiceProxy(name=header.PREMAP_LOCATION_SERVICE, service_class=getLocation)
+        self.premapMarkerLocationService=rospy.ServiceProxy(name=topicHeader.PREMAP_LOCATION_SERVICE, service_class=getLocation)
         rospy.loginfo("waiting for premap location Service")
         self.premapMarkerLocationService.wait_for_service()
         rospy.loginfo("Got move premap location  service !!")
@@ -82,8 +81,7 @@ class Interaction(object):
         rospy.loginfo("succesfully got all publishers and subsrcibers to mission planner !! ")
     
     def positionCallback(self,msg):
-        self.pose=msg.data
-        self.pose.header=msg.header
+        pass
 
 
 
@@ -102,7 +100,10 @@ def main():
 #     sm.userdata.x=None;
 #     with sm:
 #         sm.add('INIT', initialState(), transitions={'initalized':'failed','failed':'fialed'});
-    pass;
+    rospy.init_node(name="interaction", anonymous=False)
+    cin=Interaction()
+    
+    
         
     
 if __name__ == '__main__':

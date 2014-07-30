@@ -58,8 +58,8 @@ const char* HARDWARE_KILL_SWITCH="/kraken/hardware/kill_switch_serv";
 
 //navigation
 const char* NAV_POSE_ESTIMATED="/kraken/nav/pose_estimated";
-
-
+const char* PREMAP_LOCATION_SERVICE="/kraken/nav/premap_location";
+const char* RESET_POSITION_SERVICE="/kraken/nav/reset_position";
 
 // vision stack topics
 
