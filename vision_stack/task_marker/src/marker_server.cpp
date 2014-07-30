@@ -1,10 +1,13 @@
 #include <ros/ros.h>
 #include <task_marker/marker_server.h>
 
+#include <resources/topicHeader.h>
+
 Marker::Marker(std::string name, std::string _threshold_filepath) : _it(_n), _s(_n, name, boost::bind(&Marker::executeCB, this, _1), false), _actionName(name)
 {
-    _sub = _it.subscribe("/kraken/bottom_camera", 1, &Marker::imageCallBack, this);
-    _pub = _it.advertise("/kraken/bottomcam/marker_image", 1);
+    _sub = _it.subscribe(topic::CAMERA_BOTTOM_RAW_IMAGE, 1, &Marker::imageCallBack, this);
+    // _pub = _it.advertise("/kraken/bottomcam/marker_image", 1);
+    _pub = _it.advertise(topics::CAMERA_BOTTOM_MARKER_IMAGE, 1);
     marker_detect_status=false;
     marker_align_status=false;
 

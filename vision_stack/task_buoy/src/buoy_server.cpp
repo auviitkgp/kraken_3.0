@@ -2,10 +2,12 @@
 #include <task_buoy/buoy_server.h>
 #define PI 3.1414
 
+#include <resources/topicHeader.h>
+
 Buoy::Buoy(std::string name) : _it(_n), _s(_n, name, boost::bind(&Buoy::executeCB, this, _1), false), _actionName(name)
 {
-    _sub = _it.subscribe("/kraken/front_camera", 1, &Buoy::imageCallBack, this);
-    _pub = _it.advertise("/kraken/processed/buoy_image", 1);
+    _sub = _it.subscribe(topics::CAMERA_FRONT_RAW_IMAGE, 1, &Buoy::imageCallBack, this);
+    _pub = _it.advertise(topics::CAMERA_FRONT_BUOY_IMAGE, 1);
 
     ifstream _thresholdVal("threshold.th");
     if(_thresholdVal.is_open())
