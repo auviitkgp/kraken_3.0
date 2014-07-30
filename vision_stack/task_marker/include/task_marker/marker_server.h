@@ -4,7 +4,7 @@
 #include <ros/ros.h>
 #include <image_transport/image_transport.h>
 #include <cv_bridge/cv_bridge.h>
-#include <actionmsg/markerAction.h>
+#include <ip_msgs/markerAction.h>
 #include <actionlib/server/simple_action_server.h>
 #include <opencv/cv.h>
 #include <opencv/cxcore.h>
@@ -24,7 +24,7 @@
 using namespace std;
 using namespace cv;
 
-typedef actionlib::SimpleActionServer<actionmsg::markerAction> Server;
+typedef actionlib::SimpleActionServer<ip_msgs::markerAction> Server;
 
 class Marker
 {
@@ -34,8 +34,8 @@ private:
     image_transport::ImageTransport _it;
     image_transport::Subscriber _sub;
     image_transport::Publisher _pub;
-    actionmsg::markerFeedback _feedback;
-    actionmsg::markerResult _result;
+    ip_msgs::markerFeedback _feedback;
+    ip_msgs::markerResult _result;
     Mat I, I_hsv, I_bw;
     Scalar _lowerThresh, _upperThresh;
     Mat _kernelDilateErode;
@@ -49,7 +49,7 @@ private:
     bool marker_align_status;
 public:
     Marker(std::string _name, std::string _threshold_filepath);
-    void executeCB(const actionmsg::markerGoalConstPtr &_goal);
+    void executeCB(const ip_msgs::markerGoalConstPtr &_goal);
     void imageCallBack(const sensor_msgs::ImageConstPtr &msg);
     void detectMarker();
     void getAllignment();

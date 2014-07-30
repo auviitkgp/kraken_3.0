@@ -45,7 +45,7 @@ void Marker::imageCallBack(const sensor_msgs::ImageConstPtr &_msg)
     I = _imagePtr->image;
 }
 
-void Marker::executeCB(const actionmsg::markerGoalConstPtr &_goal)
+void Marker::executeCB(const ip_msgs::markerGoalConstPtr &_goal)
 {
     ros::Rate looprate(10);
     bool success = true;
