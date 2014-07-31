@@ -6,15 +6,40 @@ import kraken_msgs
 from kraken_msgs.msg._controllerAction import controllerAction
 from kraken_msgs.msg._controllerGoal import controllerGoal
 from actionlib.simple_action_client import SimpleActionClient
-import header
 from kraken_msgs.msg._advancedControllerAction import advancedControllerAction
 from kraken_msgs.msg._krakenPose import krakenPose
 from kraken_msgs.msg._ipControllererror import ipControllererror
 from kraken_msgs.srv._moveAlongLine import moveAlongLine
 from kraken_msgs.srv._krakenResetPose import krakenResetPose
 from premap.srv._getLocation import getLocation
-from jinja2._stringdefs import No
 from resources import topicHeader
+import geometry_msgs
+from geometry_msgs.msg._Pose import Pose
+from kraken_msgs.msg._advancedControllerActionGoal import advancedControllerActionGoal
+from kraken_msgs.msg._advancedControllerGoal import advancedControllerGoal
+
+class KrakenState(object):
+    px=0 
+    py=1
+    pz=2 
+    vx=3
+    vy=4
+    vz=5    
+    ax=6
+    ay=7
+    az=8
+    roll=9
+    pitch=10
+    yaw=11
+    wroll=12
+    wpitch=13
+    wyaw=14
+    def __init__(self):
+        self.data=[None]*15
+        
+
+
+
 class Interaction(object):
     """
     this is the entry point for interaction with outside resources to the state
@@ -81,8 +106,13 @@ class Interaction(object):
         rospy.loginfo("succesfully got all publishers and subsrcibers to mission planner !! ")
     
     def positionCallback(self,msg):
-        pass
-
+#        self.pose.x=msg.data
+#        self.pose.header=msg.header
+         self.state=KrakenState()
+         self.state.data=msg.data
+         
+        
+        
 
 
 
@@ -102,7 +132,12 @@ def main():
 #         sm.add('INIT', initialState(), transitions={'initalized':'failed','failed':'fialed'});
     rospy.init_node(name="interaction", anonymous=False)
     cin=Interaction()
-    
+    goal2=advancedControllerGoal()
+    goal2.flag=1
+    goal2.x=13
+    goal2.y=20
+    cin.advancedControllerClient.send_goal_and_wait(goal2)
+    rospy.spin()
     
         
     

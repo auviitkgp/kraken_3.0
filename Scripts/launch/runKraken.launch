@@ -33,9 +33,14 @@ rosrun control_server client_action 3.0 -->
 	<node name="thruster" pkg="thruster_force_converter" type="converter" args="3"/>
 	<node name="control_node" pkg="control_server" type="controlServer" args="10 $(find control_server)/parameters/MoveBack.cp 
 		$(find control_server)/parameters/MoveForward.cp $(find control_server)/parameters/Pause.cp"/>
+	<node name="thruster_to_force" pkg="thruster_force_converter" type="converter"/>
+	<node name="pose_server" pkg="pose_server" type="server"/>
+	<node name="gui" pkg="Telemetry" type="App"/>
+
 
 	<include file="$(find premap)/launch/start_premap.launch"/>
 	<include file="$(find task_marker)/launch/run_server.launch"/>
 	<include file="$(find Scripts)/launch/simulator.launch" />
+
 	<!-- <node name="server_pose" pkg="pose_server" type="PoseServer"/> -->
 </launch>

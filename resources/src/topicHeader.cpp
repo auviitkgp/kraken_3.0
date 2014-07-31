@@ -11,12 +11,12 @@ namespace topics{
 //all topics here are only used for simulator and in genral not used by other packages
 const char* SIMULATOR_THRUSTER4_TO_FORCE="/kraken/simulator/thruster4toforce";
 const char* SIMULATOR_THRUSTER6_TO_FORCE="/kraken/simulator/thruster6toforce";
-const char* SIMULATOR_MODEL_POSE="/kraken/physics_model/pose";
+const char* SIMULATOR_MODEL_POSE="/kraken/simulator/pose";
 const char* SIMULATOR_MODEL_FORCE_DATA_4_THRUSTERS="/kraken/physics_model/forceData4Thruster";
 const char* SIMULATOR_MODEL_FORCE_DATA_6_THRUSTERS="/kraken/physics_model/forceData6Thruster";
 const char* SIMULATOR_MODEL_DATA_NAVIGATOR="/kraken/physics_model/dataNavigator";
 const char* SIMULATOR_MODEL_IMU_DATA="/kraken/physics_model/imuData";
-const char* SIMULATOR_MODEL_TWIST="/kraken/physics_model/twist";
+const char* SIMULATOR_MODEL_TWIST="/kraken/simulator/twist";
 const char* SIMULATOR_JOINT_STATE="/kraken/simulator/joint_state";
 const char* SIMULATOR_JOINT_STATE_CMD="/kraken/simulator/joint_state_command";
 const char* SIMULATOR_TWIST="/kraken/simulator/twist";
