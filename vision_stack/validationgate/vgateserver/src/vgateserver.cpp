@@ -1,10 +1,11 @@
 #include <vgateserver/vgateserver.h>
 #define PI 3.1414
+#include <resources/topicHeader.h>
 
 Vgate::Vgate(std::string name) : _it(_n), _s(_n, name, boost::bind(&Vgate::executCB, this, _1), false), _actionName(name)
 {
-    _sub = _it.subscribe("/kraken/bottomcam/raw_image", 1, &Vgate::imageCallBack, this);
-    _pub = _it.advertise("/kraken/bottomcam/validationgate_image", 1);
+    _sub = _it.subscribe(topics::BOTTOM_CAMERA_RAW_IAMGE, 1, &Vgate::imageCallBack, this);
+    _pub = _it.advertise(topics::CAMERA_BOTTOM_VGATE_IMAGE, 1);
     
     ifstream _thresholdVal("threshold.th");
     if(_thresholdVal.is_open())

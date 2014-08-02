@@ -83,6 +83,10 @@ extern const char* CAMERA_BOTTOM_THEORA;
 extern const char* CAMERA_BOTTOM_THEORA_PARAM_DESCRIP;
 extern const char* CAMERA_BOTTOM_THEORA_PARAM_UPDATES;
 extern const char* CAMERA_BOTTOM_INFO;
+
+extern const char* CAMERA_BOTTOM_MARKER_IMAGE;
+extern const char* CAMERA_BOTTOM_VGATE_IMAGE;
+
 /*
 /kraken/front_camera
 /kraken/front_camera/compressed
@@ -108,14 +112,9 @@ extern const char* CAMERA_FRONT_THEORA_PARAM_DESCRIP;
 extern const char* CAMERA_FRONT_THEORA_PARAM_UPDATES;
 extern const char* CAMERA_FRONT_INFO;
 
-
-
+extern const char* CAMERA_FRONT_BUOY_IMAGE;
 
 extern const char* CAMERA_CAM_SWITCH;
-
-
-
-
 
 //navigation
 extern const char* NAV_POSE_ESTIMATED;

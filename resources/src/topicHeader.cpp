@@ -75,6 +75,9 @@ const char* CAMERA_BOTTOM_THEORA_PARAM_DESCRIP="/kraken/bottom_camera/theora/par
 const char* CAMERA_BOTTOM_THEORA_PARAM_UPDATES="/kraken/bottom_camera/theora/parameter_updates";
 const char* CAMERA_BOTTOM_INFO="/kraken/bottom_camera_info";
 
+const char* CAMERA_BOTTOM_MARKER_IMAGE="/kraken/bottom_camera/marker_image";
+const char* CAMERA_BOTTOM_VGATE_IMAGE="/kraken/bottom_camera/validation_gate_image";
+
 const char* CAMERA_FRONT_RAW_IMAGE="/kraken/front_camera";
 const char* CAMERA_FRONT_COMPRESSED="/kraken/front_camera/compressed";
 const char* CAMERA_FRONT_COMPRESSED_PARAM_DESCRIP="/kraken/front_camera/compressed/parameter_descriptions";
@@ -87,9 +90,9 @@ const char* CAMERA_FRONT_THEORA_PARAM_DESCRIP="/kraken/front_camera/theora/param
 const char* CAMERA_FRONT_THEORA_PARAM_UPDATES="/kraken/front_camera/theora/parameter_updates";
 const char* CAMERA_FRONT_INFO="/kraken/front_camera_info";
 
+const char* CAMERA_FRONT_BUOY_IMAGE='/kraken/front_camera/buoy_image'
 
-
-const char* CAMERA_CAM_SWITCH="/kraken/camera/bottomcam/camera_switch";
+const char* CAMERA_CAM_SWITCH="/kraken/camera/camera_switch";
 
 
 
