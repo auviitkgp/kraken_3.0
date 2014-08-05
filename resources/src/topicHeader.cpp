@@ -90,7 +90,7 @@ const char* CAMERA_FRONT_THEORA_PARAM_DESCRIP="/kraken/front_camera/theora/param
 const char* CAMERA_FRONT_THEORA_PARAM_UPDATES="/kraken/front_camera/theora/parameter_updates";
 const char* CAMERA_FRONT_INFO="/kraken/front_camera_info";
 
-const char* CAMERA_FRONT_BUOY_IMAGE='/kraken/front_camera/buoy_image'
+const char* CAMERA_FRONT_BUOY_IMAGE="/kraken/front_camera/buoy_image";
 
 const char* CAMERA_CAM_SWITCH="/kraken/camera/camera_switch";
 
