@@ -1,0 +1,67 @@
+digraph graphname {
+	graph [rankdir=LR, rank=same];
+	node [label="\N"];
+	graph [bb="0,0,822,904"];
+	subgraph cluster_kraken {
+		graph [label=kraken,
+			bb="228,8,622,896"];
+		_kraken_sensor_dvl [label="/kraken/sensor/dvl", URL=topic_3A_kraken_sensor_dvl, shape=box, pos="425,844", width="1.9722", height="0.5"];
+		_kraken_simulator_dvl [label="/kraken/simulator/dvl", URL=topic_3A_kraken_simulator_dvl, shape=box, pos="425,682", width="2.25", height="0.5"];
+		_kraken_simulator_twist [label="/kraken/simulator/twist", URL=topic_3A_kraken_simulator_twist, shape=box, pos="425,358", width="2.4444", height="0.5"];
+		_kraken_physics_model_forceData6Thruster [label="/kraken/physics_model/forceData6Thruster", URL=topic_3A_kraken_physics_model_forceData6Thruster, shape=box, pos="425,304", width="4.3333", height="0.5"];
+		_kraken_nav_pose_estimated [label="/kraken/nav/pose_estimated", URL=topic_3A_kraken_nav_pose_estimated, shape=box, pos="425,520", width="2.9167", height="0.5"];
+		_kraken_sensor_depth [label="/kraken/sensor/depth", URL=topic_3A_kraken_sensor_depth, shape=box, pos="425,790", width="2.25", height="0.5"];
+		_kraken_simulator_imu [label="/kraken/simulator/imu", URL=topic_3A_kraken_simulator_imu, shape=box, pos="425,628", width="2.3056", height="0.5"];
+		_kraken_bottom_camera [label="/kraken/bottom_camera", URL=topic_3A_kraken_bottom_camera, shape=box, pos="425,466", width="2.5", height="0.5"];
+		_kraken_sensor_imu [label="/kraken/sensor/imu", URL=topic_3A_kraken_sensor_imu, shape=box, pos="425,736", width="2.0556", height="0.5"];
+		_kraken_physics_model_forceData4Thruster [label="/kraken/physics_model/forceData4Thruster", URL=topic_3A_kraken_physics_model_forceData4Thruster, shape=box, pos="425,250", width="4.3333", height="0.5"];
+		_kraken_control_thruster6pid [label="/kraken/control/thruster6pid", URL=topic_3A_kraken_control_thruster6pid, shape=box, pos="425,196", width="2.9444", height="0.5"];
+		_kraken_simulator_depth [label="/kraken/simulator/depth", URL=topic_3A_kraken_simulator_depth, shape=box, pos="425,574", width="2.5278", height="0.5"];
+		_kraken_control_thruster4pid [label="/kraken/control/thruster4pid", URL=topic_3A_kraken_control_thruster4pid, shape=box, pos="425,142", width="2.9444", height="0.5"];
+		_kraken_simulator_pose [label="/kraken/simulator/pose", URL=topic_3A_kraken_simulator_pose, shape=box, pos="425,412", width="2.3889", height="0.5"];
+		kraken_control_advancedcontrol_action_action_topics [label="kraken/control/advancedcontrol_action/action_topics", URL=topic_3Akraken_control_advancedcontrol_action_action_topics, shape=box, pos="425,88", width="5.2222", height="0.5"];
+		kraken_control_setpoint_action_action_topics [label="kraken/control/setpoint_action/action_topics", URL=topic_3Akraken_control_setpoint_action_action_topics, shape=box, pos="425,34", width="4.4444", height="0.5"];
+	}
+	subgraph cluster_marker {
+		graph [label=marker,
+			bb="12,710,188,788"];
+		marker_action_topics [label="marker/action_topics", URL=topic_3Amarker_action_topics, shape=box, pos="100,736", width="2.1944", height="0.5"];
+	}
+	_thruster [label="/thruster", URL=_thruster, shape=ellipse, pos="736,223", width="1.5278", height="0.51389"];
+	_simulator_UWSim [label="/simulator/UWSim", URL=_simulator_UWSim, shape=ellipse, pos="100,520", width="2.75", height="0.51389"];
+	_auv_model [label="/auv_model", URL=_auv_model, shape=ellipse, pos="736,331", width="1.8611", height="0.51389"];
+	_pose_server [label="/pose_server", URL=_pose_server, shape=ellipse, pos="736,776", width="2.0278", height="0.51389"];
+	_marker_server [label="/marker_server", URL=_marker_server, shape=ellipse, pos="736,466", width="2.3611", height="0.51389"];
+	_control_node [label="/control_node", URL=_control_node, shape=ellipse, pos="100,196", width="2.1667", height="0.51389"];
+	_premap [label="/premap", URL=_premap, shape=ellipse, pos="736,520", width="1.4167", height="0.51389"];
+	_simu2kraken [label="/simu2kraken", URL=_simu2kraken, shape=ellipse, pos="736,695", width="2.1667", height="0.51389"];
+	_kraken_simulator_depth -> _simu2kraken [pos="e,720.29,677 516.1,576.02 550.44,579.44 589.11,586.59 622,601 658.15,616.84 692.03,647.59 713.3,669.61"];
+	_kraken_physics_model_forceData4Thruster -> _auv_model [pos="e,707.45,314.46 581.07,266.87 595.03,269.74 608.85,273.09 622,277 648.63,284.93 676.87,298.26 698.57,309.69"];
+	_simulator_UWSim -> _kraken_simulator_imu [pos="e,341.15,624.43 121.57,537.79 145.85,556.77 187.24,586.11 228,601 260.47,612.86 297.68,619.57 330.96,623.35"];
+	_simulator_UWSim -> _kraken_simulator_depth [pos="e,333.58,562.86 162.33,534.08 183.15,538.54 206.52,543.27 228,547 258.86,552.36 292.6,557.32 323.29,561.48"];
+	_simulator_UWSim -> _kraken_simulator_dvl [pos="e,343.69,682.95 111.17,538.13 130.73,568.1 174.26,627.43 228,655 260.15,671.5 298.94,679.02 333.57,682.14"];
+	_simulator_UWSim -> _kraken_bottom_camera [pos="e,334.56,477.01 162.33,505.92 183.15,501.46 206.52,496.73 228,493 259.3,487.56 293.56,482.54 324.61,478.35"];
+	_kraken_control_thruster6pid -> _thruster [pos="e,682.64,218.37 531.16,205.22 578.2,209.3 631.97,213.97 672.61,217.5"];
+	_kraken_sensor_dvl -> _pose_server [pos="e,698.87,791.58 496.8,837.8 534.44,833.64 581.1,827.04 622,817 644.66,811.44 669.09,803 689.5,795.22"];
+	_kraken_simulator_dvl -> _simu2kraken [pos="e,659.18,691.79 506.31,685.4 550.13,687.23 604.24,689.49 648.92,691.36"];
+	_kraken_sensor_depth -> _pose_server [pos="e,663.65,779.26 506.31,786.34 551.65,784.3 607.99,781.76 653.52,779.71"];
+	_kraken_simulator_pose -> _simulator_UWSim [pos="e,121.57,502.21 338.23,415.86 303.18,419.47 262.86,426.27 228,439 191.54,452.32 154.57,477.2 129.8,495.89"];
+	_kraken_simulator_twist -> _simulator_UWSim [pos="e,111.17,501.87 336.37,357.61 301.04,360.58 261.02,368.06 228,385 178.88,410.2 138.29,461.94 116.74,493.53"];
+	_kraken_bottom_camera -> _marker_server [pos="e,650.48,466 515.37,466 554.55,466 600.47,466 640.24,466"];
+	_kraken_control_thruster4pid -> _thruster [pos="e,708.84,207.21 531.06,150.49 560.87,154.5 593.05,160.38 622,169 649.18,177.09 678.04,190.81 699.91,202.4"];
+	_kraken_sensor_imu -> _pose_server [pos="e,670.91,767.63 499.1,745.53 548.01,751.82 611.89,760.04 660.98,766.35"];
+	_simu2kraken -> _kraken_sensor_depth [pos="e,506.27,786.21 708.91,711.94 678.2,731.01 631.22,759.77 622,763 588.64,774.69 550.44,781.35 516.62,785.13"];
+	_simu2kraken -> _kraken_sensor_imu [pos="e,499.1,726.23 668.05,703.96 621.36,710.11 559.05,718.33 509.21,724.9"];
+	_simu2kraken -> _kraken_sensor_dvl [pos="e,496.81,850.77 700.09,711.06 683.05,720.16 663.52,732.96 650,749 628.94,773.99 647.86,797.01 622,817 589.79,841.91 545.43,849.6 506.97,850.64"];
+	_control_node -> _kraken_control_thruster4pid [pos="e,318.97,155.11 155.59,183.37 178.01,178.51 204.17,173.14 228,169 254.09,164.47 282.23,160.23 308.85,156.51"];
+	_control_node -> _kraken_control_thruster6pid [pos="e,318.86,196 178.26,196 217.38,196 265.5,196 308.83,196"];
+	_auv_model -> _kraken_simulator_pose [pos="e,511.54,405.92 707.45,347.54 684.97,359.82 652.44,375.94 622,385 590.05,394.51 554.18,400.68 521.89,404.69"];
+	_auv_model -> _kraken_simulator_twist [pos="e,513.7,350.3 671.89,336.57 629.22,340.27 572.32,345.21 523.9,349.41"];
+	_thruster -> _kraken_physics_model_forceData4Thruster [pos="e,581.41,236.42 682.56,227.64 656.91,229.87 624.62,232.67 591.66,235.53"];
+	_thruster -> _kraken_physics_model_forceData6Thruster [pos="e,581.07,287.13 708.84,238.79 686.31,251.15 653.06,267.75 622,277 611.93,280 601.47,282.66 590.86,285.03"];
+	_pose_server -> _kraken_nav_pose_estimated [pos="e,530.11,511.15 697.09,760.52 680,751.74 661.28,739.06 650,722 606.55,656.3 678.32,602.07 622,547 600.32,525.8 570.33,515.97 540.29,512.21"];
+	_kraken_physics_model_forceData6Thruster -> _auv_model [pos="e,672,325.44 581.41,317.58 609.47,320.02 637.49,322.45 661.81,324.56"];
+	_kraken_simulator_imu -> _simu2kraken [pos="e,697.54,679.33 508.6,635.69 543.9,639.91 585.25,646.13 622,655 644.08,660.33 667.87,668.31 687.99,675.74"];
+	_kraken_nav_pose_estimated -> _premap [pos="e,684.48,520 530.29,520 578.21,520 633.26,520 674.35,520"];
+	_kraken_nav_pose_estimated -> _control_node [pos="e,101.78,214.03 319.97,524.92 287.79,521.64 254.04,512.8 228,493 139.43,425.66 111.28,284.61 103.08,224.31"];
+}
