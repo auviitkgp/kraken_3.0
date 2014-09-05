@@ -1,35 +1,54 @@
 posDict = {}
 
-import xml.etree.ElementTree as ET
-tree = ET.parse('scene_1.xml')
-root = tree.getroot()
+import parseXML
 
-for joint in root.iter('joint'):
+posDict = parseXML.parseSimX()
 
-    attribs = joint.attrib
+print posDict.keys()
 
-    nameString = attribs['name']
+names = {}
 
-    for i in range(3):
+names['gate_shooter_to_pool'] = 'Shooter'
+names['gate_buoy_green_to_pool'] = 'Green'
+names['gate_buoy_red_to_pool'] = 'Red'
+names['gate_marker3_to_pool'] = 'M3'
+names['gate_marker2_to_pool'] = 'M2'
+names['gate_L_rod_to_pool'] = 'LGate'
+names['gate_buoy_blue_to_pool'] = 'Blue'
+names['gate_marker5_to_pool'] = 'M5'
+names['gate_marker4_to_pool'] = 'M4'
+names['gate_dropper_to_pool'] = 'Dropper'
 
-        if joint[i].tag == 'origin':
 
-            pos = joint[i].attrib['xyz']
+# import xml.etree.ElementTree as ET
+# tree = ET.parse('scene_1.xml')
+# root = tree.getroot()
 
-            print pos
-            print type(pos)
+# for joint in root.iter('joint'):
 
-            print pos.split(' ')
+#     attribs = joint.attrib
 
-            possplt = pos.split(' ')
+#     nameString = attribs['name']
 
-            t = [float(possplt[i]) for i in range(len(possplt))]
+#     for i in range(3):
 
-            print t
+#         if joint[i].tag == 'origin':
 
-            posDict[nameString] = t[:]
+#             pos = joint[i].attrib['xyz']
 
-            break
+#             # print pos
+#             # print type(pos)
+#             # print pos.split(' ')
+
+#             possplt = pos.split(' ')
+
+#             t = [float(possplt[i]) for i in range(len(possplt))]
+
+#             # print t
+
+#             posDict[nameString] = t[:]
+
+#             break
 
         # origin = joint[0][1]
 
@@ -37,13 +56,12 @@ for joint in root.iter('joint'):
 
         # origin.set('xyz', '20 20 10')
 
-print posDict
+# print posDict
 
-for key, value in posDict.iteritems():
+# for key, value in posDict.iteritems():
 
-    print key
-    print value
-
+#     print key
+#     print value
 
 import sys
 from PyQt4 import QtGui, QtCore
@@ -97,7 +115,6 @@ class Example(QtGui.QWidget):
         super(Example, self).__init__()
         self.initUI()
 
-
     def initUI(self):
         self.setAcceptDrops(True)
 
@@ -106,15 +123,15 @@ class Example(QtGui.QWidget):
         # button = Button('Button', self)
         # button.move(100, 65)
 
-        for i in range(4):
+        # for i in range(4):
 
-            for j in range(4):
+        #     for j in range(4):
 
-                    button = Button(str(i) + "," + str(j), self)
+        #             button = Button(str(i) + "," + str(j), self)
 
-                    button.move(190 + 100 * i, 50 + 50 * j)
+        #             button.move(190 + 100 * i, 50 + 50 * j)
 
-                    self.buttons.append(button)
+        #             self.buttons.append(button)
 
         # self.buttons = [button]
 
@@ -126,8 +143,8 @@ class Example(QtGui.QWidget):
             t = value
             name = key
 
-            button = Button(name, self)
-            button.move(t[0] * 10, t[1] * 10)
+            button = Button(names[name], self)
+            button.move(t[0] * 10, t[1] * 20)
 
             self.buttons.append(button)
 
@@ -136,7 +153,7 @@ class Example(QtGui.QWidget):
         # button.move(t[0] * 10, t[1] * 10)
 
         self.setWindowTitle('Copy or Move')
-        self.setGeometry(1000, 1000, 1000, 1000)
+        self.setGeometry(1000, 1000, 500, 500)
 
     def dragEnterEvent(self, e):
         e.accept()
@@ -146,7 +163,8 @@ class Example(QtGui.QWidget):
         mime = e.mimeData().text()
         x, y = map(int, mime.split(','))
 
-        print e.pos() - QtCore.QPoint(x, y)
+        print 'Coorected position: ', e.pos() - QtCore.QPoint(x, y)
+        print 'Absolute position: ', QtCore.QPoint(x, y)
         print x, y
 
         if e.keyboardModifiers() & QtCore.Qt.ShiftModifier:
