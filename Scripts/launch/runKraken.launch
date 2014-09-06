@@ -27,16 +27,18 @@ rosrun control_server client_action 3.0 -->
 
 
 <launch>
-	<!-- <node name="pose_server" pkg="pose_server" type="testkalman"/>  -->
-	<node name="simu2kraken" pkg="simulator_to_kmsgs" type="simulator_to_kmsgs"/>
+	<node name="pose_server" pkg="pose_server" type="testkalman" > 
+		<remap from="/kraken/nav/pose_estimated" to="nav_pose"/>
+	</node>
+	<!-- <node name="simu2kraken" pkg="simulator_to_kmsgs" type="simulator_to_kmsgs"/> -->
 	<node name="auv_model" pkg="simulator_physics_model" type="start_auv_model" args="0.0 0.0 0.0 0.0 0.0 0.0"/>
 	<node name="thruster" pkg="thruster_force_converter" type="converter" args="3"/>
 	<node name="control_node" pkg="control_server" type="controlServer" args="10 $(find control_server)/parameters/MoveBack.cp 
 		$(find control_server)/parameters/MoveForward.cp $(find control_server)/parameters/Pause.cp"/>
 	<node name="thruster_to_force" pkg="thruster_force_converter" type="converter"/>
-	<node name="pose_server" pkg="pose_server" type="server"/>
-	<node name="gui" pkg="Telemetry" type="App"/>
-
+	<!-- <node name="pose_server" pkg="pose_server" type="server"/> -->
+	<!-- <node name="gui" pkg="Telemetry" type="App"/> -->
+	<node name="simulator_2_nav_pose" pkg="simulator_to_navpose" type="sim_to_navpose" />
 
 	<include file="$(find premap)/launch/start_premap.launch"/>
 	<include file="$(find task_marker)/launch/run_server.launch"/>

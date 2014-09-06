@@ -10,18 +10,18 @@
 #include "NqDVL/NqDVL.h"
 #include "tracks_imu/Tracks.h"
 const double PI=3.14;
-class Converter{
+class NavPub{
 public:
-    Converter(){
+    NavPub(){
         ros::NodeHandle n;
         _kraken_depth=n.advertise<underwater_sensor_msgs::Pressure>(topics::SENSOR_DEPTH,10);
         _kraken_imu=n.advertise<kraken_msgs::imuData>(topics::SENSOR_IMU,20);
         _kraken_dvl=n.advertise<kraken_msgs::dvlData>(topics::SENSOR_DVL,10);
 
 
-        _sim_depth=n.subscribe(topics::SIMULATOR_DEPTH,10,&Converter::simDepth2krakenDepth,this);
-        _sim_dvl=n.subscribe(topics::SIMULATOR_DVL,10,&Converter::simDvl2krakenDvl,this);
-        _sim_imu=n.subscribe(topics::SIMULATOR_IMU,10,&Converter::simImu2krakenImu,this);
+        _sim_depth=n.subscribe(topics::SIMULATOR_DEPTH,10,&NavPub::simDepth2krakenDepth,this);
+        _sim_dvl=n.subscribe(topics::SIMULATOR_DVL,10,&NavPub::simDvl2krakenDvl,this);
+        _sim_imu=n.subscribe(topics::SIMULATOR_IMU,10,&NavPub::simImu2krakenImu,this);
     }
 
     void simDepth2krakenDepth(const underwater_sensor_msgs::PressureConstPtr &msg){
@@ -29,7 +29,7 @@ public:
     }
     void simDvl2krakenDvl(const underwater_sensor_msgs::DVLConstPtr &msg){
         kraken_msgs::dvlData d;
-        /* https://github.com/uji-ros-pkg/underwater_simulation/blob/hydro-devel/underwater_sensor_msgs/msg/DVL.msg*/
+        // https://github.com/uji-ros-pkg/underwater_simulation/blob/hydro-devel/underwater_sensor_msgs/msg/DVL.msg
         d.data[kraken_sensors::_dvl_vx]=msg->bs_longitudinal;
         d.data[kraken_sensors::_dvl_vy]=msg->bs_transverse;
         d.data[kraken_sensors::_dvl_vz]=msg->bs_normal;
@@ -85,10 +85,12 @@ private:
 
 
 
+
+
 int main(int argc,char **argv)
 {
     ros::init(argc,argv,"msg_converter");
-    Converter con;
+
     ros::spin();
 }
 
