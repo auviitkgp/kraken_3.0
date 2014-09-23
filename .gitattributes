@@ -1,0 +1,3 @@
+# Set default behaviour in case autocrlf is not set
+* text=auto
+
