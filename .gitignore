@@ -84,7 +84,6 @@ ui_*.h
 
 *.autosave
 
-
 # Custom folders
 msgs_stack/ip_msgs/msg/
 */**/src/*/srv/
@@ -92,3 +91,16 @@ msgs_stack/ip_msgs/msg/
 ./*/srv/_*.py
 /sensor_stack/nqDVL/.pydevproject
 /sensor_stack/tracks/.pydevproject
+
+### SublimeText ###
+# cache files for sublime text
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+
+# workspace files are user-specific
+*.sublime-workspace
+
+# project files should be checked into the repository, unless a significant
+# proportion of contributors will probably not be using SublimeText
+*.sublime-project
