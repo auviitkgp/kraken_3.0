@@ -1,0 +1,28 @@
+<package>
+  <description brief="gui_template">
+
+     gui_template
+
+  </description>
+  <author>Vinay Yadav</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/App</url>
+
+
+  <rosdep name="qt4"/>
+
+  <!-- rosbuild1 -->
+  <depend package="qt_build"/>
+  <depend package="roscpp"/>
+  <depend package="resources"/>
+  <depend package="kraken_msgs"/>
+  <depend package="pose_server"/>
+  <rosbuild2>
+    <depend package="qt_build"/>
+    <depend package="roscpp"/>
+    <depend package="actionlib"/>
+    
+  </rosbuild2>
+  
+</package>

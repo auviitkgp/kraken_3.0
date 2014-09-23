@@ -47,7 +47,7 @@ namespace Telemetry {
   const std::string  _ros_topic_thruster_6_data=topics::CONTROL_PID_THRUSTER6;
   const std::string  _ros_topic_thruster_4_data=topics::CONTROL_PID_THRUSTER4;
   const std::string  _ros_topic_kraken_current_pose=topics::NAV_POSE_ESTIMATED;
-  const std::string  _ros_topic_kraken_set_pose="/kraken/pose_set";
+  const std::string  _ros_topic_kraken_set_pose=topics::RESET_POSITION_SERVICE;
   
 class QNode : public QThread {
     Q_OBJECT
