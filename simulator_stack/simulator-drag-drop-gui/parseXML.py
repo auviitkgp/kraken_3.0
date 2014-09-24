@@ -73,6 +73,10 @@ def changeJointTag(xmlString, newValue):
                     print 'Old Value: ', posDict[nameString]
                     print 'New Value: ', newValue
 
+                    newString = str(newValue[0]) + ' ' + str(newValue[1]) + ' ' + '0'
+
+                    joint[i].set('xyz', newString)
+
                     break
 
-    return posDict
+    tree.write('scene_2.xml')
