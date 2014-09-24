@@ -19,6 +19,7 @@ names['gate_marker5_to_pool'] = 'M5'
 names['gate_marker4_to_pool'] = 'M4'
 names['gate_dropper_to_pool'] = 'Dropper'
 
+scaleFactor = 20.0
 
 # import xml.etree.ElementTree as ET
 # tree = ET.parse('scene_1.xml')
@@ -70,8 +71,6 @@ class Button(QtGui.QPushButton):
     def mouseMoveEvent(self, e):
         if e.buttons() != QtCore.Qt.RightButton:
             return
-
-        print type(e)
 
         # write the relative cursor position to mime data
         mimeData = QtCore.QMimeData()
@@ -143,7 +142,7 @@ class Example(QtGui.QWidget):
             name = key
 
             button = Button(names[name], self)
-            button.move(t[0] * 10, t[1] * 20)
+            button.move(t[0] * 10, t[1] * scaleFactor)
 
             self.buttons.append(button)
 
@@ -166,15 +165,30 @@ class Example(QtGui.QWidget):
         # print type(e.source())
         # print e.source().text()
 
+        # figure out the new position
+
         mime = e.mimeData().text()
         x, y = map(int, mime.split(','))
+        correctPosition = e.pos() - QtCore.QPoint(x, y)
+
+        finalpose = [correctPosition.x() / scaleFactor, correctPosition.y() / scaleFactor]
+
+        # figure out the xml id of the button that was moved.
+
         buttonString = e.source().text()
+
+        reverse_names = dict((v,k) for k, v in names.iteritems())
+
+        xmlId = reverse_names[str(buttonString)]
+
+        print xmlId, ' moved to ', finalpose
+
+        parseXML.changeJointTag(xmlId, finalpose)
+
+        # print reverse_names
 
         # print 'Corrected position: ', e.pos() - QtCore.QPoint(x, y)
         # print 'Absolute position: ', QtCore.QPoint(x, y)
-
-        finalpos = e.pos() - QtCore.QPoint(x, y)
-
         # print "Final Position: ", finalpos.x(), ' ', finalpos.y()
 
         if e.keyboardModifiers() & QtCore.Qt.ShiftModifier:
