@@ -71,6 +71,8 @@ class Button(QtGui.QPushButton):
         if e.buttons() != QtCore.Qt.RightButton:
             return
 
+        print type(e)
+
         # write the relative cursor position to mime data
         mimeData = QtCore.QMimeData()
         # simple string with 'x,y'
@@ -102,13 +104,10 @@ class Button(QtGui.QPushButton):
         else:
             print 'copied'
 
-
     def mousePressEvent(self, e):
         QtGui.QPushButton.mousePressEvent(self, e)
         if e.button() == QtCore.Qt.LeftButton:
             print 'press'
-
-
 
 class Example(QtGui.QWidget):
     def __init__(self):
@@ -160,12 +159,23 @@ class Example(QtGui.QWidget):
 
     def dropEvent(self, e):
         # get the relative position from the mime data
+
+        # type(e) : QDropEvent
+
+        # print e.source()
+        # print type(e.source())
+        # print e.source().text()
+
         mime = e.mimeData().text()
         x, y = map(int, mime.split(','))
+        buttonString = e.source().text()
 
-        print 'Coorected position: ', e.pos() - QtCore.QPoint(x, y)
-        print 'Absolute position: ', QtCore.QPoint(x, y)
-        print x, y
+        # print 'Corrected position: ', e.pos() - QtCore.QPoint(x, y)
+        # print 'Absolute position: ', QtCore.QPoint(x, y)
+
+        finalpos = e.pos() - QtCore.QPoint(x, y)
+
+        # print "Final Position: ", finalpos.x(), ' ', finalpos.y()
 
         if e.keyboardModifiers() & QtCore.Qt.ShiftModifier:
             # copy
