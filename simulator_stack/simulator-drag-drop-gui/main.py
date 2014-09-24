@@ -69,8 +69,8 @@ from PyQt4 import QtGui, QtCore
 
 class Button(QtGui.QPushButton):
     def mouseMoveEvent(self, e):
-        if e.buttons() != QtCore.Qt.RightButton:
-            return
+        # if e.buttons() != QtCore.Qt.RightButton:
+        #     return
 
         # write the relative cursor position to mime data
         mimeData = QtCore.QMimeData()
@@ -150,7 +150,7 @@ class Example(QtGui.QWidget):
         # button = Button('gate_buoy_blue_to_pool', self)
         # button.move(t[0] * 10, t[1] * 10)
 
-        self.setWindowTitle('Copy or Move')
+        self.setWindowTitle('Simulator Drag-Drop GUI')
         self.setGeometry(0, 0, 500, 500)
 
     def dragEnterEvent(self, e):
