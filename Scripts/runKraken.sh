@@ -1,6 +1,6 @@
 #!/bin/bash
 WS=$ROS_WORKSPACE 
-source /opt/ros/hydro/setup.bash
+source /opt/ros/indigo/setup.bash
 export ROS_WORKSPACE=$WS
 export ROS_PACKAGE_PATH=$ROS_WORKSPACE:$ROS_PACKAGE_PATH
 

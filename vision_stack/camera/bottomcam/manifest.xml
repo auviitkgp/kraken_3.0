@@ -10,7 +10,6 @@
   <url>http://ros.org/wiki/bottomcam</url>
   <depend package="roscpp"/>
   <depend package="std_msgs"/>
-  <depend package="opencv2"/>
   <depend package="image_transport"/>
   <depend package="cv_bridge"/>
   <depend package="resources"/>

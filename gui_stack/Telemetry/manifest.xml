@@ -17,14 +17,13 @@
   <depend package="roscpp"/>
   <depend package="kraken_msgs"/>
   <depend package="premap"/>
-  <depend package="opencv2"/>
   <depend package="pose_server"/>
   <depend package="cv_bridge"/>
   <depend package="resources"/>
-  
+
   <rosbuild2>
     <depend package="qt_build"/>
     <depend package="roscpp"/>
   </rosbuild2>
-  
+
 </package>
