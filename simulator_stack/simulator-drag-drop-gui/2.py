@@ -153,7 +153,7 @@ class Example(QtGui.QWidget):
         # button.move(t[0] * 10, t[1] * 10)
 
         self.setWindowTitle('Copy or Move')
-        self.setGeometry(1000, 1000, 500, 500)
+        self.setGeometry(0, 0, 500, 500)
 
     def dragEnterEvent(self, e):
         e.accept()
