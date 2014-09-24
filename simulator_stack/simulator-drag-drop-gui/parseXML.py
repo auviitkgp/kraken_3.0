@@ -1,9 +1,11 @@
+filename = "scene_2.xml"
+
 def parseSimX():
 
     posDict = {}
 
     import xml.etree.ElementTree as ET
-    tree = ET.parse('scene_1.xml')
+    tree = ET.parse(filename)
     root = tree.getroot()
 
     for joint in root.iter('joint'):
@@ -39,7 +41,7 @@ def changeJointTag(xmlString, newValue):
     posDict = {}
 
     import xml.etree.ElementTree as ET
-    tree = ET.parse('scene_1.xml')
+    tree = ET.parse(filename)
     root = tree.getroot()
 
     for joint in root.iter('joint'):
@@ -79,4 +81,4 @@ def changeJointTag(xmlString, newValue):
 
                     break
 
-    tree.write('scene_2.xml')
+    tree.write(filename)
