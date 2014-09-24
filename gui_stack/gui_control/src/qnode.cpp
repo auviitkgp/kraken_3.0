@@ -15,6 +15,7 @@
 #include <string>
 #include <std_msgs/String.h>
 #include <sstream>
+#include <resources/topicHeader.h>
 #include "../include/gui_template/qnode.hpp"
 
 /*****************************************************************************
@@ -29,7 +30,7 @@ namespace gui_template {
 
 QNode::QNode(int argc, char** argv ) :
 	init_argc(argc),
-    init_argv(argv),_controllerClient("control_client",true),_advancedControllerClient("advancecleint",true)
+    init_argv(argv)
 	{}
 
 QNode::~QNode() {
@@ -41,25 +42,24 @@ QNode::~QNode() {
 }
 
 bool QNode::init() {
-	ros::init(init_argc,init_argv,"App");
+    ros::init(init_argc,init_argv,"Control_gui");
 	ros::start(); // explicitly needed since our nodehandle is going out of scope.
 	ros::NodeHandle n;
 	// Add your ros communications here.
-	chatter_publisher = n.advertise<std_msgs::String>("chatter", 1000);
 
+  //_ros_subscriber_thruster_6_data = n.subscribe<kraken_msgs::thrusterData6Thruster>(_ros_topic_thruster_6_data.c_str(),1,&QNode::callBackThruster6Data,this);
+    _controllerClient=new _controllerClientType("controller_client",true);
+    _advancedControllerClient=new _advancedControllerClientType("advanced_controller_client",true);
+    _state_sub=n.subscribe<kraken_msgs::krakenPose>(topics::NAV_POSE_ESTIMATED,5,&QNode::callBackStatePub,this);
+    _forceData_sub=n.subscribe<kraken_msgs::forceData6Thruster>(topics::SIMULATOR_MODEL_FORCE_DATA_6_THRUSTERS,5,&QNode::callBackForcePub,this);
 	start();
 	return true;
 }
 
 
 void QNode::run() {
-	ros::Rate loop_rate(1);
-	int count = 0;
-	while ( ros::ok() ) 
-	{
-	    
-	}
-	std::cout << "Ros shutdown, proceeding to close the gui." << std::endl;
+    ros::spin();
+    std::cout << "Ros shutdown, proceeding to close the gui." << std::endl;
     Q_EMIT rosShutdown(); // used to signal the gui for a shutdown (useful to roslaunch)
 }
 
@@ -80,7 +80,7 @@ void QNode::advancedGoalCB(float x, float y, float z)
     g1.y=y;
     g1.depth=z;
     g1.flag=0;
-    _advancedControllerClient.sendGoal(g1);
+    _advancedControllerClient->sendGoal(g1);
 }
 
 void QNode::controlGoalCB(float r, float p, float y)
@@ -89,7 +89,7 @@ void QNode::controlGoalCB(float r, float p, float y)
     g1.r=r;
     g1.p=p;
     g1.y=y;
-    _controllerClient.sendGoal(g1);
+    _controllerClient->sendGoal(g1);
 }
 
 

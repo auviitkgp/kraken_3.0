@@ -67,8 +67,8 @@ private:
 	char** init_argv;
 	ros::Publisher chatter_publisher;
     ros::Subscriber _state_sub,_forceData_sub;
-    _advancedControllerClientType _advancedControllerClient;
-    _controllerClientType _controllerClient;
+    _advancedControllerClientType* _advancedControllerClient;
+    _controllerClientType* _controllerClient;
 };
 
 }  // namespace App

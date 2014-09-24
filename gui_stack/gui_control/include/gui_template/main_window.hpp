@@ -21,7 +21,8 @@
 /*****************************************************************************
 ** Namespace
 *****************************************************************************/
-
+Q_DECLARE_METATYPE(kraken_msgs::krakenPoseConstPtr);
+Q_DECLARE_METATYPE(kraken_msgs::forceData6ThrusterConstPtr);
 namespace gui_template {
 
 /*****************************************************************************
@@ -52,6 +53,8 @@ public Q_SLOTS:
         *******************************************/
     void state_update(const kraken_msgs::krakenPoseConstPtr &msg);
     void force_update(const kraken_msgs::forceData6ThrusterConstPtr& msg);
+    void controllerButtonClicked();
+    void advancedControllerButtonClicked();
 
 Q_SIGNALS:
     void sendControllGoal(float r,float p,float y);

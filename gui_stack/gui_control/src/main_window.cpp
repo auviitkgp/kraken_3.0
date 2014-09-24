@@ -12,8 +12,9 @@
 #include <QtGui>
 #include <QMessageBox>
 #include <iostream>
-#include "../include/gui_template/main_window.hpp"
 #include "pose_server/KrakenPose.h"
+#include "../include/gui_template/main_window.hpp"
+
 /*****************************************************************************
 ** Namespaces
 *****************************************************************************/
@@ -37,7 +38,18 @@ MainWindow::MainWindow(int argc, char** argv, QWidget *parent)
     /*********************
     ** Auto Start
     **********************/
-    
+    qRegisterMetaType<kraken_msgs::krakenPoseConstPtr>("krakenPoseConstPtrT");
+    qRegisterMetaType<kraken_msgs::forceData6ThrusterConstPtr>("thrusterData4ThrusterConstPtrT");
+
+
+
+    QObject::connect(&qnode, SIGNAL(statePub(kraken_msgs::krakenPoseConstPtr)), this, SLOT(state_update(kraken_msgs::krakenPoseConstPtr)));
+    QObject::connect(&qnode,SIGNAL(forcePub(kraken_msgs::forceData6ThrusterConstPtr)),this,SLOT(force_update(kraken_msgs::forceData6ThrusterConstPtr)));
+    QObject::connect(this,SIGNAL(sendControllGoal(float,float,float)),&qnode,SLOT(controlGoalCB(float,float,float)));
+    QObject::connect(this,SIGNAL(sendAdvancedControlGoal(float,float,float)),&qnode,SLOT(advancedGoalCB(float,float,float)));
+    QObject::connect(ui.advcedcontrol_sendbtn,SIGNAL(clicked()),this,SLOT(advancedControllerButtonClicked()));
+    QObject::connect(ui.controller_button,SIGNAL(clicked()),this,SLOT(controllerButtonClicked()));
+    qnode.init();
 }
 
 MainWindow::~MainWindow() {}
@@ -49,7 +61,6 @@ MainWindow::~MainWindow() {}
 /*****************************************************************************
 ** Implemenation [Slots][manually connected]
 *****************************************************************************/
-
 
 /*****************************************************************************
 ** Implementation [Menu]
@@ -111,6 +122,26 @@ void MainWindow::force_update(const kraken_msgs::forceData6ThrusterConstPtr &msg
     ui.force_box->setText(s);
 }
 
+void MainWindow::controllerButtonClicked()
+{
+    float r,p,y;
+    r=ui.roll_box->text().toFloat();
+    p=ui.pitch_box->text().toFloat();
+    y=ui.yaw_box->text().toFloat();
+    Q_EMIT sendControllGoal(r,p,y);
+    ui.textBrowser->append("Controller goal sent\n");
+}
+
+void MainWindow::advancedControllerButtonClicked()
+{
+    float x,y,z;
+    x=ui.x_box->text().toFloat();
+    y=ui.y_box->text().toFloat();
+    z=ui.z_box->text().toFloat();
+    Q_EMIT sendAdvancedControlGoal(x,y,z);
+    ui.textBrowser->append("Advanced Controller goal sent\n");
+}
+
 void MainWindow::state_update(const kraken_msgs::krakenPoseConstPtr &msg)
 {
     QString s[6];
@@ -121,14 +152,15 @@ void MainWindow::state_update(const kraken_msgs::krakenPoseConstPtr &msg)
     s[4]=QString::number(msg->data[kraken_core::_pitch]);
     s[5]=QString::number(msg->data[kraken_core::_yaw]);
 
-    ui.x_box->setText(s[0]);
-    ui.y_box->setText(s[1]);
-    ui.z_box->setText(s[2]);
+    ui.x_val->setText(s[0]);
+    ui.y_val->setText(s[1]);
+    ui.z_val->setText(s[2]);
 
-    ui.roll_box->setText(s[3]);
-    ui.pitch_box->setText(s[4]);
-    ui.yaw_box->setText(s[5]);
+    ui.roll_val->setText(s[3]);
+    ui.pitch_val->setText(s[4]);
+    ui.yaw_val->setText(s[5]);
 }
+
 
 
 }  // namespace App

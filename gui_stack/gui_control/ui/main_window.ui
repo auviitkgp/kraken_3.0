@@ -125,7 +125,7 @@
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;tabINd&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="AdvancedControllerTab">
      <attribute name="title">
@@ -211,6 +211,16 @@
       </property>
       <property name="text">
        <string>Send Goal</string>
+      </property>
+     </widget>
+     <widget class="QTextBrowser" name="textBrowser">
+      <property name="geometry">
+       <rect>
+        <x>450</x>
+        <y>30</y>
+        <width>421</width>
+        <height>331</height>
+       </rect>
       </property>
      </widget>
     </widget>
@@ -381,7 +391,7 @@
    </widget>
    <widget class="QLineEdit" name="x_val">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
@@ -394,7 +404,7 @@
    </widget>
    <widget class="QLineEdit" name="y_val">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
@@ -407,7 +417,7 @@
    </widget>
    <widget class="QLineEdit" name="z_val">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
@@ -420,7 +430,7 @@
    </widget>
    <widget class="QLineEdit" name="pitch_val">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
@@ -433,7 +443,7 @@
    </widget>
    <widget class="QLineEdit" name="roll_val">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
@@ -446,7 +456,7 @@
    </widget>
    <widget class="QLineEdit" name="yaw_val">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
