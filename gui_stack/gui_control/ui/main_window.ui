@@ -116,7 +116,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>240</y>
+      <y>230</y>
       <width>901</width>
       <height>411</height>
      </rect>
@@ -125,7 +125,7 @@
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;tabINd&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="AdvancedControllerTab">
      <attribute name="title">
@@ -213,14 +213,73 @@
        <string>Send Goal</string>
       </property>
      </widget>
-     <widget class="QTextBrowser" name="textBrowser">
+     <widget class="QTextBrowser" name="advancedfeedback">
       <property name="geometry">
        <rect>
-        <x>450</x>
+        <x>440</x>
         <y>30</y>
-        <width>421</width>
-        <height>331</height>
+        <width>351</width>
+        <height>91</height>
        </rect>
+      </property>
+     </widget>
+     <widget class="QTextBrowser" name="advancedgoal">
+      <property name="geometry">
+       <rect>
+        <x>440</x>
+        <y>140</y>
+        <width>351</width>
+        <height>91</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QTextBrowser" name="advancedstatus">
+      <property name="geometry">
+       <rect>
+        <x>440</x>
+        <y>250</y>
+        <width>351</width>
+        <height>81</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_16">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>60</y>
+        <width>66</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>feedback</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_17">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>150</y>
+        <width>66</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>goal</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_18">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>260</y>
+        <width>66</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>status</string>
       </property>
      </widget>
     </widget>
@@ -469,7 +528,7 @@
    </widget>
    <widget class="QLineEdit" name="force_box">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
@@ -477,6 +536,16 @@
       <y>180</y>
       <width>481</width>
       <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QTextBrowser" name="textBrowser">
+    <property name="geometry">
+     <rect>
+      <x>660</x>
+      <y>20</y>
+      <width>241</width>
+      <height>141</height>
      </rect>
     </property>
    </widget>

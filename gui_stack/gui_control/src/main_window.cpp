@@ -29,7 +29,7 @@ using namespace Qt;
 
 MainWindow::MainWindow(int argc, char** argv, QWidget *parent)
 	: QMainWindow(parent)
-	, qnode(argc,argv)
+    , qnode(argc,argv,ui)
 {
     ui.setupUi(this); // Calling this incidentally connects all ui's triggers to on_...() callbacks in this class.
 
@@ -42,13 +42,16 @@ MainWindow::MainWindow(int argc, char** argv, QWidget *parent)
     qRegisterMetaType<kraken_msgs::forceData6ThrusterConstPtr>("thrusterData4ThrusterConstPtrT");
 
 
-
     QObject::connect(&qnode, SIGNAL(statePub(kraken_msgs::krakenPoseConstPtr)), this, SLOT(state_update(kraken_msgs::krakenPoseConstPtr)));
     QObject::connect(&qnode,SIGNAL(forcePub(kraken_msgs::forceData6ThrusterConstPtr)),this,SLOT(force_update(kraken_msgs::forceData6ThrusterConstPtr)));
     QObject::connect(this,SIGNAL(sendControllGoal(float,float,float)),&qnode,SLOT(controlGoalCB(float,float,float)));
     QObject::connect(this,SIGNAL(sendAdvancedControlGoal(float,float,float)),&qnode,SLOT(advancedGoalCB(float,float,float)));
     QObject::connect(ui.advcedcontrol_sendbtn,SIGNAL(clicked()),this,SLOT(advancedControllerButtonClicked()));
     QObject::connect(ui.controller_button,SIGNAL(clicked()),this,SLOT(controllerButtonClicked()));
+    QObject::connect(ui.linesrv_movebtn,SIGNAL(clicked()),this,SLOT(moveAlongButtonClicked()));
+    QObject::connect(this,SIGNAL(callmoveALongsrv(float)),&qnode,SLOT(moveAlongCB(float)));
+    QObject::connect(ui.linesrv_pausebtn,SIGNAL(clicked()),this,SLOT(pauseButtonClicked()));
+    QObject::connect(this,SIGNAL(callPauseService()),&qnode,SLOT(pauseCB()));
     qnode.init();
 }
 
@@ -65,6 +68,7 @@ MainWindow::~MainWindow() {}
 /*****************************************************************************
 ** Implementation [Menu]
 *****************************************************************************/
+
 
 void MainWindow::on_actionAbout_triggered() {
     QMessageBox::about(this, tr("About ..."),tr("<h2>PACKAGE_NAME Test Program 0.10</h2><p>Copyright Yujin Robot</p><p>This package needs an about description.</p>"));
@@ -161,7 +165,16 @@ void MainWindow::state_update(const kraken_msgs::krakenPoseConstPtr &msg)
     ui.yaw_val->setText(s[5]);
 }
 
+void MainWindow::moveAlongButtonClicked()
+{
+    float angle = ui.angle_box->text().toFloat();
+    Q_EMIT callmoveALongsrv(angle);
+}
 
+void MainWindow::pauseButtonClicked()
+{
+    Q_EMIT callPauseService();
+}
 
 }  // namespace App
 
