@@ -1,0 +1,17 @@
+<package>
+  <description brief="sparton">
+
+     sparton
+
+  </description>
+  <author>vds</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/sparton</url>
+  <depend package="rospy"/>
+  <depend package="std_msgs"/>
+  <depend package="kraken_msgs"/>
+
+</package>
+
+

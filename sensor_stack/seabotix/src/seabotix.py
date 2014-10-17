@@ -10,7 +10,7 @@ from kraken_msgs.msg import seabotix
 
 dataString = ''
 
-sb = serial.Serial('/dev/ttyUSB0', 9600)
+sb = serial.Serial('/dev/ttyACM2', 9600)
 
 ## serial config
 sb.stopbits = 1
@@ -47,13 +47,23 @@ if __name__ == '__main__':
     
     
     count = 0     # variable to check frequency   
+    
+    speed = ''
+    for i in range(1,7):
+        speed += chr(0x90);
+        speed += chr(0xA0);
+    
     r = rospy.Rate(50)
+    print 'running'
+    
+    print speed
+    
     while not rospy.is_shutdown():
-        
-        
+        sb.write(speed)
+        #print speed
         count = count + 1
-        print count
-        print dataString
+        #print count
+        #print dataString
         r.sleep()
         
     
