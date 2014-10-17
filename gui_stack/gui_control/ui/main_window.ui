@@ -128,6 +128,9 @@
      <number>2</number>
     </property>
     <widget class="QWidget" name="AdvancedControllerTab">
+     <property name="cursor">
+      <cursorShape>ArrowCursor</cursorShape>
+     </property>
      <attribute name="title">
       <string>Tab 1</string>
      </attribute>

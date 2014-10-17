@@ -41,7 +41,9 @@ public:
 	void ReadSettings(); // Load up qt program settings at startup
 	void WriteSettings(); // Save qt program settings when closing
 
-	void closeEvent(QCloseEvent *event); // Overloaded function
+    void closeEvent(QCloseEvent *event); // Overloaded function
+
+
 
 public Q_SLOTS:
 	/******************************************
@@ -55,12 +57,16 @@ public Q_SLOTS:
     void force_update(const kraken_msgs::forceData6ThrusterConstPtr& msg);
     void controllerButtonClicked();
     void advancedControllerButtonClicked();
+    void moveAlongButtonClicked();
+    void pauseButtonClicked();
 
 Q_SIGNALS:
     void sendControllGoal(float r,float p,float y);
     void sendAdvancedControlGoal(float x,float y,float z);
+    void callmoveALongsrv(float angle);
+    void callPauseService();
 private:
-	Ui::MainWindowDesign ui;
+    Ui::MainWindowDesign ui;
 	QNode qnode;
 };
 
