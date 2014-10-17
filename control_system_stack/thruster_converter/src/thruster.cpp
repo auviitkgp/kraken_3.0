@@ -85,11 +85,16 @@ int main(int argc,char** argv)
     ros::Subscriber _sub6 = n.subscribe<kraken_msgs::thrusterData6Thruster>(topics::CONTROL_PID_THRUSTER6,2,thruster6callback);
     ros::Publisher _pub = n.advertise<kraken_msgs::seabotix>(topics::CONTROL_SEABOTIX,2);
 
+    serial arduino;
+    a
+
     ros::Rate looprate(10);
+    for(int i=0; i<12; i++)
+        _output.data[i] = i;
     while(ros::ok())
     {
         _pub.publish(_output);
-
+        sleep(2);
         ros::spinOnce();
         looprate.sleep();
     }
