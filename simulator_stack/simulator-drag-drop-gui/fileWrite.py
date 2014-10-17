@@ -1,5 +1,5 @@
-fin = open("scene_2.xml", "r")
-fout = open("scene_3.xml", "w")
+fin = open("input.xml", "r")
+fout = open("output.xml", "w")
 
 robot = open("robot-tag.txt", "r")
 fout.write(robot.read())

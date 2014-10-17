@@ -1,4 +1,4 @@
-filename = "scene_2.xml"
+filename = "input.xml"
 
 def parseSimX():
 
