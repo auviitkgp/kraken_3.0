@@ -4,7 +4,7 @@
 
 Vgate::Vgate(std::string name) : _it(_n), _s(_n, name, boost::bind(&Vgate::executCB, this, _1), false), _actionName(name)
 {
-    _sub = _it.subscribe(topics::BOTTOM_CAMERA_RAW_IAMGE, 1, &Vgate::imageCallBack, this);
+    _sub = _it.subscribe(topics::CAMERA_BOTTOM_RAW_IMAGE, 1, &Vgate::imageCallBack, this);
     _pub = _it.advertise(topics::CAMERA_BOTTOM_VGATE_IMAGE, 1);
     
     ifstream _thresholdVal("threshold.th");
