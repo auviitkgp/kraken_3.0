@@ -55,6 +55,8 @@ public Q_SLOTS:
     void on_writeFile_clicked();
     void on_newFile_clicked();
 
+    void writeToXml();
+
     void on_openCamera_clicked();
     void on_startCamera_clicked();
     void on_pauseCamera_clicked();
@@ -114,7 +116,10 @@ public Q_SLOTS:
 
     // manual callbacks
     void on_updateImages();
-    //i->colorImage->mouseDoubleClickEvent();
+
+    void on_openCheck_clicked();
+    void on_closeCheck_clicked();
+
 private:
     Ui::MainWindow *ui;
     bool camera_opend,video_being_processed;
@@ -131,11 +136,11 @@ private:
     void setThresh();
 
     bool source_from_log;
-//    QString fn_video; // the file name of the log video.
+    //    QString fn_video; // the file name of the log video.
 
     int mblurVal, gblurVal, blurVal;
 
-    bool dilate_b, erode_b;
+    bool dilate_b, erode_b, open_check_b, close_check_b;
 
     int kernelSizeVal, kernelShape;
 

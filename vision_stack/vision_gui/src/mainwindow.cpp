@@ -14,6 +14,11 @@
 #include <blob/ComponentLabeling.h>
 #include <blob/BlobProperties.h>
 
+#include "rapidxml-1.13/rapidxml.hpp"
+#include <string.h>
+#include <stdio.h>
+#include <vector>
+
 QString fn_video;
 
 MyWindow::MyWindow(QWidget *parent) :
@@ -49,6 +54,8 @@ MyWindow::MyWindow(QWidget *parent) :
 
     dilate_b = false;
     erode_b = false;
+    open_check_b = false;
+    close_check_b = false;
 
     kernelSizeVal = 3;
     kernelShape = 0;
@@ -203,6 +210,82 @@ void MyWindow::on_closeFile_clicked()
     ui->openFile->setEnabled(true);
     ui->writeFile->setEnabled(false);
     ui->closeFile->setEnabled(false);
+}
+
+void MyWindow::writeToXml(){
+
+    //    fout2 << "Simple filters" << endl;
+    //    fout2 << "=========" << endl;
+    //    fout2 << "<blur>" << blurVal << "</blur>" << endl;
+    //    fout2 << "<mblur>" << mblurVal << "</mblur>" << endl;
+    //    fout2 << "<gblur>" << gblurVal << "</gblur>" << endl;
+
+    //    fout2 << blur : " << mblurVal << endl;
+    //    fout2 << "Gaussian blur : " << gblurVal << endl << endl;
+
+    //    fout2 << "Dilate and Erode" << endl;
+    //    fout2 << "=========" << endl;
+
+    //    if(dilate_b)
+
+    //        fout2 << "Dilate with ";
+
+    //    if(erode_b)
+
+    //        fout2 << "Erode with ";
+
+    //    if(dilate_b || erode_b)
+    //    {
+    //        if(kernelShape == 0)
+
+    //            fout2 << "MORPH_ELLIPSE";
+
+    //        if(kernelShape == 1)
+
+    //            fout2 << "MORPH_RECT";
+
+    //        if(kernelShape == 2)
+
+    //            fout2 << "MORPH_CROSS";
+
+    //    }
+
+    //    else
+
+    //        fout2 << "Dilate and erode not applied.";
+
+    //    fout2 << endl << endl;
+
+    //    fout2 << "Blob Detection" << endl;
+    //    fout2 << "=========" << endl;
+    //    fout2 << "Background color : " << bg_r << endl;
+    //    fout2 << "Foreground color : " << fg_r << endl;
+    //    fout2 << "Area limit : " << filter_arg5_area;
+    //    fout2 << endl << endl;
+
+    //    fout2 << "Blob Criteria : ";
+
+    //    if(filter_arg2 == B_INCLUDE)
+
+    //        fout2 << "INCLUDE " ;
+
+    //    else
+
+    //        fout2 << "EXCLUDE";
+
+    //    fout2 << " all with Area ";
+
+    //    if(filter_arg4 == B_LESS)
+
+    //        fout2 << " Less ";
+
+    //    else
+
+    //        fout2 << " Greater ";
+
+    //    fout2<< " than " << filter_arg5_area << endl;
+
+    return;
 }
 
 void MyWindow::on_newFile_clicked(){
@@ -536,12 +619,68 @@ void MyWindow::on_dilateCheck_clicked(){
     dilate_b = !dilate_b;
 
     std::cout << dilate_b;
+
+    if(dilate_b || erode_b){
+        ui->openCheck->setEnabled(false);
+        ui->closeCheck->setEnabled(false);
+    }
+
+    else if(!dilate_b && !erode_b){
+        ui->openCheck->setEnabled(true);
+        ui->closeCheck->setEnabled(true);
+    }
 }
 
 void MyWindow::on_erodeCheck_clicked(){
     erode_b = !erode_b;
 
     std::cout << erode_b;
+
+    if(dilate_b || erode_b){
+        ui->openCheck->setEnabled(false);
+        ui->closeCheck->setEnabled(false);
+    }
+
+    else if(!dilate_b && !erode_b){
+        ui->openCheck->setEnabled(true);
+        ui->closeCheck->setEnabled(true);
+    }
+
+}
+
+void MyWindow::on_openCheck_clicked()
+{
+
+    open_check_b = !open_check_b;
+
+    if(dilate_b || erode_b){
+        ui->openCheck->setEnabled(false);
+        ui->closeCheck->setEnabled(false);
+    }
+
+    else if(!dilate_b && !erode_b){
+        ui->openCheck->setEnabled(true);
+        ui->closeCheck->setEnabled(true);
+    }
+}
+
+void MyWindow::on_closeCheck_clicked()
+{
+
+    close_check_b = !close_check_b;
+
+    std::cout << close_check_b;
+
+    if(dilate_b || erode_b){
+        ui->openCheck->setEnabled(false);
+        ui->closeCheck->setEnabled(false);
+    }
+
+    else if(!dilate_b && !erode_b){
+        ui->openCheck->setEnabled(true);
+        ui->closeCheck->setEnabled(true);
+    }
+
 }
 
 void MyWindow::on_morphellipse_clicked(){
@@ -774,8 +913,17 @@ void MyWindow::on_updateImages()
 
             erode(thImage, thImage, dilatekernel);
 
-        /////////////////////////////////////////////////////////////
+        if(open_check_b){
+            erode(thImage, thImage, dilatekernel);
+            dilate(thImage, thImage, dilatekernel);
+        }
 
+        else if(close_check_b){
+            dilate(thImage, thImage, dilatekernel);
+            erode(thImage, thImage, dilatekernel);            
+        }
+
+        /////////////////////////////////////////////////////////////
 
         if(blob_enabled){
 

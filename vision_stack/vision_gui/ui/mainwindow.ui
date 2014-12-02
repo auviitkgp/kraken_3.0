@@ -116,7 +116,7 @@
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>2</number>
           </property>
           <widget class="QWidget" name="tab_5">
            <attribute name="title">
@@ -903,7 +903,7 @@
            <widget class="QWidget" name="gridLayoutWidget_4">
             <property name="geometry">
              <rect>
-              <x>110</x>
+              <x>100</x>
               <y>130</y>
               <width>281</width>
               <height>31</height>
@@ -918,7 +918,7 @@
               </widget>
              </item>
              <item row="0" column="1">
-              <widget class="QCheckBox" name="checkBox">
+              <widget class="QCheckBox" name="erodeCheck">
                <property name="text">
                 <string>Erode</string>
                </property>
@@ -1030,8 +1030,8 @@
            <widget class="QCheckBox" name="contoursCheck">
             <property name="geometry">
              <rect>
-              <x>10</x>
-              <y>210</y>
+              <x>0</x>
+              <y>230</y>
               <width>131</width>
               <height>22</height>
              </rect>
@@ -1043,8 +1043,8 @@
            <widget class="QLabel" name="label_16">
             <property name="geometry">
              <rect>
-              <x>0</x>
-              <y>190</y>
+              <x>10</x>
+              <y>210</y>
               <width>451</width>
               <height>17</height>
              </rect>
@@ -1056,8 +1056,8 @@
            <widget class="QWidget" name="gridLayoutWidget_7">
             <property name="geometry">
              <rect>
-              <x>100</x>
-              <y>240</y>
+              <x>170</x>
+              <y>280</y>
               <width>160</width>
               <height>80</height>
              </rect>
@@ -1085,6 +1085,45 @@
               </widget>
              </item>
             </layout>
+           </widget>
+           <widget class="QWidget" name="gridLayoutWidget_8">
+            <property name="geometry">
+             <rect>
+              <x>40</x>
+              <y>170</y>
+              <width>398</width>
+              <height>31</height>
+             </rect>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_15">
+             <item row="0" column="1">
+              <widget class="QCheckBox" name="closeCheck">
+               <property name="text">
+                <string>Close (dilate then erode)</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QCheckBox" name="openCheck">
+               <property name="text">
+                <string>Open (erode then dilate)</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QPushButton" name="pushButton">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>130</y>
+              <width>98</width>
+              <height>27</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>PushButton</string>
+            </property>
            </widget>
           </widget>
           <widget class="QWidget" name="tab_2">
