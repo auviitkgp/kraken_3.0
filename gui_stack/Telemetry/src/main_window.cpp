@@ -175,6 +175,11 @@ void MainWindow::updateSetPose(kraken_msgs::krakenPoseConstPtr msg)
     updateSetDepth(msg->data[kraken_core::_pz]);
     updateSetYaw(msg->data[kraken_core::_yaw]);
   }
+
+  QString a;
+  a.arg(msg->data[kraken_core::_px]);
+  ui.lineEdit->setText(a);
+
 }
 
 /*****************************************************************************
