@@ -1,12 +1,28 @@
 from Tkinter import *
+import rospy
+from std_msgs.msg import String
+
+pub = rospy.Publisher('keyboard', String, queue_size=10)
+rospy.init_node('talker', anonymous=True)
+
+def tellRos(content):
+
+    content_str = str(content)
+
+    pub.publish(content_str)
+
 
 def create_callbacks(arg):
     
     def callback(ev=None):
-        if arg == 0: print 'left'
-        elif arg == 1: print 'right'
-        elif arg == 2: print 'down'
-        elif arg == 3: print 'top'
+        if arg == 0:
+        	tellRos("left")
+        elif arg == 1:        	
+        	tellRos("right")
+        elif arg == 2:        	
+        	tellRos("down")
+        elif arg == 3:        	
+        	tellRos("top")
 
     return callback
 
