@@ -1,13 +1,10 @@
 from Tkinter import *
 
-
 def create_callbacks(arg):
     
-    def callback():
-        if arg == 0:
-            print 'left'
-        elif arg == 1:
-            print 'right'
+    def callback(ev=None):
+        if arg == 0: print 'left'
+        elif arg == 1: print 'right'
         elif arg == 2: print 'down'
         elif arg == 3: print 'top'
 
@@ -32,6 +29,10 @@ right.grid(row=1,column=2)
 top = Button(frame, text="top", command=create_callbacks(3))
 top.grid(row=0,column=1)
 
+root.bind("a", create_callbacks(0))
+root.bind("d", create_callbacks(1))
+root.bind("s", create_callbacks(2))
+root.bind("w", create_callbacks(3))
 frame.pack()
 
 root.mainloop()
