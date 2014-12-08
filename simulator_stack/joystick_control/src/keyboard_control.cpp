@@ -10,7 +10,7 @@
 using namespace std;
 kraken_msgs::forceData6Thruster _force_sent;
 float _received[6]={0.0};
-const int BASE = 30;
+const int BASE = 10;
 
 // _received[0] = 0.0;
 // _received[1] = 0.0;
