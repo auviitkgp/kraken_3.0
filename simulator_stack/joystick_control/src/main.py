@@ -1,6 +1,16 @@
+# import roslib;roslib.load_manifest('mission_planner')
+
 from Tkinter import *
 import rospy
 from std_msgs.msg import String
+# from kraken_msgs import *
+
+# import kraken_msgs
+
+# f = kraken_msgs.msg.forceData6Thruster()
+
+# forceData6Thruster f
+# print type(f)
 
 pub = rospy.Publisher('keyboard', String, queue_size=10)
 rospy.init_node('talker', anonymous=True)
@@ -11,6 +21,20 @@ def tellRos(content):
 
     pub.publish(content_str)
 
+# Force Defination
+# force[0] = forward thruster on left side, positive value takes vehicle forwards
+# force[1] = forward thruster on right side, positive value takes vehicle forwards
+# force[2] = sway thruster on front side, positive value takes vehicle rightwards
+# force[3] = sway thruster on back side, positive value takes vehicle rightwards
+# force[4] = depth thruster on back side, positive value takes vehicle downwards
+# force[5] = depth thruster on front side, positive value takes vehicle downwards
+
+# Keyboard Control
+
+# w - forward
+# a - left
+# s - backward
+# d - right
 
 def create_callbacks(arg):
     
@@ -20,9 +44,9 @@ def create_callbacks(arg):
         elif arg == 1:        	
         	tellRos("right")
         elif arg == 2:        	
-        	tellRos("down")
+        	tellRos("backward")
         elif arg == 3:        	
-        	tellRos("top")
+        	tellRos("forward")
 
     return callback
 
