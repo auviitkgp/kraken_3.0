@@ -1,0 +1,23 @@
+<package>
+  <description brief="newcv">
+
+     newcv
+
+  </description>
+  <author>Manvi</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/newcv</url>
+  <depend package="roscpp"/>
+  <depend package="std_msgs"/>
+  <depend package="rospy"/>
+  <depend package="image_transport"/>
+  <depend package="sensor_msgs"/>
+  <depend package="blob"/>
+  <depend package="actionlib"/>
+  <depend package="ip_msgs"/>
+  <depend package="cv_bridge"/>
+
+</package>
+
+

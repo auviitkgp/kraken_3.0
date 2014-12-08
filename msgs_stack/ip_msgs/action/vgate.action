@@ -1,9 +1,11 @@
 #goal definition
-int32 order
+int32 gate
 ---
 #result definition
-int32[] sequence
+int32 fresult
+int32 resultx
+int32 resulty
 ---
 #feedback
-int32 errorx
-float32 errory
+float32 xfeed
+float32 yfeed
