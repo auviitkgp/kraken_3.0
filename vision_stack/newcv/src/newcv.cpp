@@ -226,7 +226,10 @@ pair<bunch,pair<bunch,bunch> > getLargestBunch(const vector<Vec4i> &lines)
         double theta;
         if(lines[i][2]-lines[i][0]!=0)
             theta = atan((lines[i][3]-lines[i][1])/(lines[i][2]-lines[i][0]));
-        else continue;
+        else{
+            goto LABEL;
+        }
+
 
         if(theta>CV_PI/180*-30&&theta<30*CV_PI/180)
         {
@@ -255,7 +258,7 @@ pair<bunch,pair<bunch,bunch> > getLargestBunch(const vector<Vec4i> &lines)
 
 }
         if(theta >CV_PI/180*60 && theta < CV_PI/180*120){
-            Point low;
+            LABEL: Point low;
 
             if(lines[i][1]<lines[i][3])
                 low.x=lines[i][2],low.y=lines[i][3];
