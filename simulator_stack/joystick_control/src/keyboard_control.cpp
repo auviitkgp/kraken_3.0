@@ -7,17 +7,45 @@
 
 #include <string.h>
 
+/**********
+ 
+Force Defination
+force[0] = forward thruster on left side, positive value takes vehicle forwards
+force[1] = forward thruster on right side, positive value takes vehicle forwards
+force[2] = sway thruster on front side, positive value takes vehicle rightwards
+force[3] = sway thruster on back side, positive value takes vehicle rightwards
+force[4] = depth thruster on back side, positive value takes vehicle downwards
+force[5] = depth thruster on front side, positive value takes vehicle downwards
+
+W - ++ 0 ; ++ 1
+S - -- 0 ; -- 1
+A - -- 2 ;
+D - ++ 2 ;
+
+*****************/
+
+
 using namespace std;
 kraken_msgs::forceData6Thruster _force_sent;
-float _received[6]={0.0};
-const int BASE = 10;
+float _received[6]={0.0}, _forcePresentData[6]={0.0};
+const int BASE = 2;
 
-// _received[0] = 0.0;
-// _received[1] = 0.0;
-// _received[2] = 0.0;
-// _received[3] = 0.0;
-// _received[4] = 0.0;
-// _received[5] = 0.0;
+void storePresentForceData(const kraken_msgs::forceData6Thruster force){
+/*
+	std::cout << force.data[0] << "\n";
+	std::cout << force.data[1] << "\n";
+	std::cout << force.data[2] << "\n";
+	std::cout << force.data[3] << "\n";
+	std::cout << force.data[4] << "\n";
+	std::cout << force.data[5] << "\n";
+*/
+	_forcePresentData[0] = force.data[0];
+	_forcePresentData[1] = force.data[1];
+	_forcePresentData[2] = force.data[2];
+	_forcePresentData[3] = force.data[3];
+	_forcePresentData[4] = force.data[4];
+	_forcePresentData[5] = force.data[5];
+}
 
 void keyCB(const std_msgs::String::ConstPtr& msg)
 {
@@ -29,26 +57,24 @@ void keyCB(const std_msgs::String::ConstPtr& msg)
 
     if(strcmp(msg->data.c_str(), "left") == 0){
         std::cout << "left";
-        _received[2] = -1 * BASE;
-        _received[3] = BASE;
+        _received[2] = _forcePresentData[2] - BASE;
     }
 
     if(strcmp(msg->data.c_str(), "right") == 0){
         std::cout << "right";
-        _received[2] = BASE;
-        _received[3] = -1 * BASE;
+        _received[2] = _forcePresentData[2] + BASE;
     }
 
     if(strcmp(msg->data.c_str(), "forward") == 0){
         std::cout << "forward";
-        _received[0] = BASE;
-        _received[1] = BASE;
+        _received[0] = _forcePresentData[0] + BASE;
+        _received[1] = _forcePresentData[1] + BASE;
     }
 
     if(strcmp(msg->data.c_str(), "backward") == 0){
         std::cout << "backward";
-        _received[0] = -1 * BASE;
-        _received[1] = -1 * BASE;
+        _received[0] = _forcePresentData[0] - BASE;
+        _received[1] = _forcePresentData[1] - BASE;
     }
 
 }
@@ -57,6 +83,8 @@ int main(int argc, char *argv[]){
     ros::init(argc, argv, "keyboard_control");
     ros::NodeHandle _nh;
     ros::Publisher _force_pub = _nh.advertise<kraken_msgs::forceData6Thruster>(topics::SIMULATOR_MODEL_FORCE_DATA_6_THRUSTERS, 100);
+		  ros::Subscriber sub1 = _nh.subscribe(topics::SIMULATOR_MODEL_FORCE_DATA_6_THRUSTERS, 1000, storePresentForceData);
+
     // ros::Subscriber _joy_sub = _nh.subscribe<sensor_msgs::Joy>("/keyboard", 100, joyCB);
     ros::Subscriber sub = _nh.subscribe("keyboard", 1000, keyCB);
 
@@ -75,8 +103,6 @@ int main(int argc, char *argv[]){
         ros::spinOnce();
         _looprate.sleep();
     }
-
-    // ros::spin();
 
     return 0;
 }
