@@ -39,7 +39,7 @@ def tellRos(content):
 # g - ground (towards the pool bottom)
 
 string_dict = {0 : "left", 1 : "right", 2 : "backward", 3 : "forward", 4 :
-               "top", 5 : "bottom"}
+               "top", 5 : "bottom", 6 : "STOP"}
 
 def create_callbacks(arg):
     
@@ -73,12 +73,19 @@ top.grid(row=0,column=3)
 bottom = Button(frame, text="bottom", command=create_callbacks(5))
 bottom.grid(row=1,column=3)
 
+bottom = Button(frame, text="bottom", command=create_callbacks(5))
+bottom.grid(row=1,column=3)
+
+stop = Button(frame, text="STOP", bg='red', command=create_callbacks(6))
+stop.grid(row=1,column=4)
+
 root.bind("a", create_callbacks(0))
 root.bind("d", create_callbacks(1))
 root.bind("s", create_callbacks(2))
 root.bind("w", create_callbacks(3))
 root.bind("t", create_callbacks(4))
 root.bind("g", create_callbacks(5))
+root.bind("<space>", create_callbacks(6))
 
 frame.pack()
 
