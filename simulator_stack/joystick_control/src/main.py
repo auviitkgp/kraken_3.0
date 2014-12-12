@@ -55,28 +55,25 @@ root = Tk()
 
 frame = Frame(root, width=100, height=100)
 
-left = Button(frame, text="left", command=create_callbacks(0))
+left = Button(frame, text="left(A)", command=create_callbacks(0))
 left.grid(row=1,column=0)
 
-back = Button(frame, text="backward", command=create_callbacks(2))
+back = Button(frame, text="backward (S)", command=create_callbacks(2))
 back.grid(row=1,column=1)
 
-right = Button(frame, text="right", command=create_callbacks(1))
+right = Button(frame, text="right (D)", command=create_callbacks(1))
 right.grid(row=1,column=2)
 
-forward = Button(frame, text="forward", command=create_callbacks(3))
+forward = Button(frame, text="forward (W)", command=create_callbacks(3))
 forward.grid(row=0,column=1)
 
-top = Button(frame, text="top", command=create_callbacks(4))
+top = Button(frame, text="top (T)", command=create_callbacks(4))
 top.grid(row=0,column=3)
 
-bottom = Button(frame, text="bottom", command=create_callbacks(5))
+bottom = Button(frame, text="bottom (G)", command=create_callbacks(5))
 bottom.grid(row=1,column=3)
 
-bottom = Button(frame, text="bottom", command=create_callbacks(5))
-bottom.grid(row=1,column=3)
-
-stop = Button(frame, text="STOP", bg='red', command=create_callbacks(6))
+stop = Button(frame, text="STOP (Space)", bg='red', command=create_callbacks(6))
 stop.grid(row=1,column=4)
 
 root.bind("a", create_callbacks(0))
