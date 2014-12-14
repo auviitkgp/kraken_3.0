@@ -1,18 +1,23 @@
-# import roslib;roslib.load_manifest('mission_planner')
+import roslib;roslib.load_manifest('joystick_control')
 
 from Tkinter import *
 import rospy
 from std_msgs.msg import String
 # from kraken_msgs import *
 
-# import kraken_msgs
+import kraken_msgs
+from kraken_msgs.msg._forceData6Thruster import forceData6Thruster
 
-# f = kraken_msgs.msg.forceData6Thruster()
+from resources import topicHeader
 
-# forceData6Thruster f
-# print type(f)
+def editGui(data):
+    
+    print data.data
+    print type(data)
+    print data.data[0]
 
 pub = rospy.Publisher('keyboard', String, queue_size=10)
+rospy.Subscriber(topicHeader.SIMULATOR_MODEL_FORCE_DATA_6_THRUSTERS, forceData6Thruster, editGui)
 rospy.init_node('talker', anonymous=True)
 
 def tellRos(content):
