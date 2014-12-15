@@ -11,10 +11,13 @@ from kraken_msgs.msg._forceData6Thruster import forceData6Thruster
 from resources import topicHeader
 
 def editGui(data):
+
+    for i in range(len(data.data)):
+        label_vars[i].set(data.data[i])
     
-    print data.data
-    print type(data)
-    print data.data[0]
+    # print data.data
+    # print type(data)
+    # print data.data[0]
 
 pub = rospy.Publisher('keyboard', String, queue_size=10)
 rospy.Subscriber(topicHeader.SIMULATOR_MODEL_FORCE_DATA_6_THRUSTERS, forceData6Thruster, editGui)
@@ -80,6 +83,22 @@ bottom.grid(row=1,column=3)
 
 stop = Button(frame, text="STOP (Space)", bg='red', command=create_callbacks(6))
 stop.grid(row=1,column=4)
+
+label_vars = range(6)
+
+for i in range(len(label_vars)):
+    label_vars[i] = StringVar()
+    label_vars[i].set('empty')
+
+for i in range(len(label_vars)):
+    label_vars[i].set('empty')
+
+l1 = Label(frame, text="Force Values")
+l1.grid(row=0, column=5)
+
+for i in range(6):
+    temp = Label(frame, textvariable=label_vars[i])
+    temp.grid(row=i+1, column=5)
 
 root.bind("a", create_callbacks(0))
 root.bind("d", create_callbacks(1))
