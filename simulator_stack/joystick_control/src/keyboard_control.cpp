@@ -31,7 +31,7 @@ using namespace std;
 kraken_msgs::forceData6Thruster _force_sent;
 float _received[6]={0.0}, _forcePresentData[6]={0.0};
 const int BASE = 2;
-
+const float SIDE_BASE=0.5;
 void storePresentForceData(const kraken_msgs::forceData6Thruster force){
 	/*
 		 std::cout << force.data[0] << "\n";
@@ -59,12 +59,12 @@ void keyCB(const std_msgs::String::ConstPtr& msg)
 
 	if(strcmp(msg->data.c_str(), "left") == 0){
 		std::cout << "left";
-		_received[2] = _forcePresentData[2] - BASE;
+		_received[2] = _forcePresentData[2] - SIDE_BASE;
 	}
 
 	if(strcmp(msg->data.c_str(), "right") == 0){
 		std::cout << "right";
-		_received[2] = _forcePresentData[2] + BASE;
+		_received[2] = _forcePresentData[2] + SIDE_BASE;
 	}
 
 	if(strcmp(msg->data.c_str(), "forward") == 0){
