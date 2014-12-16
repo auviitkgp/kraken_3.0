@@ -9,6 +9,16 @@ from kraken_msgs.msg._forceData6Thruster import forceData6Thruster
 
 from resources import topicHeader
 
+root = Tk()
+
+frame = Frame(root, width=100, height=100)
+
+label_vars = range(6)
+
+for i in range(len(label_vars)):
+    label_vars[i] = StringVar()
+    label_vars[i].set('empty')
+
 def editGui(data):
 
     for i in range(len(data.data)):
@@ -58,9 +68,6 @@ def create_callbacks(arg):
 def callback(ev=None):
     print 'callback called!'
 
-root = Tk()
-
-frame = Frame(root, width=100, height=100)
 
 left = Button(frame, text="left(A)", command=create_callbacks(0))
 left.grid(row=1,column=0)
@@ -82,15 +89,6 @@ bottom.grid(row=1,column=3)
 
 stop = Button(frame, text="STOP (Space)", bg='red', command=create_callbacks(6))
 stop.grid(row=1,column=4)
-
-label_vars = range(6)
-
-for i in range(len(label_vars)):
-    label_vars[i] = StringVar()
-    label_vars[i].set('empty')
-
-for i in range(len(label_vars)):
-    label_vars[i].set('empty')
 
 l1 = Label(frame, text="Force Values")
 l1.grid(row=0, column=5)
