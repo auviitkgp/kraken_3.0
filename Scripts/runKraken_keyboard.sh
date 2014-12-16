@@ -1,10 +1,8 @@
-# ! /bin /bash
-# ! /bin/zsh
-# WS=$ROS_WORKSPACE 
-# source /opt/ros/hydro/setup.zsh
-# export ROS_WORKSPACE=$WS
-# export ROS_PACKAGE_PATH=$ROS_WORKSPACE:$ROS_PACKAGE_PATH
-
+#!/bin /bash
+WS=$ROS_WORKSPACE 
+source /opt/ros/indigo/setup.bash
+export ROS_WORKSPACE=$WS
+export ROS_PACKAGE_PATH=$ROS_WORKSPACE:$ROS_PACKAGE_PATH
 # Run kraken_visualisation module
 roscd
 cd kraken_3.0/Scripts/
