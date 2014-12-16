@@ -1,4 +1,4 @@
-#!/bin /bash
+# ! /bin /bash
 # ! /bin/zsh
 # WS=$ROS_WORKSPACE 
 # source /opt/ros/hydro/setup.zsh
