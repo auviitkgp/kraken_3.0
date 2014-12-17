@@ -1,4 +1,4 @@
-#!/bin /bash
+#!/usr/bin/env bash
 WS=$ROS_WORKSPACE 
 source /opt/ros/indigo/setup.bash
 export ROS_WORKSPACE=$WS
