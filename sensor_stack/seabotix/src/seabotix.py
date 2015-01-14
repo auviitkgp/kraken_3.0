@@ -18,6 +18,16 @@ sb = serial.Serial('/dev/ttyACM0', 115200)
 #serial config
 sb.stopbits = 1
 
+#data to be sent to Arduino
+data = [[0x60,0,0x64],
+            [0x5A,0,0x64],
+            [0x52,0,0x64],
+            [0x5E,0,0x64],
+            [0x50,0,0x64],
+            [0x50,0,0x64],
+            [0x5C,0,0x64]]
+
+
 def initSerial():
     
     sb.open()
@@ -29,21 +39,23 @@ def initSerial():
 	    print 'Error in opening port'
     
 
-def seabotixCB(data):
-    global dataString
-    dataString = ''
-    checksum = '0x00'
+def seabotixCB(dataI):
+    global data
     
     for i in data:
+        data[i][1] = dataI.data[i]
+        '''
         dataString += chr(data.data[i])
         checksum += data.data[i]
     dataString += chr(checksum)
     sb.write(dataString)
-
+    '''
+        print "%d" %data[i][1]
 
     
 if __name__ == '__main__':
 
+    global data
     initSerial()
    
     rospy.init_node('Thruster', anonymous=True)
@@ -54,13 +66,7 @@ if __name__ == '__main__':
     #add = [0X60,0X52,0X5A,0X50,0X5C,0X5E]
     #speed = [0X62,0X62,0X62,0X62,0X62,0X62]
     #speedMax = [0X64,0X64,0X64,0X64,0X64,0X64]
-    data = [[0x60,0x62,0x64],
-	    [0x52,0x62,0x64],
-	    [0x5A,0x62,0x64],
-  	    [0x50,0x62,0x64],
-	    [0x5C,0x62,0x64],
-            [0x5E,0x62,0x64]]
-    #add[0] = 50
+     #add[0] = 50
     #add[1] = '56'
     #add[2] = '5A'
     #add[3] = '5E'
