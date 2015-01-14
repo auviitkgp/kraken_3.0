@@ -1,28 +1,32 @@
 #!/usr/bin/env python
 
+
 PKG = 'seabotix'
 
+from time import sleep
 import roslib; roslib.load_manifest(PKG)
 import serial
+
 
 import rospy
 from kraken_msgs.msg import seabotix
 
 dataString = ''
 
-sb = serial.Serial('/dev/ttyACM2', 9600)
+sb = serial.Serial('/dev/ttyACM0', 115200)
 
-## serial config
+#serial config
 sb.stopbits = 1
-##
+
 def initSerial():
     
     sb.open()
 
     if (sb.isOpen) :
         print 'Serial port opened successfully'
+    
     else:
-        print 'Error in opening port'
+	    print 'Error in opening port'
     
 
 def seabotixCB(data):
@@ -46,24 +50,41 @@ if __name__ == '__main__':
     sub = rospy.Subscriber('/kraken/seabotix', seabotix, seabotixCB)
     
     
-    count = 0     # variable to check frequency   
+    #count = 0     # variable to check frequency   
+    #add = [0X60,0X52,0X5A,0X50,0X5C,0X5E]
+    #speed = [0X62,0X62,0X62,0X62,0X62,0X62]
+    #speedMax = [0X64,0X64,0X64,0X64,0X64,0X64]
+    data = [[0x60,0x62,0x64],
+	    [0x52,0x62,0x64],
+	    [0x5A,0x62,0x64],
+  	    [0x50,0x62,0x64],
+	    [0x5C,0x62,0x64],
+            [0x5E,0x62,0x64]]
+    #add[0] = 50
+    #add[1] = '56'
+    #add[2] = '5A'
+    #add[3] = '5E'
+    #add[4] = '52'
+    #add[5] = '58'
+    #add[4] = '60'
+    #add[5] = '5C'
+
+  
+
+    r = rospy.Rate(1)
     
-    speed = ''
-    for i in range(1,7):
-        speed += chr(0x90);
-        speed += chr(0xA0);
-    
-    r = rospy.Rate(50)
     print 'running'
     
-    print speed
+    #print speed
     
+    
+    print sb.readline()
     while not rospy.is_shutdown():
-        sb.write(speed)
-        #print speed
-        count = count + 1
-        #print count
-        #print dataString
+	for i in range(0,6):
+		for j in range(0,3):
+	    		sb.write(str(chr(int(data[i][j]))))
+			print sb.readline()
+	
         r.sleep()
         
     
