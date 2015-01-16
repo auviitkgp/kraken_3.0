@@ -1,3 +1,21 @@
+/*
+This gives the estimate of AUV pose using the Estimator provided as constructor.
+
+------subscripitons-----
+imuData
+depthData
+dvlData
+
+------services implemented----
+resetKrakenPose 
+
+
+------publishes------
+pose
+
+
+
+*/
 #ifndef POSESERVER_H
 #define POSESERVER_H
 #include <pose_server/Estimator.h>

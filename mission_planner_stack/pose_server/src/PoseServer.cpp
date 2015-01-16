@@ -35,7 +35,7 @@ namespace kraken_core
     boost::mutex::scoped_lock lock(io_mutex);
     if(_good_sensor)
     {
-      _estimator->updatePose(_imuData,_depthData,_dvlData);
+      _estimator->updatePose(_imuData,_dvlData);
       _good_sensor = false;
     }
     else if(_fast_sensor && _depth_sensor)
