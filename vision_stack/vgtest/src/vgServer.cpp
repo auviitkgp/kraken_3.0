@@ -12,12 +12,14 @@ void printpoints(const vector<Point> &v)
         printf("(%d %d)",v[i].x,v[i].y);
     printf("\n");
 }
+
 bool sort_lower(Point x,Point y)//sort according to  y-cordinate
 {
     if(x.y>y.y)
         return false;
     return true;
 }
+
 bool sort_left(Point a,Point b)
 {
     if(a.x>b.x)
@@ -29,13 +31,15 @@ Gateserver::Gateserver(NodeHandle &n1)
     :_n(n1),_it(_n),
       _serv(_n,"gate_server",boost::bind(&Gateserver::serverCallback,this,_1),false)
 {
+
     _imgsub = _it.subscribe("/kraken/bottom_camera",10,&Gateserver::imageCallback,this);
     _epsilon=1;
     _THRES_LINE_GAP = 15;
     index = 0;
     _kernel = getStructuringElement(MORPH_RECT, Size(3,3),Point(-1,-1));
     _pub = _it.advertise("validationGate",1);
-
+    cog.x = _img.rows/2;
+    cog.y = _img.cols/2;
     _serv.start();
     ROS_INFO("waiting for clients");
 }
@@ -56,6 +60,8 @@ void Gateserver::printbunch(vector<bunch> &b, string name){
         exit(0);
 }
 
+
+
 inline bool Gateserver::withinThres(int th,int a ,int b)
 {
     if(fabs(b-a)<th)
@@ -74,7 +80,6 @@ pair<bunch,pair<bunch,bunch> > Gateserver::getLargestBunch(const vector<Vec4i> &
 
         if(theta>CV_PI/180*-30&&theta<30*CV_PI/180)
         {
-
             Point right;
             if(lines[i][0]<lines[i][2])
                 right.x=lines[i][2],right.y=lines[i][3];
@@ -82,6 +87,10 @@ pair<bunch,pair<bunch,bunch> > Gateserver::getLargestBunch(const vector<Vec4i> &
                 right.x=lines[i][0],right.y=lines[i][1];
             bool added=false;
             for (int j = 0; j <bunches_x.size() ; ++j) {
+
+                ///! bunches_x is an empty array... did not push bunch in that...
+
+
                 Point bunchpt=bunches_x[j].p;
 
                 if(withinThres(_THRES_LINE_GAP,bunchpt.x,right.x)&&withinThres(_THRES_LINE_GAP,bunchpt.y,right.y))
@@ -96,7 +105,6 @@ pair<bunch,pair<bunch,bunch> > Gateserver::getLargestBunch(const vector<Vec4i> &
                 b.v.push_back(lines[i]);
                 bunches_x.push_back(b);
             }
-
         }
         if(theta >CV_PI/180*60 && theta < CV_PI/180*120){
             Point low;
@@ -132,11 +140,9 @@ pair<bunch,pair<bunch,bunch> > Gateserver::getLargestBunch(const vector<Vec4i> &
     pair<bunch,bunch> sendpair;
     for(int i=0;i<bunches_x.size();i++)
     {
-
         for (int j = 0; j < bunches_y.size(); ++j) {
             if(withinThres(20,bunches_x[i].p.x,bunches_y[j].p.x)&&withinThres(20,bunches_x[i].p.y,bunches_y[j].p.y))
             {
-
                 int pre=sum;
                 sum=std::max(sum,(int)(bunches_x[i].v.size()+bunches_y[j].v.size()));
                 bmax.p=bunches_x[i].p;
@@ -154,11 +160,12 @@ pair<bunch,pair<bunch,bunch> > Gateserver::getLargestBunch(const vector<Vec4i> &
 
 Point Gateserver::getCenterOfGate()
 {
-
     Point zero;
     zero.x =0;
     zero.y =0;
+//    cout << "cof called..\n";
     cof = getCenterOfFrame();
+//    cout << "cof done..\n";
     if(cof.x==0&& cof.y==0)
         return prevmed;
     if(q.size()<10)
@@ -186,22 +193,28 @@ Point Gateserver::getCenterOfGate()
 
 Point Gateserver::getCenterOfFrame()
 {
+//    cout << "getcof..\n";
     cvtColor(_img,_hsv,CV_BGR2GRAY);
     //       inRange(_hsv,_low,_high,_thresh);
     //       medianBlur(_thresh,_median,3);
     adaptiveThreshold(_hsv,_median,200,ADAPTIVE_THRESH_MEAN_C,THRESH_BINARY,13,0);
-    imshow("adaptive", _median);
+//    imshow("adaptive", _median);
     erode(_median,_dilateImg,_kernel);
     dilate(_dilateImg,_dilateImg,_kernel);
-    imshow("erosion",_dilateImg);
-    //       Canny(_dilateImg,_canny,20,200,3);
-
+//    Point median ;
+//    median.x = _dilateImg.rows/2;
+//    median.y = _dilateImg.cols/2;
+//    imshow("erosion",_dilateImg);
+//    Canny(_dilateImg,_canny,20,200,3);
+//    cout << "2 \n";
     IplImage fimage = _dilateImg;
     _blobs1 = CBlobResult(&fimage,NULL,0);
     _blobs2 = CBlobResult(&fimage,NULL,0);
+//    cout << "blobs.. \n";
     _blobs1.Filter(_blobs1, B_EXCLUDE, CBlobGetArea(), B_GREATER, 100);
     _blobs2.Filter(_blobs2,B_INCLUDE,CBlobGetArea(), B_LESS, 40);
 
+//    cout << "1";
     for(int i=0; i< _blobs1.GetNumBlobs();i++){
         _currentBlob1 = _blobs1.GetBlob(i);
         _currentBlob1->FillBlob(&fimage,Scalar(255));
@@ -214,9 +227,12 @@ Point Gateserver::getCenterOfFrame()
     }
 
     Mat fmat(&fimage);
+
     imshow("after blob detection",fmat);
 
     HoughLinesP(fmat,_lines,1,CV_PI/180,60,30,10);
+
+//    cout << "houghlines \n";
     retpair = getLargestBunch(_lines);
     b=retpair.first;
     vector<Vec4i> &v = b.v;
@@ -234,13 +250,20 @@ Point Gateserver::getCenterOfFrame()
     std::vector<Point> lowerpoints,leftpoints;
 
 
+//    cout << "ver.v.size = " << ver.v.size() << endl;
+//    cout << "hor.v.size = " << hor.v.size() << endl;
     for(int i=0; i<ver.v.size(); i++){
-        if(ver.v[i][1]>ver.v[i][3])
+        if(ver.v[i][1]>ver.v[i][3]){
+            Point pt = Point(ver.v[i][2],ver.v[i][3]);
+//            cout << pt.x << " " << pt.y << endl;
             lowerpoints.push_back(Point(ver.v[i][2],ver.v[i][3]));
-        else
+        }
+        else{
+            Point pt = Point(ver.v[i][0],ver.v[i][1]);
+//            cout << pt.x << " " <<pt.y << endl;
             lowerpoints.push_back(Point(ver.v[i][0],ver.v[i][1]));
+        }
     }
-
 
     for(int i=0; i<hor.v.size(); i++){
         if(hor.v[i][0]>hor.v[i][2])
@@ -260,15 +283,12 @@ Point Gateserver::getCenterOfFrame()
     Point lower=getMeanOfModes(lowerpoints);
     Point left=getMeanOfModes(leftpoints);
     Point median((lower.x+left.x)/2,(lower.y+left.y)/2);
-
-
-    // line(_img,Point(xmin,y1),Point(x1,ymin),Scalar(255,0,0));
     return median;
 }
 
 bool Gateserver::detectGate()
 {
-    ROS_INFO("detectgate..!!\n");
+    ROS_INFO("detectgate func entered..!!\n");
     _center = getCenterOfGate();
     if(_center.x == 0 && _center.y == 0)
         _status = false;
@@ -277,11 +297,13 @@ bool Gateserver::detectGate()
     return _status;
 }
 
+
 void Gateserver::alignGate()
 {
     ROS_INFO("center.x and center.y are : %f %f ", _center.x, _center.y);
     _error.x  = _center.x-(_img.rows/2);
     _error.y  = _center.y-(_img.cols/2);
+
     imshow("original", _img);
     if(waitKey(33) ==27)
         return;
@@ -291,14 +313,13 @@ void Gateserver::alignGate()
 
 void Gateserver::serverCallback(const ip_msgs::vgateGoalConstPtr &goal)
 {
-    cout << "servercall back..\n";
+//    cout << "servercall back..\n";
     Rate looprate(10);
     switch(goal->gate)
     {
     case DETECT_GATE:
     {
-
-        ROS_INFO("start detecting validation gate...");
+//        cout << "start detecting validation gate...";
         while(ok())
         {
             if (_serv.isPreemptRequested())
@@ -308,7 +329,6 @@ void Gateserver::serverCallback(const ip_msgs::vgateGoalConstPtr &goal)
                 _serv.setPreempted(_res);
                 break;
             }
-
             _gateStatus = detectGate();
             if(_gateStatus){
                 ROS_INFO("gate has been detected.. ");
@@ -319,13 +339,13 @@ void Gateserver::serverCallback(const ip_msgs::vgateGoalConstPtr &goal)
                 _res.fresult = NOT_DETECTED;
                 _serv.setAborted(_res);
             }
-
             _feed.xfeed = _center.x;
             _feed.yfeed = _center.y;
             _serv.publishFeedback(_feed);
             looprate.sleep();
         }
         break;
+
     }
     case ALIGN_GATE:
     {
@@ -343,14 +363,23 @@ void Gateserver::serverCallback(const ip_msgs::vgateGoalConstPtr &goal)
             _gateStatus = detectGate();
             if(_gateStatus){
                 alignGate();
-                if(_error.x>20)
+
+                if(_error.x <-20){
+                    cout << "move to right" << endl;
                     _res.fresult = MOVE_TO_LEFT;
-                else if(_error.x < 20)
+                }
+                else if(_error.x > 20){
+                    cout << "move to left" << endl;
                     _res.fresult = MOVE_TO_RIGHT;
-                if(_error.y >20)
+                }
+                if(_error.y >20&& _error.y>0 ){
+                    cout << "move upwards" << endl;
                     _res.fresult = MOVE_UPWARDS;
-                else if(_error.y <20)
+                }
+                else if(_error.y <-20){
+                    cout << "move downwards.." << endl;
                     _res.fresult = MOVE_DOWNWARDS;
+                }
                 _feed.xfeed = _error.x;
                 _feed.yfeed = _error.y;
                 _serv.setSucceeded(_res);
@@ -372,7 +401,7 @@ void Gateserver::serverCallback(const ip_msgs::vgateGoalConstPtr &goal)
 
 void Gateserver::imageCallback(const sensor_msgs::ImageConstPtr& ptr)
 {
-    cout << "image call_back" << endl;
+//    cout << "image call_back" << endl;
     try
     {
         bridge_ptr = cv_bridge::toCvCopy(ptr,"8UC3");
@@ -387,6 +416,7 @@ void Gateserver::imageCallback(const sensor_msgs::ImageConstPtr& ptr)
     imshow("img", _img);
     waitKey(40);
 }
+
 
 
 std::vector<Point> getModePoints(vector<Point>& v)
@@ -446,6 +476,7 @@ Gateserver::~Gateserver()
 
 
 int main(int argc, char** argv){
+//    XInitThreads();
     ros::init(argc, argv, "server_node");
     //    if(argc <2){
     //        cout << "give the path of d video also..";

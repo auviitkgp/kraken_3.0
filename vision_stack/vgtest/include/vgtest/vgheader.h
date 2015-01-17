@@ -27,6 +27,8 @@
 #include <blob/BlobResult.h>
 #include <blob/ComponentLabeling.h>
 #include <boost/thread/recursive_mutex.hpp>
+#include <pthread.h>
+#include <X11/Xlib.h>
 
 using namespace cv;
 using namespace ros;
