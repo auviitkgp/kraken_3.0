@@ -13,7 +13,7 @@ from kraken_msgs.msg import seabotix
 
 dataString = ''
 
-sb = serial.Serial('/dev/ttyACM0', 115200)
+sb = serial.Serial('/dev/ttyACM0', 9600)
 
 #serial config
 sb.stopbits = 1

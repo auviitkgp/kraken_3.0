@@ -32,7 +32,7 @@ dataList = ['pitch' , 'roll', 'yaw', 'timeStamp', 'temp', 'depth', 'soundVel', '
 
 pub = rospy.Publisher('/kraken/dvl_data', dvlData, queue_size = 2)
 rospy.init_node('dvldata', anonymous=True)
-dvl = serial.Serial('/dev/ttyUSB0', 115200)
+dvl = serial.Serial('/dev/ttyS4', 115200)
 
 rawData = ''
 
@@ -95,8 +95,8 @@ def getVal(rawdata):
     
 if __name__ == '__main__':
     
-
-    dvl.open()
+    if (not dvl.isOpen):
+        dvl.open()
 
     if (dvl.isOpen) :
         print 'Serial port opened successfully'
@@ -111,10 +111,10 @@ if __name__ == '__main__':
 #                print 'got it'
 #            print k
 #        print 'out'
-#        k = ''    
     
-    r = rospy.Rate(50)
+    r = rospy.Rate(5)
     count = 1
+#        k = ''    
     while not rospy.is_shutdown():
        
         readDVLdata()

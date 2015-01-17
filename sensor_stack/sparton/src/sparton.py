@@ -246,8 +246,8 @@ if __name__ == '__main__':
 
     """
     pubData = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
-    
-    imu.open()
+    if (not imu.isOpen):
+	imu.open()
 
     if (imu.isOpen) :
         print 'Serial port opened successfully'

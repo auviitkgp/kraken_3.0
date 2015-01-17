@@ -10,8 +10,11 @@
 #include <tracks_imu/Tracks.h>
 #include <tf/tf.h>
 #include <kdl/kdl.hpp>
-#include <bullet/LinearMath/btMatrix3x3.h>
-#include <bullet/LinearMath/btQuaternion.h>
+
+//#include <bullet/LinearMath/btMatrix3x3.h>
+
+
+//#include <bullet/LinearMath/btQuaternion.h>
 #include <underwater_sensor_msgs/Pressure.h>
 #include <math.h>
 
