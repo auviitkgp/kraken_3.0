@@ -28,7 +28,12 @@ namespace kraken_core
     updateCurrentVelocity(dvl);
     updateCurrentPosition(depth);
   }
-  
+  void DeadReckoning::updatePose(kraken_msgs::imuData &imu_msg,kraken_msgs::dvlData&dvl_msg)
+  {
+      updateCurrentAccelaration(imu_msg);
+      updateCurrentVelocity(dvl_msg);
+  }
+
   void DeadReckoning::resetPose(KrakenPose & pose)
   {
     // Resets only 6 state variable of auv
