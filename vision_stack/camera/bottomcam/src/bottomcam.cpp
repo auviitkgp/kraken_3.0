@@ -44,21 +44,22 @@ int main(int argc, char** argv)
 
     ros::NodeHandle _nh;
     image_transport::ImageTransport _it(_nh);
-    image_transport::Publisher _image_pub = _it.advertise(topics::CAMERA_BOTTOM_RAW_IMAGE, 1);
+    image_transport::Publisher _image_pub = _it.advertise("/kraken/bottom_camera", 1);
     ros::Subscriber _sub = _nh.subscribe(topics::CAMERA_CAM_SWITCH, 1, msgCallback);
-
     sensor_msgs::ImagePtr _publishImage;
     cv_bridge::CvImage _image;
     _image.encoding = "bgr8";
 
-    if (argc >= 2)
-    {
-        cameraNo = atoi(argv[1]);
-        cam.open(cameraNo);
-        camOpen = true;
-    }
-    else
-        ros::shutdown();
+
+	if (argc >= 2)
+	{
+		ROS_INFO(argv[1]);
+		cam.open(argv[1]);
+		camOpen=true;
+	}
+	else
+		ros::shutdown();
+
 
     ros::Rate _looprate(10);
 
@@ -66,11 +67,15 @@ int main(int argc, char** argv)
     {
         if(camOpen)
         {
+            ROS_INFO("publishing image on /kraken/bottom_camera\n");
             cam >> _image.image;
 
             _publishImage = _image.toImageMsg();
 
             _image_pub.publish(_publishImage);
+        }
+        else{
+            ROS_INFO("video cannot be opened");
         }
 
         ros::spinOnce();
