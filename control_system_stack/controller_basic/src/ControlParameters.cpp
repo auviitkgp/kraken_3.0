@@ -34,9 +34,12 @@ namespace kraken_controller
   void ControlParameters::load(const std::string &filename)
   {
     std::ifstream file;
-    file.open(filename.c_str());
+    file.open(filename);
+    ROS_INFO("loading file with name %s outside if",filename.c_str());
     if(file.is_open())
     {
+        const char *name=filename.c_str();
+        ROS_INFO("loading file with name %s",name);
         file>>_name;
         for(int i=0;i<_row;i++)
         {
@@ -47,6 +50,7 @@ namespace kraken_controller
             }
         }
     }
+    ROS_INFO("file not opened %s",filename.c_str());
   }
   
   void ControlParameters::write(std::ostream &out)

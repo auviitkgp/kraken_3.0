@@ -4,7 +4,7 @@ test
 0	0	0	0.00	0	2.1	0.0	0	0.5	0.00	0	0	0.00	0	0	0.00	0 	0	1.2	0	0	0.5
 0	0	0	0.00	0	2.1	0.0	0	0.5	0.00	0	0	0.00	0	0	0.00	0	0	-1.2	0	0	-0.5
 0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.5	0	0	2.1	0
-0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.5	0	0	2.1	0
+0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.5	0	0	2.1	0.0
 
  offset,    
             integral( px ), integral( py ), integral( pz ),
@@ -14,5 +14,10 @@ test
             integral(roll),integral(pitch),  integral(yaw),
                      roll ,         pitch ,           yaw ,
                  del(roll),     del(pitch),       del(yaw)     
-                 
-                 
+                
+
+
+
+
+
+

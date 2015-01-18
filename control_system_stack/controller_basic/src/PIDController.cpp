@@ -1,7 +1,15 @@
 #include <controller_basic/PIDController.h>
+#include <dynamic_reconfigure/server.h>
+#include <controller_basic/controllerConfig.h>
 
 namespace kraken_controller
 {
+    void callback(controller_basic::controllerConfig&config, uint32_t level) {
+      ROS_INFO("Reconfigure Request: %f %f %f",
+                config.Kp,
+                config.Kd,
+                config.Ki);
+    }
   PIDController::PIDController(float kp, float kd, float ki):_kp(kp),_kd(kd),_ki(ki)
   {
     _error=0;
