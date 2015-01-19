@@ -68,6 +68,14 @@ void KalmanEstimator::updatePose(kraken_msgs::imuData &imu_msg, kraken_msgs::dep
     kalmanMeasurementUpdate(world_data[kraken_core::_vx],world_data[kraken_core::_vy]);
 
 }
+void KalmanEstimator::updatePose(kraken_msgs::imuData &imu_msg, kraken_msgs::dvlData &dvl_msg)
+{
+    updateState(imu_msg);
+    updateState(dvl_msg);
+    float* world_data=_next_pose_world.getData();
+    kalmanUpdateState(world_data[kraken_core::_ax],world_data[kraken_core::_ay]);
+    kalmanMeasurementUpdate(world_data[kraken_core::_vx],world_data[kraken_core::_vy]);
+}
 
 void KalmanEstimator::resetPose(KrakenPose &pose_msg)
 {

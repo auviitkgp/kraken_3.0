@@ -24,6 +24,10 @@ namespace kraken_core
      */
     virtual void updatePose(kraken_msgs::imuData &,kraken_msgs::depthData &, kraken_msgs::dvlData &);
     /*
+     * Function to update pose using DVLand IMU data
+     */
+    virtual void updatePose(kraken_msgs::imuData &,kraken_msgs::dvlData &);
+    /*
      * Function to reset position
      */
     virtual void resetPose(KrakenPose &);

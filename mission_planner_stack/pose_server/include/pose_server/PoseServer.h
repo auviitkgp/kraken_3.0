@@ -1,3 +1,21 @@
+/*
+This gives the estimate of AUV pose using the Estimator provided as constructor.
+
+------subscripitons-----
+imuData
+depthData
+dvlData
+
+------services implemented----
+resetKrakenPose 
+
+
+------publishes------
+pose
+
+
+
+*/
 #ifndef POSESERVER_H
 #define POSESERVER_H
 #include <pose_server/Estimator.h>
@@ -10,12 +28,9 @@
 #include <tracks_imu/Tracks.h>
 #include <tf/tf.h>
 #include <kdl/kdl.hpp>
-
-//#include <bullet/LinearMath/btMatrix3x3.h>
-
-
-//#include <bullet/LinearMath/btQuaternion.h>
-#include <underwater_sensor_msgs/Pressure.h>
+/*
+*/
+//#include <underwater_sensor_msgs/Pressure.h>
 #include <math.h>
 
 namespace kraken_core
@@ -92,8 +107,8 @@ namespace kraken_core
       /*
        * Depth Callback with different input data type
        */
-      //void depthCallBack(const kraken_msgs::depthData::ConstPtr &msg);
-      void depthCallBack(const underwater_sensor_msgs::Pressure::ConstPtr &msg);
+      void depthCallBack(const kraken_msgs::depthData::ConstPtr &msg);
+//      void depthCallBack(const underwater_sensor_msgs::Pressure::ConstPtr &msg);
       /*
        * IMU Callback with different input data type
        */

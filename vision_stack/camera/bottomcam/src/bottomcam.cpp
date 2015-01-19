@@ -60,7 +60,7 @@ int main(int argc, char** argv)
     else
         ros::shutdown();
 
-    ros::Rate _looprate(10);
+    ros::Rate _looprate(5);
 
     while(ros::ok())
     {

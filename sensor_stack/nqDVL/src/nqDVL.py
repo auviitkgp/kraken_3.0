@@ -8,6 +8,7 @@ import math
 import struct
 import numpy
 import rospy
+import sys
 from resources import topicHeader
 from kraken_msgs.msg import dvlData
 #dataList = ['error_code[0]' , 'error_code[1]' , 'error_code[2]' , 'error_code[3]' , 'good_or_bad[0]' , 'good_or_bad[1]' , 'good_or_bad[2]' , 'good_or_bad[3]' , 'v_altitude[0]' , 'v_altitude[1]' , 'v_altitude[2]' , 'v_altitude[3]' , 'velo_rad[0]' , 'velo_rad[1]' , 'velo_rad[2]' , 'velo_rad[3]' , 'wvelo_rad[0]' , 'wvelo_rad[1]' , 'wvelo_rad[2]' , 'wvelo_rad[3]' , 'wvelo_credit[0]' , 'wvelo_credit[1]' , 'wvelo_credit[2]' , 'wvelo_credit[3]' , 'velo_instrument_x' , 'velo_instrument_y' , 'velo_instrument_z' , 'velo_instrument_flag' , 'velo_earth_n' , 'velo_earth_e' , 'velo_earth_d' , 'velo_earth_flag' , 'water_velo_instrument_x' , 'water_velo_instrument_y' , 'water_velo_instrument_z' , 'water_velo_instrument_flag' , 'water_velo_earth_n' , 'water_velo_earth_e' , 'water_velo_earth_d' , 'water_velo_earth_flag' , 'roll' , 'pitch' , 'heading' , 'altitude_estimate' , 'temperature' , 'salinity' , 'sound-speed' , 'check-sum',]
@@ -30,11 +31,17 @@ dataList = ['pitch' , 'roll', 'yaw', 'timeStamp', 'temp', 'depth', 'soundVel', '
 #altitude : DVL altitude, '9999.99' means invalid altitude information
 #timedata :  listed as 'Not Used' in application note
 
-pub = rospy.Publisher('/kraken/dvl_data', dvlData, queue_size = 2)
+pub = rospy.Publisher(topicHeader.SENSOR_DVL, dvlData, queue_size = 2)
 rospy.init_node('dvldata', anonymous=True)
-dvl = serial.Serial('/dev/ttyS4', 115200)
+
+if (len(sys.argv) == 2):
+	num = str(sys.argv[1])
+else:
+	num = '1'
+dvl = serial.Serial('/dev/ttyUSB'+num, 9600)
 
 rawData = ''
+pubData = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
 
 ## DVL config
 dvl.stopbits = 2
@@ -78,6 +85,7 @@ def readDVLdata():
 
     
 def getVal(rawdata):
+    global pubData
     floatData = []
     data = rawdata.split('\r')
     for i in range(1,len(data)-1):
@@ -91,10 +99,21 @@ def getVal(rawdata):
            
             
     print floatData
-    
-    
+    '''
+    pubData[0] = floatData[1]
+    pubData[1] = floatData[0]
+    pubData[2] = floatData[2]
+    pubData[3] = floatData[13]
+    pubData[4] = floatData[14]
+    pubData[5] = floatData[15]
+    pubData[6] = floatData[22]
+    pubData[7] = floatData[5]
+    pubData[8] = floatData[4]
+    pubData[9] = floatData[6]    
+    '''
 if __name__ == '__main__':
     
+
     if (not dvl.isOpen):
         dvl.open()
 
@@ -118,14 +137,14 @@ if __name__ == '__main__':
     while not rospy.is_shutdown():
        
         readDVLdata()
-        print 'data count : ',count 
+        #print 'data count : ',count 
         getVal(rawData)
-        print ''
-        count += 1
+        #print ''
+        #count += 1
         
         #for i,a in enumerate(dataList):
         #    print i,' : ',a
-        #rospy.loginfo(pubData)
+        #rospy.loginfo(pub)
         #pub.publish(pubData)
         
        

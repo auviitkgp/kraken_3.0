@@ -43,7 +43,7 @@ extern const char* CONTROL_SWITCH_CONTROL;
 
 
 extern const char* CONTROL_SEABOTIX;
-
+extern const char* CONTROL_LOADPARAM;
 
 
 //sensor topics
