@@ -18,6 +18,7 @@
 #include <actionlib/client/simple_action_client.h>
 #include <actionlib/client/terminal_state.h>
 #include <ip_msgs/vgateAction.h>
+#include <resources/topicHeader.h>
 #include <fstream>
 #include <blob/blob.h>
 #include <blob/BlobContour.h>
@@ -26,13 +27,12 @@
 #include <blob/BlobProperties.h>
 #include <blob/BlobResult.h>
 #include <blob/ComponentLabeling.h>
-#include <boost/thread/recursive_mutex.hpp>
-#include <pthread.h>
-#include <X11/Xlib.h>
+
 
 using namespace cv;
 using namespace ros;
 using namespace std;
+
 
 
 typedef actionlib::SimpleActionServer<ip_msgs::vgateAction> Server;

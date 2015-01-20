@@ -17,6 +17,7 @@
   <depend package="actionlib"/>
   <depend package="ip_msgs"/>
   <depend package="cv_bridge"/>
+  <depend package="resources"/>
 
 </package>
 
