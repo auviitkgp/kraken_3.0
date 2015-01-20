@@ -5,7 +5,6 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <std_msgs/String.h>
-
 #include <resources/topicHeader.h>
 
 using namespace std;
@@ -45,7 +44,7 @@ int main(int argc, char** argv)
     ros::NodeHandle _nh;
     image_transport::ImageTransport _it(_nh);
     image_transport::Publisher _image_pub = _it.advertise(topics::CAMERA_FRONT_RAW_IMAGE, 1);
-    ros::Subscriber _sub = _nh.subscribe(topics::CAMERA_CAM_SWITCH, 1, msgCallback);
+   ros::Subscriber _sub = _nh.subscribe(topics::CAMERA_CAM_SWITCH, 1, msgCallback);
 
     sensor_msgs::ImagePtr _publishImage;
     cv_bridge::CvImage _image;
@@ -53,8 +52,8 @@ int main(int argc, char** argv)
 
     if (argc >= 2)
     {
-        cameraNo = atoi(argv[1]);
-        cam.open(cameraNo);
+//        cameraNo = atoi(argv[1]);
+        cam.open(argv[1]);
         camOpen = true;
     }
     else
@@ -67,11 +66,14 @@ int main(int argc, char** argv)
         if(camOpen)
         {
             cam >> _image.image;
+            cout << "publishsing image on topics" << topics::CAMERA_FRONT_RAW_IMAGE << endl;
 
             _publishImage = _image.toImageMsg();
 
             _image_pub.publish(_publishImage);
         }
+        else
+            cout << "camera not opened";
 
         ros::spinOnce();
         _looprate.sleep();
