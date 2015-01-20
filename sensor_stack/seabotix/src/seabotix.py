@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-
+import os
 PKG = 'seabotix'
 
 from time import sleep
@@ -9,28 +9,23 @@ import serial
 
 
 import rospy
+import struct
 from kraken_msgs.msg import seabotix
+from resources import topicHeader
 
 dataString = ''
+
+
 
 sb = serial.Serial('/dev/ttyACM0', 9600)
 
 #serial config
 sb.stopbits = 1
 
-#data to be sent to Arduino
-data = [[0x60,0,0x64],
-            [0x5A,0,0x64],
-            [0x52,0,0x64],
-            [0x5E,0,0x64],
-            [0x50,0,0x64],
-            [0x50,0,0x64],
-            [0x5C,0,0x64]]
-
 
 def initSerial():
-    
-    sb.open()
+    if (not sb.isOpen) :
+    	sb.open()
 
     if (sb.isOpen) :
         print 'Serial port opened successfully'
@@ -38,28 +33,40 @@ def initSerial():
     else:
 	    print 'Error in opening port'
     
+#data to be sent to Arduino
+data = [[0x5A,0,0x64],
+	[0x60,0,0x64],
+	[0x50,0,0x64],
+	[0x5E,0,0x64],
+	[0x52,0,0x64],
+	[0x5C,0,0x64]]
 
 def seabotixCB(dataI):
     global data
     
-    for i in data:
-        data[i][1] = dataI.data[i]
+    for i in range(len(data)):
+	#for j in data[i]:
+	
+	#data[j][1] = chr(dataI.data[j])
+	#print type(dataI.data[i]),(dataI.data[i])
+        #data[i][1] = dataI.data[i]
+	data[i][1] = struct.unpack('B',dataI.data[i])[0]
         '''
         dataString += chr(data.data[i])
         checksum += data.data[i]
     dataString += chr(checksum)
     sb.write(dataString)
     '''
-        print "%d" %data[i][1]
+	
+        #print "%d" %data[i][1]
 
     
 if __name__ == '__main__':
 
-    global data
     initSerial()
    
     rospy.init_node('Thruster', anonymous=True)
-    sub = rospy.Subscriber('/kraken/seabotix', seabotix, seabotixCB)
+    sub = rospy.Subscriber(topicHeader.CONTROL_SEABOTIX, seabotix, seabotixCB)
     
     
     #count = 0     # variable to check frequency   
@@ -77,7 +84,7 @@ if __name__ == '__main__':
 
   
 
-    r = rospy.Rate(1)
+    r = rospy.Rate(10)
     
     print 'running'
     
@@ -95,3 +102,5 @@ if __name__ == '__main__':
         
     
     sb.close()
+    print "hello world"	
+    os.system("python src/t.py")

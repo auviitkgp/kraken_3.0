@@ -9,7 +9,7 @@ namespace kraken_core
     ros::NodeHandle n;
     _imu_sub = n.subscribe<kraken_msgs::imuData>(topics::SENSOR_IMU,1,&PoseServer::imuCallBack,this);
     //_imu = n.subscribe<sensor_msgs::Imu>("/kraken/imuData",2,&PoseServer::imuCallBack,this);
-    _depth_sub = n.subscribe<underwater_sensor_msgs::Pressure>(topics::SENSOR_DEPTH,1,&PoseServer::depthCallBack,this);
+//    _depth_sub = n.subscribe<underwater_sensor_msgs::Pressure>(topics::SENSOR_DEPTH,1,&PoseServer::depthCallBack,this);
     //_depth = n.subscribe<kraken_msgs::depthData>("/kraken/depth",2,&PoseServer::depthCallBack,this);
     _dvl_sub = n.subscribe<kraken_msgs::dvlData>(topics::SENSOR_DVL,2,&PoseServer::dvlCallBack,this);
     _pose_pub = n.advertise<kraken_msgs::krakenPose>(topics::NAV_POSE_ESTIMATED,1);
@@ -35,17 +35,20 @@ namespace kraken_core
     boost::mutex::scoped_lock lock(io_mutex);
     if(_good_sensor)
     {
-      _estimator->updatePose(_imuData,_depthData,_dvlData);
+	ROS_INFO("calling 1");
+      _estimator->updatePose(_imuData,_dvlData);
       _good_sensor = false;
     }
     else if(_fast_sensor && _depth_sensor)
     {
+	ROS_INFO("calling 2");
       _estimator->updatePose(_imuData,_depthData);
       _fast_sensor = false;
       _depth_sensor=false;
     }
     else if(_fast_sensor)
       {
+	ROS_INFO("calling 3");
         _estimator->updatePose(_imuData);
         _fast_sensor = false;
         return ;
@@ -58,12 +61,12 @@ namespace kraken_core
     }
     _pose_pub.publish(pose);
   }
-  void PoseServer::depthCallBack(const underwater_sensor_msgs::Pressure::ConstPtr &msg)
-  //void PoseServer::depthCallBack(const kraken_msgs::depthData::ConstPtr &msg)
+//  void PoseServer::depthCallBack(const underwater_sensor_msgs::Pressure::ConstPtr &msg)
+  void PoseServer::depthCallBack(const kraken_msgs::depthData::ConstPtr &msg)
   {
     boost::mutex::scoped_lock lock(io_mutex);
-    //_depthData.depth = msg->depth;
-    _depthData.depth = msg->pressure;
+    _depthData.depth = msg->depth;
+//    _depthData.depth = msg->pressure;
     _depth_sensor=true;
   }
   
@@ -75,6 +78,9 @@ namespace kraken_core
     {
         _imuData.data[i] = msg->data[i];
     }
+    _imuData.data[3]/=100.0;
+    _imuData.data[4]/=100.0;
+    _imuData.data[5]/=100.0;
     //_imuData.data[kraken_sensors::yaw]+=180;
     _fast_sensor = true;
   }

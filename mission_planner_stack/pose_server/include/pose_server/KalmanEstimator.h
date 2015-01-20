@@ -23,6 +23,7 @@ namespace kraken_core{
         virtual void updatePose(kraken_msgs::imuData &);
         virtual void updatePose(kraken_msgs::imuData &,kraken_msgs::depthData&);
         virtual void updatePose(kraken_msgs::imuData &,kraken_msgs::depthData&,kraken_msgs::dvlData&);
+        virtual void updatePose(kraken_msgs::imuData &,kraken_msgs::dvlData&);
         virtual void resetPose(KrakenPose & pose_msg);
         ~KalmanEstimator(){}
     private:

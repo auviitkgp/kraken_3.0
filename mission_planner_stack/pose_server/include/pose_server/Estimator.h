@@ -39,6 +39,7 @@ namespace kraken_core
        */
       virtual void updatePose(kraken_msgs::imuData &)=0;
       virtual void updatePose(kraken_msgs::imuData &,kraken_msgs::depthData&)=0;
+      virtual void updatePose(kraken_msgs::imuData &,kraken_msgs::dvlData&)=0;
       virtual void updatePose(kraken_msgs::imuData &,kraken_msgs::depthData&,kraken_msgs::dvlData&)=0;
       /*
        * To reset the vehicle coordinates

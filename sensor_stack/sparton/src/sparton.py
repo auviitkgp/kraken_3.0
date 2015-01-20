@@ -8,13 +8,27 @@ import math
 import struct
 import numpy
 import rospy
+import sys
+import os
 from kraken_msgs.msg import imuData
 
+from resources import topicHeader
 
-
-pub = rospy.Publisher('/kraken/imu_data', imuData, queue_size = 2)
+pub = rospy.Publisher(topicHeader.SENSOR_IMU, imuData, queue_size = 2)
 rospy.init_node('imudata', anonymous=True)
-imu = serial.Serial('/dev/ttyUSB0', 115200)
+## Code to find port automatically
+find = os.popen('dmesg | grep FTDI')
+port = find.read()
+num = port.split('now attached to ')
+portName = '/dev/'+(num[1].split('\n'))[0]
+##
+'''
+if (len(sys.argv) == 2):
+	num = str(sys.argv[1])
+else:
+	num = '0'
+'''
+imu = serial.Serial(portName, 115200)
 
 
 ## DVL config
@@ -125,6 +139,7 @@ def accelero():
     #print total
     
     data = total.split(',')
+    #print data
     ax = float(((data[1]).split('='))[1])
     ay = float(((data[2]).split('='))[1])
     az = float(((((data[3]).split('='))[1]).split('*'))[0])
@@ -246,8 +261,10 @@ if __name__ == '__main__':
 
     """
     pubData = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
-    if (not imu.isOpen):
-	imu.open()
+    
+    if (not imu.isOpen) :
+	imu.close()
+        imu.open()
 
     if (imu.isOpen) :
         print 'Serial port opened successfully'
@@ -257,7 +274,7 @@ if __name__ == '__main__':
     r = rospy.Rate(10)
     count = 1
     while not rospy.is_shutdown():
-
+	#print imu.read()
         pubData = getData()
         pub.publish(pubData)
         #print roll,pitch,yaw,ax,ay,az,mx,my,mz,gx,gy,gz,temp

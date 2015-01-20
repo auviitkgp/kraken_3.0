@@ -21,7 +21,7 @@
 #include <actionlib/server/simple_action_server.h>
 #include <kraken_msgs/switchControllers.h>
 #include <controller_basic/ControlParameters.h>
-
+#include <control_server/loadParam.h>
 namespace kraken_controller
 {
   class ControlServer
@@ -39,7 +39,7 @@ namespace kraken_controller
                          kraken_msgs::switchControllers::Response &res);
       void executePoseChange( const kraken_msgs::advancedControllerGoalConstPtr &msg);
       void executeOrientationChange(const kraken_msgs::controllerGoalConstPtr &msg);
-
+      bool loadParamsCB(control_server::loadParam::Request &req, control_server::loadParam::Response &res);
       virtual ~ControlServer();
     protected:
       

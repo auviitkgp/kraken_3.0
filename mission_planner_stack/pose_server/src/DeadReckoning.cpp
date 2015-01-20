@@ -10,6 +10,7 @@ namespace kraken_core
   
   void DeadReckoning::updatePose(kraken_msgs::imuData &imu)
   {
+    ROS_INFO("Imu dta rrice");
     updateCurrentAccelaration(imu);
     updateCurrentVelocity();
     updateCurrentPosition();
@@ -28,7 +29,13 @@ namespace kraken_core
     updateCurrentVelocity(dvl);
     updateCurrentPosition(depth);
   }
-  
+  void DeadReckoning::updatePose(kraken_msgs::imuData &imu_msg,kraken_msgs::dvlData&dvl_msg)
+  {
+	ROS_INFO("devl dtat arrived");
+      updateCurrentAccelaration(imu_msg);
+      updateCurrentVelocity(dvl_msg);
+  }
+
   void DeadReckoning::resetPose(KrakenPose & pose)
   {
     // Resets only 6 state variable of auv
@@ -48,6 +55,7 @@ namespace kraken_core
     float* _data_body_next  = _next_pose_body.getData();
     float* _data_world_next = _next_pose_world.getData();
     // Update body accelaration buffer
+	ROS_INFO("ax=%f ay=%f az=%f",imu.data[kraken_sensors::accelX],imu.data[kraken_sensors::accelY],imu.data[kraken_sensors::accelZ]);
     _data_body_next[_ax] = imu.data[kraken_sensors::accelX];
     _data_body_next[_ay] = imu.data[kraken_sensors::accelY];
     _data_body_next[_az] = imu.data[kraken_sensors::accelZ];

@@ -106,7 +106,14 @@ namespace kraken_controller
       }
     return true;
   }
-  
+  bool ControlServer::loadParamsCB(control_server::loadParam::Request &req, control_server::loadParam::Response &res)
+  {
+      std::vector<std::string> v;
+      ROS_INFO("file name req is %s",req.file.c_str());
+      v.push_back(req.file);
+      loadParams(v);
+      res.res=true;
+  }
   void ControlServer::executePoseChange(const kraken_msgs::advancedControllerGoalConstPtr &msg)
   {
     _do_control = false;
@@ -213,6 +220,7 @@ namespace kraken_controller
   
   void ControlServer::loadParams(const std::vector<std::string> &filenames)
   {
+      ROS_INFO("file name is %s",filenames[0].c_str());
     _controller.loadParams(filenames);
     _controller.pause();
   }
