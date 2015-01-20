@@ -5,7 +5,6 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <std_msgs/String.h>
-
 #include <resources/topicHeader.h>
 
 using namespace std;
@@ -44,7 +43,7 @@ int main(int argc, char** argv)
 
     ros::NodeHandle _nh;
     image_transport::ImageTransport _it(_nh);
-    image_transport::Publisher _image_pub = _it.advertise("/kraken/bottom_camera", 1);
+    image_transport::Publisher _image_pub = _it.advertise(topics::CAMERA_BOTTOM_RAW_IMAGE, 1);
     ros::Subscriber _sub = _nh.subscribe(topics::CAMERA_CAM_SWITCH, 1, msgCallback);
     sensor_msgs::ImagePtr _publishImage;
     cv_bridge::CvImage _image;

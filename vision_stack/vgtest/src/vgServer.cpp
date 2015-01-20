@@ -32,7 +32,8 @@ Gateserver::Gateserver(NodeHandle &n1)
       _serv(_n,"gate_server",boost::bind(&Gateserver::serverCallback,this,_1),false)
 {
 
-    _imgsub = _it.subscribe("/kraken/bottom_camera",10,&Gateserver::imageCallback,this);
+    _imgsub = _it.subscribe(topics::CAMERA_FRONT_RAW_IMAGE,10,&Gateserver::imageCallback,this);
+    cout << "subscribed from topic = " << topics::CAMERA_FRONT_RAW_IMAGE << endl;
     _epsilon=1;
     _THRES_LINE_GAP = 15;
     index = 0;
@@ -40,13 +41,15 @@ Gateserver::Gateserver(NodeHandle &n1)
     _pub = _it.advertise("validationGate",1);
     cog.x = _img.rows/2;
     cog.y = _img.cols/2;
+    prevmed.x = 0;
+    prevmed.y = 0;
     _serv.start();
     ROS_INFO("waiting for clients");
 }
 
 
 void Gateserver::printbunch(vector<bunch> &b, string name){
-    Mat img(500, 500, CV_8UC3, Scalar(0,0,255));;
+    Mat img(500, 500, CV_8UC3, Scalar(0,0,255));
     for(int j=0; j<b.size();j++){
         vector<Vec4i> &v = b[j].v;
 
@@ -163,6 +166,7 @@ Point Gateserver::getCenterOfGate()
     Point zero;
     zero.x =0;
     zero.y =0;
+
 //    cout << "cof called..\n";
     cof = getCenterOfFrame();
 //    cout << "cof done..\n";
@@ -332,6 +336,8 @@ void Gateserver::serverCallback(const ip_msgs::vgateGoalConstPtr &goal)
             _gateStatus = detectGate();
             if(_gateStatus){
                 ROS_INFO("gate has been detected.. ");
+                _res.resultx = cog.x;
+                _res.resulty = cog.y;
                 _res.fresult = GATE_DETECTED;
                 _serv.setSucceeded(_res);
             }else{
@@ -482,7 +488,7 @@ int main(int argc, char** argv){
     //        cout << "give the path of d video also..";
     //        return 0;
     //    }
-    cout << "main...";
+//    cout << "main...";
     NodeHandle n;
     Gateserver gs(n);
     ros::spin();
