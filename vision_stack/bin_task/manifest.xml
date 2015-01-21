@@ -1,0 +1,15 @@
+<package>
+  <description brief="bin_task">
+
+     bin_task
+
+  </description>
+  <author>Manvi</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/bin_task</url>
+  <depend package="roscpp"/>
+
+</package>
+
+
