@@ -78,7 +78,7 @@ if __name__ == '__main__':
 	pub6 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER6, thrusterData6Thruster, queue_size = 2)
 	srv=Server(k_changerConfig,callback)
 
-	r = rospy.Rate(20)
+	r = rospy.Rate(10)
 
 	while not rospy.is_shutdown():
 

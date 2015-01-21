@@ -34,6 +34,7 @@ namespace kraken_core
 	ROS_INFO("devl dtat arrived");
       updateCurrentAccelaration(imu_msg);
       updateCurrentVelocity(dvl_msg);
+	updateCurrentPosition();
   }
 
   void DeadReckoning::resetPose(KrakenPose & pose)
