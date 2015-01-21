@@ -26,6 +26,9 @@ int main(int argc, char** argv)
 {
 
     Mat orgimg, finalimg, hsv, thresh,edges;
+    double slope;
+    vector<Vec4i> _linesx, _linesy;
+
     Scalar lower(0,127,127), upper(255,255,255);
     orgimg = imread(argv[1],1);
 
@@ -34,7 +37,7 @@ int main(int argc, char** argv)
         cout << "no image loaded..\n";
         return 0;
     }
-
+    Mat newimg(orgimg.rows, orgimg.cols, CV_8UC3, Scalar(0,0,255));
     vector<vector<Point> > contours;
     vector<vector<Point> > polygon;
     cvtColor(orgimg,hsv,CV_BGR2HSV);
@@ -43,21 +46,13 @@ int main(int argc, char** argv)
 
 
 
-//    imshow("hsv",hsv);
+    imshow("inrange thresh",thresh);
     if(!hsv.data && !thresh.data)
         return 0;
-    float slope;
-    vector<Vec4i> _linesx, _linesy;
-//    Mat x_lines, y_lines;
-    Mat newimg(orgimg.rows, orgimg.cols, CV_8UC3, Scalar(0,0,255));
-    Mat x_lines(orgimg.rows, orgimg.cols, CV_8UC3, Scalar(0,0,255));
-    Mat y_lines(orgimg.rows, orgimg.cols, CV_8UC3, Scalar(0,0,255));
 
-//    Canny(thresh,thresh,50,250,3);
 
     findContours(thresh,contours,CV_RETR_CCOMP,CV_CHAIN_APPROX_SIMPLE,Point(0,0));
     polygon.resize(contours.size());
-//    drawContours(thresh,contours,-1,Scalar(255,0,0),10);
 
     cout << contours.size() << " = contours size " << endl;
     for (int i = 0; i < contours.size(); ++i) {
@@ -83,51 +78,101 @@ int main(int argc, char** argv)
 
     cout << lines.size() << " = number of lines " << endl;
 
-//    for (int i = 0; i < lines.size(); i++)
-//    {
-//        for (int j = i+1; j < lines.size(); j++)
-//        {
-//            Point2f pt = computeIntersect(lines[i], lines[j]);
-//            if (pt.x >= 0 && pt.y >= 0)
-//                corners.push_back(pt);
-//        }
-//    }
-
-//    cout << "corners size = " << corners.size() << endl;
-
-//    for (int i = 0; i < corners.size(); ++i) {
-//        circle(orgimg,corners[i],5,Scalar(255,0,255),2);
-//    }
-
-
-    for (int i = 0; i < lines.size(); ++i) {
-        line(newimg,Point(lines[i][0],lines[i][1]),Point(lines[i][2],lines[i][3]),Scalar(255,255,0),2);
+    double m1, m2, angle;
+    int count=0;
+    for (int i = 0; i < lines.size() - 1; ++i) {
+        //        line(newimg,Point(lines[i][0],lines[i][1]),Point(lines[i][2],lines[i][3]),Scalar(255,255,0),1);
         if(lines[i][2]-lines[i][0] !=0){
-            slope = atan((lines[i][3]-lines[i][1])/(lines[i][2]-lines[i][0]));
+            slope = atan((double)(lines[i][3]-lines[i][1])/(double)(lines[i][2]-lines[i][0]));
+            cout << "slope for line[" << i<<"] = " << slope << endl;
+            //            line(newimg,Point(lines[i][0],lines[i][1]),Point(lines[i][2],lines[i][3]),Scalar(255,0,255),1);
         }
-        else continue;
+        else
+            line(newimg,Point(lines[i][0],lines[i][1]),Point(lines[i][2],lines[i][3]),Scalar(255,0,0),1);
 
-        if(slope<CV_PI/180*30 && slope>150*CV_PI/180){
-            _linesx.push_back(lines[i]);
-            cout << "slope of line drawn in x = " << slope << endl;
-            line(x_lines,Point(_linesx[i][0],_linesx[i][1]),Point(_linesx[i][2],_linesx[i][3]),Scalar(255,255,0),3);
-        }
-        if(slope>CV_PI/180*60 && slope<CV_PI/180*120){
-            _linesy.push_back(lines[i]);
-            cout << "slope of line drawn in y = " << slope << endl;
-            line(y_lines,Point(_linesy[i][0],_linesy[i][1]),Point(_linesy[i][2],_linesy[i][3]),Scalar(255,255,0),3);
-        }
+        //        m1 = atan((double)(lines[i][3]-lines[i][1])/(double)(lines[i][2]-lines[i][0]));
+        //        m2 = atan((double)(lines[i+1][3]-lines[i+1][1])/(double)(lines[i+1][2]-lines[i+1][0]));
+
+        //        angle = m1-m2;
+        //        cout << "angle = " << angle << endl;
+
+
+        //        if(angle < 110 && angle > 70 ){
+        //            count++;
+        //            line(newimg,Point(lines[i][0],lines[i][1]),Point(lines[i][2],lines[i][3]),Scalar(0,255,0),1);
+        //        }
+
+        //        cout <<"count = "<< count<< endl;
+        //        if(slope<CV_PI/180*30 && slope>150*CV_PI/180){
+        //            _linesx.push_back(lines[i]);
+        //            cout << "slope of line drawn in x = " << slope << endl;
+        //            line(x_lines,Point(_linesx[i][0],_linesx[i][1]),Point(_linesx[i][2],_linesx[i][3]),Scalar(255,255,0),3);
+        //        }
+        //        if(slope>CV_PI/180*60 && slope<CV_PI/180*120){
+        //            _linesy.push_back(lines[i]);
+        //            cout << "slope of line drawn in y = " << slope << endl;
+        //            line(y_lines,Point(_linesy[i][0],_linesy[i][1]),Point(_linesy[i][2],_linesy[i][3]),Scalar(255,255,0),3);
+        //        }
 
     }
 
+
+
+    for (int i = 0; i < lines.size(); ++i) {
+        int count = 0;
+        if(lines[i][2]-lines[i][0] !=0){
+            m1 = atan((double)(lines[i][3]-lines[i][1])/(double)(lines[i][2]-lines[i][0]));
+            cout << "slope for line[" << i<<"] = " << slope << endl;
+            line(newimg,Point(lines[i][0],lines[i][1]),Point(lines[i][2],lines[i][3]),Scalar(255,0,255),1);
+        }
+        else{
+            m1 = 90*CV_PI/180;
+            line(newimg,Point(lines[i][0],lines[i][1]),Point(lines[i][2],lines[i][3]),Scalar(255,0,0),1);
+        }
+
+//        m1 = atan((double)(lines[i][3]-lines[i][1])/(double)(lines[i][2]-lines[i][0]));
+
+
+        angle = m1-m2;
+        cout << "angle = " << angle << endl;
+        for (int j = 0; j < lines.size(); ++j) {
+               m2 = atan((double)(lines[j][3]-lines[j][1])/(double)(lines[j][2]-lines[j][0]));
+               angle = m1- m2;
+               if(angle <100*CV_PI/180 && angle>75*CV_PI/180){
+                   count++;
+                   cout << "count for line[" << i << "] = " << count << endl;
+//                   line(newimg,)
+               }
+        }
+    }
+    ///! find intersection points of lines
+    for (int i = 0; i < lines.size(); i++)
+    {
+        for (int j = i+1; j < lines.size(); j++)
+        {
+            Point2f pt = computeIntersect(lines[i], lines[j]);
+            if (pt.x >= 0 && pt.y >= 0)
+                corners.push_back(pt);
+            circle(newimg,corners[i],5,Scalar(255,0,255),2);
+        }
+    }
+
+    cout << "corners size = " << corners.size() << endl;
+
+
+
+
+
+
+
     imshow("win", newimg);
 
-    cout << _linesx.size() << endl;
-    cout << _linesy.size() << endl;
+    //    cout << _linesx.size() << endl;
+    //    cout << _linesy.size() << endl;
 
-    cout << lines.size() << endl;
-//    imshow("x_lines", x_lines);
-//    imshow("y_lines", y_lines);
+    //    cout << lines.size() << endl;
+    //    imshow("x_lines", x_lines);
+    //    imshow("y_lines", y_lines);
     imshow("orgimg", orgimg);
     imshow("thresh", thresh);
     waitKey(0);
