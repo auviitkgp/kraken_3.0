@@ -9,17 +9,26 @@ import struct
 import numpy
 import rospy
 import sys
+import os
 from kraken_msgs.msg import imuData
 
 from resources import topicHeader
 
 pub = rospy.Publisher(topicHeader.SENSOR_IMU, imuData, queue_size = 2)
 rospy.init_node('imudata', anonymous=True)
+## Code to find port automatically
+find = os.popen('dmesg | grep FTDI')
+port = find.read()
+num = port.split('now attached to ')
+portName = '/dev/'+(num[1].split('\n'))[0]
+##
+'''
 if (len(sys.argv) == 2):
 	num = str(sys.argv[1])
 else:
 	num = '0'
-imu = serial.Serial('/dev/ttyUSB'+num, 115200)
+'''
+imu = serial.Serial(portName, 115200)
 
 
 ## DVL config

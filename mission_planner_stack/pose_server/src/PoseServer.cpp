@@ -75,6 +75,9 @@ namespace kraken_core
     {
         _imuData.data[i] = msg->data[i];
     }
+    _imuData.data[3]/=100.0;
+    _imuData.data[4]/=100.0;
+    _imuData.data[5]/=100.0;
     //_imuData.data[kraken_sensors::yaw]+=180;
     _fast_sensor = true;
   }

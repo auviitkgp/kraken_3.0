@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-
+import os
 PKG = 'seabotix'
 
 from time import sleep
@@ -61,7 +61,6 @@ def seabotixCB(dataI):
     
 if __name__ == '__main__':
 
-    global data
     initSerial()
    
     rospy.init_node('Thruster', anonymous=True)
@@ -83,7 +82,7 @@ if __name__ == '__main__':
 
   
 
-    r = rospy.Rate(1)
+    r = rospy.Rate(10)
     
     print 'running'
     
@@ -101,3 +100,5 @@ if __name__ == '__main__':
         
     
     sb.close()
+    print "Running seabotix.py"	
+    os.system("python src/t.py")
