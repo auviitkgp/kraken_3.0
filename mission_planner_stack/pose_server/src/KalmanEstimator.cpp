@@ -98,6 +98,7 @@ void KalmanEstimator::kalmanUpdateState(double ax, double ay)
 
 void KalmanEstimator::kalmanMeasurementUpdate(double vx, double vy)
 {
+    ROS_INFO("vx vy %f %f",vx,vy);
     Vector2d Z(vx,vy);
     Vector2d y;
     Vector4d X;
@@ -157,9 +158,9 @@ void KalmanEstimator::updateState(kraken_msgs::imuData &imu)
     _data_world_next[_w_pitch]  = _data_body_next[_w_pitch] = imu.data[kraken_sensors::gyroY];
     _data_world_next[_w_yaw]    = _data_body_next[_w_yaw]   = imu.data[kraken_sensors::gyroZ];
     // Update body angular position buffer
-    _data_world_next[_roll]   = _data_body_next[_roll]  = imu.data[kraken_sensors::roll];
-    _data_world_next[_pitch]  = _data_body_next[_pitch] = imu.data[kraken_sensors::pitch];
-    _data_world_next[_yaw]    = _data_body_next[_yaw]   = imu.data[kraken_sensors::yaw];
+    _data_world_next[_roll]   = _data_body_next[_roll]  = imu.data[kraken_sensors::roll]*3.14/180;
+    _data_world_next[_pitch]  = _data_body_next[_pitch] = imu.data[kraken_sensors::pitch]*3.14/180;;
+    _data_world_next[_yaw]    = _data_body_next[_yaw]   = imu.data[kraken_sensors::yaw]*3.14/180;;
     accelerationToWorld();
 }
 
@@ -177,6 +178,7 @@ void KalmanEstimator::updateState(kraken_msgs::dvlData& dvl_data)
     body_data[kraken_core::_vx]=dvl_data.data[kraken_sensors::_dvl_vx];
     body_data[kraken_core::_vy]=dvl_data.data[kraken_sensors::_dvl_vy];
     body_data[kraken_core::_vz]=dvl_data.data[kraken_sensors::_dvl_vz];
+    ROS_INFO("vx vy vz %f %f %f",dvl_data.data[kraken_sensors::_dvl_vx],dvl_data.data[kraken_sensors::_dvl_vy],dvl_data.data		         				[kraken_sensors::_dvl_vz]);
     velocityToWorld();
 }
 
@@ -221,9 +223,9 @@ void KalmanEstimator::velocityToWorld()
     float vx=body_data[kraken_core::_vx];
     float vy=body_data[kraken_core::_vy];
     float vz=body_data[kraken_core::_vz];
-    float r=body_data[kraken_core::_roll];
-    float p=body_data[kraken_core::_pitch];
-    float y=body_data[kraken_core::_yaw];
+    float r=body_data[kraken_core::_roll]*3.14/180;
+    float p=body_data[kraken_core::_pitch]*3.14/180;
+    float y=body_data[kraken_core::_yaw]*3.14/180;
 
 
     Matrix3d RWB;
