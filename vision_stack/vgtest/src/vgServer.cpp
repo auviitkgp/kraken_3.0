@@ -79,8 +79,7 @@ pair<bunch,pair<bunch,bunch> > Gateserver::getLargestBunch(const vector<Vec4i> &
         double theta;
         if(lines[i][2]-lines[i][0]!=0)
             theta = atan((lines[i][3]-lines[i][1])/(lines[i][2]-lines[i][0]));
-        else continue;
-
+        else theta = 90*CV_PI/180;
         if(theta>CV_PI/180*-30&&theta<30*CV_PI/180)
         {
             Point right;
