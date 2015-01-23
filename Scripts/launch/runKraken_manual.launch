@@ -1,0 +1,10 @@
+<launch>
+	<node name="thruster_converter" pkg="thruster_converter" type="thruster_converter" args="0.0 0.0 0.0 0.0 0.0 0.0"/>
+
+	<node name="uwsim_launcher_script" pkg="kraken_visualization" type="kraken_visualization_launcher"/>
+
+	<node name="seabotix" pkg="seabotix" type="seabotix.py"/>
+
+	<node name="manual_control" pkg="manual_control" type="manual_control"/>
+
+</launch>
