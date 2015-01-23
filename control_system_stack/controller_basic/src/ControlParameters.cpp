@@ -52,7 +52,17 @@ namespace kraken_controller
     }
     ROS_INFO("file not opened %s",filename.c_str());
   }
-  
+  void ControlParameters::load(int *arr[22])
+  {
+    for(int i=0;i<_row;i++)
+    {
+        _gain[i][0]=arr[i][0];
+        for(int j=0;j<_col;j++)
+        {
+            _gain[i][j]=arr[i][j];
+        }
+    }
+  }
   void ControlParameters::write(std::ostream &out)
   {
     //std::cerr<<"Writing"<<std::endl;
@@ -68,5 +78,21 @@ namespace kraken_controller
     }
     out<<std::endl;
   }
-  
+  void ControlParameters::write(FILE* fp)
+  {
+    //std::cerr<<"Writing"<<std::endl;
+      fprintf(fp,"\n%s\n",_name.c_str());
+      printf("\n%s\n",_name.c_str());
+//    out<<std::endl<<_name<<std::endl;
+    for(int i=0;i<_row;i++)
+    {
+        fprintf(fp,"%.2f\t",_offset[i]);
+        for(int j=0;j<_col;j++)
+        {
+          fprintf(fp,"%.2f\t",_gain[i][j]);
+        }
+        fprintf(fp,"\n");
+    }
+    fprintf(fp,"\n");
+  }
 }

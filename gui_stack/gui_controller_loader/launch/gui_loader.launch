@@ -1,0 +1,9 @@
+<launch>
+	
+	
+	
+	<node name="gui_loader" pkg="gui_controller_loader" type="App" args="$(find control_server)/parameters/ "/>
+	
+
+	
+</launch>
