@@ -65,11 +65,13 @@ namespace kraken_controller
 
       _setPoint[kraken_core::_roll+3] = setpoint.data[kraken_core::_roll];
       _setPoint[kraken_core::_pitch+3] = setpoint.data[kraken_core::_pitch];
-      _setPoint[kraken_core::_yaw+3] = setpoint.data[kraken_core::_yaw];
+      _setPoint[kraken_core::_yaw+3] = getYaw(_setPoint[kraken_core::_yaw+3],
+                                    setpoint.data[kraken_core::_yaw]);
 
       _setPoint[kraken_core::_roll+6] = setpoint.data[kraken_core::_roll];
       _setPoint[kraken_core::_pitch+6] = setpoint.data[kraken_core::_pitch];
-      _setPoint[kraken_core::_yaw+6] = setpoint.data[kraken_core::_yaw];
+      _setPoint[kraken_core::_yaw+6] = getYaw(_setPoint[kraken_core::_yaw+6],
+              setpoint.data[kraken_core::_yaw]);
 
       _setPoint[kraken_core::_w_roll+6] = setpoint.data[kraken_core::_w_roll];
       _setPoint[kraken_core::_w_pitch+6] = setpoint.data[kraken_core::_w_pitch];

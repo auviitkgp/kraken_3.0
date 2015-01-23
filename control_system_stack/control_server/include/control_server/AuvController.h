@@ -33,6 +33,15 @@ namespace kraken_controller
       std::vector<ControlParameters*> _control_parameters;
       std::map<std::string,int> _control_parameters_index;
       void multiply(float matrix[][3], float* src_vec, float* dst_vec);
+      inline float getYaw(float now,float dest)
+      {
+          float x=now,y=dest;
+          if(y-x>360-y+x)
+              return +y-x;
+          else
+              return -(360-y+x);
+      }
+
     protected:
   };
 }
