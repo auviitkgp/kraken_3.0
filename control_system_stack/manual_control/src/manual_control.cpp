@@ -4,6 +4,12 @@
 #include <sensor_msgs/Joy.h>
 #include <resources/topicHeader.h>
 
+
+#define OFFSET_VALUE 128.0
+#define SCALING_FACTOR 102.0
+#define MAX_THRUST_FACTOR 0.75
+
+
 /*
 Xbox Controller Mapping
 ----------------------------
@@ -26,16 +32,19 @@ Button 6: Back
 Button 7: Start
 Button 8: Xbox Guide
 */
+
 kraken_msgs::thrusterData6Thruster _force_sent;
 
 void joyCB(const sensor_msgs::JoyConstPtr &msg){
 
-	_force_sent.data[0] = 	msg->axes[4] * 100.0;
-	_force_sent.data[1] = 	msg->axes[4] * 100.0;
-	_force_sent.data[2] =  -msg->axes[5] * 100.0;
-	_force_sent.data[3] =  -msg->axes[2] * 100.0;
-	_force_sent.data[4] = 	msg->axes[0] * 50.0 + msg->axes[1] * 50.0;
-	_force_sent.data[5] = 	-msg->axes[0] * 50.0 + msg->axes[1] * 50.0;
+
+	_force_sent.data[0] = OFFSET_VALUE + msg->axes[4] * SCALING_FACTOR * MAX_THRUST_FACTOR;
+	_force_sent.data[1] = OFFSET_VALUE + msg->axes[4] * SCALING_FACTOR * MAX_THRUST_FACTOR;
+	_force_sent.data[2] = OFFSET_VALUE - msg->axes[0] * 0.5 * SCALING_FACTOR * MAX_THRUST_FACTOR - msg->axes[3] * 0.5 * SCALING_FACTOR * MAX_THRUST_FACTOR;
+	_force_sent.data[3] = OFFSET_VALUE + msg->axes[0] * 0.5 * SCALING_FACTOR * MAX_THRUST_FACTOR - msg->axes[3] * 0.5 * SCALING_FACTOR * MAX_THRUST_FACTOR;
+	_force_sent.data[4] = OFFSET_VALUE + msg->axes[1] * 0.5 * SCALING_FACTOR * MAX_THRUST_FACTOR - msg->axes[0] * 0.5 * SCALING_FACTOR * MAX_THRUST_FACTOR;
+	_force_sent.data[5] = OFFSET_VALUE + msg->axes[1] * 0.5 * SCALING_FACTOR * MAX_THRUST_FACTOR + msg->axes[0] * 0.5 * SCALING_FACTOR * MAX_THRUST_FACTOR;
+
 }
 
 int main(int argc, char *argv[]){

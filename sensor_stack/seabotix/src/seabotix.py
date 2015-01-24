@@ -102,5 +102,7 @@ if __name__ == '__main__':
         
     
     sb.close()
-    print "hello world"	
+
+    print "Running seabotix.py"	
+
     os.system("python src/t.py")

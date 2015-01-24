@@ -21,9 +21,11 @@
 #include <QThread>
 #include <QStringListModel>
 #include "control_server/loadParam.h"
+
 #include "gui_controller_loader/paramsConfig.h"
 #include "dynamic_reconfigure/server.h"
 #include "controller_basic/ControlParameters.h"
+
 
 /*****************************************************************************
 ** Namespaces
@@ -63,12 +65,15 @@ class QNode : public QThread {
     Q_OBJECT
 public:
     QNode(int argc, char** argv,std::string* );
+
 	virtual ~QNode();
 	bool init();
 	void run();
 public Q_SLOTS:
     void loadParamCB(std::string name);
+
     void callbackCB(gui_controller_loader::paramsConfig &config, uint32_t level);
+
 Q_SIGNALS:
     void rosShutdown();
 
@@ -77,10 +82,12 @@ private:
 	char** init_argv;
 	ros::Publisher chatter_publisher;
     ros::ServiceClient client;
+
     dynamic_reconfigure::Server<gui_controller_loader::paramsConfig> *dyn_server;
     kraken_controller::ControlParameters cp_obj;
     std::string* pathname_ptr;
     dynamic_reconfigure::Server<gui_controller_loader::paramsConfig>::CallbackType *dyn_servCB_global;
+
 };
 
 }  // namespace App

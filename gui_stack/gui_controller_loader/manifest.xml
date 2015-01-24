@@ -17,7 +17,10 @@
   <depend package="roscpp"/>
   <depend package="resources"/>
   <depend package="control_server"/>
+
   <depend package="dynamic_reconfigure"/>
+
+
   
   <rosbuild2>
     <depend package="qt_build"/>

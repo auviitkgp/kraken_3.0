@@ -28,7 +28,9 @@ using namespace Qt;
 using namespace std;
 MainWindow::MainWindow(int argc, char** argv, QWidget *parent)
     : QMainWindow(parent)
+
     , qnode(argc,argv,&pathname)
+
 {
     ui.setupUi(this); // Calling this incidentally connects all ui's triggers to on_...() callbacks in this class.
     char params[1000];
@@ -41,9 +43,6 @@ MainWindow::MainWindow(int argc, char** argv, QWidget *parent)
     text=in.readAll();
     ui.textEdit->setText(text);
     setWindowIcon(QIcon(":/images/icon.png"));
-
-
-
 
     QObject::connect(ui.pushButton,SIGNAL(clicked()),this,SLOT(pushButtonclicked()));
     QObject::connect(this,SIGNAL(callService(std::string)),&qnode,SLOT(loadParamCB(std::string)));

@@ -27,10 +27,12 @@ namespace gui_template {
 ** Implementation
 *****************************************************************************/
 
+
 QNode::QNode(int argc, char** argv,std::string* ptr ) :
 	init_argc(argc),
     init_argv(argv),
     pathname_ptr(ptr)
+
 	{}
 
 QNode::~QNode() {
@@ -46,6 +48,7 @@ bool QNode::init() {
 	ros::start(); // explicitly needed since our nodehandle is going out of scope.
 	ros::NodeHandle n;
 	// Add your ros communications here.
+<<<<<<< HEAD
 
 	chatter_publisher = n.advertise<std_msgs::String>("chatter", 1000);
     client=n.serviceClient<control_server::loadParam>(topics::CONTROL_LOADPARAM);
@@ -56,6 +59,10 @@ bool QNode::init() {
 
     *dyn_servCB_global=boost::bind(&QNode::callbackCB,this,_1,_2);
     dyn_server->setCallback(*dyn_servCB_global);
+=======
+	chatter_publisher = n.advertise<std_msgs::String>("chatter", 1000);
+    client=n.serviceClient<control_server::loadParam>(topics::CONTROL_LOADPARAM);
+>>>>>>> origin/indigo-devel
 	start();
 	return true;
 }
@@ -66,6 +73,7 @@ void QNode::loadParamCB(std::string name)
     srv.request.file=name;
     client.call(srv);
 }
+
 
 
 
@@ -130,6 +138,7 @@ void QNode::run() {
      loop_rate.sleep();
     }
     ros::spin();
+
 	std::cout << "Ros shutdown, proceeding to close the gui." << std::endl;
 	Q_EMIT rosShutdown(); // used to signal the gui for a shutdown (useful to roslaunch)
 }

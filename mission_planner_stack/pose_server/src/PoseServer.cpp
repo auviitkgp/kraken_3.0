@@ -35,7 +35,7 @@ namespace kraken_core
     boost::mutex::scoped_lock lock(io_mutex);
     if(_good_sensor)
     {
-	ROS_INFO("calling 1");
+
       _estimator->updatePose(_imuData,_dvlData);
       _good_sensor = false;
     }

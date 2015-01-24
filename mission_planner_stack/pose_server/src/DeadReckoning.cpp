@@ -31,7 +31,7 @@ namespace kraken_core
   }
   void DeadReckoning::updatePose(kraken_msgs::imuData &imu_msg,kraken_msgs::dvlData&dvl_msg)
   {
-	ROS_INFO("devl dtat arrived");
+
       updateCurrentAccelaration(imu_msg);
       updateCurrentVelocity(dvl_msg);
 	updateCurrentPosition();
