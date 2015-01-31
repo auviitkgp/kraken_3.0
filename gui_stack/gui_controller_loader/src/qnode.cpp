@@ -48,7 +48,7 @@ bool QNode::init() {
 	ros::start(); // explicitly needed since our nodehandle is going out of scope.
 	ros::NodeHandle n;
 	// Add your ros communications here.
-<<<<<<< HEAD
+
 
 	chatter_publisher = n.advertise<std_msgs::String>("chatter", 1000);
     client=n.serviceClient<control_server::loadParam>(topics::CONTROL_LOADPARAM);
@@ -59,10 +59,7 @@ bool QNode::init() {
 
     *dyn_servCB_global=boost::bind(&QNode::callbackCB,this,_1,_2);
     dyn_server->setCallback(*dyn_servCB_global);
-=======
-	chatter_publisher = n.advertise<std_msgs::String>("chatter", 1000);
-    client=n.serviceClient<control_server::loadParam>(topics::CONTROL_LOADPARAM);
->>>>>>> origin/indigo-devel
+
 	start();
 	return true;
 }
