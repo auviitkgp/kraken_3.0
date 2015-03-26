@@ -6,7 +6,6 @@ from time import sleep
 import roslib; roslib.load_manifest(PKG)
 import serial
 
-
 import rospy
 from kraken_msgs.msg import seabotix
 
@@ -27,7 +26,6 @@ def initSerial():
     else:
 	    print 'Error in opening port'
     
-
 def seabotixCB(data):
     global dataString
     dataString = ''
@@ -39,15 +37,12 @@ def seabotixCB(data):
     dataString += chr(checksum)
     sb.write(dataString)
 
-
-    
 if __name__ == '__main__':
 
     initSerial()
    
     rospy.init_node('Thruster', anonymous=True)
     sub = rospy.Subscriber('/kraken/seabotix', seabotix, seabotixCB)
-    
     
     #count = 0     # variable to check frequency   
     #add = [0X60,0X52,0X5A,0X50,0X5C,0X5E]
@@ -67,15 +62,12 @@ if __name__ == '__main__':
     #add[5] = '58'
     #add[4] = '60'
     #add[5] = '5C'
-
   
-
     r = rospy.Rate(1)
     
     print 'running'
     
     #print speed
-    
     
     print sb.readline()
     while not rospy.is_shutdown():
@@ -86,5 +78,4 @@ if __name__ == '__main__':
 	
         r.sleep()
         
-    
     sb.close()
