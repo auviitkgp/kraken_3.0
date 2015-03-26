@@ -6,7 +6,6 @@ from time import sleep
 import roslib; roslib.load_manifest(PKG)
 import serial
 
-
 import rospy
 from kraken_msgs.msg import seabotix
 
@@ -14,7 +13,7 @@ dataString = ''
 
 sb = serial.Serial('/dev/ttyACM0', 9600)
 
-#serial config
+# serial config
 sb.stopbits = 1
 
 def initSerial():
@@ -39,8 +38,6 @@ def seabotixCB(data):
     dataString += chr(checksum)
     sb.write(dataString)
 
-
-    
 if __name__ == '__main__':
 
     initSerial()
@@ -67,15 +64,12 @@ if __name__ == '__main__':
     #add[5] = '58'
     #add[4] = '60'
     #add[5] = '5C'
-
-  
-
+    
     r = rospy.Rate(1)
     
     print 'running'
     
     #print speed
-    
     
     print sb.readline()
     while not rospy.is_shutdown():
@@ -86,5 +80,5 @@ if __name__ == '__main__':
 	
         r.sleep()
         
-    
     sb.close()
+    
