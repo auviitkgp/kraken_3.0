@@ -1,5 +1,19 @@
 #!/usr/bin/env python
 
+# testThrusters.py
+
+# This module uses the serial library in python.
+
+# It creates a handle for the serial port in the Arduino and then writes
+# the data to be fed to the thrusters directly to this serial port.
+
+# It does so using a while loop.
+
+# TODO:
+
+# - Ctrl+C handling
+# - Write a bash script to start this up directly from the repo root.
+
 PKG = 'seabotix'
 
 from time import sleep

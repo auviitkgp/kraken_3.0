@@ -2,6 +2,27 @@
 
 PKG = 'seabotix'
 
+# stopKraken.py
+
+# This module uses the serial library in python.
+
+# It creates a handle for the serial port in the Arduino and then writes
+# the data to be fed to the thrusters directly to this serial port.
+
+# It does so using a while loop. (which may be redundant)
+
+# The value "0x7F" is the zero for the seabotix thrusters. This is
+# the reason that this value is part of the data that is being written
+# to the serial port.
+
+# TODO:
+
+# - Check how the thrusters work
+#     If only publishing once is enough, then the while loop is redundant, 
+#     and we can stop the loop after publishing once.
+# - Write a bash script to start this up directly from the repo root.
+
+
 from time import sleep
 import roslib; roslib.load_manifest(PKG)
 import serial
