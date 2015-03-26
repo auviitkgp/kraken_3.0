@@ -25,24 +25,10 @@ def initSerial():
     
     else:
 	    print 'Error in opening port'
-    
-def seabotixCB(data):
-    global dataString
-    dataString = ''
-    checksum = '0x00'
-    
-    for i in data:
-        dataString += chr(data.data[i])
-        checksum += data.data[i]
-    dataString += chr(checksum)
-    sb.write(dataString)
-
+   
 if __name__ == '__main__':
 
     initSerial()
-   
-    rospy.init_node('Thruster', anonymous=True)
-    sub = rospy.Subscriber('/kraken/seabotix', seabotix, seabotixCB)
     
     #count = 0     # variable to check frequency   
     #add = [0X60,0X52,0X5A,0X50,0X5C,0X5E]
