@@ -51,8 +51,7 @@ if __name__ == '__main__':
 
     initSerial()
    
-    rospy.init_node('Thruster', anonymous=True)
-    sub = rospy.Subscriber('/kraken/seabotix', seabotix, seabotixCB)
+    rospy.init_node('stopKraken', anonymous=True)
     
     # count = 0     # variable to check frequency   
     # add = [0X60,0X52,0X5A,0X50,0X5C,0X5E]
@@ -88,4 +87,6 @@ if __name__ == '__main__':
         r.sleep()
         
     sb.close()
+
+    print "Exited from the While Loop"
     
