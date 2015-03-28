@@ -23,12 +23,23 @@ import serial
 import rospy
 from kraken_msgs.msg import seabotix
 
+import os
+import signal
+import sys
+
 dataString = ''
 
 sb = serial.Serial('/dev/ttyACM0', 9600)
 
 # serial config
 sb.stopbits = 1
+
+def stopThrustersNow(s, f):
+
+    print "Stopping thrusters now!"
+    os.system("python stopKraken.py")
+    # signal.alarm(2)
+    # sys.exit(0)
 
 def initSerial():
     if (sb.isOpen == 0):
@@ -42,7 +53,10 @@ def initSerial():
    
 if __name__ == '__main__':
 
+    signal.signal(signal.SIGINT, stopThrustersNow)
     initSerial()
+
+    rospy.init_node('testThrusters', anonymous=True) # required for using rospy.Rate
     
     # count = 0     # variable to check frequency   
     # add = [0X60,0X52,0X5A,0X50,0X5C,0X5E]
