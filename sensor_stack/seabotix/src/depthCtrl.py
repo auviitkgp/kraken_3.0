@@ -12,13 +12,13 @@ from resources import topicHeader
 from dynamic_reconfigure.server import Server
 from seabotix.cfg import k_changerConfig
 
-offset = 0.8
+offset = 0
 depth = 0.0
-depthGoal = 0.4
+depthGoal = 0.5
 
-Kp = 69
-Kd = 27
-Ki = 25
+Kp = 100
+Kd = 44
+Ki = 0
 
 # Use in case of mismatch
 Kp_front = 200;
@@ -48,15 +48,21 @@ def dvlCB(dataIn):
 		offset = dataIn.data[6]
 	  	i = i+1
 	  	print i,offset
-
+	  	if dataIn.data[6]>2:
+	  		return;
         depth = offset - dataIn.data[6]
 	
 
 	prevError = errorP
 	errorP = depthGoal - depth
+
+
 	print 'Error',errorP
+
 	errorI = errorP + prevError
 	errorD = errorP - prevError
+
+	
 
 thruster6Data = thrusterData6Thruster()
 thruster4Data = thrusterData4Thruster()
@@ -76,21 +82,23 @@ if __name__ == '__main__':
 	sub = rospy.Subscriber(topicHeader.SENSOR_DVL, dvlData, dvlCB)
 	pub4 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER4, thrusterData4Thruster, queue_size = 2)
 	pub6 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER6, thrusterData6Thruster, queue_size = 2)
-	srv=Server(k_changerConfig,callback)
+	# srv=Server(k_changerConfig,callback)
 
 	r = rospy.Rate(10)
+	thruster6Data.data[2] = 0.0
+	thruster6Data.data[3] = 0.0
 
+	thruster6Data.data[4] = 0.0
+	thruster6Data.data[5] = 0.0
 	while not rospy.is_shutdown():
+		
 
 		thruster6Data.data[0] = Kp*errorP + Kd*errorD + Ki*errorI
+
 		#print Kp,Kd,Ki,errorP,errorD,errorI
 		#print thruster6Data.data[0]
 		thruster6Data.data[1] = Kp*errorP + Kd*errorD + Ki*errorI
-		thruster6Data.data[2] = 0.0
-		thruster6Data.data[3] = 0.0
-
-		thruster6Data.data[4] = 0.0
-		thruster6Data.data[5] = 0.0
+		
 
 		thruster4Data.data[0] = thruster6Data.data[0]
 		thruster4Data.data[1] = thruster6Data.data[1]

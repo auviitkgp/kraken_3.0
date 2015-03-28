@@ -10,9 +10,10 @@ from kraken_msgs.msg import thrusterData4Thruster
 from kraken_msgs.msg import imuData
 from resources import topicHeader
 
-yaw = 0.0
-goal = 150.0
 
+yaw = 0.0
+goal = 200.0
+offset=0
 Kp_left = 1.27;
 Kd_left = 0.016;
 Ki_left = 0.00;
@@ -37,6 +38,15 @@ def imuCB(dataIn):
 
 	prevError = errorP
 	errorP = goal - yaw
+	fabserror=abs(errorP)
+	sign=1;
+	if(errorP<0):
+		sign=-1;
+	if(fabserror>180):
+		errorP=-1*(sign*(360-fabserror));
+	
+
+
 	print errorP
 	errorI = errorP + prevError
 	errorD = errorP - prevError
@@ -46,6 +56,7 @@ def imuCB(dataIn):
 
 
 if __name__ == '__main__':
+	# offset=50;
 	thruster4Data=thrusterData4Thruster();
 	thruster6Data=thrusterData6Thruster();
 	
@@ -55,16 +66,22 @@ if __name__ == '__main__':
 	pub6 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER6, thrusterData6Thruster, queue_size = 2)
 
 	r = rospy.Rate(10)
-
+	thruster6Data.data[0] = 0.0
+	thruster6Data.data[1] = 0.0
+	thruster6Data.data[2] = 0.0
+	thruster6Data.data[3] = 0.0
 	while not rospy.is_shutdown():
 
-		thruster6Data.data[0] = 0.0
-		thruster6Data.data[1] = 0.0
-		thruster6Data.data[2] = 0.0
-		thruster6Data.data[3] = 0.0
+		
 
-		thruster6Data.data[4] = Kp_left*errorP + Kd_left*errorD + Ki_left*errorI
-		thruster6Data.data[5] = Kp_right*errorP + Kd_right*errorD + Ki_right*errorI
+		thruster6Data.data[4] =Kp_left*errorP + Kd_left*errorD + Ki_left*errorI
+		thruster6Data.data[5] =Kp_right*errorP + Kd_right*errorD + Ki_right*errorI
+
+		if(abs(errorP)<10):
+			thruster6Data.data[4]=offset;
+			thruster6Data.data[5]=offset;			
+			print 'mind fuck'
+
 
 		thruster4Data.data[0] = thruster6Data.data[0]
 		thruster4Data.data[1] = thruster6Data.data[1]

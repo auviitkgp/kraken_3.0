@@ -64,8 +64,15 @@ void thruster6callback(const kraken_msgs::thrusterData6ThrusterConstPtr msg)
     {
         inData[i] = msg->data[i];
 	ROS_INFO("indata[%d] : %f",i,inData[i]);
-        store = uint8_t((converter*inData[i]>(0xE6-0x80)?(0xE6):converter*inData[i]+0x80));
-	store = uint8_t((converter*inData[i]<(0x19-0x80)?(0x19):converter*inData[i]+0x80));
+    if((converter*inData[i]> 100))
+        store=0xE6;
+    else if((converter*inData[i]<-100))
+        store=-((int)0x80-0x19);
+    else
+        store= inData[i] +0x80;
+
+ //        store = uint8_t((converter*inData[i]>(0xE6-0x80)?(0xE6):converter*inData[i]+0x80));
+	// store = uint8_t((converter*inData[i]<(0x19-0x80)?(0x19):converter*inData[i]+0x80));
 	ROS_INFO("store : %d",store);
         if (store > max)
             store = max;

@@ -1,16 +1,16 @@
 <launch>
 	<node name="imudata" pkg="sparton" type="sparton.py" />
 
-	<node name="dvldata" pkg="nqDVL" type="nqDVL,py" />
+	<!-- <node name="dvldata" pkg="nqDVL" type="nqDVL.py" /> -->
 
-	<node name="seaboticConverter" pkg="thruster_converter" type="thruster" />
+	<!-- <node name="seaboticConverter" pkg="thruster_converter" type="thrust_convert" /> -->
 
-	<node name="control_node" pkg="control_server" type="controlServer" args="10 $(find control_server)/parameters/MoveBack.cp 
+	<!-- <node name="control_node" pkg="control_server" type="controlServer" args="10 $(find control_server)/parameters/MoveBack.cp 
 		$(find control_server)/parameters/MoveForward.cp $(find control_server)/parameters/Pause.cp"/>
-
+ -->
 	<node name="Thruster" pkg="seabotix" type="seabotix.py" />
 
-	<node name="Thruster" pkg="seabotix" type="seabotix.py" />
+	<!-- <node name="Thruster" pkg="seabotix" type="seabotix.py" /> -->
 
 
 </launch>

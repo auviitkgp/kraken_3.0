@@ -6,6 +6,7 @@ from time import sleep
 import roslib; roslib.load_manifest(PKG)
 import serial
 
+
 import rospy
 from kraken_msgs.msg import seabotix
 
@@ -26,6 +27,7 @@ def initSerial():
     else:
 	    print 'Error in opening port'
     
+
 def seabotixCB(data):
     global dataString
     dataString = ''
@@ -37,6 +39,8 @@ def seabotixCB(data):
     dataString += chr(checksum)
     sb.write(dataString)
 
+
+    
 if __name__ == '__main__':
 
     initSerial()
@@ -44,43 +48,39 @@ if __name__ == '__main__':
     rospy.init_node('Thruster', anonymous=True)
     sub = rospy.Subscriber('/kraken/seabotix', seabotix, seabotixCB)
         
-    # count = 0     # variable to check frequency   
-    # add = [0X60,0X52,0X5A,0X50,0X5C,0X5E]
-    # speed = [0X62,0X62,0X62,0X62,0X62,0X62]   5A  and 60 for depth and 
-    # speedMax = [0X64,0X64,0X64,0X64,0X64,0X64] n   52 and 5C are surge thrusters
-    data = [[0x60,0xAA,0x64],  #depth Back
-	    [0x52,0xB0,0x64],  #Surge Left
-	    [0x5A,0xAA,0x64],  #depth Front
-  	    [0x50,0x80,0x64],  
-	    [0x5C,0xAA,0x64],  #Surge Right
-            [0x5E,0x62,0x64]]
-
-    # add[0] = 50
-    # add[1] = '56'
-    # add[2] = '5A'
-    # add[3] = '5E'
-    # add[4] = '52'
-    # add[5] = '58'
-    # add[4] = '60'
-    # add[5] = '5C'  
+    #count = 0     # variable to check frequency   
+    #add = [0X60,0X52,0X5A,0X50,0X5C,0X5E]
+    #speed = [0X62,0X62,0X62,0X62,0X62,0X62]
+    #speedMax = [0X64,0X64,0X64,0X64,0X64,0X64]
+    data = [[0x60,0x7F,0x64],
+	    [0x52,0x7F,0x64],
+	    [0x5A,0x7F,0x64],
+  	    [0x50,0x7F,0x64],
+	    [0x5C,0x7F,0x64],
+            [0x5E,0x7F,0x64]]
+    #add[0] = 50
+    #add[1] = '56'
+    #add[2] = '5A'
+    #add[3] = '5E'
+    #add[4] = '52'
+    #add[5] = '58'
+    #add[4] = '60'
+    #add[5] = '5C'
 
     r = rospy.Rate(1)
     
-    print 'Started running'
+    print 'running'
     
-    # print speed
+    #print speed
     
-    # print sb.readline()
+    print sb.readline()
     while not rospy.is_shutdown():
-	print "Cycle Started"
 	for i in range(0,6):
 		for j in range(0,3):
 	    		sb.write(str(chr(int(data[i][j]))))
-			# print sb.readline()
-			print "Single thruster data published"
-	print "Cycle Ended"	
-	# Press Ctrl+C here to stop publishing new data
+			print sb.readline()
+	
         r.sleep()
-           
+        
+    
     sb.close()
-    print "The while loop has ended"
