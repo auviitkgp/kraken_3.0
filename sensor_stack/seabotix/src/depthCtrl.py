@@ -11,10 +11,13 @@ from kraken_msgs.msg import dvlData
 from resources import topicHeader
 from dynamic_reconfigure.server import Server
 from seabotix.cfg import k_changerConfig
+from actionmsg.msg import buoyFeedback
+
 
 offset = 0
 depth = 0.0
-depthGoal = 0.5
+depthGoal = 0.25
+PIXEL_RATIO=10
 
 Kp = 100
 Kd = 44
@@ -62,6 +65,10 @@ def dvlCB(dataIn):
 	errorI = errorP + prevError
 	errorD = errorP - prevError
 
+def goalCB(goalin):
+	global depthGoal
+	global PIXEL_RATIO
+	depthGoal=depthGoal+ goalin.errory/PIXEL_RATIO
 	
 
 thruster6Data = thrusterData6Thruster()
@@ -80,6 +87,9 @@ if __name__ == '__main__':
 
 	rospy.init_node('Control', anonymous=True)
 	sub = rospy.Subscriber(topicHeader.SENSOR_DVL, dvlData, dvlCB)
+
+	goalsub=rospy.Subscriber('/buoy/feedback',buoyFeedback,goalCB)
+	
 	pub4 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER4, thrusterData4Thruster, queue_size = 2)
 	pub6 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER6, thrusterData6Thruster, queue_size = 2)
 	# srv=Server(k_changerConfig,callback)

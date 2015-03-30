@@ -9,10 +9,10 @@ from kraken_msgs.msg import thrusterData6Thruster
 from kraken_msgs.msg import thrusterData4Thruster
 from kraken_msgs.msg import imuData
 from resources import topicHeader
-
+from actionmsg.msg import buoyActionFeedback
 
 yaw = 0.0
-goal = 200.0
+goal = 0.0
 offset=0
 Kp_left = 1.27;
 Kd_left = 0.016;
@@ -47,12 +47,20 @@ def imuCB(dataIn):
 	
 
 
-	print errorP
+	print "Error P:", errorP, "; Yaw: ", yaw
 	errorI = errorP + prevError
 	errorD = errorP - prevError
 
 #thruster6Data.data = [0.0,0.0,0.0,0.0,0.0,0.0]
 #thruster4Data.data = [0.0, 0.0, 0.0, 0.0]
+
+def goalCB(goalin):
+	global goal
+	goalin=goalin.feedback
+	goal=(goal+ goalin.errorx)%360
+	print 'goal_new= ',goal,'goalin= ',goalin
+	
+
 
 
 if __name__ == '__main__':
@@ -62,6 +70,9 @@ if __name__ == '__main__':
 	
 	rospy.init_node('Control', anonymous=True)
 	sub = rospy.Subscriber(topicHeader.SENSOR_IMU, imuData, imuCB)
+
+	goalsub=rospy.Subscriber('/buoy/feedback',buoyActionFeedback,goalCB)
+
 	pub4 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER4, thrusterData4Thruster, queue_size = 2)
 	pub6 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER6, thrusterData6Thruster, queue_size = 2)
 
