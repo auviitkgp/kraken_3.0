@@ -1,0 +1,17 @@
+<package>
+  <description brief="pose_server_python">
+
+     pose_server_python
+
+  </description>
+  <author>Siddharth</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/pose_server_python</url>
+  <depend package="rospy"/>
+  <depend package="resources"/>
+  <depend package="std_msgs"/>
+
+</package>
+
+
