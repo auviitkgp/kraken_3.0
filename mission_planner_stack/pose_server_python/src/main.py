@@ -1,6 +1,7 @@
 import roslib;roslib.load_manifest('mission_planner')
 import rospy
 import rospy
+import time
 from resources import topicHeader
 
 import kraken_msgs
@@ -24,17 +25,40 @@ P = matrix([[1000., 0., 0., 0.], [0., 1000., 0., 0.], [0., 0., 0, 0.], [0., 0., 
 def imuCallback(imu):
 	print "Entered IMU callback!"
 
+oldtime = 0
+def dvlCallback2(dvl):
+	global oldtime
+	t = dvl.data
+
+	if oldtime == 0:
+
+		oldtime = time.time()
+		print t[3], t[4]
+		return
+
+	if time.time() - oldtime >= 1:
+
+		oldtime = time.time()
+		print t[3], t[4]
+
 def dvlCallback(dvl):
 	global state
 	global measurements
 	global statefilled
 
-	print "Entered DVL callback!"
+	# print dvl.data
+
+	# print "Entered DVL callback!"
 
 	## Extract from the variable dvl
 
-	vx = int(raw_input("Enter vx: "))
-	vy = int(raw_input("Enter vy: "))
+	# vx = int(raw_input("Enter vx: "))
+	# vy = int(raw_input("Enter vy: "))
+
+	vx = dvl.data[3]
+	vy = -1 * dvl.data[4]
+
+	print vx, vy
 	
 	## End extract step
 
@@ -80,5 +104,7 @@ while(1):
 		new_state.show()
 		print "new P matrix: "
 		new_P.show()
+		
+		P = matrix(new_P.value)
 
 rospy.spin()
