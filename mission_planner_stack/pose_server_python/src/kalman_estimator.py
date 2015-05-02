@@ -139,23 +139,26 @@ class matrix:
         return repr(self.value)
 
     def setvalue(self, indx, indy, new_value):
-
-        print indx
-        print indy
-
-        print self.value
-        print self.value[0]
+        '''
+        setvalue(row, column, new_value)
+        '''
 
         self.value[indx-1][indy-1] = new_value
 
-        self.show()
+    def getvalue(self, indx, indy):
+        '''
+        getvalue(row, column, new_value)
+        '''
+
+        return self.value[indx-1][indy-1]
+
 
 def kalman_estimate(x, P, measurement):
 
     dt = 0.1
 
     F = matrix([[1., 0., dt, 0.], [0., 1., 0., dt], [0., 0., 1., 0.], [0., 0., 0., 1.]])# next state function
-    H = matrix([[1., 0., 0., 0.], [0., 1., 0., 0.]])# measurement function
+    H = matrix([[0., 0., 1., 0.], [0., 0, 0., 1.]])# measurement function
     R = matrix([[.1, 0.], [0., .1]])# measurement uncertainty
     I = matrix([[1., 0., 0., 0.,], [0., 1., 0., 0.], [0., 0., 1., 0.], [0., 0., 0., 1.]]) # identity matrix
     u = matrix([[0.], [0.], [0.], [0.]]) # external motion
@@ -164,9 +167,10 @@ def kalman_estimate(x, P, measurement):
     # x = (F * x) + u
     x = (F * x)
     P = F * P * F.transpose()
-    
+   
     # measurement update
     Z = matrix([measurement])
+    Z.show()
     y = Z.transpose() - (H * x)
     S = H * P * H.transpose() + R
     K = P * H.transpose() * S.inverse()
