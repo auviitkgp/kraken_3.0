@@ -152,7 +152,6 @@ class matrix:
 
         return self.value[indx-1][indy-1]
 
-
 def kalman_estimate(x, P, measurement):
 
     dt = 0.1
@@ -170,17 +169,17 @@ def kalman_estimate(x, P, measurement):
    
     # measurement update
     Z = matrix([measurement])
-    Z.show()
+    # Z.show()
     y = Z.transpose() - (H * x)
     S = H * P * H.transpose() + R
     K = P * H.transpose() * S.inverse()
     x = x + (K * y)
     P = (I - (K * H)) * P
     
-    print '[new] x= '
-    x.show()
-    print '[new] P= '
-    P.show()
+    # print '[new] x= '
+    # x.show()
+    # print '[new] P= '
+    # P.show()
 
     return (x, P)
 
