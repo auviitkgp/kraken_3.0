@@ -12,8 +12,8 @@ from kalman_estimator import *
 
 dt = 0.1
 NUM_VARIABLE_IN_STATE = 4
-INDEX_VEL_X = 2
-INDEX_VEL_Y = 3
+INDEX_VEL_X = 3
+INDEX_VEL_Y = 4
 
 # state = [position-x, position-y, velocity-x, velocity-y]
 state = matrix([[0.0], [0.0], [0.], [0.]]) # initial state (location and velocity)
@@ -41,7 +41,7 @@ def dvlCallback(dvl):
 	this_iteration_measurement = [vx, vy]
 
 	state.setvalue(INDEX_VEL_X, 1, vx)
-	state.setvalue(INDEX_VEL_Y, 1, vx)
+	state.setvalue(INDEX_VEL_Y, 1, vy)
 
 	statefilled += 2	
 	measurements.append(this_iteration_measurement)
@@ -65,12 +65,15 @@ rospy.Subscriber(name=dvl_topic_name, data_class=dvlData, callback=dvlCallback)
 
 while(1):
 
+	# if all the data has been accumulated in the state variable
+
 	if(statefilled >= NUM_VARIABLE_IN_STATE):
 
 		(new_state, new_P) = kalman_estimate(state, P, measurements[-1])
 
-		state[0] = new_state[0]
-		state[1] = new_state[1]
+		state.setvalue(1, 1, new_state.getvalue(1, 1))
+		state.setvalue(2, 1, new_state.getvalue(2, 1))
+
 		statefilled = 2
 
 		print "new state: "
