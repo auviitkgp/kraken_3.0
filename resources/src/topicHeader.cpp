@@ -65,6 +65,11 @@ const char* NAV_POSE_ESTIMATED="/kraken/nav/pose_estimated";
 const char* PREMAP_LOCATION_SERVICE="/kraken/nav/premap_location";
 const char* RESET_POSITION_SERVICE="/kraken/nav/reset_position";
 
+
+// pose server
+extern const char* POSE_SERVER_STATE="/kraken/estimated/state";
+extern const char* PRESENT_POSE="/kraken/estimated/position";
+
 // vision stack topics
 
 const char* CAMERA_BOTTOM_RAW_IMAGE="/kraken/bottom_camera";
