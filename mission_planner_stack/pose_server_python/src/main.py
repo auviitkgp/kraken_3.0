@@ -8,6 +8,8 @@ import kraken_msgs
 import kraken_msgs
 from kraken_msgs.msg._imuData import imuData
 from kraken_msgs.msg._dvlData import dvlData
+from kraken_msgs.msg._positionData import positionData
+from kraken_msgs.msg._stateData import stateData
 
 from kalman_estimator import *
 
@@ -86,7 +88,6 @@ def imuCallback(imu):
 	pitch = pitch - base_pitch
 	yaw = yaw - base_yaw
 
-	print "IMU (Corrected): ", roll, pitch, yaw
 	print "IMU (Corrected): ", 
 	print round(roll, 2), 
 	print round(pitch, 2), 
@@ -164,6 +165,33 @@ def dvlCallback(dvl):
 	statefilled += 2	
 	measurements.append(this_iteration_measurement)
 
+def publishStateAndPosition(state_matrix):
+
+	global position_publisher
+	global state_publisher
+
+	vx = state_matrix.getvalue(INDEX_VEL_X, 1)
+	vy = state_matrix.getvalue(INDEX_VEL_Y, 1)
+	pos_x = state_matrix.getvalue(1, 1)
+	pos_y = state_matrix.getvalue(2, 1)
+
+	present_position = positionData()
+	present_state = stateData()
+
+	present_position.x_coordinate = present_state.x_coordinate = pos_x
+	present_position.y_coordinate = present_state.y_coordinate = pos_y
+
+	present_state.velocity_x = vx
+	present_state.velocity_y = vy
+
+	# print present_state
+	# print present_position
+
+	position_publisher.publish(present_position)
+	state_publisher.publish(present_state)
+
+	return
+
 # subscribe to IMU and DVL
 
 # extract pitch and yaw from IMU
@@ -172,14 +200,24 @@ def dvlCallback(dvl):
 
 imu_topic_name = topicHeader.SENSOR_IMU
 dvl_topic_name = topicHeader.SENSOR_DVL
+publish_state_topic_name = topicHeader.POSE_SERVER_STATE
+publish_position_topic_name = topicHeader.PRESENT_POSE
 
 # print imu_topic_name
 # print dvl_topic_name
+# print publish_position_topic_name
+# print publish_state_topic_name
 
 rospy.init_node('pose_server_python_node', anonymous=True)
 
 rospy.Subscriber(name=imu_topic_name, data_class=imuData, callback=imuCallback)
 rospy.Subscriber(name=dvl_topic_name, data_class=dvlData, callback=dvlCallback)
+
+position_publisher = rospy.Publisher(publish_position_topic_name, positionData, queue_size=10)
+state_publisher = rospy.Publisher(publish_state_topic_name, stateData, queue_size=10)
+
+# state_matrix = matrix([[0.], [0.], [0.], [0.]])
+# publishStateAndPosition(state_matrix)
 
 while(1):
 
@@ -194,6 +232,8 @@ while(1):
 
 		statefilled = 2
 		CONVERTED_TO_WORLD = False
+
+		publishStateAndPosition(state)
 
 		# print "new state: "
 		# new_state.show()
