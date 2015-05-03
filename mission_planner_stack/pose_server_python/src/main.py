@@ -47,6 +47,7 @@ def imuCallback(imu):
 	global statefilled
 	global state
 	global CONVERTED_TO_WORLD
+	global FIRST_ITERATION
 	global base_roll
 	global base_pitch
 	global base_yaw
@@ -60,6 +61,15 @@ def imuCallback(imu):
 	pitch = imu.data[1]
 	yaw = imu.data[2]
 
+	## IMU: takes the clockwise angle to be positive.
+	## In our convention for Kalman's filter, we take the 
+	## anti-clockwise angle as positive. So, we subtract
+	## the data from 360 to get the reading that we want.
+
+	roll = 360 - roll
+	pitch = 360 - pitch
+	yaw = 360 - yaw
+
 	if FIRST_ITERATION:
 
 		base_roll = roll
@@ -67,11 +77,20 @@ def imuCallback(imu):
 		base_yaw = yaw
 		FIRST_ITERATION = False
 
+	print "IMU (Un-Corrected): ", 
+	print round(roll, 2), 
+	print round(pitch, 2), 
+	print round(yaw, 2)
+
 	roll = roll - base_roll
 	pitch = pitch - base_pitch
 	yaw = yaw - base_yaw
 
 	print "IMU (Corrected): ", roll, pitch, yaw
+	print "IMU (Corrected): ", 
+	print round(roll, 2), 
+	print round(pitch, 2), 
+	print round(yaw, 2)
 
 	## Convert the roll, pitch and yaw to radians.
 
@@ -105,7 +124,7 @@ def imuCallback(imu):
 
 	vel_wrt_world = bodytoworld * vel_wrt_body
 
-	# vel_wrt_world.show()
+	vel_wrt_world.show()
 
 	CONVERTED_TO_WORLD = True
 
