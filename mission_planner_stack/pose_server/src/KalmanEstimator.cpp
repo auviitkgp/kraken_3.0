@@ -5,7 +5,8 @@ using namespace kraken_core;
 KalmanEstimator::KalmanEstimator(int size, float time):Estimator(size,time),_isStateInitiaized(false){
 
 
-    //defining all the 4 matrices;
+    // defining all the 4 matrices;
+		
     _Hmatrix<<0,0,1,0,
                0,0,0,1;
 
@@ -104,21 +105,19 @@ void KalmanEstimator::kalmanMeasurementUpdate(double vx, double vy)
     Vector4d X;
     X=getStateMatrix();
 
-
     y=Z-_Hmatrix*X;
+
     Matrix2d S=_Hmatrix*_Pmatrix*_Hmatrix.transpose()+ _Rmatrix;
 
     //assuming S is invertible
     Matrix<double,4,2> K=_Pmatrix*_Hmatrix.transpose()*S.inverse();
 
+    Vector4d temp=X+K*y; // new position
 
-    Vector4d temp=X+K*y;
     kalmanUpdateStateFromMatrix(temp);
-    _Pmatrix=(Matrix4d::Identity()-K*_Hmatrix)*_Pmatrix;
+
+    _Pmatrix=(Matrix4d::Identity()-K*_Hmatrix)*_Pmatrix; // new covariance
 }
-
-
-
 
 void KalmanEstimator::kalmanUpdateStateFromMatrix(const Vector4d &stateVector)
 {
@@ -129,6 +128,7 @@ void KalmanEstimator::kalmanUpdateStateFromMatrix(const Vector4d &stateVector)
     current_state_array[kraken_core::_vy]=stateVector(3);
 }
 
+// updating the state on the basis of the data from IMU
 void KalmanEstimator::updateState(kraken_msgs::imuData &imu)
 {
     //should be called at first for updating all the required imu values
@@ -164,6 +164,7 @@ void KalmanEstimator::updateState(kraken_msgs::imuData &imu)
     accelerationToWorld();
 }
 
+// updateState on the basis of data from the Depth Sensor
 void KalmanEstimator::updateState(kraken_msgs::depthData &depth_data_msg)
 {
     float *world_data=_next_pose_world.getData();
@@ -171,6 +172,7 @@ void KalmanEstimator::updateState(kraken_msgs::depthData &depth_data_msg)
     world_data[kraken_core::_pz]=depth_data_msg.depth;
 }
 
+// updateState on the basis of data from DVL
 void KalmanEstimator::updateState(kraken_msgs::dvlData& dvl_data)
 {
     float* body_data=_next_pose_body.getData();
@@ -182,14 +184,11 @@ void KalmanEstimator::updateState(kraken_msgs::dvlData& dvl_data)
     velocityToWorld();
 }
 
-
-
 void KalmanEstimator::accelerationToWorld()
 {
     //gets acceleration in world frame in _next_pose_world
     float* world_data=_next_pose_world.getData();
     float *body_data=_next_pose_body.getData();
-
 
     float ax=body_data[kraken_core::_ax];
     float ay=body_data[kraken_core::_ay];
@@ -197,7 +196,6 @@ void KalmanEstimator::accelerationToWorld()
     float r=body_data[kraken_core::_roll];
     float p=body_data[kraken_core::_pitch];
     float y=body_data[kraken_core::_yaw];
-
 
     Matrix3d RWB;
     RWB<<cos(p)*cos(y),     sin(r)*sin(p)*cos(y)-cos(r)*sin(y),            cos(r)*sin(p)*cos(y)+sin(r)*sin(y),
