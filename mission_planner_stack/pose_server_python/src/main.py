@@ -16,6 +16,10 @@ NUM_VARIABLE_IN_STATE = 4
 INDEX_VEL_X = 3
 INDEX_VEL_Y = 4
 CONVERTED_TO_WORLD = False
+FIRST_ITERATION = True
+base_roll = 0
+base_pitch = 0
+base_yaw = 0
 
 # state = [position-x, position-y, velocity-x, velocity-y]
 state = matrix([[0.0], [0.0], [0.], [0.]]) # initial state (location and velocity)
@@ -43,6 +47,9 @@ def imuCallback(imu):
 	global statefilled
 	global state
 	global CONVERTED_TO_WORLD
+	global base_roll
+	global base_pitch
+	global base_yaw
 
 	vx = state.getvalue(INDEX_VEL_X, 1)
 	vy = state.getvalue(INDEX_VEL_Y, 1)
@@ -53,7 +60,20 @@ def imuCallback(imu):
 	pitch = imu.data[1]
 	yaw = imu.data[2]
 
-	print "IMU: ", roll, pitch, yaw
+	if FIRST_ITERATION:
+
+		base_roll = roll
+		base_pitch = pitch
+		base_yaw = yaw
+		FIRST_ITERATION = False
+
+	roll = roll - base_roll
+	pitch = pitch - base_pitch
+	yaw = yaw - base_yaw
+
+	print "IMU (Corrected): ", roll, pitch, yaw
+
+	## Convert the roll, pitch and yaw to radians.
 
 	yaw = yaw * 3.14 / 180
 	roll = roll * 3.14 / 180
