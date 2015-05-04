@@ -1,6 +1,5 @@
 #include <pose_server/DeadReckoning.h>
 
-
 namespace kraken_core
 {
   DeadReckoning::DeadReckoning(int size, float time):Estimator(size,time)
@@ -112,12 +111,17 @@ namespace kraken_core
       _data_world_next[_az] = (_data_world_next[_vz] - _data[_vz])/_time;
   }
   
+	// updating the current position on the basis of the data from the depth sensor
+	// we don't apply the equation in the z axis, we use the data from the 
+	// sensor.
   void DeadReckoning::updateCurrentPosition(kraken_msgs::depthData & depth)
   {
     float* _data_world_next  = _next_pose_world.getData();
     boost::circular_buffer<KrakenPose>::iterator start = _prev_states_world.end()-1;
     float* _data = (*start).getData();
     // Calculate world positions
+		// s = u*t + 0.5 * a * t^2
+		// s = (u + 0.5 * a * t) * t
     _data_world_next[_px] = _data[_px]+(_data[_vx]+_data[_ax]*_time/2.0)*_time;
     _data_world_next[_py] = _data[_py]+(_data[_vy]+_data[_ay]*_time/2.0)*_time;
     _data_world_next[_pz] = depth.depth;
@@ -133,12 +137,15 @@ namespace kraken_core
     _prev_states_body.push_back(_next_pose_body);
   }
   
+	// update the current position, by applying the second equation in all
+	// three axes.
   void DeadReckoning::updateCurrentPosition()
   {
     float* _data_world_next  = _next_pose_world.getData();
     boost::circular_buffer<KrakenPose>::iterator start = _prev_states_world.end()-1;
     float* _data = (*start).getData();
     // Calculate world positions
+
     _data_world_next[_px] = _data[_px]+(_data[_vx]+_data[_ax]*_time/2.0)*_time;
     _data_world_next[_py] = _data[_py]+(_data[_vy]+_data[_ay]*_time/2.0)*_time;
     _data_world_next[_pz] = _data[_pz]+(_data[_vz]+_data[_az]*_time/2.0)*_time;

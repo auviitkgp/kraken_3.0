@@ -1,5 +1,18 @@
 #include <bits/stdc++.h>
 
+/*
+
+getPythonHeader.cpp
+
+- Make this package
+- Run the script in bin: 
+		./bin/getPythonHeader src/topicHeader.cpp src/resources/topicHeader.py
+
+This will create a script that will write all the topcis in the cpp file to the 
+python file for use with rospy.
+
+*/
+
 using namespace std;
 int main(int argc, char const *argv[])
 {
@@ -10,9 +23,8 @@ int main(int argc, char const *argv[])
 	cout<<"source="<<argv[1]<<endl;
 	cout<<"destination="<<argv[2]<<endl;
 
-
-    freopen(argv[1], "r", stdin);
-    freopen(argv[2], "w", stdout);
+	freopen(argv[1], "r", stdin);
+	freopen(argv[2], "w", stdout);
 	std::string input;
 	while(cin>>input){
 		// cout<<input<<endl;
@@ -21,7 +33,7 @@ int main(int argc, char const *argv[])
 			cin>>input;
 			if(input=="char*")
 			{
-                char word[250];
+				char word[250];
 
 				scanf(" %[^;\n]s",word);
 				
@@ -29,6 +41,6 @@ int main(int argc, char const *argv[])
 			}
 		}
 	}
-    
+
 	return 0;
 }
