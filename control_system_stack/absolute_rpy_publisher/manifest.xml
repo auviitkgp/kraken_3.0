@@ -1,0 +1,17 @@
+<package>
+  <description brief="absolute_rpy_publisher">
+
+     absolute_rpy_publisher
+
+  </description>
+  <author>Siddharth</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/absolute_rpy_publisher</url>
+  <depend package="rospy"/>
+  <depend package="kraken_msgs"/>
+  <depend package="resources"/>
+
+</package>
+
+
