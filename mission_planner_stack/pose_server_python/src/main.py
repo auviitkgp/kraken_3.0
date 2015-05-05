@@ -6,7 +6,7 @@ from resources import topicHeader
 
 import kraken_msgs
 import kraken_msgs
-from kraken_msgs.msg._imuData import imuData
+from kraken_msgs.msg._absoluteRPY import absoluteRPY
 from kraken_msgs.msg._dvlData import dvlData
 from kraken_msgs.msg._positionData import positionData
 from kraken_msgs.msg._stateData import stateData
@@ -45,7 +45,7 @@ def dvlCallback2(dvl):
 		oldtime = time.time()
 		# print t[3], t[4]
 
-def imuCallback(imu):
+def transformCallback(abrpy):
 	global statefilled
 	global state
 	global CONVERTED_TO_WORLD
@@ -59,18 +59,9 @@ def imuCallback(imu):
 
 	# yaw, pitch, roll
 
-	roll = imu.data[0]
-	pitch = imu.data[1]
-	yaw = imu.data[2]
-
-	## IMU: takes the clockwise angle to be positive.
-	## In our convention for Kalman's filter, we take the 
-	## anti-clockwise angle as positive. So, we subtract
-	## the data from 360 to get the reading that we want.
-
-	roll = 360 - roll
-	pitch = 360 - pitch
-	yaw = 360 - yaw
+	roll = abrpy.roll
+	pitch = abrpy.pitch
+	yaw = abrpy.yaw
 
 	if FIRST_ITERATION:
 
@@ -99,20 +90,30 @@ def imuCallback(imu):
 	roll = roll * 3.14 / 180
 	pitch = pitch * 3.14 / 180
 
+	## Refer: http://www.chrobotics.com/library/understanding-euler-angles
+
 	bodytoworld = matrix(
-		[[cos(yaw) * cos(pitch), 
-		 sin(yaw) * cos(pitch), 
-		 -1 * sin(pitch)
+		[
+		[ # row 1
+			cos(yaw) * cos(pitch),  
+		  sin(yaw) * cos(pitch), 
+		 	-1 * sin(pitch)
 		],
 
-		[cos(yaw) * sin(pitch) * sin(roll) - sin(yaw) * cos(roll), 
-		 sin(yaw) * sin(pitch) * sin(roll) + cos(yaw) * cos(roll),
-		 cos(pitch) * sin(roll)
+		[ # row 2
+			cos(yaw) * sin(pitch) * sin(roll) - sin(yaw) * cos(roll), 
+		 	sin(yaw) * sin(pitch) * sin(roll) + cos(yaw) * cos(roll),
+		 	cos(pitch) * sin(roll)
 		],
-		[cos(yaw) * sin(pitch) * cos(roll) + sin(yaw) * sin(roll),
-		 sin(yaw) * sin(pitch) * cos(roll) - cos(yaw) * sin(roll),
-		 cos(pitch) * cos(roll)
-		]])
+		[ # row 3
+			cos(yaw) * sin(pitch) * cos(roll) + sin(yaw) * sin(roll),
+		 	sin(yaw) * sin(pitch) * cos(roll) - cos(yaw) * sin(roll),
+		 	cos(pitch) * cos(roll)
+		]
+	  ]
+	)
+
+	bodytoworld = bodytoworld.transpose()
 
 	# print bodytoworld
 
@@ -198,25 +199,24 @@ def publishStateAndPosition(state_matrix):
 # extract vx and vy from DVL
 # take positions state and y from previous state. (Take (state, y) = (0, 0) initially.)
 
-imu_topic_name = topicHeader.SENSOR_IMU
+absolute_rpy_topic_name = topicHeader.ABSOLUTE_RPY
 dvl_topic_name = topicHeader.SENSOR_DVL
 publish_state_topic_name = topicHeader.POSE_SERVER_STATE
 publish_position_topic_name = topicHeader.PRESENT_POSE
 
-# print imu_topic_name
+# print absolute_rpy_topic_name
 # print dvl_topic_name
 # print publish_position_topic_name
 # print publish_state_topic_name
 
 rospy.init_node('pose_server_python_node', anonymous=True)
 
-rospy.Subscriber(name=imu_topic_name, data_class=imuData, callback=imuCallback)
+rospy.Subscriber(name=absolute_rpy_topic_name, data_class=absoluteRPY, callback=transformCallback)
 rospy.Subscriber(name=dvl_topic_name, data_class=dvlData, callback=dvlCallback)
 
 position_publisher = rospy.Publisher(publish_position_topic_name, positionData, queue_size=10)
 state_publisher = rospy.Publisher(publish_state_topic_name, stateData, queue_size=10)
 
-# state_matrix = matrix([[0.], [0.], [0.], [0.]])
 # publishStateAndPosition(state_matrix)
 
 while(1):
