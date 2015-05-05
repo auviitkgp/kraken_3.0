@@ -1,3 +1,23 @@
+'''
+Publishing the absolute Roll, Pitch and Yaw
+
+- Axes :-
+
+  - x -> Along the vehicle, pointing from the backplate to the front plate.
+  - y -> Perpendicular to the vehicle; Points from the left surge thruster, 
+         towards the right surge thruster.
+  - z -> Normal to the vehicle; From the top of the hull, towards the DVL;
+
+- Angle Convention :-
+
+  - Angles in the xy plane are seen from the z-axis. (Same for other two planes.)
+  - Angles are NEVER seen from the origin
+  - Anti-clockwise angles are positive.
+
+  - Refer to Euler Angles, on wikipedia
+  - Reference: http://en.wikipedia.org/wiki/File:Yaw_Axis_Corrected.svg
+'''
+
 import roslib;roslib.load_manifest('mission_planner')
 import rospy
 import rospy
@@ -17,20 +37,19 @@ def imuCallback(imu):
 
 	global absolute_rpy_publisher
 
-	roll = imu.data[0]
+	roll  = imu.data[0]
 	pitch = imu.data[1]
-	yaw = imu.data[2]
+	yaw   = imu.data[2]
 
-	# Fix the roll, pitch and yaw by subtracting it from 360
+	# Fix the roll, pitch by subtracting it from 360
 
-	roll = 360 - roll
+	roll  = 360 - roll
 	pitch = 360 - pitch
-	yaw = 360 - yaw
 
-	abrpy = absoluteRPY()
-	abrpy.roll = roll
+	abrpy       = absoluteRPY()
+	abrpy.roll  = roll
 	abrpy.pitch = pitch
-	abrpy.yaw = yaw
+	abrpy.yaw   = yaw
 
 	absolute_rpy_publisher.publish(abrpy)
 
