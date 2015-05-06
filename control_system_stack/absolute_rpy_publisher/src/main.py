@@ -18,7 +18,7 @@ Publishing the absolute Roll, Pitch and Yaw
   - Reference: http://en.wikipedia.org/wiki/File:Yaw_Axis_Corrected.svg
 '''
 
-import roslib;roslib.load_manifest('mission_planner')
+import roslib;roslib.load_manifest('absolute_rpy_publisher')
 import rospy
 import rospy
 import time
