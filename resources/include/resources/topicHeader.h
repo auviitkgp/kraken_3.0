@@ -124,5 +124,10 @@ extern const char* RESET_POSITION_SERVICE;
 // pose server
 extern const char* POSE_SERVER_STATE;
 extern const char* PRESENT_POSE;
+
+// absolute RPY
+// Check topicHeader.cpp for more details
+
+extern const char* ABSOLUTE_RPY;
 }
 #endif
