@@ -1,4 +1,4 @@
-import roslib;roslib.load_manifest('mission_planner')
+import roslib;roslib.load_manifest('pose_server_python')
 import rospy
 import rospy
 import time
