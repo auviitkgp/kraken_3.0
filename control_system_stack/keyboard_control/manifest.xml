@@ -1,0 +1,17 @@
+<package>
+  <description brief="keyboard_control">
+
+     keyboard_control
+
+  </description>
+  <author>Siddharth</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/keyboard_control</url>
+  <depend package="rospy"/>
+  <depend package="kraken_msgs"/>
+  <depend package="resources"/>
+
+</package>
+
+
