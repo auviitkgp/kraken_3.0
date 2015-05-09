@@ -3,8 +3,12 @@ import roslib;roslib.load_manifest('keyboard_control')
 from Tkinter import *
 import rospy
 from std_msgs.msg import String
-from kraken_msgs.msg import forceData6Thruster
+from kraken_msgs.msg import thrusterData6Thruster
 from resources import topicHeader
+
+rospy.init_node('keyboard_control_vehicle_node', anonymous=True)
+
+import replicateData
 
 root = Tk()
 
@@ -18,73 +22,54 @@ for i in range(len(label_vars)):
 
 def editGui(data):
 
+    global FIRST_ITERATION
+    global previous6
+    global present6
+
     for i in range(len(data.data)):
         label_vars[i].set(data.data[i])
 
-    if FIRST_ITERATION:
+    present6.data[0] = previous6.data[0] = data.data[0]
+    present6.data[1] = previous6.data[1] = data.data[1]
+    present6.data[2] = previous6.data[2] = data.data[2]
+    present6.data[3] = previous6.data[3] = data.data[3]
+    present6.data[4] = previous6.data[4] = data.data[4]
+    present6.data[5] = previous6.data[5] = data.data[5]
 
-        present6.data[0] = previous6.data[0] = data.data[0]
-        present6.data[1] = previous6.data[1] = data.data[1]
-        present6.data[2] = previous6.data[2] = data.data[2]
-        present6.data[3] = previous6.data[3] = data.data[3]
-        present6.data[4] = previous6.data[4] = data.data[4]
-        present6.data[5] = previous6.data[5] = data.data[5]
+    # if FIRST_ITERATION:
+
+    #     present6.data[0] = previous6.data[0] = data.data[0]
+    #     present6.data[1] = previous6.data[1] = data.data[1]
+    #     present6.data[2] = previous6.data[2] = data.data[2]
+    #     present6.data[3] = previous6.data[3] = data.data[3]
+    #     present6.data[4] = previous6.data[4] = data.data[4]
+    #     present6.data[5] = previous6.data[5] = data.data[5]
 
 
-        FIRST_ITERATION = False
+    #     FIRST_ITERATION = False
 
-    previous6.data[0] = data.data[0]
-    previous6.data[1] = data.data[1]
-    previous6.data[2] = data.data[2]
-    previous6.data[3] = data.data[3]
-    previous6.data[4] = data.data[4]
-    previous6.data[5] = data.data[5]
+    # previous6.data[0] = data.data[0]
+    # previous6.data[1] = data.data[1]
+    # previous6.data[2] = data.data[2]
+    # previous6.data[3] = data.data[3]
+    # previous6.data[4] = data.data[4]
+    # previous6.data[5] = data.data[5]
 
+    # this line ensures that the data is always being published
+    # to the thrusters.
+
+    # print "Data: ", data.data
     # print data.data
     # print type(data)
     # print data.data[0]
-
-rospy.init_node('keyboard_control_vehicle_node', anonymous=True)
-rospy.Subscriber(topicHeader.CONTROL_PID_THRUSTER6, forceData6Thruster, editGui)
-pub6 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER6, thrusterData6Thruster, queue_size = 2)
-
-present6 = thrusterData6Thruster()
-previous6 = thrusterData6Thruster()
-THRUSTER_VALUES_CHANGED = False
-FIRST_ITERATION = True
-
-r = rospy.Rate(10)
-
-while not rospy.is_shutdown():
-
-    # pub4.publish(thruster4Data)
-
-    if THRUSTER_VALUES_CHANGED:
-
-        pub6.publish(present6)
-        THRUSTER_VALUES_CHANGED = False
-
-    else:
-
-        pub6.publish(previous6)
-        
-    r.sleep()
-
-# Force Defination
-# force[0] = forward thruster on left side, positive value takes vehicle forwards
-# force[1] = forward thruster on right side, positive value takes vehicle forwards
-# force[2] = sway thruster on front side, positive value takes vehicle rightwards
-# force[3] = sway thruster on back side, positive value takes vehicle rightwards
-# force[4] = depth thruster on back side, positive value takes vehicle downwards
-# force[5] = depth thruster on front side, positive value takes vehicle downwards
 
 # Keyboard Control
 
 # w - forward
 # a - left
 # s - backward
-# d - right
-# t - top (towards the surface)
+    # d - right
+# t - top (towards the water surface)
 # g - ground (towards the pool bottom)
 
 string_dict = {0 : "left", 1 : "right", 2 : "backward", 3 : "forward", 4 :
@@ -104,9 +89,12 @@ def create_callbacks(arg):
         instead of previous6, thus changing the values given to the thrusters.
         '''
 
+        print "Entered callback with thruster value ", arg
+
         global present6
         global previous6
         global THRUSTER_VALUES_CHANGED
+        global pub6
 
         present6.data[0] = previous6.data[0]
         present6.data[1] = previous6.data[1]
@@ -157,8 +145,16 @@ def create_callbacks(arg):
 
         THRUSTER_VALUES_CHANGED = True
 
+        print "Previous values: "
+        print previous6.data
+
+        print "Present values: "
+        print present6.data
+
+        pub6.publish(present6)
+
     return callback
-    
+
 left = Button(frame, text="left(A)", command=create_callbacks(0))
 left.grid(row=1,column=0)
 
@@ -196,5 +192,16 @@ root.bind("g", create_callbacks(5))
 root.bind("<space>", create_callbacks(6))
 
 frame.pack()
+
+# rospy.init_node('keyboard_control_vehicle_node', anonymous=True)
+rospy.Subscriber(topicHeader.CONTROL_PID_THRUSTER6, thrusterData6Thruster, editGui)
+pub6 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER6, thrusterData6Thruster, queue_size = 10)
+
+present6 = thrusterData6Thruster()
+previous6 = thrusterData6Thruster()
+THRUSTER_VALUES_CHANGED = False
+FIRST_ITERATION = True
+MIN_THRUST_INPUT = 2.0
+prev_time = 0.
 
 root.mainloop()
