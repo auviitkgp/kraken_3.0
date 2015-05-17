@@ -1,0 +1,19 @@
+<package>
+  <description brief="task_bin">
+
+     task_bin
+
+  </description>
+  <author>Kalyan Kumar</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/task_bin</url>
+  <depend package="actionlib"/>
+  <depend package="roscpp"/>
+  <depend package="rospy"/>
+  <depend package="roslib"/>
+  <depend package="std_msgs"/>
+  <depend package="actionmsg"/>
+  <depend package="resources"/>
+
+</package>
