@@ -24,11 +24,12 @@ private:
 	actionmsg::binFeedback _feedback;
 	actionmsg::binResult _result;
 	std::string _actionName;
+	Point templ_center;
 
 public:
 	Bin(string name, int t);
 	void executeCB(const actionmsg::binGoalConstPtr &_goal);
 	void imageCallBack(const sensor_msgs::ImageConstPtr &msg);
-	Point tempMatch(Mat feed_image, Mat templ);
+	Point tempMatch(Point *X);
 	~Bin();
 };

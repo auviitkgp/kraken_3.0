@@ -2,10 +2,10 @@
 #include <task_bin/bin_server.h>
 #include <resources/topicHeader.h>
 
-Bin::Bin(std::string name, int t=0): _it(_n), _s(_n, name, boost::bind(&Bin::executeCB, this, _1), false), _actionName(name)
+Bin::Bin(std::string name, int t): _it(_n), _s(_n, name, boost::bind(&Bin::executeCB, this, _1), false), _actionName(name)
 {
-	_sub = _it.subscribe(topics::CAMERA_FRONT_RAW_IMAGE, 1, &Bin::imageCallBack, this);
-  _pub = _it.advertise("/kraken/temp/", 1); // TODO: Create a topic in resources.
+	_sub = _it.subscribe(topics::CAMERA_BOTTOM_RAW_IMAGE, 1, &Bin::imageCallBack, this);
+  _pub = _it.advertise(topics::CAMERA_BOTTOM_BIN_IMAGE, 1);
   switch(t)
   {
     case 0:
@@ -36,7 +36,6 @@ void Bin::executeCB(const actionmsg::binGoalConstPtr &_goal)
 {
 	ros::Rate looprate(10);
   bool _detected;
-  Point templ_center;
 
   switch(_goal->order)
   {
@@ -50,7 +49,7 @@ void Bin::executeCB(const actionmsg::binGoalConstPtr &_goal)
         _s.setPreempted();
         break;
       }
-      _detected = tempMatch(&templ_center);
+      _detected = tempMatch();
       looprate.sleep();
     }
     break;
@@ -72,7 +71,7 @@ void Bin::imageCallBack(const sensor_msgs::ImageConstPtr &_msg)
 	_image = _imagePtr->image;
 }
 
-bool tempMatch(Point *X)
+bool tempMatch()
 {
   bool match;
   if(!_image.empty())
@@ -94,12 +93,12 @@ bool tempMatch(Point *X)
 
     minMaxLoc( result, &minVal, &maxVal, &minLoc, &maxLoc, Mat() );
 
-    if(minVal < 20)
+    if(minVal < 20) // TO BE CHECKED
       match = true;
     else
       match = false;
     matchLoc = minLoc;
-    *X = Point(matchLoc.x + (templ.cols)/2 , matchLoc.y + (templ.rows)/2 );
+    templ_center = Point(matchLoc.x + (templ.cols)/2 , matchLoc.y + (templ.rows)/2 );
 
     rectangle( img, matchLoc, Point( matchLoc.x + templ1.cols , matchLoc.y + templ1.rows ), Scalar::all(0), 2, 8, 0 );
     rectangle( result, matchLoc, Point( matchLoc.x + templ1.cols , matchLoc.y + templ1.rows ), Scalar::all(0), 2, 8, 0 );
@@ -123,9 +122,12 @@ int main(int argc, char ** argv)
   if (argc >= 2)
     t = atoi(argv[1]);
   else
+  {
+    ROS_INFO("An integer 1, 2, 3 or 4 must be passed as argument to get the template to be matched.\n");
     ros::shutdown();
+  }
 
-  Bin _binserver("bin", 0);
+  Bin _binserver("bin", t);
   ros::spin();
   return 0;
 }
