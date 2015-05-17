@@ -31,4 +31,4 @@ public:
 	void imageCallBack(const sensor_msgs::ImageConstPtr &msg);
 	Point tempMatch(Mat feed_image, Mat templ);
 	~Bin();
-}
+};

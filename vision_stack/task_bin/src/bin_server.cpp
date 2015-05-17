@@ -5,7 +5,7 @@
 Bin::Bin(std::string name, int t=0): _it(_n), _s(_n, name, boost::bind(&Bin::executeCB, this, _1), false), _actionName(name)
 {
 	_sub = _it.subscribe(topics::CAMERA_FRONT_RAW_IMAGE, 1, &Bin::imageCallBack, this);
-  _pub = _it.advertise('/kraken/temp/', 1); // TODO: Create a topic in resources.
+  _pub = _it.advertise("/kraken/temp/", 1); // TODO: Create a topic in resources.
   switch(t)
   {
     case 0:
@@ -40,7 +40,7 @@ void Bin::executeCB(const actionmsg::binGoalConstPtr &_goal)
 
   switch(_goal->order)
   {
-    case DETECT_SLIHOUETTE:
+    case DETECT_SILHOUETTE:
     {
      while(ros::ok())
      {
