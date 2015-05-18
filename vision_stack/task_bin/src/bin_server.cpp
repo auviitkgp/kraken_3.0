@@ -2,34 +2,37 @@
 #include <task_bin/bin_server.h>
 #include <resources/topicHeader.h>
 
+char* const image_window = "Source Image";
+char* const result_window = "Result window";
+
 Bin::Bin(std::string name, int t): _it(_n), _s(_n, name, boost::bind(&Bin::executeCB, this, _1), false), _actionName(name)
 {
 	_sub = _it.subscribe(topics::CAMERA_BOTTOM_RAW_IMAGE, 1, &Bin::imageCallBack, this);
-  _pub = _it.advertise(topics::CAMERA_BOTTOM_BIN_IMAGE, 1);
-  switch(t)
-  {
-    case 0:
-    {
-      templ = imread("RoboSub2015_silhouettes1.png");
-      break;
-    }
-    case 1:
-    {
-      templ = imread("RoboSub2015_silhouettes2.png");
-      break;
-    }
-    case 2:
-    {
-      templ = imread("RoboSub2015_silhouettes3.png");
-      break;
-    }
-    case 3:
-    {
-      templ = imread("RoboSub2015_silhouettes4.png");
-      break;
-    }
-  }
-  _s.start();
+  	_pub = _it.advertise(topics::CAMERA_BOTTOM_BIN_IMAGE, 1);
+  	switch(t)
+  	{
+    	case 0:
+    	{
+      		templ = imread("/home/kalyan/rosbuild_ws/kraken_3.0/vision_stack/task_bin/RoboSub2015_silhouettes1.png");
+      		break;
+    	}
+    	case 1:
+    	{
+      		templ = imread("/home/kalyan/rosbuild_ws/kraken_3.0/vision_stack/task_bin/RoboSub2015_silhouettes2.png");
+      	break;
+    	}
+    	case 2:
+    	{
+      		templ = imread("/home/kalyan/rosbuild_ws/kraken_3.0/vision_stack/task_bin/RoboSub2015_silhouettes3.png");
+      		break;
+    	}
+    	case 3:
+    	{
+      		templ = imread("/home/kalyan/rosbuild_ws/kraken_3.0/vision_stack/task_bin/RoboSub2015_silhouettes4.png");
+      		break;
+    	}
+  	}
+  	_s.start();
 }
 
 void Bin::executeCB(const actionmsg::binGoalConstPtr &_goal)
@@ -39,7 +42,7 @@ void Bin::executeCB(const actionmsg::binGoalConstPtr &_goal)
 
   switch(_goal->order)
   {
-    case DETECT_SILHOUETTE:
+    case 0:
     {
      while(ros::ok())
      {
@@ -71,14 +74,20 @@ void Bin::imageCallBack(const sensor_msgs::ImageConstPtr &_msg)
 	_image = _imagePtr->image;
 }
 
-bool tempMatch()
+bool Bin::tempMatch()
 {
   bool match;
   if(!_image.empty())
   {
-    Mat img, result;
-    feed_image.copyTo( img );
-
+  	double minVal; double maxVal; Point minLoc; Point maxLoc; Point matchLoc;
+  	//minMaxLoc(_image, &minVal, &maxVal, &minLoc, &maxLoc, Mat());
+  	//_image.convertTo(_image, CV_32FC1);
+  	//templ.convertTo(templ, CV_32FC3);
+  	//cvtColor(templ, templ, CV_BGR2GRAY);
+    Mat img, result, tmp;
+    
+    _image.copyTo( img );
+    
     int result_cols =  img.cols - templ.cols + 1;
     int result_rows = img.rows - templ.rows + 1;
 
@@ -86,10 +95,12 @@ bool tempMatch()
 
     //Here, we are using SQDIFF_NORMED matching method
 
+    cout << img.depth() << "  " << templ.depth() << endl;
+    cout << img.channels() << "  " << templ.channels() << endl;
+
+
     matchTemplate( img, templ, result, 1 );
     normalize( result, result, 0, 1, NORM_MINMAX, -1, Mat() );
-
-    double minVal; double maxVal; Point minLoc; Point maxLoc; Point matchLoc;
 
     minMaxLoc( result, &minVal, &maxVal, &minLoc, &maxLoc, Mat() );
 
@@ -100,8 +111,8 @@ bool tempMatch()
     matchLoc = minLoc;
     templ_center = Point(matchLoc.x + (templ.cols)/2 , matchLoc.y + (templ.rows)/2 );
 
-    rectangle( img, matchLoc, Point( matchLoc.x + templ1.cols , matchLoc.y + templ1.rows ), Scalar::all(0), 2, 8, 0 );
-    rectangle( result, matchLoc, Point( matchLoc.x + templ1.cols , matchLoc.y + templ1.rows ), Scalar::all(0), 2, 8, 0 );
+    rectangle( img, matchLoc, Point( matchLoc.x + templ.cols , matchLoc.y + templ.rows ), Scalar::all(0), 2, 8, 0 );
+    rectangle( result, matchLoc, Point( matchLoc.x + templ.cols , matchLoc.y + templ.rows ), Scalar::all(0), 2, 8, 0 );
 
     namedWindow( image_window, CV_WINDOW_AUTOSIZE );
     namedWindow( result_window, CV_WINDOW_AUTOSIZE );
@@ -109,10 +120,15 @@ bool tempMatch()
     imshow( image_window, img );
     imshow( result_window, result );
 
+    waitKey(0);
+
     return match;
   }
   else
-    return false;
+  {
+  	ROS_INFO("NO IMAGE LOADED\n");
+   	return false;
+  }
 }
 
 int main(int argc, char ** argv)

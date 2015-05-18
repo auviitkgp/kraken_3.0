@@ -7,6 +7,8 @@
 #include <opencv/highgui.h>
 #include <actionmsg/binAction.h>
 
+
+
 using namespace std;
 using namespace cv;
 
@@ -30,6 +32,6 @@ public:
 	Bin(string name, int t);
 	void executeCB(const actionmsg::binGoalConstPtr &_goal);
 	void imageCallBack(const sensor_msgs::ImageConstPtr &msg);
-	Point tempMatch(Point *X);
-	~Bin();
+	bool tempMatch();
+	// ~Bin();
 };

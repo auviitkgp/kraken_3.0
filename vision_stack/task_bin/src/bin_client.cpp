@@ -13,7 +13,7 @@ int main(int argc, char **argv)
 	_client.waitForServer();
 	ROS_INFO("bin_server started.");
 	actionmsg::binGoal _goal;
-    _goal.order = DETECT_BIN;
+    _goal.order = 0;
     ROS_INFO("Sending goal - DETECT_BIN.");
     _client.sendGoal(_goal);
     bool _actionStatus = _client.waitForResult(ros::Duration(300.0));
