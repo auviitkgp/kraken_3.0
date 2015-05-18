@@ -120,5 +120,14 @@ extern const char* CAMERA_CAM_SWITCH;
 extern const char* NAV_POSE_ESTIMATED;
 extern const char* PREMAP_LOCATION_SERVICE;
 extern const char* RESET_POSITION_SERVICE;
+
+// pose server
+extern const char* POSE_SERVER_STATE;
+extern const char* PRESENT_POSE;
+
+// absolute RPY
+// Check topicHeader.cpp for more details
+
+extern const char* ABSOLUTE_RPY;
 }
 #endif

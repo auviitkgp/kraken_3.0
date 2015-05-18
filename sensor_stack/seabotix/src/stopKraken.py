@@ -80,7 +80,8 @@ if __name__ == '__main__':
 	    		sb.write(str(chr(int(data[i][j]))))
 			print sb.readline()
 	
+	sb.close()
+	exit()
         r.sleep()
         
-    
     sb.close()

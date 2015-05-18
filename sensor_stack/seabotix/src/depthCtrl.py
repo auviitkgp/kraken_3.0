@@ -11,18 +11,21 @@ from kraken_msgs.msg import dvlData
 from resources import topicHeader
 from dynamic_reconfigure.server import Server
 from seabotix.cfg import k_changerConfig
-from actionmsg.msg import buoyFeedback
+from actionmsg.msg import buoyActionFeedback
 
 
 offset = 0
-depth = 0.0
-depthGoal = 0.25
-PIXEL_RATIO=10
+depth = 1.1
+depthGoal = 0.1
+PIXEL_RATIO=10000.
 
-Kp = 100
-Kd = 44
+# Kp = 100
+# Kd = 44
+# Ki = 0.5
+
+Kp = 500
+Kd = 100
 Ki = 0
-
 # Use in case of mismatch
 Kp_front = 200;
 Kd_front = 0.5;
@@ -60,7 +63,7 @@ def dvlCB(dataIn):
 	errorP = depthGoal - depth
 
 
-	print 'Error',errorP
+	print 'ErrorP: ',errorP
 
 	errorI = errorP + prevError
 	errorD = errorP - prevError
@@ -68,8 +71,9 @@ def dvlCB(dataIn):
 def goalCB(goalin):
 	global depthGoal
 	global PIXEL_RATIO
-	depthGoal=depthGoal+ goalin.errory/PIXEL_RATIO
-	
+
+	# depthGoal=depthGoal+ goalin.feedback.errory*1.0/PIXEL_RATIO
+	# print 'new goal depth=',depthGoal,' goalin=',goalin.feedback.errory,' val=',goalin.feedback.errory*1.0/PIXEL_RATIO;
 
 thruster6Data = thrusterData6Thruster()
 thruster4Data = thrusterData4Thruster()
@@ -88,7 +92,7 @@ if __name__ == '__main__':
 	rospy.init_node('Control', anonymous=True)
 	sub = rospy.Subscriber(topicHeader.SENSOR_DVL, dvlData, dvlCB)
 
-	goalsub=rospy.Subscriber('/buoy/feedback',buoyFeedback,goalCB)
+	goalsub=rospy.Subscriber('/buoy/feedback',buoyActionFeedback,goalCB)
 	
 	pub4 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER4, thrusterData4Thruster, queue_size = 2)
 	pub6 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER6, thrusterData6Thruster, queue_size = 2)
@@ -102,11 +106,10 @@ if __name__ == '__main__':
 	thruster6Data.data[5] = 0.0
 	while not rospy.is_shutdown():
 		
+		# front thruster
+		thruster6Data.data[0] = (Kp + 40)*errorP + (Kd)*errorD + (Ki + 0.1)*errorI 
 
-		thruster6Data.data[0] = Kp*errorP + Kd*errorD + Ki*errorI
-
-		#print Kp,Kd,Ki,errorP,errorD,errorI
-		#print thruster6Data.data[0]
+		# rear thruster
 		thruster6Data.data[1] = Kp*errorP + Kd*errorD + Ki*errorI
 		
 

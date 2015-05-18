@@ -36,9 +36,10 @@ void thruster4callback(const kraken_msgs::thrusterData4ThrusterConstPtr &msg)
     for(int i = 0; i<4 ; i++ )
     {
         inData[i] = msg->data[i];
+	ROS_INFO("indata[%d] : %f",i,inData[i]);
         store = uint8_t((converter*inData[i]>0xE6-0x80?(0xE6-0x80):converter*inData[i])+offset);
 	store = uint8_t((converter*inData[i]<0x19-0x80?(0x19-0x80):converter*inData[i])+offset);
-
+	ROS_INFO("store : %d",store);
         if (store > max)
             store = max;
 
@@ -64,15 +65,8 @@ void thruster6callback(const kraken_msgs::thrusterData6ThrusterConstPtr msg)
     {
         inData[i] = msg->data[i];
 	ROS_INFO("indata[%d] : %f",i,inData[i]);
-    if((converter*inData[i]> 100))
-        store=0xE6;
-    else if((converter*inData[i]<-100))
-        store=-((int)0x80-0x19);
-    else
-        store= inData[i] +0x80;
-
- //        store = uint8_t((converter*inData[i]>(0xE6-0x80)?(0xE6):converter*inData[i]+0x80));
-	// store = uint8_t((converter*inData[i]<(0x19-0x80)?(0x19):converter*inData[i]+0x80));
+        store = uint8_t((converter*inData[i]>(0xE6-0x80)?(0xE6-0x80):converter*inData[i]+offset));
+	store = uint8_t((converter*inData[i]<(0x19-0x80)?(0x19-0x80):converter*inData[i]+offset));
 	ROS_INFO("store : %d",store);
         if (store > max)
             store = max;
@@ -91,14 +85,14 @@ int main(int argc,char** argv)
     ros::init(argc ,argv, "seabotixConverter");
 
     ros::NodeHandle n;
-    ros::Subscriber _sub4 = n.subscribe<kraken_msgs::thrusterData4Thruster>(topics::CONTROL_PID_THRUSTER4,2,thruster4callback);
-    ros::Subscriber _sub6 = n.subscribe<kraken_msgs::thrusterData6Thruster>(topics::CONTROL_PID_THRUSTER6,2,thruster6callback);
-    ros::Publisher _pub = n.advertise<kraken_msgs::seabotix>(topics::CONTROL_SEABOTIX,2);
+    ros::Subscriber _sub4 = n.subscribe<kraken_msgs::thrusterData4Thruster>(topics::CONTROL_PID_THRUSTER4,1,thruster4callback);
+    ros::Subscriber _sub6 = n.subscribe<kraken_msgs::thrusterData6Thruster>(topics::CONTROL_PID_THRUSTER6,1,thruster6callback);
+    ros::Publisher _pub = n.advertise<kraken_msgs::seabotix>(topics::CONTROL_SEABOTIX,1);
 
 //    Serial arduino;
 
 
-    ros::Rate looprate(10);
+    ros::Rate looprate(20);
     
     while(ros::ok())
     {

@@ -5,6 +5,9 @@
 #include <task_marker/resultheader.h>
 #include <task_marker/taskheader.h>
 
+
+using namespace std;
+
 typedef actionlib::SimpleActionClient<ip_msgs::markerAction> Client;
 
 void done_cb(const actionlib::SimpleClientGoalState& state,const ip_msgs::markerResultConstPtr& result)
@@ -32,6 +35,7 @@ int main(int argc, char ** argv)
     ip_msgs::markerGoal _goal;
     _goal.order = DETECT_MARKER;
 
+    cout << "detetct marker goal sent" << endl;
     _client.sendGoal(_goal,&done_cb,
                      &activeCb ,
                      &feedback_cb);
@@ -49,6 +53,7 @@ int main(int argc, char ** argv)
         _client.cancelGoal();
     }
     _goal.order = ALIGN_MARKER;
+    cout << "align marker goal sent" << endl;
     _client.sendGoal(_goal);
     _actionStatus = _client.waitForResult(ros::Duration(300.0));
     if(_actionStatus == true)

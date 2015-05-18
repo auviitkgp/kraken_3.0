@@ -48,11 +48,11 @@ if __name__ == '__main__':
     # add = [0X60,0X52,0X5A,0X50,0X5C,0X5E]
     # speed = [0X62,0X62,0X62,0X62,0X62,0X62]   5A  and 60 for depth and 
     # speedMax = [0X64,0X64,0X64,0X64,0X64,0X64] n   52 and 5C are surge thrusters
-    data = [[0x60,0xAA,0x64],  #depth Back
-	    [0x52,0xB0,0x64],  #Surge Left
-	    [0x5A,0xAA,0x64],  #depth Front
+    data = [[0x60,0xA0,0x64],  #depth Back
+	    [0x52,0xA0,0x64],  #Surge Left
+	    [0x5A,0xA0,0x64],  #depth Front
   	    [0x50,0x80,0x64],  
-	    [0x5C,0xAA,0x64],  #Surge Right
+	    [0x5C,0xA0,0x64],  #Surge Right
             [0x5E,0x62,0x64]]
 
     # add[0] = 50

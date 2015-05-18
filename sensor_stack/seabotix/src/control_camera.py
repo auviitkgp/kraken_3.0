@@ -25,28 +25,20 @@ goal = float(sys.argv[1])
 base_yaw = 0.0
 FIRST_ITERATION = True
 
-Kp_left = -2.5
-Kd_left = -5.25
-Ki_left = -2.25
+Kp_left = 0.127;
+Kd_left = 0.0016;
+Ki_left = 0.000;
 
-Kp_right = 2.5
-Kd_right = 5.25
-Ki_right = 2.25
-
-# Kp_left = 1.27;
-# Kd_left = 0.046;
-# Ki_left = 0.00;
-
-# Kp_right = -1.27;
-# Kd_right = -0.016;
-# Ki_right = -0.00;
+Kp_right = -0.127;
+Kd_right = -0.0016;
+Ki_right = -0.000;
 
 errorI = 0.0
 errorP = 0.0
 errorD = 0.0
 prevError = 0.0
 
-def imuCB(dataIn):
+def cameraCB(dataIn):
 	global yaw
 	global errorI
 	global errorP
@@ -76,7 +68,7 @@ if __name__ == '__main__':
 	thruster6Data=thrusterData6Thruster();
 	
 	rospy.init_node('Control', anonymous=True)
-	sub = rospy.Subscriber(topicHeader.SENSOR_IMU, imuData, imuCB)
+	sub = rospy.Subscriber('/kraken/buoy/coordinates/', 5, cameraCB)
 	pub4 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER4, thrusterData4Thruster, queue_size = 2)
 	pub6 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER6, thrusterData6Thruster, queue_size = 2)
 
@@ -88,7 +80,9 @@ if __name__ == '__main__':
 		thruster6Data.data[1] = 0.0
 		thruster6Data.data[2] = 0.0
 		thruster6Data.data[3] = 0.0
-		thruster6Data.data[4] = Kp_left*errorP + Kd_left*errorD + Ki_left*errorI
+
+		thrust_input = Kp_left*errorP + Kd_left*errorD + Ki_left*errorI
+		thruster6Data.data[4] = int(round(thrust_input, 0))
 		thruster6Data.data[5] = -1 * thruster6Data.data[4]
 		# thruster6Data.data[5] = Kp_right*errorP + Kd_right*errorD + Ki_right*errorI
 

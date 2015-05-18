@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#ZZ!/usr/bin/env python
 
 import os
 PKG = 'seabotix'
@@ -15,12 +15,36 @@ from resources import topicHeader
 
 dataString = ''
 
-
+import os
+import signal
 
 sb = serial.Serial('/dev/ttyACM0', 9600)
 
 #serial config
 sb.stopbits = 1
+
+
+def stopThrustersNow(signal, frame):
+
+    print "Stopping thrusters now!"
+    print os.getcwd()
+    data = [[0x60,0x80,0x50],  #depth Back
+	    [0x52,0x80,0x50],  #Surge Left
+	    [0x5A,0x80,0x50],  #depth Front
+  	    [0x50,0x80,0x50],  
+	    [0x5C,0x80,0x50],  #Surge Right
+        [0x5E,0x80,0x50]]
+    global sb
+    print "Cycle Started"
+    for i in range(0,6):
+        for j in range(0,3):
+            sb.write(str(chr(int(data[i][j]))))
+    	#print "Single Thuster Data-point completed." # Total 18 data-points
+		
+    print "All thrusters stopped"
+    
+    sb.close()
+    exit()
 
 
 def initSerial():
@@ -63,9 +87,11 @@ def seabotixCB(dataI):
     
 if __name__ == '__main__':
 
+    signal.signal(signal.SIGINT, stopThrustersNow)
+
     initSerial()
    
-    rospy.init_node('Thruster', anonymous=True)
+    rospy.init_node('seabotix_py_thrusters', anonymous=True)
     sub = rospy.Subscriber(topicHeader.CONTROL_SEABOTIX, seabotix, seabotixCB)
     
     
@@ -93,12 +119,11 @@ if __name__ == '__main__':
     
     print sb.readline()
     while not rospy.is_shutdown():
-	for i in range(0,6):
-		for j in range(0,3):
-	    		sb.write(str(chr(int(data[i][j]))))
-			print sb.readline()
-	
-        r.sleep()
+        for i in range(0,6):
+            for j in range(0,3):
+                sb.write(str(chr(int(data[i][j]))))
+			#print sb.readline()
+	    r.sleep()
         
     
     sb.close()

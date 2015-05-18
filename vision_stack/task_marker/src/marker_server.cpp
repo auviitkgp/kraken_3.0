@@ -5,7 +5,12 @@
 
 Marker::Marker(std::string name, std::string _threshold_filepath) : _it(_n), _s(_n, name, boost::bind(&Marker::executeCB, this, _1), false), _actionName(name)
 {
-    _sub = _it.subscribe(topics::CAMERA_BOTTOM_RAW_IMAGE, 1, &Marker::imageCallBack, this);
+	// camera is changed to frontcam for testing purpose 
+	// when bottomcam starts working it has to be changed to bottomcam
+
+    _sub = _it.subscribe(topics::CAMERA_FRONT_RAW_IMAGE, 1, &Marker::imageCallBack, this);
+    // _sub = _it.subscribe(topics::CAMERA_BOTTOM_RAW_IMAGE, 1, &Marker::imageCallBack, this);
+    
     // _pub = _it.advertise("/kraken/bottomcam/marker_image", 1);
     _pub = _it.advertise(topics::CAMERA_BOTTOM_MARKER_IMAGE, 1);
     marker_detect_status=false;
@@ -114,6 +119,12 @@ void Marker::executeCB(const ip_msgs::markerGoalConstPtr &_goal)
 
 void Marker::detectMarker()
 {
+    if (I.empty())
+    {
+        cout << "image not loaded..";
+        marker_detect_status = false;
+        return;
+    }
     cvtColor(I, I_hsv, CV_BGR2HSV);
     inRange(I_hsv, _lowerThresh, _upperThresh, I_bw);
     medianBlur(I_bw, I_bw, 3);
@@ -153,8 +164,16 @@ void Marker::detectMarker()
         if(contourArea(_contours[i])>400)
         {
            _minRect.push_back(minAreaRect( Mat(_contours[i])));
+           drawContours(I,_contours,i,Scalar(0,255,255),4);
             marker_detect_status=true;
+            cout << "marker detected.. " << endl;
         }
+    }
+
+    imshow("I",I);
+    if (cvWaitKey(33) == 27)
+    {
+        return;
     }
 }
 
@@ -162,7 +181,7 @@ void Marker::getAllignment()
 {
     for( int i = 0; i< _minRect.size(); i++ )
     {
-        Scalar _color = Scalar(  Scalar(255,0,0) );
+        Scalar _color = Scalar( Scalar(255,0,0) );
         Point2f _rectPoints[4];
         _minRect[i].points( _rectPoints );
         for( int j = 0; j < 4; j++ )

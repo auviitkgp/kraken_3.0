@@ -37,9 +37,13 @@ private:
     image_transport::Publisher _pub;
     actionmsg::buoyFeedback _feedback;
     actionmsg::buoyResult _result;
+    
+    ros::Publisher _buoy_coord_pub;
+    ros::NodeHandle _nh;
+
     Mat _image, _imageHSV, _imageBW, _imageBWRed, _imageBWGreen;
     Scalar _lowerThreshRed1, _lowerThreshRed2, _upperThreshRed1, _upperThreshRed2;
-    Scalar _lowerThreshGreen, _upperThreshGreen;
+    Scalar _lowerThreshGreen, _upperThreshGreen, _lowerThreshYellow, _upperThreshYellow;
     Mat _kernelDilateErode;
     std::string _actionName;
     cv_bridge::CvImage _finalImage;
@@ -48,6 +52,11 @@ private:
     vector<vector<Point> > _contoursPoly;
     vector<Point2f> _center;
     vector<float> _radius;
+    vector<Vec3f> circles;
+    vector<int> _fradius;
+    vector<Point> _fcenter;
+    int max ;
+    int index;
 public:
     Buoy(std::string _name);
     void executeCB(const actionmsg::buoyGoalConstPtr &_goal);
@@ -60,3 +69,4 @@ public:
 };
 
 #endif
+
