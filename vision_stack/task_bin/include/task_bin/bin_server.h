@@ -17,6 +17,7 @@ typedef actionlib::SimpleActionServer<actionmsg::binAction> Server;
 class Bin
 {
 private:
+	string DIR, path, tmp0, tmp1, tmp2, tmp3;
 	ros::NodeHandle _n;
 	Server _s;
 	image_transport::ImageTransport _it;

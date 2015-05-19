@@ -1,4 +1,5 @@
 #include <ros/ros.h>
+#include <ros/package.h>
 #include <task_bin/bin_server.h>
 #include <resources/topicHeader.h>
 
@@ -9,26 +10,31 @@ Bin::Bin(std::string name, int t): _it(_n), _s(_n, name, boost::bind(&Bin::execu
 {
 	_sub = _it.subscribe(topics::CAMERA_BOTTOM_RAW_IMAGE, 1, &Bin::imageCallBack, this);
   	_pub = _it.advertise(topics::CAMERA_BOTTOM_BIN_IMAGE, 1);
+  	DIR = ros::package::getPath("task_bin");
   	switch(t)
   	{
     	case 0:
     	{
-      		templ = imread("/home/kalyan/rosbuild_ws/kraken_3.0/vision_stack/task_bin/RoboSub2015_silhouettes1.png");
+    		path = DIR + "/RoboSub2015_silhouettes1.png";
+      		templ = imread(path);
       		break;
     	}
     	case 1:
     	{
-      		templ = imread("/home/kalyan/rosbuild_ws/kraken_3.0/vision_stack/task_bin/RoboSub2015_silhouettes2.png");
-      	break;
+    		path = DIR + "/RoboSub2015_silhouettes2.png";
+      		templ = imread(path);
+      		break;
     	}
     	case 2:
     	{
-      		templ = imread("/home/kalyan/rosbuild_ws/kraken_3.0/vision_stack/task_bin/RoboSub2015_silhouettes3.png");
+    		path = DIR + "/RoboSub2015_silhouettes3.png";
+      		templ = imread(path);
       		break;
     	}
     	case 3:
     	{
-      		templ = imread("/home/kalyan/rosbuild_ws/kraken_3.0/vision_stack/task_bin/RoboSub2015_silhouettes4.png");
+    		path = DIR + "/RoboSub2015_silhouettes4.png";
+      		templ = imread(path);
       		break;
     	}
   	}
@@ -94,11 +100,7 @@ bool Bin::tempMatch()
     result.create( result_rows, result_cols, CV_32FC1 );
 
     //Here, we are using SQDIFF_NORMED matching method
-
-    cout << img.depth() << "  " << templ.depth() << endl;
-    cout << img.channels() << "  " << templ.channels() << endl;
-
-
+    
     matchTemplate( img, templ, result, 1 );
     normalize( result, result, 0, 1, NORM_MINMAX, -1, Mat() );
 
@@ -139,7 +141,7 @@ int main(int argc, char ** argv)
     t = atoi(argv[1]);
   else
   {
-    ROS_INFO("An integer 1, 2, 3 or 4 must be passed as argument to get the template to be matched.\n");
+    ROS_INFO("An integer 0, 1, 2 or 3  must be passed as argument to get the template to be matched.\n");
     ros::shutdown();
   }
 
