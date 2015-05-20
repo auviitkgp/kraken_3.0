@@ -113,6 +113,7 @@ extern const char* CAMERA_FRONT_THEORA_PARAM_UPDATES;
 extern const char* CAMERA_FRONT_INFO;
 
 extern const char* CAMERA_FRONT_BUOY_IMAGE;
+extern const char* CAMERA_BOTTOM_BIN_IMAGE;
 
 extern const char* CAMERA_CAM_SWITCH;
 

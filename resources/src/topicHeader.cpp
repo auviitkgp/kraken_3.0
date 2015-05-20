@@ -67,7 +67,7 @@ namespace topics{
 
 
 	// pose server
-  const char* POSE_SERVER_STATE="/kraken/estimated/state";
+    const char* POSE_SERVER_STATE="/kraken/estimated/state";
 	const char* PRESENT_POSE="/kraken/estimated/position";
 
 	// absolute roll, pitch and yaw
@@ -106,6 +106,7 @@ namespace topics{
 	const char* CAMERA_FRONT_INFO="/kraken/front_camera_info";
 
 	const char* CAMERA_FRONT_BUOY_IMAGE="/kraken/front_camera/buoy_image";
+	const char* CAMERA_BOTTOM_BIN_IMAGE="/kraken/bottom_camera/bin_image";
 
 	const char* CAMERA_CAM_SWITCH="/kraken/camera/camera_switch";
 }

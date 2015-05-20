@@ -7,6 +7,8 @@
 #include <opencv/highgui.h>
 #include <actionmsg/binAction.h>
 
+
+
 using namespace std;
 using namespace cv;
 
@@ -15,6 +17,7 @@ typedef actionlib::SimpleActionServer<actionmsg::binAction> Server;
 class Bin
 {
 private:
+	string DIR, path;
 	ros::NodeHandle _n;
 	Server _s;
 	image_transport::ImageTransport _it;
@@ -24,11 +27,12 @@ private:
 	actionmsg::binFeedback _feedback;
 	actionmsg::binResult _result;
 	std::string _actionName;
+	Point templ_center;
 
 public:
 	Bin(string name, int t);
 	void executeCB(const actionmsg::binGoalConstPtr &_goal);
 	void imageCallBack(const sensor_msgs::ImageConstPtr &msg);
-	Point tempMatch(Mat feed_image, Mat templ);
-	~Bin();
+	bool tempMatch();
+	// ~Bin();
 };

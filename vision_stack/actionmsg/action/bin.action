@@ -7,3 +7,4 @@ int32[] sequence
 #feedback
 int32 errorx
 int32 errory
+bool bin_detect
