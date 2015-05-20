@@ -201,7 +201,7 @@ present6 = thrusterData6Thruster()
 previous6 = thrusterData6Thruster()
 THRUSTER_VALUES_CHANGED = False
 FIRST_ITERATION = True
-MIN_THRUST_INPUT = 2.0
+MIN_THRUST_INPUT = 10.0
 prev_time = 0.
 
 root.mainloop()
