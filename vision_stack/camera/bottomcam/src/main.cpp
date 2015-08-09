@@ -65,8 +65,6 @@ int main(int argc, char** argv)
       if (camObj.isOpen()) {
         _this_cam >> _image.image;
 
-        std::cout << "Entered this loop once.";
-
         // cv::imshow(_image.image);
 
         _publishImage = _image.toImageMsg();
