@@ -26,13 +26,13 @@
 #include <QtCore>
 class MyLabel : public QLabel
 {
-    
+
     Q_OBJECT
 public:
 Q_SIGNALS:
     //
     void on_mouseDoubleClickEvent(QMouseEvent * ev);
-    
+
 protected:
     void mouseDoubleClickEvent(QMouseEvent * ev)
     {

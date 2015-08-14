@@ -34,34 +34,36 @@
 ** Namespaces
 *****************************************************************************/
 
-namespace Telemetry {
-  
-  const double pi = 3.14159;
+namespace Telemetry
+{
+
+const double pi = 3.14159;
 
 /*****************************************************************************
 ** Class
 *****************************************************************************/
 
-  const std::string  _ros_topic_front_image=topics::CAMERA_FRONT_RAW_IMAGE;
-  const std::string  _ros_topic_bottom_image=topics::CAMERA_BOTTOM_RAW_IMAGE;
-  const std::string  _ros_topic_thruster_6_data=topics::CONTROL_PID_THRUSTER6;
-  const std::string  _ros_topic_thruster_4_data=topics::CONTROL_PID_THRUSTER4;
-  const std::string  _ros_topic_kraken_current_pose=topics::NAV_POSE_ESTIMATED;
-  const std::string  _ros_topic_kraken_set_pose=topics::RESET_POSITION_SERVICE;
-  
-class QNode : public QThread {
+const std::string  _ros_topic_front_image=topics::CAMERA_FRONT_RAW_IMAGE;
+const std::string  _ros_topic_bottom_image=topics::CAMERA_BOTTOM_RAW_IMAGE;
+const std::string  _ros_topic_thruster_6_data=topics::CONTROL_PID_THRUSTER6;
+const std::string  _ros_topic_thruster_4_data=topics::CONTROL_PID_THRUSTER4;
+const std::string  _ros_topic_kraken_current_pose=topics::NAV_POSE_ESTIMATED;
+const std::string  _ros_topic_kraken_set_pose=topics::RESET_POSITION_SERVICE;
+
+class QNode : public QThread
+{
     Q_OBJECT
 public:
-	QNode(int argc, char** argv );
-	virtual ~QNode();
-	bool init();
-	void run();
-	void callBackFrontImage(const sensor_msgs::ImageConstPtr &msg);
-	void callBackBottomImage(const sensor_msgs::ImageConstPtr &msg);
-	void callBackThruster6Data(const kraken_msgs::thrusterData6ThrusterConstPtr &msg);
-	void callBackThruster4Data(const kraken_msgs::thrusterData4ThrusterConstPtr &msg);
-	void callBackKrakenCurrentPose(const kraken_msgs::krakenPoseConstPtr &msg);
-	void callBackKrakenSetPose(const kraken_msgs::krakenPoseConstPtr &msg);
+    QNode(int argc, char** argv );
+    virtual ~QNode();
+    bool init();
+    void run();
+    void callBackFrontImage(const sensor_msgs::ImageConstPtr &msg);
+    void callBackBottomImage(const sensor_msgs::ImageConstPtr &msg);
+    void callBackThruster6Data(const kraken_msgs::thrusterData6ThrusterConstPtr &msg);
+    void callBackThruster4Data(const kraken_msgs::thrusterData4ThrusterConstPtr &msg);
+    void callBackKrakenCurrentPose(const kraken_msgs::krakenPoseConstPtr &msg);
+    void callBackKrakenSetPose(const kraken_msgs::krakenPoseConstPtr &msg);
 Q_SIGNALS:
     void rosShutdown();
     void updateCurrentPose(kraken_msgs::krakenPoseConstPtr msg);
@@ -70,14 +72,14 @@ Q_SIGNALS:
     void updateBottomImage(sensor_msgs::ImageConstPtr _msg);
 
 private:
-	int init_argc;
-	char** init_argv;
-	ros::Subscriber _ros_subscriber_front_image;
-	ros::Subscriber _ros_subscriber_bottom_image;
-	ros::Subscriber _ros_subscriber_thruster_4_data;
-	ros::Subscriber _ros_subscriber_thruster_6_data;
-	ros::Subscriber _ros_subscriber_kraken_current_pose;
-	ros::Subscriber _ros_subscriber_set_pose;
+    int init_argc;
+    char** init_argv;
+    ros::Subscriber _ros_subscriber_front_image;
+    ros::Subscriber _ros_subscriber_bottom_image;
+    ros::Subscriber _ros_subscriber_thruster_4_data;
+    ros::Subscriber _ros_subscriber_thruster_6_data;
+    ros::Subscriber _ros_subscriber_kraken_current_pose;
+    ros::Subscriber _ros_subscriber_set_pose;
 };
 
 }  // namespace App

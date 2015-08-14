@@ -23,7 +23,8 @@
 *****************************************************************************/
 Q_DECLARE_METATYPE(kraken_msgs::krakenPoseConstPtr);
 Q_DECLARE_METATYPE(kraken_msgs::forceData6ThrusterConstPtr);
-namespace gui_template {
+namespace gui_template
+{
 
 /*****************************************************************************
 ** Interface [MainWindow]
@@ -31,28 +32,29 @@ namespace gui_template {
 /**
  * @brief Qt central, all operations relating to the view part here.
  */
-class MainWindow : public QMainWindow {
-Q_OBJECT
+class MainWindow : public QMainWindow
+{
+    Q_OBJECT
 
 public:
-	MainWindow(int argc, char** argv, QWidget *parent = 0);
-	~MainWindow();
+    MainWindow(int argc, char** argv, QWidget *parent = 0);
+    ~MainWindow();
 
-	void ReadSettings(); // Load up qt program settings at startup
-	void WriteSettings(); // Save qt program settings when closing
+    void ReadSettings(); // Load up qt program settings at startup
+    void WriteSettings(); // Save qt program settings when closing
 
     void closeEvent(QCloseEvent *event); // Overloaded function
 
 
 
 public Q_SLOTS:
-	/******************************************
-	** Auto-connections (connectSlotsByName())
-	*******************************************/
-	void on_actionAbout_triggered();
-        /******************************************
-        ** Manual connections
-        *******************************************/
+    /******************************************
+    ** Auto-connections (connectSlotsByName())
+    *******************************************/
+    void on_actionAbout_triggered();
+    /******************************************
+    ** Manual connections
+    *******************************************/
     void state_update(const kraken_msgs::krakenPoseConstPtr &msg);
     void force_update(const kraken_msgs::forceData6ThrusterConstPtr& msg);
     void controllerButtonClicked();
@@ -67,7 +69,7 @@ Q_SIGNALS:
     void callPauseService();
 private:
     Ui::MainWindowDesign ui;
-	QNode qnode;
+    QNode qnode;
 };
 
 }  // namespace App

@@ -23,7 +23,8 @@
 ** Namespace
 *****************************************************************************/
 
-namespace gui_template {
+namespace gui_template
+{
 
 /*****************************************************************************
 ** Interface [MainWindow]
@@ -38,29 +39,30 @@ const std::string MOVE_DEPTH="depth.cp";
 const std::string STOP="Pause.cp";
 const std::string DEFAULT="Test.cp";
 
-class MainWindow : public QMainWindow {
-Q_OBJECT
+class MainWindow : public QMainWindow
+{
+    Q_OBJECT
 
 public:
-	MainWindow(int argc, char** argv, QWidget *parent = 0);
-	~MainWindow();
+    MainWindow(int argc, char** argv, QWidget *parent = 0);
+    ~MainWindow();
 
-	void ReadSettings(); // Load up qt program settings at startup
-	void WriteSettings(); // Save qt program settings when closing
+    void ReadSettings(); // Load up qt program settings at startup
+    void WriteSettings(); // Save qt program settings when closing
 
-	void closeEvent(QCloseEvent *event); // Overloaded function
+    void closeEvent(QCloseEvent *event); // Overloaded function
 
 Q_SIGNALS:
     void callService(std::string name);
 
 public Q_SLOTS:
-	/******************************************
-	** Auto-connections (connectSlotsByName())
-	*******************************************/
-	void on_actionAbout_triggered();
-        /******************************************
-        ** Manual connections
-      *******************************************/
+    /******************************************
+    ** Auto-connections (connectSlotsByName())
+    *******************************************/
+    void on_actionAbout_triggered();
+    /******************************************
+    ** Manual connections
+    *******************************************/
     void pushButtonclicked();
     void moveForwar();
     void moveBack();
@@ -68,8 +70,8 @@ public Q_SLOTS:
     void stop();
 private:
     QFile file;
-	Ui::MainWindowDesign ui;
-	QNode qnode;
+    Ui::MainWindowDesign ui;
+    QNode qnode;
     std::string pathname;
 
 };

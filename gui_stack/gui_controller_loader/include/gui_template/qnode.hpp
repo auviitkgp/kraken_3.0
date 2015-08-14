@@ -31,7 +31,8 @@
 ** Namespaces
 *****************************************************************************/
 
-namespace gui_template {
+namespace gui_template
+{
 
 /*****************************************************************************
 ** Class
@@ -39,36 +40,37 @@ namespace gui_template {
 const std::string PARAM_SAVER="paramSaver.cp";
 const std::pair<int,int>
 
-    OFF_YAW(4,0),
-    KP_YAW(4,17),
-    KD_YAW(4,20),
-    KI_YAW(4,14),
-    KP_YAW_NEG(5,17),
-    KD_YAW_NEG(5,20),
-    KI_YAW_NEG(5,14),
+OFF_YAW(4,0),
+        KP_YAW(4,17),
+        KD_YAW(4,20),
+        KI_YAW(4,14),
+        KP_YAW_NEG(5,17),
+        KD_YAW_NEG(5,20),
+        KI_YAW_NEG(5,14),
 
 
-    //bottom----- pitch is positive
-    off_dep_bot(0,0),
-    Kib_depth(0,13),
-    Kpb_depth(0,16),
-    Kdb_depth(0,19),
+        //bottom----- pitch is positive
+        off_dep_bot(0,0),
+        Kib_depth(0,13),
+        Kpb_depth(0,16),
+        Kdb_depth(0,19),
 
 
 
-    off_dep_top(1,0),
-    Kit_depth(1,13),
-    Kpt_depth(1,16),
-    Kdt_depth(1,19)
-    ;
-class QNode : public QThread {
+        off_dep_top(1,0),
+        Kit_depth(1,13),
+        Kpt_depth(1,16),
+        Kdt_depth(1,19)
+        ;
+class QNode : public QThread
+{
     Q_OBJECT
 public:
     QNode(int argc, char** argv,std::string* );
 
-	virtual ~QNode();
-	bool init();
-	void run();
+    virtual ~QNode();
+    bool init();
+    void run();
 public Q_SLOTS:
     void loadParamCB(std::string name);
 
@@ -78,9 +80,9 @@ Q_SIGNALS:
     void rosShutdown();
 
 private:
-	int init_argc;
-	char** init_argv;
-	ros::Publisher chatter_publisher;
+    int init_argc;
+    char** init_argv;
+    ros::Publisher chatter_publisher;
     ros::ServiceClient client;
 
     dynamic_reconfigure::Server<gui_controller_loader::paramsConfig> *dyn_server;

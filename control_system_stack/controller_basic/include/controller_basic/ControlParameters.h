@@ -5,53 +5,53 @@
 
 namespace kraken_controller
 {
-  class ControlParameters
-  {
-    public:
-      ControlParameters(int row=6,int col=21);
-      void load(const std::string &filename);
-      void load(int *[21]);
+class ControlParameters
+{
+public:
+    ControlParameters(int row=6,int col=21);
+    void load(const std::string &filename);
+    void load(int *[21]);
 
 
-      inline float** getGain()
-      {
+    inline float** getGain()
+    {
         return _gain;
-      }
+    }
 
-      inline float* getOffset()
-      {
+    inline float* getOffset()
+    {
         return _offset;
-      }
-      inline const std::string getName()
-      {
+    }
+    inline const std::string getName()
+    {
         return _name;
-      }
-      inline int getRows()
-      {
-          return _row;
-      }
-      inline int getColumns()
-      {
-          return _col;
-      }
+    }
+    inline int getRows()
+    {
+        return _row;
+    }
+    inline int getColumns()
+    {
+        return _col;
+    }
 
-      virtual ~ControlParameters();
-      void write(FILE *fp);
-      void write(std::ostream &out);
+    virtual ~ControlParameters();
+    void write(FILE *fp);
+    void write(std::ostream &out);
 
-    private:
-       
-       
-       
-       
-       
-    protected:
-      float** _gain;
-      float* _offset;
-      int _row;
-      int _col;
-      std::string _name;
-  };
+private:
+
+
+
+
+
+protected:
+    float** _gain;
+    float* _offset;
+    int _row;
+    int _col;
+    std::string _name;
+};
 }
 
 #endif // CONTROLPARAMETERS_H

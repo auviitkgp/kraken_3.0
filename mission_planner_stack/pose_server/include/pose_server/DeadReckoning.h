@@ -6,11 +6,11 @@
 
 namespace kraken_core
 {
-  class DeadReckoning : public Estimator
-  {
-    public:
+class DeadReckoning : public Estimator
+{
+public:
     DeadReckoning(int size=2,float time=0.05);
-    virtual ~DeadReckoning(){}
+    virtual ~DeadReckoning() {}
     /*
      * Function to update pose using only IMU data
      */
@@ -31,7 +31,7 @@ namespace kraken_core
      * Function to reset position
      */
     virtual void resetPose(KrakenPose &);
-    private:
+private:
     /*
      * Function to update current position with depth data
      */
@@ -41,7 +41,7 @@ namespace kraken_core
      */
     void updateCurrentPosition();
     /*
-     * Function to update current velocity 
+     * Function to update current velocity
      */
     void updateCurrentVelocity();
     void updateCurrentVelocity(kraken_msgs::dvlData & dvl_data);
@@ -51,8 +51,8 @@ namespace kraken_core
      */
 
     void updateCurrentAccelaration(kraken_msgs::imuData &);
-    protected:
-  };
+protected:
+};
 }
 
 #endif // DEADRECKONING_H

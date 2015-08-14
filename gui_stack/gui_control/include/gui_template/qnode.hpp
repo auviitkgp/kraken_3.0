@@ -36,7 +36,8 @@
 ** Namespaces
 *****************************************************************************/
 
-namespace gui_template {
+namespace gui_template
+{
 
 /*****************************************************************************
 ** Class
@@ -45,13 +46,14 @@ namespace gui_template {
 typedef actionlib::SimpleActionClient<kraken_msgs::advancedControllerAction> _advancedControllerClientType;
 typedef actionlib::SimpleActionClient<kraken_msgs::controllerAction> _controllerClientType;
 
-class QNode : public QThread {
+class QNode : public QThread
+{
     Q_OBJECT
 public:
     QNode(int argc, char** argv ,Ui::MainWindowDesign &uir);
-	virtual ~QNode();
-	bool init();
-	void run();
+    virtual ~QNode();
+    bool init();
+    void run();
     void callBackStatePub(const kraken_msgs::krakenPoseConstPtr& msg);
     void callBackForcePub(const kraken_msgs::forceData6ThrusterConstPtr& msg);
 
@@ -73,9 +75,9 @@ public Q_SLOTS:
     void moveAlongCB(float angle);
     void pauseCB();
 private:
-	int init_argc;
-	char** init_argv;
-	ros::Publisher chatter_publisher;
+    int init_argc;
+    char** init_argv;
+    ros::Publisher chatter_publisher;
     ros::Subscriber _state_sub,_forceData_sub,_advGoalSub,_advFeedSub,_advStatusSub;
     _advancedControllerClientType* _advancedControllerClient;
     _controllerClientType* _controllerClient;

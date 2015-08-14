@@ -24,38 +24,38 @@
 #include <control_server/loadParam.h>
 namespace kraken_controller
 {
-  class ControlServer
-  {
-    public:
-      ControlServer(float freq=10.0);
-      void loadParams(const std::vector<std::string> &filenames);
-      void timeCallBack(const ros::TimerEvent&);
-      void setServers(actionlib::SimpleActionServer<kraken_msgs::advancedControllerAction>*,actionlib::SimpleActionServer<kraken_msgs::controllerAction>*);
-      void poseFeedBack(const kraken_msgs::krakenPose::ConstPtr &msg);
-      void ipErrorFeedBack(const kraken_msgs::ipControllererror::ConstPtr &msg);
-      bool moveAlongLine(kraken_msgs::moveAlongLine::Request  &req,
-                         kraken_msgs::moveAlongLine::Response &res);
-      bool changeController(kraken_msgs::switchControllers::Request  &req,
-                         kraken_msgs::switchControllers::Response &res);
-      void executePoseChange( const kraken_msgs::advancedControllerGoalConstPtr &msg);
-      void executeOrientationChange(const kraken_msgs::controllerGoalConstPtr &msg);
-      bool loadParamsCB(control_server::loadParam::Request &req, control_server::loadParam::Response &res);
-      virtual ~ControlServer();
-    protected:
-      
-    private:
-      
-      ros::Publisher _pub,_pub6,_set_point;
-      ros::Subscriber _sub_pose;
-      ros::Subscriber _sub_ip_error;
-      ros::Timer _time;
-      AuvController _controller;
-      kraken_msgs::krakenPose _feedBack;
-      bool _do_control;
-      actionlib::SimpleActionServer<kraken_msgs::advancedControllerAction> *_server1;
-      actionlib::SimpleActionServer<kraken_msgs::controllerAction> *_server2;
-      bool _ip_controller;
-  };
+class ControlServer
+{
+public:
+    ControlServer(float freq=10.0);
+    void loadParams(const std::vector<std::string> &filenames);
+    void timeCallBack(const ros::TimerEvent&);
+    void setServers(actionlib::SimpleActionServer<kraken_msgs::advancedControllerAction>*,actionlib::SimpleActionServer<kraken_msgs::controllerAction>*);
+    void poseFeedBack(const kraken_msgs::krakenPose::ConstPtr &msg);
+    void ipErrorFeedBack(const kraken_msgs::ipControllererror::ConstPtr &msg);
+    bool moveAlongLine(kraken_msgs::moveAlongLine::Request  &req,
+                       kraken_msgs::moveAlongLine::Response &res);
+    bool changeController(kraken_msgs::switchControllers::Request  &req,
+                          kraken_msgs::switchControllers::Response &res);
+    void executePoseChange( const kraken_msgs::advancedControllerGoalConstPtr &msg);
+    void executeOrientationChange(const kraken_msgs::controllerGoalConstPtr &msg);
+    bool loadParamsCB(control_server::loadParam::Request &req, control_server::loadParam::Response &res);
+    virtual ~ControlServer();
+protected:
+
+private:
+
+    ros::Publisher _pub,_pub6,_set_point;
+    ros::Subscriber _sub_pose;
+    ros::Subscriber _sub_ip_error;
+    ros::Timer _time;
+    AuvController _controller;
+    kraken_msgs::krakenPose _feedBack;
+    bool _do_control;
+    actionlib::SimpleActionServer<kraken_msgs::advancedControllerAction> *_server1;
+    actionlib::SimpleActionServer<kraken_msgs::controllerAction> *_server2;
+    bool _ip_controller;
+};
 }
 
 #endif // CONTROLSERVER_H
