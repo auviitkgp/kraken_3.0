@@ -22,6 +22,7 @@ int main(int argc,char** argv)
     // send a goal to the action
     kraken_msgs::advancedControllerGoal goal;
     kraken_msgs::controllerGoal goal1;
+
     if(atoi(argv[1])==1)
     {
         goal.flag = atof(argv[2]);
@@ -71,5 +72,6 @@ int main(int argc,char** argv)
             ROS_INFO("Action did not finish before the time out.");
         }
     }
+
     return 0;
 }

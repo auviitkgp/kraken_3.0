@@ -11,14 +11,14 @@ using namespace cv;
 
 int main(int argc, char ** argv)
 {
-	ros::init(argc, argv, "videoread");
+    ros::init(argc, argv, "videoread");
 
     if(argc != 3)
     {
         cout << "videoread : Requires 1) video file path, 2)target topic name as arguments." << endl;
         ros::shutdown();
     }
-    
+
     std::string _videopath = argv[1];
     std::string _topicname = argv[2];
 
@@ -30,6 +30,7 @@ int main(int argc, char ** argv)
     ros::Rate _looprate(10);
 
     VideoCapture _camera(_videopath.c_str());
+
     if(_camera.isOpened())
     {
         ROS_INFO("Video file opened successfully");
@@ -51,6 +52,6 @@ int main(int argc, char ** argv)
         ros::spinOnce();
     }
 
-	return 0;
+    return 0;
 }
 

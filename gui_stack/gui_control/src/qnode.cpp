@@ -22,44 +22,50 @@
 ** Namespaces
 *****************************************************************************/
 
-namespace gui_template {
+namespace gui_template
+{
 
 /*****************************************************************************
 ** Implementation
 *****************************************************************************/
 
 QNode::QNode(int argc, char** argv, Ui::MainWindowDesign &uir ) :
-	init_argc(argc),
+    init_argc(argc),
     init_argv(argv),
     ui(uir)
-	{}
+{}
 
-QNode::~QNode() {
-    if(ros::isStarted()) {
-      ros::shutdown(); // explicitly needed since we use ros::start();
-      ros::waitForShutdown();
+QNode::~QNode()
+{
+    if(ros::isStarted())
+    {
+        ros::shutdown(); // explicitly needed since we use ros::start();
+        ros::waitForShutdown();
     }
-	wait();
+
+    wait();
 }
 
-bool QNode::init() {
+bool QNode::init()
+{
     ros::init(init_argc,init_argv,"Control_gui");
-	ros::start(); // explicitly needed since our nodehandle is going out of scope.
-	ros::NodeHandle n;
-	// Add your ros communications here.
+    ros::start(); // explicitly needed since our nodehandle is going out of scope.
+    ros::NodeHandle n;
+    // Add your ros communications here.
 
-  //_ros_subscriber_thruster_6_data = n.subscribe<kraken_msgs::thrusterData6Thruster>(_ros_topic_thruster_6_data.c_str(),1,&QNode::callBackThruster6Data,this);
+    //_ros_subscriber_thruster_6_data = n.subscribe<kraken_msgs::thrusterData6Thruster>(_ros_topic_thruster_6_data.c_str(),1,&QNode::callBackThruster6Data,this);
     _controllerClient=new _controllerClientType(topics::CONTROL_SETPOINT_ACTION,true);
     _advancedControllerClient=new _advancedControllerClientType(topics::CONTROL_ADVANCEDCONTROLLER_ACTION,true);
     _state_sub=n.subscribe<kraken_msgs::krakenPose>(topics::NAV_POSE_ESTIMATED,5,&QNode::callBackStatePub,this);
     _forceData_sub=n.subscribe<kraken_msgs::forceData6Thruster>(topics::SIMULATOR_MODEL_FORCE_DATA_6_THRUSTERS,5,&QNode::callBackForcePub,this);
     _movealongLineSrv=n.serviceClient<kraken_msgs::moveAlongLine>(topics::CONTROL_MOVEALONG_SERV);
-	start();
-	return true;
+    start();
+    return true;
 }
 
 
-void QNode::run() {
+void QNode::run()
+{
     ros::spin();
     std::cout << "Ros shutdown, proceeding to close the gui." << std::endl;
     Q_EMIT rosShutdown(); // used to signal the gui for a shutdown (useful to roslaunch)
@@ -122,13 +128,16 @@ void QNode::moveAlongCB(float angle)
     kraken_msgs::moveAlongLine srv;
     srv.request.angle=angle;
     srv.request.type=1;//0 to pause and 1 to move
+
     if(_movealongLineSrv.call(srv))
     {
         QString str=QString::number(angle);
         ui.textBrowser->append("moving along line with angle clockwise "+str+"\n");
     }
     else
+    {
         ui.textBrowser->append("error in calling move along service!!!!");
+    }
 
 }
 
@@ -136,12 +145,15 @@ void QNode::pauseCB()
 {
     kraken_msgs::moveAlongLine srv;
     srv.request.type=0;
+
     if(_movealongLineSrv.call(srv))
     {
         ui.textBrowser->append("vehicle stopped moving");
     }
     else
+    {
         ui.textBrowser->append("error in stopping vehicle!!!!");
+    }
 }
 
 

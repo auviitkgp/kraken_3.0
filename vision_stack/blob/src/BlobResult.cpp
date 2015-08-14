@@ -1,10 +1,10 @@
 /************************************************************************
   			BlobResult.cpp
-  			
+
 FUNCIONALITAT: Implementació de la classe CBlobResult
 AUTOR: Inspecta S.L.
 MODIFICACIONS (Modificació, Autor, Data):
- 
+
 **************************************************************************/
 
 #include <limits.h>
@@ -15,8 +15,8 @@ MODIFICACIONS (Modificació, Autor, Data):
 
 //! Show errors functions: only works for windows releases
 #ifdef _SHOW_ERRORS
-	#include <afx.h>			//suport per a CStrings
-	#include <afxwin.h>			//suport per a AfxMessageBox
+#include <afx.h>			//suport per a CStrings
+#include <afxwin.h>			//suport per a AfxMessageBox
 #endif
 
 /**************************************************************************
@@ -48,17 +48,17 @@ MODIFICACIONS (Modificació, Autor, Data):
 */
 CBlobResult::CBlobResult()
 {
-	m_blobs = Blob_vector();
+    m_blobs = Blob_vector();
 }
 
 /**
 - FUNCIÓ: CBlobResult
-- FUNCIONALITAT: Constructor a partir d'una imatge. Inicialitza la seqüència de blobs 
+- FUNCIONALITAT: Constructor a partir d'una imatge. Inicialitza la seqüència de blobs
 			   amb els blobs resultants de l'anàlisi de blobs de la imatge.
 - PARÀMETRES:
 	- source: imatge d'on s'extreuran els blobs
-	- mask: màscara a aplicar. Només es calcularan els blobs on la màscara sigui 
-			diferent de 0. Els blobs que toquin a un pixel 0 de la màscara seran 
+	- mask: màscara a aplicar. Només es calcularan els blobs on la màscara sigui
+			diferent de 0. Els blobs que toquin a un pixel 0 de la màscara seran
 			considerats exteriors.
 	- threshold: llindar que s'aplicarà a la imatge source abans de calcular els blobs
 	- findmoments: indica si s'han de calcular els moments de cada blob
@@ -94,23 +94,26 @@ CBlobResult::CBlobResult()
 */
 CBlobResult::CBlobResult(IplImage *source, IplImage *mask, uchar backgroundColor )
 {
-	bool success;
+    bool success;
 
-	try
-	{
-		success = ComponentLabeling( source, mask, backgroundColor, m_blobs );
-	}
-	catch(...)
-	{
-		success = false;
-	}
+    try
+    {
+        success = ComponentLabeling( source, mask, backgroundColor, m_blobs );
+    }
+    catch(...)
+    {
+        success = false;
+    }
 
-	if( !success ) throw EXCEPCIO_CALCUL_BLOBS;
+    if( !success )
+    {
+        throw EXCEPCIO_CALCUL_BLOBS;
+    }
 }
 
 /**
 - FUNCIÓ: CBlobResult
-- FUNCIONALITAT: Constructor de còpia. Inicialitza la seqüència de blobs 
+- FUNCIONALITAT: Constructor de còpia. Inicialitza la seqüència de blobs
 			   amb els blobs del paràmetre.
 - PARÀMETRES:
 	- source: objecte que es copiarà
@@ -134,23 +137,23 @@ CBlobResult::CBlobResult(IplImage *source, IplImage *mask, uchar backgroundColor
 */
 CBlobResult::CBlobResult( const CBlobResult &source )
 {
-	m_blobs = Blob_vector( source.GetNumBlobs() );
-	
-	// creem el nou a partir del passat com a paràmetre
-	m_blobs = Blob_vector( source.GetNumBlobs() );
-	// copiem els blobs de l'origen a l'actual
-	Blob_vector::const_iterator pBlobsSrc = source.m_blobs.begin();
-	Blob_vector::iterator pBlobsDst = m_blobs.begin();
+    m_blobs = Blob_vector( source.GetNumBlobs() );
 
-	while( pBlobsSrc != source.m_blobs.end() )
-	{
-		// no podem cridar a l'operador = ja que Blob_vector és un 
-		// vector de CBlob*. Per tant, creem un blob nou a partir del
-		// blob original
-		*pBlobsDst = new CBlob(**pBlobsSrc);
-		pBlobsSrc++;
-		pBlobsDst++;
-	}
+    // creem el nou a partir del passat com a paràmetre
+    m_blobs = Blob_vector( source.GetNumBlobs() );
+    // copiem els blobs de l'origen a l'actual
+    Blob_vector::const_iterator pBlobsSrc = source.m_blobs.begin();
+    Blob_vector::iterator pBlobsDst = m_blobs.begin();
+
+    while( pBlobsSrc != source.m_blobs.end() )
+    {
+        // no podem cridar a l'operador = ja que Blob_vector és un
+        // vector de CBlob*. Per tant, creem un blob nou a partir del
+        // blob original
+        *pBlobsDst = new CBlob(**pBlobsSrc);
+        pBlobsSrc++;
+        pBlobsDst++;
+    }
 }
 
 
@@ -178,7 +181,7 @@ CBlobResult::CBlobResult( const CBlobResult &source )
 */
 CBlobResult::~CBlobResult()
 {
-	ClearBlobs();
+    ClearBlobs();
 }
 
 /**************************************************************************
@@ -200,7 +203,7 @@ CBlobResult::~CBlobResult()
 */
 /**
 - FUNCTION: Assigment operator
-- FUNCTIONALITY: 
+- FUNCTIONALITY:
 - PARAMETERS:
 - RESULT:
 - RESTRICTIONS:
@@ -210,32 +213,34 @@ CBlobResult::~CBlobResult()
 */
 CBlobResult& CBlobResult::operator=(const CBlobResult& source)
 {
-	// si ja són el mateix, no cal fer res
-	if (this != &source)
-	{
-		// alliberem el conjunt de blobs antic
-		for( int i = 0; i < GetNumBlobs(); i++ )
-		{
-			delete m_blobs[i];
-		}
-		m_blobs.clear();
-		// creem el nou a partir del passat com a paràmetre
-		m_blobs = Blob_vector( source.GetNumBlobs() );
-		// copiem els blobs de l'origen a l'actual
-		Blob_vector::const_iterator pBlobsSrc = source.m_blobs.begin();
-		Blob_vector::iterator pBlobsDst = m_blobs.begin();
+    // si ja són el mateix, no cal fer res
+    if (this != &source)
+    {
+        // alliberem el conjunt de blobs antic
+        for( int i = 0; i < GetNumBlobs(); i++ )
+        {
+            delete m_blobs[i];
+        }
 
-		while( pBlobsSrc != source.m_blobs.end() )
-		{
-			// no podem cridar a l'operador = ja que Blob_vector és un 
-			// vector de CBlob*. Per tant, creem un blob nou a partir del
-			// blob original
-			*pBlobsDst = new CBlob(**pBlobsSrc);
-			pBlobsSrc++;
-			pBlobsDst++;
-		}
-	}
-	return *this;
+        m_blobs.clear();
+        // creem el nou a partir del passat com a paràmetre
+        m_blobs = Blob_vector( source.GetNumBlobs() );
+        // copiem els blobs de l'origen a l'actual
+        Blob_vector::const_iterator pBlobsSrc = source.m_blobs.begin();
+        Blob_vector::iterator pBlobsDst = m_blobs.begin();
+
+        while( pBlobsSrc != source.m_blobs.end() )
+        {
+            // no podem cridar a l'operador = ja que Blob_vector és un
+            // vector de CBlob*. Per tant, creem un blob nou a partir del
+            // blob original
+            *pBlobsDst = new CBlob(**pBlobsSrc);
+            pBlobsSrc++;
+            pBlobsDst++;
+        }
+    }
+
+    return *this;
 }
 
 
@@ -265,26 +270,26 @@ CBlobResult& CBlobResult::operator=(const CBlobResult& source)
 - MODIFICATION: Date. Author. Description.
 */
 CBlobResult CBlobResult::operator+( const CBlobResult& source ) const
-{	
-	//creem el resultat a partir dels blobs actuals
-	CBlobResult resultat( *this );
-	
-	// reservem memòria per als nous blobs
-	resultat.m_blobs.resize( resultat.GetNumBlobs() + source.GetNumBlobs() );
+{
+    //creem el resultat a partir dels blobs actuals
+    CBlobResult resultat( *this );
 
-	// declarem els iterador per recòrrer els blobs d'origen i desti
-	Blob_vector::const_iterator pBlobsSrc = source.m_blobs.begin();
-	Blob_vector::iterator pBlobsDst = resultat.m_blobs.end();
+    // reservem memòria per als nous blobs
+    resultat.m_blobs.resize( resultat.GetNumBlobs() + source.GetNumBlobs() );
 
-	// insertem els blobs de l'origen a l'actual
-	while( pBlobsSrc != source.m_blobs.end() )
-	{
-		pBlobsDst--;
-		*pBlobsDst = new CBlob(**pBlobsSrc);
-		pBlobsSrc++;
-	}
-	
-	return resultat;
+    // declarem els iterador per recòrrer els blobs d'origen i desti
+    Blob_vector::const_iterator pBlobsSrc = source.m_blobs.begin();
+    Blob_vector::iterator pBlobsDst = resultat.m_blobs.end();
+
+    // insertem els blobs de l'origen a l'actual
+    while( pBlobsSrc != source.m_blobs.end() )
+    {
+        pBlobsDst--;
+        *pBlobsDst = new CBlob(**pBlobsSrc);
+        pBlobsSrc++;
+    }
+
+    return resultat;
 }
 
 /**************************************************************************
@@ -305,8 +310,10 @@ CBlobResult CBlobResult::operator+( const CBlobResult& source ) const
 */
 void CBlobResult::AddBlob( CBlob *blob )
 {
-	if( blob != NULL )
-		m_blobs.push_back( new CBlob( blob ) );
+    if( blob != NULL )
+    {
+        m_blobs.push_back( new CBlob( blob ) );
+    }
 }
 
 
@@ -329,7 +336,7 @@ void CBlobResult::AddBlob( CBlob *blob )
 - FUNCTIONALITY: Computes the function evaluador on all the blobs of the class
 				 and returns a vector with the result
 - PARAMETERS:
-	- evaluador: function to apply to each blob (any object derived from the 
+	- evaluador: function to apply to each blob (any object derived from the
 				 COperadorBlob class )
 - RESULT:
 	- vector with all the results in the same order as the blobs
@@ -340,25 +347,26 @@ void CBlobResult::AddBlob( CBlob *blob )
 */
 double_vector CBlobResult::GetResult( funcio_calculBlob *evaluador ) const
 {
-	if( GetNumBlobs() <= 0 )
-	{
-		return double_vector();
-	}
+    if( GetNumBlobs() <= 0 )
+    {
+        return double_vector();
+    }
 
-	// definim el resultat
-	double_vector result = double_vector( GetNumBlobs() );
-	// i iteradors sobre els blobs i el resultat
-	double_vector::iterator itResult = result.GetIterator();
-	Blob_vector::const_iterator itBlobs = m_blobs.begin();
+    // definim el resultat
+    double_vector result = double_vector( GetNumBlobs() );
+    // i iteradors sobre els blobs i el resultat
+    double_vector::iterator itResult = result.GetIterator();
+    Blob_vector::const_iterator itBlobs = m_blobs.begin();
 
-	// avaluem la funció en tots els blobs
-	while( itBlobs != m_blobs.end() )
-	{
-		*itResult = (*evaluador)(**itBlobs);
-		itBlobs++;
-		itResult++;
-	}
-	return result;
+    // avaluem la funció en tots els blobs
+    while( itBlobs != m_blobs.end() )
+    {
+        *itResult = (*evaluador)(**itBlobs);
+        itBlobs++;
+        itResult++;
+    }
+
+    return result;
 }
 #endif
 
@@ -379,7 +387,7 @@ double_vector CBlobResult::GetResult( funcio_calculBlob *evaluador ) const
 - FUNCTIONALITY: Computes the function evaluador on all the blobs of the class
 				 and returns a vector with the result
 - PARAMETERS:
-	- evaluador: function to apply to each blob (any object derived from the 
+	- evaluador: function to apply to each blob (any object derived from the
 				 COperadorBlob class )
 - RESULT:
 	- vector with all the results in the same order as the blobs
@@ -390,25 +398,26 @@ double_vector CBlobResult::GetResult( funcio_calculBlob *evaluador ) const
 */
 double_stl_vector CBlobResult::GetSTLResult( funcio_calculBlob *evaluador ) const
 {
-	if( GetNumBlobs() <= 0 )
-	{
-		return double_stl_vector();
-	}
+    if( GetNumBlobs() <= 0 )
+    {
+        return double_stl_vector();
+    }
 
-	// definim el resultat
-	double_stl_vector result = double_stl_vector( GetNumBlobs() );
-	// i iteradors sobre els blobs i el resultat
-	double_stl_vector::iterator itResult = result.begin();
-	Blob_vector::const_iterator itBlobs = m_blobs.begin();
+    // definim el resultat
+    double_stl_vector result = double_stl_vector( GetNumBlobs() );
+    // i iteradors sobre els blobs i el resultat
+    double_stl_vector::iterator itResult = result.begin();
+    Blob_vector::const_iterator itBlobs = m_blobs.begin();
 
-	// avaluem la funció en tots els blobs
-	while( itBlobs != m_blobs.end() )
-	{
-		*itResult = (*evaluador)(**itBlobs);
-		itBlobs++;
-		itResult++;
-	}
-	return result;
+    // avaluem la funció en tots els blobs
+    while( itBlobs != m_blobs.end() )
+    {
+        *itResult = (*evaluador)(**itBlobs);
+        itBlobs++;
+        itResult++;
+    }
+
+    return result;
 }
 
 /**
@@ -429,7 +438,7 @@ double_stl_vector CBlobResult::GetSTLResult( funcio_calculBlob *evaluador ) cons
 - FUNCTIONALITY: Computes the function evaluador on a blob of the class
 - PARAMETERS:
 	- indexBlob: index of the blob to compute the function
-	- evaluador: function to apply to each blob (any object derived from the 
+	- evaluador: function to apply to each blob (any object derived from the
 				 COperadorBlob class )
 - RESULT:
 - RESTRICTIONS:
@@ -439,16 +448,19 @@ double_stl_vector CBlobResult::GetSTLResult( funcio_calculBlob *evaluador ) cons
 */
 double CBlobResult::GetNumber( int indexBlob, funcio_calculBlob *evaluador ) const
 {
-	if( indexBlob < 0 || indexBlob >= GetNumBlobs() )
-		RaiseError( EXCEPTION_BLOB_OUT_OF_BOUNDS );
-	return (*evaluador)( *m_blobs[indexBlob] );
+    if( indexBlob < 0 || indexBlob >= GetNumBlobs() )
+    {
+        RaiseError( EXCEPTION_BLOB_OUT_OF_BOUNDS );
+    }
+
+    return (*evaluador)( *m_blobs[indexBlob] );
 }
 
 /////////////////////////// FILTRAT DE BLOBS ////////////////////////////////////
 
 /**
 - FUNCIÓ: Filter
-- FUNCIONALITAT: Filtra els blobs de la classe i deixa el resultat amb només 
+- FUNCIONALITAT: Filtra els blobs de la classe i deixa el resultat amb només
 			   els blobs que han passat el filtre.
 			   El filtrat es basa en especificar condicions sobre un resultat dels blobs
 			   i seleccionar (o excloure) aquells blobs que no compleixen una determinada
@@ -458,13 +470,13 @@ double CBlobResult::GetNumber( int indexBlob, funcio_calculBlob *evaluador ) con
 	- filterAction:	acció de filtrat. Incloure els blobs trobats (B_INCLUDE),
 				    o excloure els blobs trobats (B_EXCLUDE)
 	- evaluador: Funció per evaluar els blobs (qualsevol objecte derivat de COperadorBlob
-	- Condition: tipus de condició que ha de superar la mesura (FilterType) 
+	- Condition: tipus de condició que ha de superar la mesura (FilterType)
 				 sobre cada blob per a ser considerat.
 				    B_EQUAL,B_NOT_EQUAL,B_GREATER,B_LESS,B_GREATER_OR_EQUAL,
 				    B_LESS_OR_EQUAL,B_INSIDE,B_OUTSIDE
 	- LowLimit:  valor numèric per a la comparació (Condition) de la mesura (FilterType)
 	- HighLimit: valor numèric per a la comparació (Condition) de la mesura (FilterType)
-				 (només té sentit per a aquelles condicions que tenen dos valors 
+				 (només té sentit per a aquelles condicions que tenen dos valors
 				 (B_INSIDE, per exemple).
 - RESULTAT:
 	- Deixa els blobs resultants del filtrat a destination
@@ -476,11 +488,11 @@ double CBlobResult::GetNumber( int indexBlob, funcio_calculBlob *evaluador ) con
 /**
 - FUNCTION: Filter
 - FUNCTIONALITY: Get some blobs from the class based on conditions on measures
-				 of the blobs. 
+				 of the blobs.
 - PARAMETERS:
 	- dst: where to store the selected blobs
-	- filterAction:	B_INCLUDE: include the blobs which pass the filter in the result 
-				    B_EXCLUDE: exclude the blobs which pass the filter in the result 
+	- filterAction:	B_INCLUDE: include the blobs which pass the filter in the result
+				    B_EXCLUDE: exclude the blobs which pass the filter in the result
 	- evaluador: Object to evaluate the blob
 	- Condition: How to decide if  the result returned by evaluador on each blob
 				 is included or not. It can be:
@@ -497,20 +509,20 @@ double CBlobResult::GetNumber( int indexBlob, funcio_calculBlob *evaluador ) con
 - CREATION DATE: 25-05-2005.
 - MODIFICATION: Date. Author. Description.
 */
-void CBlobResult::Filter(CBlobResult &dst, 
-						 int filterAction, 
-						 funcio_calculBlob *evaluador, 
-						 int condition, 
-						 double lowLimit, double highLimit /*=0*/) const
-							
+void CBlobResult::Filter(CBlobResult &dst,
+                         int filterAction,
+                         funcio_calculBlob *evaluador,
+                         int condition,
+                         double lowLimit, double highLimit /*=0*/) const
+
 {
-	// do the job
-	DoFilter(dst, filterAction, evaluador, condition, lowLimit, highLimit );
+    // do the job
+    DoFilter(dst, filterAction, evaluador, condition, lowLimit, highLimit );
 }
 
 /**
 - FUNCIÓ: Filter (const version)
-- FUNCIONALITAT: Filtra els blobs de la classe i deixa el resultat amb només 
+- FUNCIONALITAT: Filtra els blobs de la classe i deixa el resultat amb només
 			   els blobs que han passat el filtre.
 			   El filtrat es basa en especificar condicions sobre un resultat dels blobs
 			   i seleccionar (o excloure) aquells blobs que no compleixen una determinada
@@ -520,13 +532,13 @@ void CBlobResult::Filter(CBlobResult &dst,
 	- filterAction:	acció de filtrat. Incloure els blobs trobats (B_INCLUDE),
 				    o excloure els blobs trobats (B_EXCLUDE)
 	- evaluador: Funció per evaluar els blobs (qualsevol objecte derivat de COperadorBlob
-	- Condition: tipus de condició que ha de superar la mesura (FilterType) 
+	- Condition: tipus de condició que ha de superar la mesura (FilterType)
 				 sobre cada blob per a ser considerat.
 				    B_EQUAL,B_NOT_EQUAL,B_GREATER,B_LESS,B_GREATER_OR_EQUAL,
 				    B_LESS_OR_EQUAL,B_INSIDE,B_OUTSIDE
 	- LowLimit:  valor numèric per a la comparació (Condition) de la mesura (FilterType)
 	- HighLimit: valor numèric per a la comparació (Condition) de la mesura (FilterType)
-				 (només té sentit per a aquelles condicions que tenen dos valors 
+				 (només té sentit per a aquelles condicions que tenen dos valors
 				 (B_INSIDE, per exemple).
 - RESULTAT:
 	- Deixa els blobs resultants del filtrat a destination
@@ -538,11 +550,11 @@ void CBlobResult::Filter(CBlobResult &dst,
 /**
 - FUNCTION: Filter (const version)
 - FUNCTIONALITY: Get some blobs from the class based on conditions on measures
-				 of the blobs. 
+				 of the blobs.
 - PARAMETERS:
 	- dst: where to store the selected blobs
-	- filterAction:	B_INCLUDE: include the blobs which pass the filter in the result 
-				    B_EXCLUDE: exclude the blobs which pass the filter in the result 
+	- filterAction:	B_INCLUDE: include the blobs which pass the filter in the result
+				    B_EXCLUDE: exclude the blobs which pass the filter in the result
 	- evaluador: Object to evaluate the blob
 	- Condition: How to decide if  the result returned by evaluador on each blob
 				 is included or not. It can be:
@@ -559,140 +571,174 @@ void CBlobResult::Filter(CBlobResult &dst,
 - CREATION DATE: 25-05-2005.
 - MODIFICATION: Date. Author. Description.
 */
-void CBlobResult::Filter(CBlobResult &dst, 
-						 int filterAction, 
-						 funcio_calculBlob *evaluador, 
-						 int condition, 
-						 double lowLimit, double highLimit /*=0*/)
-							
+void CBlobResult::Filter(CBlobResult &dst,
+                         int filterAction,
+                         funcio_calculBlob *evaluador,
+                         int condition,
+                         double lowLimit, double highLimit /*=0*/)
+
 {
-	int numBlobs = GetNumBlobs();
+    int numBlobs = GetNumBlobs();
 
-	// do the job
-	DoFilter(dst, filterAction, evaluador, condition, lowLimit, highLimit );
+    // do the job
+    DoFilter(dst, filterAction, evaluador, condition, lowLimit, highLimit );
 
-	// inline operation: remove previous blobs
-	if( &dst == this ) 
-	{
-		// esborrem els primers blobs ( que són els originals )
-		// ja que els tindrem replicats al final si passen el filtre
-		Blob_vector::iterator itBlobs = m_blobs.begin();
-		for( int i = 0; i < numBlobs; i++ )
-		{
-			delete *itBlobs;
-			itBlobs++;
-		}
-		m_blobs.erase( m_blobs.begin(), itBlobs );
-	}
+    // inline operation: remove previous blobs
+    if( &dst == this )
+    {
+        // esborrem els primers blobs ( que són els originals )
+        // ja que els tindrem replicats al final si passen el filtre
+        Blob_vector::iterator itBlobs = m_blobs.begin();
+
+        for( int i = 0; i < numBlobs; i++ )
+        {
+            delete *itBlobs;
+            itBlobs++;
+        }
+
+        m_blobs.erase( m_blobs.begin(), itBlobs );
+    }
 }
 
 
 //! Does the Filter method job
-void CBlobResult::DoFilter(CBlobResult &dst, int filterAction, funcio_calculBlob *evaluador, 
-						   int condition, double lowLimit, double highLimit/* = 0*/) const
+void CBlobResult::DoFilter(CBlobResult &dst, int filterAction, funcio_calculBlob *evaluador,
+                           int condition, double lowLimit, double highLimit/* = 0*/) const
 {
-	int i, numBlobs;
-	bool resultavaluacio;
-	double_stl_vector avaluacioBlobs;
-	double_stl_vector::iterator itavaluacioBlobs;
+    int i, numBlobs;
+    bool resultavaluacio;
+    double_stl_vector avaluacioBlobs;
+    double_stl_vector::iterator itavaluacioBlobs;
 
-	if( GetNumBlobs() <= 0 ) return;
-	if( !evaluador ) return;
-	//avaluem els blobs amb la funció pertinent	
-	avaluacioBlobs = GetSTLResult(evaluador);
-	itavaluacioBlobs = avaluacioBlobs.begin();
-	numBlobs = GetNumBlobs();
-	switch(condition)
-	{
-		case B_EQUAL:
-			for(i=0;i<numBlobs;i++, itavaluacioBlobs++)
-			{
-				resultavaluacio= *itavaluacioBlobs == lowLimit;
-				if( ( resultavaluacio && filterAction == B_INCLUDE ) ||
-					( !resultavaluacio && filterAction == B_EXCLUDE ))
-				{
-					dst.m_blobs.push_back( new CBlob( GetBlob( i ) ));
-				}				
-			}
-			break;
-		case B_NOT_EQUAL:
-			for(i=0;i<numBlobs;i++, itavaluacioBlobs++)
-			{
-				resultavaluacio = *itavaluacioBlobs != lowLimit;
-				if( ( resultavaluacio && filterAction == B_INCLUDE ) ||
-					( !resultavaluacio && filterAction == B_EXCLUDE ))
-				{
-					dst.m_blobs.push_back( new CBlob( GetBlob( i ) ));
-				}
-			}
-			break;
-		case B_GREATER:
-			for(i=0;i<numBlobs;i++, itavaluacioBlobs++)
-			{
-				resultavaluacio= *itavaluacioBlobs > lowLimit;
-				if( ( resultavaluacio && filterAction == B_INCLUDE ) ||
-					( !resultavaluacio && filterAction == B_EXCLUDE ))
-				{
-					dst.m_blobs.push_back( new CBlob( GetBlob( i ) ));
-				}
-			}
-			break;
-		case B_LESS:
-			for(i=0;i<numBlobs;i++, itavaluacioBlobs++)
-			{
-				resultavaluacio= *itavaluacioBlobs < lowLimit;
-				if( ( resultavaluacio && filterAction == B_INCLUDE ) ||
-					( !resultavaluacio && filterAction == B_EXCLUDE ))
-				{
-					dst.m_blobs.push_back( new CBlob( GetBlob( i ) ));
-				}
-			}
-			break;
-		case B_GREATER_OR_EQUAL:
-			for(i=0;i<numBlobs;i++, itavaluacioBlobs++)
-			{
-				resultavaluacio= *itavaluacioBlobs>= lowLimit;
-				if( ( resultavaluacio && filterAction == B_INCLUDE ) ||
-					( !resultavaluacio && filterAction == B_EXCLUDE ))
-				{
-					dst.m_blobs.push_back( new CBlob( GetBlob( i ) ));
-				}
-			}
-			break;
-		case B_LESS_OR_EQUAL:
-			for(i=0;i<numBlobs;i++, itavaluacioBlobs++)
-			{
-				resultavaluacio= *itavaluacioBlobs <= lowLimit;
-				if( ( resultavaluacio && filterAction == B_INCLUDE ) ||
-					( !resultavaluacio && filterAction == B_EXCLUDE ))
-				{
-					dst.m_blobs.push_back( new CBlob( GetBlob( i ) ));
-				}
-			}
-			break;
-		case B_INSIDE:
-			for(i=0;i<numBlobs;i++, itavaluacioBlobs++)
-			{
-				resultavaluacio=( *itavaluacioBlobs >= lowLimit) && ( *itavaluacioBlobs <= highLimit); 
-				if( ( resultavaluacio && filterAction == B_INCLUDE ) ||
-					( !resultavaluacio && filterAction == B_EXCLUDE ))
-				{
-					dst.m_blobs.push_back( new CBlob( GetBlob( i ) ));
-				}
-			}
-			break;
-		case B_OUTSIDE:
-			for(i=0;i<numBlobs;i++, itavaluacioBlobs++)
-			{
-				resultavaluacio=( *itavaluacioBlobs < lowLimit) || ( *itavaluacioBlobs > highLimit); 
-				if( ( resultavaluacio && filterAction == B_INCLUDE ) ||
-					( !resultavaluacio && filterAction == B_EXCLUDE ))
-				{
-					dst.m_blobs.push_back( new CBlob( GetBlob( i ) ));
-				}
-			}
-			break;
-	}
+    if( GetNumBlobs() <= 0 )
+    {
+        return;
+    }
+
+    if( !evaluador )
+    {
+        return;
+    }
+
+    //avaluem els blobs amb la funció pertinent
+    avaluacioBlobs = GetSTLResult(evaluador);
+    itavaluacioBlobs = avaluacioBlobs.begin();
+    numBlobs = GetNumBlobs();
+
+    switch(condition)
+    {
+        case B_EQUAL:
+            for(i=0; i<numBlobs; i++, itavaluacioBlobs++)
+            {
+                resultavaluacio= *itavaluacioBlobs == lowLimit;
+
+                if( ( resultavaluacio && filterAction == B_INCLUDE ) ||
+                        ( !resultavaluacio && filterAction == B_EXCLUDE ))
+                {
+                    dst.m_blobs.push_back( new CBlob( GetBlob( i ) ));
+                }
+            }
+
+            break;
+
+        case B_NOT_EQUAL:
+            for(i=0; i<numBlobs; i++, itavaluacioBlobs++)
+            {
+                resultavaluacio = *itavaluacioBlobs != lowLimit;
+
+                if( ( resultavaluacio && filterAction == B_INCLUDE ) ||
+                        ( !resultavaluacio && filterAction == B_EXCLUDE ))
+                {
+                    dst.m_blobs.push_back( new CBlob( GetBlob( i ) ));
+                }
+            }
+
+            break;
+
+        case B_GREATER:
+            for(i=0; i<numBlobs; i++, itavaluacioBlobs++)
+            {
+                resultavaluacio= *itavaluacioBlobs > lowLimit;
+
+                if( ( resultavaluacio && filterAction == B_INCLUDE ) ||
+                        ( !resultavaluacio && filterAction == B_EXCLUDE ))
+                {
+                    dst.m_blobs.push_back( new CBlob( GetBlob( i ) ));
+                }
+            }
+
+            break;
+
+        case B_LESS:
+            for(i=0; i<numBlobs; i++, itavaluacioBlobs++)
+            {
+                resultavaluacio= *itavaluacioBlobs < lowLimit;
+
+                if( ( resultavaluacio && filterAction == B_INCLUDE ) ||
+                        ( !resultavaluacio && filterAction == B_EXCLUDE ))
+                {
+                    dst.m_blobs.push_back( new CBlob( GetBlob( i ) ));
+                }
+            }
+
+            break;
+
+        case B_GREATER_OR_EQUAL:
+            for(i=0; i<numBlobs; i++, itavaluacioBlobs++)
+            {
+                resultavaluacio= *itavaluacioBlobs>= lowLimit;
+
+                if( ( resultavaluacio && filterAction == B_INCLUDE ) ||
+                        ( !resultavaluacio && filterAction == B_EXCLUDE ))
+                {
+                    dst.m_blobs.push_back( new CBlob( GetBlob( i ) ));
+                }
+            }
+
+            break;
+
+        case B_LESS_OR_EQUAL:
+            for(i=0; i<numBlobs; i++, itavaluacioBlobs++)
+            {
+                resultavaluacio= *itavaluacioBlobs <= lowLimit;
+
+                if( ( resultavaluacio && filterAction == B_INCLUDE ) ||
+                        ( !resultavaluacio && filterAction == B_EXCLUDE ))
+                {
+                    dst.m_blobs.push_back( new CBlob( GetBlob( i ) ));
+                }
+            }
+
+            break;
+
+        case B_INSIDE:
+            for(i=0; i<numBlobs; i++, itavaluacioBlobs++)
+            {
+                resultavaluacio=( *itavaluacioBlobs >= lowLimit) && ( *itavaluacioBlobs <= highLimit);
+
+                if( ( resultavaluacio && filterAction == B_INCLUDE ) ||
+                        ( !resultavaluacio && filterAction == B_EXCLUDE ))
+                {
+                    dst.m_blobs.push_back( new CBlob( GetBlob( i ) ));
+                }
+            }
+
+            break;
+
+        case B_OUTSIDE:
+            for(i=0; i<numBlobs; i++, itavaluacioBlobs++)
+            {
+                resultavaluacio=( *itavaluacioBlobs < lowLimit) || ( *itavaluacioBlobs > highLimit);
+
+                if( ( resultavaluacio && filterAction == B_INCLUDE ) ||
+                        ( !resultavaluacio && filterAction == B_EXCLUDE ))
+                {
+                    dst.m_blobs.push_back( new CBlob( GetBlob( i ) ));
+                }
+            }
+
+            break;
+    }
 }
 /**
 - FUNCIÓ: GetBlob
@@ -717,18 +763,22 @@ void CBlobResult::DoFilter(CBlobResult &dst, int filterAction, funcio_calculBlob
 - MODIFICATION: Date. Author. Description.
 */
 CBlob CBlobResult::GetBlob(int indexblob) const
-{	
-	if( indexblob < 0 || indexblob >= GetNumBlobs() )
-		RaiseError( EXCEPTION_BLOB_OUT_OF_BOUNDS );
+{
+    if( indexblob < 0 || indexblob >= GetNumBlobs() )
+    {
+        RaiseError( EXCEPTION_BLOB_OUT_OF_BOUNDS );
+    }
 
-	return *m_blobs[indexblob];
+    return *m_blobs[indexblob];
 }
 CBlob *CBlobResult::GetBlob(int indexblob)
-{	
-	if( indexblob < 0 || indexblob >= GetNumBlobs() )
-		RaiseError( EXCEPTION_BLOB_OUT_OF_BOUNDS );
+{
+    if( indexblob < 0 || indexblob >= GetNumBlobs() )
+    {
+        RaiseError( EXCEPTION_BLOB_OUT_OF_BOUNDS );
+    }
 
-	return m_blobs[indexblob];
+    return m_blobs[indexblob];
 }
 
 /**
@@ -763,53 +813,55 @@ CBlob *CBlobResult::GetBlob(int indexblob)
 */
 void CBlobResult::GetNthBlob( funcio_calculBlob *criteri, int nBlob, CBlob &dst ) const
 {
-	// verifiquem que no estem accedint fora el vector de blobs
-	if( nBlob < 0 || nBlob >= GetNumBlobs() )
-	{
-		//RaiseError( EXCEPTION_BLOB_OUT_OF_BOUNDS );
-		dst = CBlob();
-		return;
-	}
+    // verifiquem que no estem accedint fora el vector de blobs
+    if( nBlob < 0 || nBlob >= GetNumBlobs() )
+    {
+        //RaiseError( EXCEPTION_BLOB_OUT_OF_BOUNDS );
+        dst = CBlob();
+        return;
+    }
 
-	double_stl_vector avaluacioBlobs, avaluacioBlobsOrdenat;
-	double valorEnessim;
+    double_stl_vector avaluacioBlobs, avaluacioBlobsOrdenat;
+    double valorEnessim;
 
-	//avaluem els blobs amb la funció pertinent	
-	avaluacioBlobs = GetSTLResult(criteri);
+    //avaluem els blobs amb la funció pertinent
+    avaluacioBlobs = GetSTLResult(criteri);
 
-	avaluacioBlobsOrdenat = double_stl_vector( GetNumBlobs() );
+    avaluacioBlobsOrdenat = double_stl_vector( GetNumBlobs() );
 
-	// obtenim els nBlob primers resultats (en ordre descendent)
-	std::partial_sort_copy( avaluacioBlobs.begin(), 
-						    avaluacioBlobs.end(),
-						    avaluacioBlobsOrdenat.begin(), 
-						    avaluacioBlobsOrdenat.end(),
-						    std::greater<double>() );
+    // obtenim els nBlob primers resultats (en ordre descendent)
+    std::partial_sort_copy( avaluacioBlobs.begin(),
+                            avaluacioBlobs.end(),
+                            avaluacioBlobsOrdenat.begin(),
+                            avaluacioBlobsOrdenat.end(),
+                            std::greater<double>() );
 
-	valorEnessim = avaluacioBlobsOrdenat[nBlob];
+    valorEnessim = avaluacioBlobsOrdenat[nBlob];
 
-	// busquem el primer blob que té el valor n-ssim
-	double_stl_vector::const_iterator itAvaluacio = avaluacioBlobs.begin();
+    // busquem el primer blob que té el valor n-ssim
+    double_stl_vector::const_iterator itAvaluacio = avaluacioBlobs.begin();
 
-	bool trobatBlob = false;
-	int indexBlob = 0;
-	while( itAvaluacio != avaluacioBlobs.end() && !trobatBlob )
-	{
-		if( *itAvaluacio == valorEnessim )
-		{
-			trobatBlob = true;
-			dst = CBlob( GetBlob(indexBlob));
-		}
-		itAvaluacio++;
-		indexBlob++;
-	}
+    bool trobatBlob = false;
+    int indexBlob = 0;
+
+    while( itAvaluacio != avaluacioBlobs.end() && !trobatBlob )
+    {
+        if( *itAvaluacio == valorEnessim )
+        {
+            trobatBlob = true;
+            dst = CBlob( GetBlob(indexBlob));
+        }
+
+        itAvaluacio++;
+        indexBlob++;
+    }
 }
 
 /**
 - FUNCIÓ: ClearBlobs
 - FUNCIONALITAT: Elimina tots els blobs de l'objecte
 - PARÀMETRES:
-- RESULTAT: 
+- RESULTAT:
 	- Allibera tota la memòria dels blobs
 - RESTRICCIONS:
 - AUTOR: Ricard Borràs Navarra
@@ -828,14 +880,15 @@ void CBlobResult::GetNthBlob( funcio_calculBlob *criteri, int nBlob, CBlob &dst 
 */
 void CBlobResult::ClearBlobs()
 {
-	Blob_vector::iterator itBlobs = m_blobs.begin();
-	while( itBlobs != m_blobs.end() )
-	{
-		delete *itBlobs;
-		itBlobs++;
-	}
+    Blob_vector::iterator itBlobs = m_blobs.begin();
 
-	m_blobs.clear();
+    while( itBlobs != m_blobs.end() )
+    {
+        delete *itBlobs;
+        itBlobs++;
+    }
+
+    m_blobs.clear();
 }
 
 /**
@@ -844,7 +897,7 @@ void CBlobResult::ClearBlobs()
 			   les excepcions
 - PARÀMETRES:
 	- errorCode: codi d'error
-- RESULTAT: 
+- RESULTAT:
 	- Ensenya un missatge a l'usuari (en debug) i llença una excepció
 - RESTRICCIONS:
 - AUTOR: Ricard Borràs Navarra
@@ -868,22 +921,23 @@ void CBlobResult::RaiseError(const int errorCode) const
 {
 //! Do we need to show errors?
 #ifdef _SHOW_ERRORS
-	CString msg, format = "Error en CBlobResult: %s";
+    CString msg, format = "Error en CBlobResult: %s";
 
-	switch (errorCode)
-	{
-	case EXCEPTION_BLOB_OUT_OF_BOUNDS:
-		msg.Format(format, "Intentant accedir a un blob no existent");
-		break;
-	default:
-		msg.Format(format, "Codi d'error desconegut");
-		break;
-	}
+    switch (errorCode)
+    {
+        case EXCEPTION_BLOB_OUT_OF_BOUNDS:
+            msg.Format(format, "Intentant accedir a un blob no existent");
+            break;
 
-	AfxMessageBox(msg);
+        default:
+            msg.Format(format, "Codi d'error desconegut");
+            break;
+    }
+
+    AfxMessageBox(msg);
 
 #endif
-	throw errorCode;
+    throw errorCode;
 }
 
 
@@ -895,7 +949,7 @@ void CBlobResult::RaiseError(const int errorCode) const
 
 /**
 - FUNCIÓ: PrintBlobs
-- FUNCIONALITAT: Escriu els paràmetres (àrea, perímetre, exterior, mitjana) 
+- FUNCIONALITAT: Escriu els paràmetres (àrea, perímetre, exterior, mitjana)
 			   de tots els blobs a un fitxer.
 - PARÀMETRES:
 	- nom_fitxer: path complet del fitxer amb el resultat
@@ -918,26 +972,27 @@ void CBlobResult::RaiseError(const int errorCode) const
 */
 void CBlobResult::PrintBlobs( char *nom_fitxer ) const
 {
-	double_stl_vector area, /*perimetre,*/ exterior, compacitat, longitud, 
-					  externPerimeter, perimetreConvex, perimetre;
-	int i;
-	FILE *fitxer_sortida;
+    double_stl_vector area, /*perimetre,*/ exterior, compacitat, longitud,
+                      externPerimeter, perimetreConvex, perimetre;
+    int i;
+    FILE *fitxer_sortida;
 
- 	area      = GetSTLResult( CBlobGetArea());
-	perimetre = GetSTLResult( CBlobGetPerimeter());
-	exterior  = GetSTLResult( CBlobGetExterior());
-	compacitat = GetSTLResult(CBlobGetCompactness());
-	longitud  = GetSTLResult( CBlobGetLength());
-	externPerimeter = GetSTLResult( CBlobGetExternPerimeter());
-	perimetreConvex = GetSTLResult( CBlobGetHullPerimeter());
+    area      = GetSTLResult( CBlobGetArea());
+    perimetre = GetSTLResult( CBlobGetPerimeter());
+    exterior  = GetSTLResult( CBlobGetExterior());
+    compacitat = GetSTLResult(CBlobGetCompactness());
+    longitud  = GetSTLResult( CBlobGetLength());
+    externPerimeter = GetSTLResult( CBlobGetExternPerimeter());
+    perimetreConvex = GetSTLResult( CBlobGetHullPerimeter());
 
-	fitxer_sortida = fopen( nom_fitxer, "w" );
+    fitxer_sortida = fopen( nom_fitxer, "w" );
 
-	for(i=0; i<GetNumBlobs(); i++)
-	{
-		fprintf( fitxer_sortida, "blob %d ->\t a=%7.0f\t p=%8.2f (%8.2f extern)\t pconvex=%8.2f\t ext=%.0f\t m=%7.2f\t c=%3.2f\t l=%8.2f\n",
-				 i, area[i], perimetre[i], externPerimeter[i], perimetreConvex[i], exterior[i], compacitat[i], longitud[i] );
-	}
-	fclose( fitxer_sortida );
+    for(i=0; i<GetNumBlobs(); i++)
+    {
+        fprintf( fitxer_sortida, "blob %d ->\t a=%7.0f\t p=%8.2f (%8.2f extern)\t pconvex=%8.2f\t ext=%.0f\t m=%7.2f\t c=%3.2f\t l=%8.2f\n",
+                 i, area[i], perimetre[i], externPerimeter[i], perimetreConvex[i], exterior[i], compacitat[i], longitud[i] );
+    }
+
+    fclose( fitxer_sortida );
 
 }

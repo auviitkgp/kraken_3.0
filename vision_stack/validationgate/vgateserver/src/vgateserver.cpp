@@ -6,14 +6,16 @@ Vgate::Vgate(std::string name) : _it(_n), _s(_n, name, boost::bind(&Vgate::execu
 {
     _sub = _it.subscribe(topics::CAMERA_BOTTOM_RAW_IMAGE, 1, &Vgate::imageCallBack, this);
     _pub = _it.advertise(topics::CAMERA_BOTTOM_VGATE_IMAGE, 1);
-    
+
     ifstream _thresholdVal("threshold.th");
+
     if(_thresholdVal.is_open())
     {
         for(int i = 0; i < 3; i++)
         {
             _thresholdVal >> _lowerThresh[i];
         }
+
         for(int i = 0; i < 3; i++)
         {
             _thresholdVal >> _upperThresh[i];
@@ -24,6 +26,7 @@ Vgate::Vgate(std::string name) : _it(_n), _s(_n, name, boost::bind(&Vgate::execu
         ROS_ERROR("Unable to open threshold.th file.");
         ros::shutdown();
     }
+
     _kernelDilateErode = getStructuringElement(MORPH_RECT, Size(3,3));
     _finalImage.encoding = "bgr8";
     _s.start();
@@ -32,6 +35,7 @@ Vgate::Vgate(std::string name) : _it(_n), _s(_n, name, boost::bind(&Vgate::execu
 void Vgate::imageCallBack(const sensor_msgs::ImageConstPtr &_msg)
 {
     cv_bridge::CvImagePtr _imagePtr;
+
     try
     {
         _imagePtr = cv_bridge::toCvCopy(_msg, "bgr8");
@@ -40,6 +44,7 @@ void Vgate::imageCallBack(const sensor_msgs::ImageConstPtr &_msg)
     {
         ROS_ERROR("validationgate : Could not convert from '%s' to 'bgr8'.", _msg->encoding.c_str());
     }
+
     _image = _imagePtr->image;
 }
 
@@ -84,6 +89,7 @@ void Vgate::executCB(const actionmsg::vgateGoalConstPtr &_goal)
         case DETECT_VGATE:
         {
             bool _detected = false;
+
             while(ros::ok())
             {
                 if (_s.isPreemptRequested() || !ros::ok())
@@ -93,6 +99,7 @@ void Vgate::executCB(const actionmsg::vgateGoalConstPtr &_goal)
                     success = false;
                     break;
                 }
+
                 _detected = detectVgate();
                 _finalImage.image = _image;
                 _finalImagemsg = _finalImage.toImageMsg();
@@ -102,10 +109,13 @@ void Vgate::executCB(const actionmsg::vgateGoalConstPtr &_goal)
                 {
                     break;
                 }
+
                 looprate.sleep();
             }
+
             break;
         }
+
         case ALLIGN_VGATE:
         {
             while(ros::ok())
@@ -117,19 +127,23 @@ void Vgate::executCB(const actionmsg::vgateGoalConstPtr &_goal)
                     success = false;
                     break;
                 }
+
                 detectVgate();
                 getAllignment();
                 _finalImage.image = _image;
                 _finalImagemsg = _finalImage.toImageMsg();
                 _pub.publish(_finalImagemsg);
+
                 if((_feedback.errorx < 10 && _feedback.errorx >> -10) && (_feedback.errory > -10 && _feedback.errory < 10))
                 {
                     _result.sequence.push_back(VGATE_ALLIGNED);
                     break;
                 }
+
                 _s.publishFeedback(_feedback);
                 looprate.sleep();
             }
+
             break;
         }
     }
@@ -152,13 +166,20 @@ bool Vgate::detectVgate()
 
 
         HoughLinesP(_imageBW, _lines, 1, CV_PI/180, 100, 75, 40);
+
         if(_lines.size() >= 4)
+        {
             return true;
+        }
         else
+        {
             return false;
+        }
     }
     else
+    {
         return false;
+    }
 }
 
 void Vgate::getAllignment()
@@ -166,6 +187,7 @@ void Vgate::getAllignment()
     for( int i = 0; i < _lines.size(); i++ )
     {
         line(_image, Point2i(_lines[i][0], _lines[i][1]), Point2i(_lines[i][2], _lines[i][3]), Scalar(255,255,0),3,8);
+
         if(i==0)
         {
             _coordinate[0].x = _lines[i][0];			//taking min x
@@ -184,36 +206,43 @@ void Vgate::getAllignment()
                 _coordinate[0].x = _lines[i][0];
                 _coordinate[0].y = _lines[i][1];
             }
+
             if(_lines[i][2] > _coordinate[1].x)
             {
                 _coordinate[1].x = _lines[i][2];
                 _coordinate[1].y = _lines[i][3];
             }
+
             if(_lines[i][0] > _coordinate[1].x)
             {
                 _coordinate[1].x = _lines[i][0];
                 _coordinate[1].y = _lines[i][1];
             }
+
             if(_lines[i][2] < _coordinate[0].x)
             {
                 _coordinate[0].x = _lines[i][2];
                 _coordinate[0].y = _lines[i][3];
             }
+
             if(_lines[i][1] < _coordinate[2].y)
             {
                 _coordinate[2].x = _lines[i][0];
                 _coordinate[2].y = _lines[i][1];
             }
+
             if(_lines[i][3] > _coordinate[3].y)
             {
                 _coordinate[3].x = _lines[i][2];
                 _coordinate[3].y = _lines[i][3];
             }
+
             if(_lines[i][1] > _coordinate[3].y)
             {
                 _coordinate[3].x = _lines[i][0];
                 _coordinate[3].y = _lines[i][1];
             }
+
             if(_lines[i][3] < _coordinate[2].y)
             {
                 _coordinate[2].x = _lines[i][2];
@@ -221,6 +250,7 @@ void Vgate::getAllignment()
             }
         }
     }
+
     line(_image, _coordinate[0], _coordinate[2], Scalar(255,0,0),3,8);
     _rodB.x=(_coordinate[0].x + _coordinate[2].x)/2;
     _rodB.y=(_coordinate[0].y + _coordinate[2].y)/2;

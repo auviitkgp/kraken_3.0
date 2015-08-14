@@ -13,6 +13,7 @@ int main(int argc,char** argv)
     ros::init(argc, argv, "control_server_client");
 
     ros::NodeHandle n;
+
     if(argc>1)
     {
         ros::ServiceClient client = n.serviceClient<kraken_msgs::moveAlongLine>("/kraken/translate_auv");
@@ -29,15 +30,17 @@ int main(int argc,char** argv)
         {
             srv.request.angle = 0;
         }
+
         std::cerr<<srv.request.angle<<"\t"<<atoi(argv[1])<<std::endl;
+
         if (client.call(srv))
         {
-          ROS_INFO("Sum: %d", srv.response.result);
+            ROS_INFO("Sum: %d", srv.response.result);
         }
         else
         {
-          ROS_ERROR("ERROR");
-          return 1;
+            ROS_ERROR("ERROR");
+            return 1;
         }
     }
     else
@@ -45,5 +48,5 @@ int main(int argc,char** argv)
         std::cerr<<"Give motion command 3.0 for forward -3.0 for backward 0.0 for pause "<<std::endl;
     }
 
-  return 0;
+    return 0;
 }

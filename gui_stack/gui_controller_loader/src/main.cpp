@@ -17,7 +17,8 @@
 ** Main
 *****************************************************************************/
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
 
     /*********************
     ** Qt
@@ -27,11 +28,12 @@ int main(int argc, char **argv) {
         std::cout<<"give the path\n";
         return 0;
     }
+
     QApplication app(argc, argv);
     gui_template::MainWindow w(argc,argv);
     w.show();
     app.connect(&app, SIGNAL(lastWindowClosed()), &app, SLOT(quit()));
     int result = app.exec();
 
-	return result;
+    return result;
 }

@@ -12,12 +12,14 @@ Marker::Marker(std::string name, std::string _threshold_filepath) : _it(_n), _s(
     marker_align_status=false;
 
     ifstream _thresholdVal(_threshold_filepath.c_str());
+
     if(_thresholdVal.is_open())
     {
         for(int i = 0; i < 3; i++)
         {
             _thresholdVal >> _lowerThresh[i];
         }
+
         for(int i = 0; i < 3; i++)
         {
             _thresholdVal >> _upperThresh[i];
@@ -28,6 +30,7 @@ Marker::Marker(std::string name, std::string _threshold_filepath) : _it(_n), _s(
         ROS_ERROR("marker_server : Unable to open threshold file.");
         ros::shutdown();
     }
+
     _kernelDilateErode = getStructuringElement(MORPH_RECT, Size(3,3));
     _finalImage.encoding = "mono8";
     _s.start();
@@ -37,6 +40,7 @@ Marker::Marker(std::string name, std::string _threshold_filepath) : _it(_n), _s(
 void Marker::imageCallBack(const sensor_msgs::ImageConstPtr &_msg)
 {
     cv_bridge::CvImagePtr _imagePtr;
+
     try
     {
         _imagePtr = cv_bridge::toCvCopy(_msg, "bgr8");
@@ -45,6 +49,7 @@ void Marker::imageCallBack(const sensor_msgs::ImageConstPtr &_msg)
     {
         ROS_ERROR("marker_server : Could not convert from '%s' to 'bgr8'.", _msg->encoding.c_str());
     }
+
     I = _imagePtr->image;
 }
 
@@ -65,16 +70,23 @@ void Marker::executeCB(const ip_msgs::markerGoalConstPtr &_goal)
                     success = false;
                     break;
                 }
+
                 detectMarker();
 
                 _finalImage.image = I_bw;
                 _finalImagemsg = _finalImage.toImageMsg();
                 _pub.publish(_finalImagemsg);
+
                 if(marker_detect_status)
+                {
                     break;
+                }
+
                 looprate.sleep();
             }
+
             break;
+
         case ALIGN_MARKER:
             while(ros::ok())
             {
@@ -85,17 +97,23 @@ void Marker::executeCB(const ip_msgs::markerGoalConstPtr &_goal)
                     success = false;
                     break;
                 }
+
                 detectMarker();
                 getAllignment();
                 _finalImage.image = I_bw;
                 _finalImagemsg = _finalImage.toImageMsg();
                 _pub.publish(_finalImagemsg);
-                
+
                 _s.publishFeedback(_feedback);
+
                 if(marker_align_status)
+                {
                     break;
+                }
+
                 looprate.sleep();
             }
+
             break;
 
     }
@@ -107,7 +125,8 @@ void Marker::executeCB(const ip_msgs::markerGoalConstPtr &_goal)
         _s.setSucceeded(_result);
 
     }
-    else{
+    else
+    {
         _s.setPreempted();
     }
 }
@@ -152,7 +171,7 @@ void Marker::detectMarker()
     {
         if(contourArea(_contours[i])>400)
         {
-           _minRect.push_back(minAreaRect( Mat(_contours[i])));
+            _minRect.push_back(minAreaRect( Mat(_contours[i])));
             marker_detect_status=true;
         }
     }
@@ -165,6 +184,7 @@ void Marker::getAllignment()
         Scalar _color = Scalar(  Scalar(255,0,0) );
         Point2f _rectPoints[4];
         _minRect[i].points( _rectPoints );
+
         for( int j = 0; j < 4; j++ )
         {
             line( I_bw, _rectPoints[j], _rectPoints[(j+1)%4], _color, 3, 8 );
@@ -174,7 +194,9 @@ void Marker::getAllignment()
             cout << "[" << _feedback.errorx << " -- " << _feedback.errorangle << "]" << endl;
 
             if(_feedback.errorangle < 3 && _feedback.errorangle > -3 && _feedback.errorx < 5)
+            {
                 marker_align_status = true;
+            }
         }
     }
 }
@@ -186,11 +208,13 @@ Marker::~Marker()
 int main(int argc, char ** argv)
 {
     ros::init(argc, argv, "markerserver");
+
     if(argc < 2)
     {
         ROS_INFO("marker_server : Requires threshold file as input parameter");
         ros::shutdown();
     }
+
     Marker _markerAction("marker", argv[1]);
     ros::spin();
     return 0;

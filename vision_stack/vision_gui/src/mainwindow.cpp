@@ -86,30 +86,37 @@ void MyWindow::setThresh()
     int H_min = ui->HValue_slider->value()-ui->HThreshValue_slider->value();
     int S_min = ui->SValue_slider->value()-ui->SThreshValue_slider->value();
     int V_min = ui->VValue_slider->value()-ui->VThreshValue_slider->value();
+
     if(H_max>255)
     {
         H_max=255;
     }
+
     if(H_min<0)
     {
         H_min=0;
     }
+
     if(S_max>255)
     {
         S_max=255;
     }
+
     if(S_min<0)
     {
         S_min=0;
     }
+
     if(V_max>255)
     {
         V_max=255;
     }
+
     if(V_min<0)
     {
         V_min=0;
     }
+
     start = cv::Scalar(H_min,S_min,V_min);
     end = cv::Scalar(H_max,S_max,V_max);
 }
@@ -117,13 +124,15 @@ void MyWindow::setThresh()
 void MyWindow::on_openFile_clicked()
 {
     QString filename = QFileDialog::getOpenFileName(this,
-                                                    tr("Open File"),
-                                                    "/home/","*.th");
+                       tr("Open File"),
+                       "/home/","*.th");
+
     if(!filename.isEmpty())
     {
         fileName = filename.toStdString();
         std::cout<<fileName<<std::endl;
         std::ifstream file(fileName.c_str());
+
         if(file.is_open())
         {
             file.close();
@@ -144,6 +153,7 @@ void MyWindow::on_openFile_clicked()
 void MyWindow::on_writeFile_clicked()
 {
     std::ofstream file(fileName.c_str());
+
     if(file.is_open())
     {
         int H_max = ui->HValue_slider->value()+ui->HThreshValue_slider->value();
@@ -152,30 +162,37 @@ void MyWindow::on_writeFile_clicked()
         int H_min = ui->HValue_slider->value()-ui->HThreshValue_slider->value();
         int S_min = ui->SValue_slider->value()-ui->SThreshValue_slider->value();
         int V_min = ui->VValue_slider->value()-ui->VThreshValue_slider->value();
+
         if(H_max>255)
         {
             H_max=255;
         }
+
         if(H_min<0)
         {
             H_min=0;
         }
+
         if(S_max>255)
         {
             S_max=255;
         }
+
         if(S_min<0)
         {
             S_min=0;
         }
+
         if(V_max>255)
         {
             V_max=255;
         }
+
         if(V_min<0)
         {
             V_min=0;
         }
+
         file<<H_min<<std::endl;
         file<<S_min<<std::endl;
         file<<V_min<<std::endl;
@@ -205,7 +222,8 @@ void MyWindow::on_closeFile_clicked()
     ui->closeFile->setEnabled(false);
 }
 
-void MyWindow::on_newFile_clicked(){
+void MyWindow::on_newFile_clicked()
+{
 
     std::ofstream fout;
     std::ofstream fout2;
@@ -221,30 +239,37 @@ void MyWindow::on_newFile_clicked(){
         int H_min = ui->HValue_slider->value()-ui->HThreshValue_slider->value();
         int S_min = ui->SValue_slider->value()-ui->SThreshValue_slider->value();
         int V_min = ui->VValue_slider->value()-ui->VThreshValue_slider->value();
+
         if(H_max>255)
         {
             H_max=255;
         }
+
         if(H_min<0)
         {
             H_min=0;
         }
+
         if(S_max>255)
         {
             S_max=255;
         }
+
         if(S_min<0)
         {
             S_min=0;
         }
+
         if(V_max>255)
         {
             V_max=255;
         }
+
         if(V_min<0)
         {
             V_min=0;
         }
+
         fout<<H_min<<std::endl;
         fout<<S_min<<std::endl;
         fout<<V_min<<std::endl;
@@ -280,31 +305,43 @@ void MyWindow::on_newFile_clicked(){
 
         if(dilate_b)
 
+        {
             fout2 << "Dilate with ";
+        }
 
         if(erode_b)
 
+        {
             fout2 << "Erode with ";
+        }
 
         if(dilate_b || erode_b)
         {
             if(kernelShape == 0)
 
+            {
                 fout2 << "MORPH_ELLIPSE";
+            }
 
             if(kernelShape == 1)
 
+            {
                 fout2 << "MORPH_RECT";
+            }
 
             if(kernelShape == 2)
 
+            {
                 fout2 << "MORPH_CROSS";
+            }
 
         }
 
         else
 
+        {
             fout2 << "Dilate and erode not applied.";
+        }
 
         fout2 << endl << endl;
 
@@ -319,21 +356,29 @@ void MyWindow::on_newFile_clicked(){
 
         if(filter_arg2 == B_INCLUDE)
 
+        {
             fout2 << "INCLUDE " ;
+        }
 
         else
 
+        {
             fout2 << "EXCLUDE";
+        }
 
         fout2 << " all with Area ";
 
         if(filter_arg4 == B_LESS)
 
+        {
             fout2 << " Less ";
+        }
 
         else
 
+        {
             fout2 << " Greater ";
+        }
 
         fout2<< " than " << filter_arg5_area << endl;
 
@@ -364,14 +409,16 @@ void MyWindow::on_openCamera_clicked()
     camera_opend = false;
     std::cout<<ui->cameraNo->currentIndex()<<std::endl;
 
-    if (ui->cameraNo->currentIndex() == 2){
+    if (ui->cameraNo->currentIndex() == 2)
+    {
         fn_video = QFileDialog::getOpenFileName(this,
                                                 tr("Open File"),
                                                 "/home/","*.avi");
 
         std::cout <<"Opening : " << fn_video.toUtf8().constData() << std::endl;
 
-        if(cam.open(fn_video.toUtf8().constData())){
+        if(cam.open(fn_video.toUtf8().constData()))
+        {
             camera_opend = true;
             source_from_log = true;
             ui->openCamera->setEnabled(false);
@@ -381,7 +428,8 @@ void MyWindow::on_openCamera_clicked()
 
         }
 
-        else{
+        else
+        {
 
             QMessageBox::question(  this,
                                     tr("Error"),
@@ -427,7 +475,7 @@ void MyWindow::on_startCamera_clicked()
     }
     else
     {
-        
+
     }
 }
 
@@ -502,7 +550,8 @@ void MyWindow::on_VThreshValue_slider_valueChanged(int value)
     setThresh();
 }
 
-void MyWindow::on_blurSlider_valueChanged(int value){
+void MyWindow::on_blurSlider_valueChanged(int value)
+{
     blurVal = value;
     std::cout << "The value of blur is :- " << blurVal << "\n";
     //    std::cout << "value changed!";
@@ -512,7 +561,8 @@ void MyWindow::on_blurSlider_valueChanged(int value){
     return;
 }
 
-void MyWindow::on_mblurSlider_valueChanged(int value){
+void MyWindow::on_mblurSlider_valueChanged(int value)
+{
     mblurVal = 2 * value + 1;
     std::cout << "The value of median is :- " << mblurVal << "\n";
     //    std::cout << "value changed!";
@@ -522,7 +572,8 @@ void MyWindow::on_mblurSlider_valueChanged(int value){
     return;
 }
 
-void MyWindow::on_gblurSlider_valueChanged(int value){
+void MyWindow::on_gblurSlider_valueChanged(int value)
+{
     gblurVal = 2 * value + 1;
     std::cout << "The value of gblur is :- " << gblurVal << "\n";
     //    std::cout << "value changed!";
@@ -532,41 +583,48 @@ void MyWindow::on_gblurSlider_valueChanged(int value){
     return;
 }
 
-void MyWindow::on_dilateCheck_clicked(){
+void MyWindow::on_dilateCheck_clicked()
+{
     dilate_b = !dilate_b;
 
     std::cout << dilate_b;
 }
 
-void MyWindow::on_erodeCheck_clicked(){
+void MyWindow::on_erodeCheck_clicked()
+{
     erode_b = !erode_b;
 
     std::cout << erode_b;
 }
 
-void MyWindow::on_morphellipse_clicked(){
+void MyWindow::on_morphellipse_clicked()
+{
     kernelShape = 0;
     std::cout << kernelShape;
 }
 
-void MyWindow::on_morphrect_clicked(){
+void MyWindow::on_morphrect_clicked()
+{
     kernelShape = 1;
     std::cout << kernelShape;
 }
 
-void MyWindow::on_morphcross_clicked(){
+void MyWindow::on_morphcross_clicked()
+{
     kernelShape = 2;
     std::cout << kernelShape;
 }
 
-void MyWindow::on_kernelSizeSlider_valueChanged(int value){
+void MyWindow::on_kernelSizeSlider_valueChanged(int value)
+{
     kernelSizeVal = value;
     std::ostringstream str;
     str << value;
     ui->kernelSizeLineEdit->setText(QString(str.str().c_str()));
 }
 
-void MyWindow::on_contoursCheck_clicked(){
+void MyWindow::on_contoursCheck_clicked()
+{
     draw_contours = !draw_contours;
 
     ui->boundrectCheck->setEnabled(draw_contours);
@@ -574,22 +632,27 @@ void MyWindow::on_contoursCheck_clicked(){
     ui->approxpolyCheck->setEnabled(draw_contours);
 }
 
-void MyWindow::on_boundrectCheck_clicked(){
+void MyWindow::on_boundrectCheck_clicked()
+{
     rectContours = !rectContours;
 }
 
-void MyWindow::on_boundcircleCheck_clicked(){
+void MyWindow::on_boundcircleCheck_clicked()
+{
     circleContours = !circleContours;
 }
-void MyWindow::on_approxpolyCheck_clicked(){
+void MyWindow::on_approxpolyCheck_clicked()
+{
     polyContours = !polyContours;
 }
 
-void MyWindow::on_houghCheck_clicked(){
+void MyWindow::on_houghCheck_clicked()
+{
     hough_enabled = !hough_enabled;
 }
 
-void MyWindow::on_houghMinRadius_valueChanged(int value){
+void MyWindow::on_houghMinRadius_valueChanged(int value)
+{
     min_radius = value;
 
     std::ostringstream str;
@@ -597,7 +660,8 @@ void MyWindow::on_houghMinRadius_valueChanged(int value){
     ui->houghMinRadiusLineEdit->setText(QString(str.str().c_str()));
 }
 
-void MyWindow::on_houghMaxRadius_valueChanged(int value){
+void MyWindow::on_houghMaxRadius_valueChanged(int value)
+{
     max_radius = value;
 
     std::ostringstream str;
@@ -605,15 +669,18 @@ void MyWindow::on_houghMaxRadius_valueChanged(int value){
     ui->houghMaxRadiusLineEdit->setText(QString(str.str().c_str()));
 }
 
-void MyWindow::on_houghLinesCheck_clicked(){
+void MyWindow::on_houghLinesCheck_clicked()
+{
     hough_lines_enabled = !hough_lines_enabled;
 }
 
-void MyWindow::on_blobCheck_clicked(){
+void MyWindow::on_blobCheck_clicked()
+{
     blob_enabled = !blob_enabled;
 }
 
-void MyWindow::on_backgroundRSlider_valueChanged(int value){
+void MyWindow::on_backgroundRSlider_valueChanged(int value)
+{
     bg_r = value;
 
     std::ostringstream str;
@@ -640,7 +707,8 @@ void MyWindow::on_backgroundRSlider_valueChanged(int value){
 
 //}
 
-void MyWindow::on_foregroundRSlider_valueChanged(int value){
+void MyWindow::on_foregroundRSlider_valueChanged(int value)
+{
     fg_r = value;
 
     std::ostringstream str;
@@ -667,7 +735,8 @@ void MyWindow::on_foregroundRSlider_valueChanged(int value){
 
 //}
 
-void MyWindow::on_areablobSlider_valueChanged(int value){
+void MyWindow::on_areablobSlider_valueChanged(int value)
+{
     filter_arg5_area = value;
 
     std::ostringstream str;
@@ -675,23 +744,27 @@ void MyWindow::on_areablobSlider_valueChanged(int value){
     ui->areablobSliderLE->setText(QString(str.str().c_str()));
 }
 
-void MyWindow::on_areablobLess_clicked(){
+void MyWindow::on_areablobLess_clicked()
+{
 
     filter_arg4 = B_LESS;
 
 }
 
-void MyWindow::on_areablobMore_clicked(){
+void MyWindow::on_areablobMore_clicked()
+{
     filter_arg4 = B_GREATER;
 }
 
 
-void MyWindow::on_blobInclude_clicked(){
+void MyWindow::on_blobInclude_clicked()
+{
     filter_arg2 = B_INCLUDE;
 }
 
 
-void MyWindow::on_blobExclude_clicked(){
+void MyWindow::on_blobExclude_clicked()
+{
     filter_arg2 = B_EXCLUDE;
 }
 
@@ -716,13 +789,16 @@ void MyWindow::on_updateImages()
     {
         cam >> camImage;
 
-        if(camImage.empty() && source_from_log){
+        if(camImage.empty() && source_from_log)
+        {
             std::cout << "Entered the empty image branch!";
 
             cam.release();
 
             if(cam.open(fn_video.toUtf8().constData()))
+            {
                 cam >> camImage;
+            }
 
             else
             {
@@ -754,30 +830,41 @@ void MyWindow::on_updateImages()
 
         if(kernelShape == 0)
 
+        {
             dilatekernel = getStructuringElement(MORPH_ELLIPSE, Size(kernelSizeVal, kernelSizeVal));
+        }
 
         if(kernelShape == 1)
 
+        {
             dilatekernel = getStructuringElement(MORPH_RECT, Size(kernelSizeVal, kernelSizeVal));
+        }
 
         if(kernelShape == 2)
 
+        {
             dilatekernel = getStructuringElement(MORPH_CROSS, Size(kernelSizeVal, kernelSizeVal));
+        }
 
         // First and second both argument selectable
 
         if(dilate_b)
 
+        {
             dilate(thImage, thImage, dilatekernel);
+        }
 
         if(erode_b)
 
+        {
             erode(thImage, thImage, dilatekernel);
+        }
 
         /////////////////////////////////////////////////////////////
 
 
-        if(blob_enabled){
+        if(blob_enabled)
+        {
 
             IplImage Iipl = thImage;
 
@@ -793,6 +880,7 @@ void MyWindow::on_updateImages()
             // the clutter that we found.
 
             blobs.Filter(blobs, filter_arg2, CBlobGetArea(), filter_arg4, filter_arg5_area);
+
             for (int i = 0; i < blobs.GetNumBlobs(); i++ )
             {
                 currentBlob = blobs.GetBlob(i);
@@ -813,7 +901,8 @@ void MyWindow::on_updateImages()
 
         Mat drawing;
 
-        if(draw_contours){
+        if(draw_contours)
+        {
             // Drawing contours
 
             int thresh = 100;
@@ -842,20 +931,31 @@ void MyWindow::on_updateImages()
 
             // Draw polygonal contour + bonding rects + circles
             drawing = Mat::zeros( threshold_output.size(), CV_8UC3 );
+
             for( int i = 0; i< contours.size(); i++ )
             {
                 Scalar color = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
+
                 if(polyContours)
+                {
                     drawContours( colorImage, contours_poly, i, color, 1, 8, vector<Vec4i>(), 0, Point() );
+                }
+
                 if(rectContours)
+                {
                     rectangle( colorImage, boundRect[i].tl(), boundRect[i].br(), color, 2, 8, 0 );
+                }
+
                 if(circleContours)
+                {
                     circle( colorImage, center[i], (int)radius[i], color, 2, 8, 0 );
+                }
             }
 
         }
 
-        if(hough_enabled){
+        if(hough_enabled)
+        {
 
             vector<Vec3f> circles;
             /// Apply the Hough Transform to find the circles
@@ -874,10 +974,12 @@ void MyWindow::on_updateImages()
 
         }
 
-        if(hough_lines_enabled){
+        if(hough_lines_enabled)
+        {
 
             vector<Vec4i> lines;
             HoughLinesP(thImage, lines, 1, CV_PI/180, 50, 50, 10 );
+
             for( size_t i = 0; i < lines.size(); i++ )
             {
                 Vec4i l = lines[i];
@@ -916,6 +1018,7 @@ MyWindow::~MyWindow()
 void MyWindow::closeEvent(QCloseEvent *)
 {
     std::cout<<"closing"<<std::endl;
+
     if(video_being_processed)
     {
         //on_Stop_clicked();

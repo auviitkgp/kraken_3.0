@@ -2,19 +2,19 @@
 
 namespace kraken_controller
 {
-  StateController::StateController()
-  {
-    
-  }
-  
-  StateController::~StateController()
-  {
-    
-  }
-  
-  void StateController::resetController(float **gain, float *offset)
-  {
+StateController::StateController()
+{
+
+}
+
+StateController::~StateController()
+{
+
+}
+
+void StateController::resetController(float **gain, float *offset)
+{
     _gain = gain;
-    _offset = offset;    
-  }
+    _offset = offset;
+}
 }

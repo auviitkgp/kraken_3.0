@@ -21,28 +21,30 @@
 ** Namespaces
 *****************************************************************************/
 
-namespace Telemetry {
+namespace Telemetry
+{
 
 /*****************************************************************************
 ** Implementation
 *****************************************************************************/
 
 QNode::QNode(int argc, char** argv ) :
-	init_argc(argc),
-	init_argv(argv)
-	{}
+    init_argc(argc),
+    init_argv(argv)
+{}
 
-QNode::~QNode() 
+QNode::~QNode()
 {
-    if(ros::isStarted()) 
+    if(ros::isStarted())
     {
-      ros::shutdown(); // explicitly needed since we use ros::start();
-      ros::waitForShutdown();
+        ros::shutdown(); // explicitly needed since we use ros::start();
+        ros::waitForShutdown();
     }
+
     wait();
 }
 
-bool QNode::init() 
+bool QNode::init()
 {
     ros::init(init_argc,init_argv,"Telemetry");
     ros::start(); // explicitly needed since our nodehandle is going out of scope.
@@ -60,7 +62,7 @@ bool QNode::init()
 }
 
 
-void QNode::run() 
+void QNode::run()
 {
     ros::spin();
     std::cout << "Ros shutdown, proceeding to close the gui." << std::endl;
@@ -69,32 +71,32 @@ void QNode::run()
 
 void QNode::callBackBottomImage(const sensor_msgs::ImageConstPtr &msg)
 {
-  Q_EMIT updateBottomImage(msg);
+    Q_EMIT updateBottomImage(msg);
 }
 
 void QNode::callBackFrontImage(const sensor_msgs::ImageConstPtr &msg)
 {
-  Q_EMIT updateFrontImage(msg);;
+    Q_EMIT updateFrontImage(msg);;
 }
 
 void QNode::callBackKrakenCurrentPose(const kraken_msgs::krakenPoseConstPtr &msg)
 {
-  Q_EMIT updateCurrentPose(msg);
+    Q_EMIT updateCurrentPose(msg);
 }
 
 void QNode::callBackKrakenSetPose(const kraken_msgs::krakenPoseConstPtr &msg)
 {
-  Q_EMIT updateSetPose(msg);
+    Q_EMIT updateSetPose(msg);
 }
 
 void QNode::callBackThruster4Data(const kraken_msgs::thrusterData4ThrusterConstPtr &msg)
 {
-  
+
 }
 
 void QNode::callBackThruster6Data(const kraken_msgs::thrusterData6ThrusterConstPtr &msg)
 {
-  
+
 }
 
 }  // namespace App
