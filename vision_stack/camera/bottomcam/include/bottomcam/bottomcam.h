@@ -8,26 +8,27 @@
 
 #include <resources/topicHeader.h>
 
-class Camera {
+class Camera
+{
 public:
-  Camera(int camNo=0);
-  cv::VideoCapture cam;
-  int cameraNo;
-  bool camOpen;
+    Camera(int camNo=0);
+    cv::VideoCapture cam;
+    int cameraNo;
+    bool camOpen;
 
-  // Getter functions
+    // Getter functions
 
-  cv::VideoCapture returnCamera();
-  int getCurrentCameraNo();
-  bool isOpen();
+    cv::VideoCapture returnCamera();
+    int getCurrentCameraNo();
+    bool isOpen();
 
-  // Setter functions
+    // Setter functions
 
-  void switchCamera();
-  void setCameraState(bool);
-  void setCameraNo(int camNo);
+    void switchCamera();
+    void setCameraState(bool);
+    void setCameraNo(int camNo);
 
-  // Functions to print the object
+    // Functions to print the object
 
-  void inspect();
+    void inspect();
 };
