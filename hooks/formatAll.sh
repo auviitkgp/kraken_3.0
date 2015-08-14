@@ -1,3 +1,3 @@
 for i in `find ./ -name '*.cpp'`; do
-	astyle -yej -f -S $i
+	astyle -A1 -yej -f -S $i
 done;

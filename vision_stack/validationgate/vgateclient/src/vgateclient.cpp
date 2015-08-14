@@ -12,7 +12,7 @@ typedef actionlib::SimpleActionClient<actionmsg::vgateAction> Client;
 
 int main(int argc, char ** argv)
 {
-	ros::init(argc, argv, "vgateclient");
+    ros::init(argc, argv, "vgateclient");
     Client _client("vgate");
     ROS_INFO("vgatenclient started : waiting for server to start.");
     _client.waitForServer();
@@ -21,6 +21,7 @@ int main(int argc, char ** argv)
     _goal.order = DETECT_VGATE;
     _client.sendGoal(_goal);
     bool _actionStatus = _client.waitForResult(ros::Duration(15.0));
+
     if(_actionStatus)
     {
         actionlib::SimpleClientGoalState _state = _client.getState();
@@ -35,6 +36,7 @@ int main(int argc, char ** argv)
     _goal.order = ALLIGN_VGATE;
     _client.sendGoal(_goal);
     _actionStatus = _client.waitForResult(ros::Duration(15.0));
+
     if(_actionStatus == true)
     {
         actionlib::SimpleClientGoalState _state = _client.getState();
@@ -45,5 +47,6 @@ int main(int argc, char ** argv)
         ROS_INFO("vgateclient : Action did not finish within specified time.");
         _client.cancelGoal();
     }
-	return 0;
+
+    return 0;
 }

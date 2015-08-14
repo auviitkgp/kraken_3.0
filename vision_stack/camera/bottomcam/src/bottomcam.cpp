@@ -22,6 +22,7 @@ VideoCapture cam;
 void msgCallback(const std_msgs::String::ConstPtr& msg)
 {
     camMsg = atoi(msg->data.c_str());
+
     if(camMsg == cameraNo && !camOpen)
     {
         if(cam.open(camMsg))
@@ -30,12 +31,13 @@ void msgCallback(const std_msgs::String::ConstPtr& msg)
             camOpen = true;
         }
     }
-    else if(camMsg != cameraNo && camOpen)
-    {
-        cam.release();
-        cout << "BottomCam closed successfully." << endl;
-        camOpen = false;
-    }
+    else
+        if(camMsg != cameraNo && camOpen)
+        {
+            cam.release();
+            cout << "BottomCam closed successfully." << endl;
+            camOpen = false;
+        }
 }
 
 int main(int argc, char** argv)
@@ -58,7 +60,9 @@ int main(int argc, char** argv)
         camOpen = true;
     }
     else
+    {
         ros::shutdown();
+    }
 
     ros::Rate _looprate(5);
 

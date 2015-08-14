@@ -4,18 +4,20 @@
 
 int main(int argc,char** argv)
 {
-  ros::init(argc,argv,"converter");
-  float gain = 0.5;
-  if(argc==2)
+    ros::init(argc,argv,"converter");
+    float gain = 0.5;
+
+    if(argc==2)
     {
-      gain = atof(argv[1]);
+        gain = atof(argv[1]);
     }
-  else
+    else
     {
-      ROS_INFO("Please give the gain as first parameter");
-      exit(0);
+        ROS_INFO("Please give the gain as first parameter");
+        exit(0);
     }
-  kraken_simulator::ForceConverter converter(gain);
-  ros::spin();
-  return 0;
+
+    kraken_simulator::ForceConverter converter(gain);
+    ros::spin();
+    return 0;
 }

@@ -14,5 +14,6 @@ int main(int argc, char** argv)
         std::cout<<"test started :)"<<std::endl;
         serial_port.closePort();
     }
-  return 0;
+
+    return 0;
 }

@@ -19,15 +19,20 @@ using namespace kraken_simulator;
 
 
 
-float storeforce[]={0,0,0,0,0,0};
+float storeforce[]= {0,0,0,0,0,0};
 void updateAUV(AuvModelSimple6DoF& auv,float force[])
 {
-    for(int i=0;i<6;i++)storeforce[i]=force[i];
+    for(int i=0; i<6; i++)
+    {
+        storeforce[i]=force[i];
+    }
+
     auv.updateAuv (force);
 }
 
 
-class Functor{
+class Functor
+{
     NodeHandle &nodeh;
     AuvModelSimple6DoF& auv;
     Publisher &pose_pub,&twist_pub,odo_pub,&imu_pub;
@@ -36,7 +41,7 @@ class Functor{
 
 public:
     Functor(NodeHandle&n,AuvModelSimple6DoF&a,Publisher &pub,Publisher &t,Publisher &odo,Publisher &imu,int val=0)
-        :nodeh(n),auv(a),pose_pub(pub),twist_pub(t),odo_pub(odo),imu_pub(imu),isLineNeeded(val),count(0){}
+        :nodeh(n),auv(a),pose_pub(pub),twist_pub(t),odo_pub(odo),imu_pub(imu),isLineNeeded(val),count(0) {}
 
 
     void operator()(const TimerEvent& t)
@@ -82,8 +87,11 @@ public:
         imu.data[kraken_sensors::yaw] = auv._current_position_to_body[5];
 //        imu_pub.publish(imu);
         pose_pub.publish(pos_msg);
+
         if(isLineNeeded)
+        {
             odo_pub.publish(odo_msg);
+        }
     }
 };
 
@@ -115,13 +123,18 @@ int main(int argc,char **argv)
 {
     ros::init (argc,argv,"simulator_node_1");
     int type=0;
+
     if(argc>=8)
     {
         type=atoi(argv[8]);
 
     }
-    for(int i=1;i<argc&&i<7;i++)
-            storeforce[i-1]=atof(argv[i]);
+
+    for(int i=1; i<argc&&i<7; i++)
+    {
+        storeforce[i-1]=atof(argv[i]);
+    }
+
     NodeHandle n;
 
     Publisher pose_publisher=n.advertise<geometry_msgs::Pose>(topics::SIMULATOR_MODEL_POSE,1);

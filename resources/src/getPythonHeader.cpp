@@ -5,10 +5,10 @@
 getPythonHeader.cpp
 
 - Make this package
-- Run the script in bin: 
+- Run the script in bin:
 		./bin/getPythonHeader src/topicHeader.cpp src/resources/topicHeader.py
 
-This will create a script that will write all the topcis in the cpp file to the 
+This will create a script that will write all the topcis in the cpp file to the
 python file for use with rospy.
 
 */
@@ -16,31 +16,36 @@ python file for use with rospy.
 using namespace std;
 int main(int argc, char const *argv[])
 {
-	if(argc<3){
-		printf("Sorry paths not properly set\n");
-		return 0;
-	}
-	cout<<"source="<<argv[1]<<endl;
-	cout<<"destination="<<argv[2]<<endl;
+    if(argc<3)
+    {
+        printf("Sorry paths not properly set\n");
+        return 0;
+    }
 
-	freopen(argv[1], "r", stdin);
-	freopen(argv[2], "w", stdout);
-	std::string input;
-	while(cin>>input){
-		// cout<<input<<endl;
-		if (input=="const")
-		{
-			cin>>input;
-			if(input=="char*")
-			{
-				char word[250];
+    cout<<"source="<<argv[1]<<endl;
+    cout<<"destination="<<argv[2]<<endl;
 
-				scanf(" %[^;\n]s",word);
-				
-				printf("%s\n", word);
-			}
-		}
-	}
+    freopen(argv[1], "r", stdin);
+    freopen(argv[2], "w", stdout);
+    std::string input;
 
-	return 0;
+    while(cin>>input)
+    {
+        // cout<<input<<endl;
+        if (input=="const")
+        {
+            cin>>input;
+
+            if(input=="char*")
+            {
+                char word[250];
+
+                scanf(" %[^;\n]s",word);
+
+                printf("%s\n", word);
+            }
+        }
+    }
+
+    return 0;
 }

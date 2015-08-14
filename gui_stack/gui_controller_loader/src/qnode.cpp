@@ -21,7 +21,8 @@
 ** Namespaces
 *****************************************************************************/
 
-namespace gui_template {
+namespace gui_template
+{
 
 /*****************************************************************************
 ** Implementation
@@ -29,28 +30,32 @@ namespace gui_template {
 
 
 QNode::QNode(int argc, char** argv,std::string* ptr ) :
-	init_argc(argc),
+    init_argc(argc),
     init_argv(argv),
     pathname_ptr(ptr)
 
-	{}
+{}
 
-QNode::~QNode() {
-    if(ros::isStarted()) {
-      ros::shutdown(); // explicitly needed since we use ros::start();
-      ros::waitForShutdown();
+QNode::~QNode()
+{
+    if(ros::isStarted())
+    {
+        ros::shutdown(); // explicitly needed since we use ros::start();
+        ros::waitForShutdown();
     }
-	wait();
+
+    wait();
 }
 
-bool QNode::init() {
-	ros::init(init_argc,init_argv,"App");
-	ros::start(); // explicitly needed since our nodehandle is going out of scope.
-	ros::NodeHandle n;
-	// Add your ros communications here.
+bool QNode::init()
+{
+    ros::init(init_argc,init_argv,"App");
+    ros::start(); // explicitly needed since our nodehandle is going out of scope.
+    ros::NodeHandle n;
+    // Add your ros communications here.
 
 
-	chatter_publisher = n.advertise<std_msgs::String>("chatter", 1000);
+    chatter_publisher = n.advertise<std_msgs::String>("chatter", 1000);
     client=n.serviceClient<control_server::loadParam>(topics::CONTROL_LOADPARAM);
 
     dyn_server=new dynamic_reconfigure::Server<gui_controller_loader::paramsConfig>();
@@ -60,8 +65,8 @@ bool QNode::init() {
     *dyn_servCB_global=boost::bind(&QNode::callbackCB,this,_1,_2);
     dyn_server->setCallback(*dyn_servCB_global);
 
-	start();
-	return true;
+    start();
+    return true;
 }
 
 void QNode::loadParamCB(std::string name)
@@ -82,10 +87,14 @@ void QNode::callbackCB(gui_controller_loader::paramsConfig &config, uint32_t lev
     float *offset_arr=cp_obj.getOffset();
 
     ROS_INFO("before");
-    for (int i = 0; i < cp_obj.getRows(); ++i) {
-        for (int j = 0; j < cp_obj.getColumns(); ++j) {
+
+    for (int i = 0; i < cp_obj.getRows(); ++i)
+    {
+        for (int j = 0; j < cp_obj.getColumns(); ++j)
+        {
             printf("%f\t",gain_matrix[i][j]);
         }
+
         printf("\n");
     }
 
@@ -111,10 +120,14 @@ void QNode::callbackCB(gui_controller_loader::paramsConfig &config, uint32_t lev
     gain_matrix[Kdt_depth.first][Kdt_depth.second]=config.Kdt_depth;
 
     ROS_INFO("after");
-    for (int i = 0; i < cp_obj.getRows(); ++i) {
-        for (int j = 0; j < cp_obj.getColumns(); ++j) {
+
+    for (int i = 0; i < cp_obj.getRows(); ++i)
+    {
+        for (int j = 0; j < cp_obj.getColumns(); ++j)
+        {
             printf("%f\t",gain_matrix[i][j]);
         }
+
         printf("\n");
     }
 
@@ -127,17 +140,20 @@ void QNode::callbackCB(gui_controller_loader::paramsConfig &config, uint32_t lev
     loadParamCB((*pathname_ptr+PARAM_SAVER));
 }
 
-void QNode::run() {
+void QNode::run()
+{
     ros::Rate loop_rate(10);
     int count = 0;
+
     while ( ros::ok() )
     {
-     loop_rate.sleep();
+        loop_rate.sleep();
     }
+
     ros::spin();
 
-	std::cout << "Ros shutdown, proceeding to close the gui." << std::endl;
-	Q_EMIT rosShutdown(); // used to signal the gui for a shutdown (useful to roslaunch)
+    std::cout << "Ros shutdown, proceeding to close the gui." << std::endl;
+    Q_EMIT rosShutdown(); // used to signal the gui for a shutdown (useful to roslaunch)
 }
 
 

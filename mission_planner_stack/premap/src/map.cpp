@@ -22,8 +22,12 @@ void Map::updateVehiclePosition(const kraken_msgs::krakenPoseConstPtr &est_pose_
 bool Map::getObjectLocation(premap::getLocation::Request &req, premap::getLocation::Response &res)
 {
     int _id=req.id;
+
     if(_id>=_nMarkers||_id<0)
+    {
         return false;
+    }
+
     res.x=MARKERS[_id].x;
     res.y=MARKERS[_id].y;
     return true;
@@ -41,14 +45,19 @@ void Map::updateVehiclePosition(const Point3f &new_position)
 
 
 
-    for (int depth = 1,z; depth< CAM_DEPTH_MAX*10; ++z) {
+    for (int depth = 1,z; depth< CAM_DEPTH_MAX*10; ++z)
+    {
         z=p.z-depth;
         float radius=depth*sin(CAMERA_ANGLE/2);
 
-        for (int x = p.x-radius; x < p.x+radius ; ++x) {
-            for (int y = p.y-radius; y < p.y+radius; ++y) {
+        for (int x = p.x-radius; x < p.x+radius ; ++x)
+        {
+            for (int y = p.y-radius; y < p.y+radius; ++y)
+            {
                 if(cv::norm(cv::Mat(Point(x,y)),cv::Mat(Point(p.x,p.y))) <= radius )
+                {
                     _map_data[x][y][z]=SEEN;
+                }
             }
         }
     }

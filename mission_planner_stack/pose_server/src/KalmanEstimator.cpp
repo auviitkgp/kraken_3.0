@@ -2,31 +2,32 @@
 
 using namespace kraken_core;
 
-KalmanEstimator::KalmanEstimator(int size, float time):Estimator(size,time),_isStateInitiaized(false){
+KalmanEstimator::KalmanEstimator(int size, float time):Estimator(size,time),_isStateInitiaized(false)
+{
 
 
     // defining all the 4 matrices;
-		
+
     _Hmatrix<<0,0,1,0,
-               0,0,0,1;
+             0,0,0,1;
 
     _Fmatrix<<1,0,_time,0,
-            0,1,0,_time,
-            0,0,1,0,
-            0,0,0,1;
+             0,1,0,_time,
+             0,0,1,0,
+             0,0,0,1;
 
     _Pmatrix<<0.05,0,0,0,
-            0,0.05,0,0,
-            0,0,0.01,0,
-            0,0,0,0.01;
+             0,0.05,0,0,
+             0,0,0.01,0,
+             0,0,0,0.01;
 
     _Rmatrix<<0.01,0,
-            0,0.01;
+             0,0.01;
 
     _Bmatrix<<_time*_time,0,
-            0,_time*_time,
-            _time,0,
-            0,_time;
+             0,_time*_time,
+             _time,0,
+             0,_time;
 
 }
 
@@ -80,7 +81,7 @@ void KalmanEstimator::updatePose(kraken_msgs::imuData &imu_msg, kraken_msgs::dvl
 
 void KalmanEstimator::resetPose(KrakenPose &pose_msg)
 {
-   return;
+    return;
 }
 
 
@@ -199,8 +200,8 @@ void KalmanEstimator::accelerationToWorld()
 
     Matrix3d RWB;
     RWB<<cos(p)*cos(y),     sin(r)*sin(p)*cos(y)-cos(r)*sin(y),            cos(r)*sin(p)*cos(y)+sin(r)*sin(y),
-            cos(p)*sin(y),   sin(r)*sin(p)*sin(y)+cos(r)*cos(y),           cos(r)*sin(p)*sin(y)-sin(r)*cos(y),
-            -sin(p)  ,        sin(r)*cos(y),                                 cos(r)*cos(p);
+        cos(p)*sin(y),   sin(r)*sin(p)*sin(y)+cos(r)*cos(y),           cos(r)*sin(p)*sin(y)-sin(r)*cos(y),
+        -sin(p)  ,        sin(r)*cos(y),                                 cos(r)*cos(p);
 
     Vector3d Aw=RWB*Vector3d(ax,ay,az);
 
@@ -228,8 +229,8 @@ void KalmanEstimator::velocityToWorld()
 
     Matrix3d RWB;
     RWB<<cos(p)*cos(y),     sin(r)*sin(p)*cos(y)-cos(r)*sin(y),            cos(r)*sin(p)*cos(y)+sin(r)*sin(y),
-            cos(p)*sin(y),   sin(r)*sin(p)*sin(y)+cos(r)*cos(y),           cos(r)*sin(p)*sin(y)-sin(r)*cos(y),
-            -sin(p)  ,        sin(r)*cos(y),                                 cos(r)*cos(p);
+        cos(p)*sin(y),   sin(r)*sin(p)*sin(y)+cos(r)*cos(y),           cos(r)*sin(p)*sin(y)-sin(r)*cos(y),
+        -sin(p)  ,        sin(r)*cos(y),                                 cos(r)*cos(p);
 
     Vector3d Vw=RWB*Vector3d(vx,vy,vz);
 

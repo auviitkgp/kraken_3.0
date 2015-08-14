@@ -21,15 +21,15 @@
 */
 double CBlobGetMoment::operator()(CBlob &blob)
 {
-	return blob.Moment(m_p, m_q);
+    return blob.Moment(m_p, m_q);
 }
 
 /**
 - FUNCIÓ: HullPerimeter
 - FUNCIONALITAT: Calcula la longitud del perimetre convex del blob.
-			   Fa servir la funció d'OpenCV cvConvexHull2 per a 
+			   Fa servir la funció d'OpenCV cvConvexHull2 per a
 			   calcular el perimetre convex.
-			   
+
 - PARÀMETRES:
 - RESULTAT:
 	- retorna la longitud del perímetre convex del blob. Si el blob no té coordenades
@@ -44,7 +44,7 @@ double CBlobGetMoment::operator()(CBlob &blob)
 - FUNCTIONALITY: Calculates the convex hull perimeter of the blob
 - PARAMETERS:
 - RESULT:
-	- returns the convex hull perimeter of the blob or the perimeter if the 
+	- returns the convex hull perimeter of the blob or the perimeter if the
 	blob edges could not be retrieved
 - RESTRICTIONS:
 - AUTHOR: Ricard Borràs
@@ -53,36 +53,44 @@ double CBlobGetMoment::operator()(CBlob &blob)
 */
 double CBlobGetHullPerimeter::operator()(CBlob &blob)
 {
-	CvSeq *convexHull;
-	double perimeter;
+    CvSeq *convexHull;
+    double perimeter;
 
-	convexHull = blob.GetConvexHull();
+    convexHull = blob.GetConvexHull();
 
-	if( convexHull )
-		perimeter = fabs(cvArcLength(convexHull,CV_WHOLE_SEQ,1));
-	else
-		return 0;
+    if( convexHull )
+    {
+        perimeter = fabs(cvArcLength(convexHull,CV_WHOLE_SEQ,1));
+    }
+    else
+    {
+        return 0;
+    }
 
-	cvClearSeq(convexHull);
+    cvClearSeq(convexHull);
 
-	return perimeter;
+    return perimeter;
 }
 
 double CBlobGetHullArea::operator()(CBlob &blob)
 {
-	CvSeq *convexHull;
-	double area;
+    CvSeq *convexHull;
+    double area;
 
-	convexHull = blob.GetConvexHull();
+    convexHull = blob.GetConvexHull();
 
-	if( convexHull )
-		area = fabs(cvContourArea(convexHull));
-	else
-		return 0;
+    if( convexHull )
+    {
+        area = fabs(cvContourArea(convexHull));
+    }
+    else
+    {
+        return 0;
+    }
 
-	cvClearSeq(convexHull);
+    cvClearSeq(convexHull);
 
-	return area;
+    return area;
 }
 
 /**
@@ -97,27 +105,32 @@ double CBlobGetHullArea::operator()(CBlob &blob)
 */
 double CBlobGetMinXatMinY::operator()(CBlob &blob)
 {
-	double result = LONG_MAX;
-	
-	CvSeqReader reader;
-	CvPoint actualPoint;
-	t_PointList externContour;
-	
-	externContour = blob.GetExternalContour()->GetContourPoints();
-	if( !externContour ) return result;
-	cvStartReadSeq( externContour, &reader);
+    double result = LONG_MAX;
 
-	for( int i=0; i< externContour->total; i++)
-	{
-		CV_READ_SEQ_ELEM( actualPoint, reader);
+    CvSeqReader reader;
+    CvPoint actualPoint;
+    t_PointList externContour;
 
-		if( (actualPoint.y == blob.MinY()) && (actualPoint.x < result) )
-		{
-			result = actualPoint.x;
-		}	
-	}
+    externContour = blob.GetExternalContour()->GetContourPoints();
 
-	return result;
+    if( !externContour )
+    {
+        return result;
+    }
+
+    cvStartReadSeq( externContour, &reader);
+
+    for( int i=0; i< externContour->total; i++)
+    {
+        CV_READ_SEQ_ELEM( actualPoint, reader);
+
+        if( (actualPoint.y == blob.MinY()) && (actualPoint.x < result) )
+        {
+            result = actualPoint.x;
+        }
+    }
+
+    return result;
 }
 
 /**
@@ -132,27 +145,32 @@ double CBlobGetMinXatMinY::operator()(CBlob &blob)
 */
 double CBlobGetMinYatMaxX::operator()(CBlob &blob)
 {
-	double result = LONG_MAX;
-	
-	CvSeqReader reader;
-	CvPoint actualPoint;
-	t_PointList externContour;
-	
-	externContour = blob.GetExternalContour()->GetContourPoints();
-	if( !externContour ) return result;
-	cvStartReadSeq( externContour, &reader);
+    double result = LONG_MAX;
 
-	for( int i=0; i< externContour->total; i++)
-	{
-		CV_READ_SEQ_ELEM( actualPoint, reader);
+    CvSeqReader reader;
+    CvPoint actualPoint;
+    t_PointList externContour;
 
-		if( (actualPoint.x == blob.MaxX()) && (actualPoint.y < result) )
-		{
-			result = actualPoint.y;
-		}	
-	}
+    externContour = blob.GetExternalContour()->GetContourPoints();
 
-	return result;
+    if( !externContour )
+    {
+        return result;
+    }
+
+    cvStartReadSeq( externContour, &reader);
+
+    for( int i=0; i< externContour->total; i++)
+    {
+        CV_READ_SEQ_ELEM( actualPoint, reader);
+
+        if( (actualPoint.x == blob.MaxX()) && (actualPoint.y < result) )
+        {
+            result = actualPoint.y;
+        }
+    }
+
+    return result;
 }
 
 /**
@@ -167,28 +185,32 @@ double CBlobGetMinYatMaxX::operator()(CBlob &blob)
 */
 double CBlobGetMaxXatMaxY::operator()(CBlob &blob)
 {
-	double result = LONG_MIN;
-	
-	CvSeqReader reader;
-	CvPoint actualPoint;
-	t_PointList externContour;
-	
-	externContour = blob.GetExternalContour()->GetContourPoints();
-	if( !externContour ) return result;
+    double result = LONG_MIN;
 
-	cvStartReadSeq( externContour, &reader);
+    CvSeqReader reader;
+    CvPoint actualPoint;
+    t_PointList externContour;
 
-	for( int i=0; i< externContour->total; i++)
-	{
-		CV_READ_SEQ_ELEM( actualPoint, reader);
+    externContour = blob.GetExternalContour()->GetContourPoints();
 
-		if( (actualPoint.y == blob.MaxY()) && (actualPoint.x > result) )
-		{
-			result = actualPoint.x;
-		}	
-	}
+    if( !externContour )
+    {
+        return result;
+    }
 
-	return result;
+    cvStartReadSeq( externContour, &reader);
+
+    for( int i=0; i< externContour->total; i++)
+    {
+        CV_READ_SEQ_ELEM( actualPoint, reader);
+
+        if( (actualPoint.y == blob.MaxY()) && (actualPoint.x > result) )
+        {
+            result = actualPoint.x;
+        }
+    }
+
+    return result;
 }
 
 /**
@@ -203,29 +225,33 @@ double CBlobGetMaxXatMaxY::operator()(CBlob &blob)
 */
 double CBlobGetMaxYatMinX::operator()(CBlob &blob)
 {
-	double result = LONG_MIN;
-	
-	CvSeqReader reader;
-	CvPoint actualPoint;
-	t_PointList externContour;
-	
-	externContour = blob.GetExternalContour()->GetContourPoints();
-	if( !externContour ) return result;
+    double result = LONG_MIN;
 
-	cvStartReadSeq( externContour, &reader);
+    CvSeqReader reader;
+    CvPoint actualPoint;
+    t_PointList externContour;
 
-	
-	for( int i=0; i< externContour->total; i++)
-	{
-		CV_READ_SEQ_ELEM( actualPoint, reader);
+    externContour = blob.GetExternalContour()->GetContourPoints();
 
-		if( (actualPoint.x == blob.MinX()) && (actualPoint.y > result) )
-		{
-			result = actualPoint.y;
-		}	
-	}
+    if( !externContour )
+    {
+        return result;
+    }
 
-	return result;
+    cvStartReadSeq( externContour, &reader);
+
+
+    for( int i=0; i< externContour->total; i++)
+    {
+        CV_READ_SEQ_ELEM( actualPoint, reader);
+
+        if( (actualPoint.x == blob.MinX()) && (actualPoint.y > result) )
+        {
+            result = actualPoint.y;
+        }
+    }
+
+    return result;
 }
 
 
@@ -242,25 +268,33 @@ double CBlobGetMaxYatMinX::operator()(CBlob &blob)
 */
 double CBlobGetElongation::operator()(CBlob &blob)
 {
-	double ampladaC,longitudC,amplada,longitud;
+    double ampladaC,longitudC,amplada,longitud;
 
-	double tmp;
+    double tmp;
 
-	tmp = blob.Perimeter()*blob.Perimeter() - 16*blob.Area();
+    tmp = blob.Perimeter()*blob.Perimeter() - 16*blob.Area();
 
-	if( tmp > 0.0 )
-		ampladaC = (double) (blob.Perimeter()+sqrt(tmp))/4;
-	// error intrínsec en els càlculs de l'àrea i el perímetre 
-	else
-		ampladaC = (double) (blob.Perimeter())/4;
+    if( tmp > 0.0 )
+    {
+        ampladaC = (double) (blob.Perimeter()+sqrt(tmp))/4;
+    }
+    // error intrínsec en els càlculs de l'àrea i el perímetre
+    else
+    {
+        ampladaC = (double) (blob.Perimeter())/4;
+    }
 
-	if(ampladaC<=0.0) return 0;
-	longitudC=(double) blob.Area()/ampladaC;
+    if(ampladaC<=0.0)
+    {
+        return 0;
+    }
 
-	longitud=MAX( longitudC , ampladaC );
-	amplada=MIN( longitudC , ampladaC );
+    longitudC=(double) blob.Area()/ampladaC;
 
-	return (double) longitud/amplada;
+    longitud=MAX( longitudC , ampladaC );
+    amplada=MIN( longitudC , ampladaC );
+
+    return (double) longitud/amplada;
 }
 
 /**
@@ -268,7 +302,7 @@ double CBlobGetElongation::operator()(CBlob &blob)
 */
 /**
 - FUNCTION: CBlobGetCompactness
-- FUNCTIONALITY: Calculates the compactness of the blob 
+- FUNCTIONALITY: Calculates the compactness of the blob
 			    ( maximum for circle shaped blobs, minimum for the rest)
 - PARAMETERS:
 - RESULT:
@@ -279,10 +313,14 @@ double CBlobGetElongation::operator()(CBlob &blob)
 */
 double CBlobGetCompactness::operator()(CBlob &blob)
 {
-	if( blob.Area() != 0.0 )
-		return (double) pow(blob.Perimeter(),2)/(4*CV_PI*blob.Area());
-	else
-		return 0.0;
+    if( blob.Area() != 0.0 )
+    {
+        return (double) pow(blob.Perimeter(),2)/(4*CV_PI*blob.Area());
+    }
+    else
+    {
+        return 0.0;
+    }
 }
 
 /**
@@ -290,7 +328,7 @@ double CBlobGetCompactness::operator()(CBlob &blob)
 */
 /**
 - FUNCTION: CBlobGetRoughness
-- FUNCTIONALITY: Calculates the roughness of the blob 
+- FUNCTIONALITY: Calculates the roughness of the blob
 			    ( ratio between perimeter and convex hull perimeter)
 - PARAMETERS:
 - RESULT:
@@ -301,14 +339,16 @@ double CBlobGetCompactness::operator()(CBlob &blob)
 */
 double CBlobGetRoughness::operator()(CBlob &blob)
 {
-	CBlobGetHullPerimeter getHullPerimeter = CBlobGetHullPerimeter();
-	
-	double hullPerimeter = getHullPerimeter(blob);
+    CBlobGetHullPerimeter getHullPerimeter = CBlobGetHullPerimeter();
 
-	if( hullPerimeter != 0.0 )
-		return blob.Perimeter() / hullPerimeter;//HullPerimeter();
+    double hullPerimeter = getHullPerimeter(blob);
 
-	return 0.0;
+    if( hullPerimeter != 0.0 )
+    {
+        return blob.Perimeter() / hullPerimeter;    //HullPerimeter();
+    }
+
+    return 0.0;
 }
 
 /**
@@ -327,21 +367,29 @@ double CBlobGetRoughness::operator()(CBlob &blob)
 */
 double CBlobGetLength::operator()(CBlob &blob)
 {
-	double ampladaC,longitudC;
-	double tmp;
+    double ampladaC,longitudC;
+    double tmp;
 
-	tmp = blob.Perimeter()*blob.Perimeter() - 16*blob.Area();
+    tmp = blob.Perimeter()*blob.Perimeter() - 16*blob.Area();
 
-	if( tmp > 0.0 )
-		ampladaC = (double) (blob.Perimeter()+sqrt(tmp))/4;
-	// error intrínsec en els càlculs de l'àrea i el perímetre 
-	else
-		ampladaC = (double) (blob.Perimeter())/4;
+    if( tmp > 0.0 )
+    {
+        ampladaC = (double) (blob.Perimeter()+sqrt(tmp))/4;
+    }
+    // error intrínsec en els càlculs de l'àrea i el perímetre
+    else
+    {
+        ampladaC = (double) (blob.Perimeter())/4;
+    }
 
-	if(ampladaC<=0.0) return 0;
-	longitudC=(double) blob.Area()/ampladaC;
+    if(ampladaC<=0.0)
+    {
+        return 0;
+    }
 
-	return MAX( longitudC , ampladaC );
+    longitudC=(double) blob.Area()/ampladaC;
+
+    return MAX( longitudC , ampladaC );
 }
 
 /**
@@ -360,21 +408,29 @@ double CBlobGetLength::operator()(CBlob &blob)
 */
 double CBlobGetBreadth::operator()(CBlob &blob)
 {
-	double ampladaC,longitudC;
-	double tmp;
+    double ampladaC,longitudC;
+    double tmp;
 
-	tmp = blob.Perimeter()*blob.Perimeter() - 16*blob.Area();
+    tmp = blob.Perimeter()*blob.Perimeter() - 16*blob.Area();
 
-	if( tmp > 0.0 )
-		ampladaC = (double) (blob.Perimeter()+sqrt(tmp))/4;
-	// error intrínsec en els càlculs de l'àrea i el perímetre 
-	else
-		ampladaC = (double) (blob.Perimeter())/4;
+    if( tmp > 0.0 )
+    {
+        ampladaC = (double) (blob.Perimeter()+sqrt(tmp))/4;
+    }
+    // error intrínsec en els càlculs de l'àrea i el perímetre
+    else
+    {
+        ampladaC = (double) (blob.Perimeter())/4;
+    }
 
-	if(ampladaC<=0.0) return 0;
-	longitudC = (double) blob.Area()/ampladaC;
+    if(ampladaC<=0.0)
+    {
+        return 0;
+    }
 
-	return MIN( longitudC , ampladaC );
+    longitudC = (double) blob.Area()/ampladaC;
+
+    return MIN( longitudC , ampladaC );
 }
 
 /**
@@ -382,7 +438,7 @@ double CBlobGetBreadth::operator()(CBlob &blob)
 */
 /**
 - FUNCTION: CBlobGetDistanceFromPoint
-- FUNCTIONALITY: Calculates the euclidean distance between the blob center and 
+- FUNCTIONALITY: Calculates the euclidean distance between the blob center and
 				 the point specified in the constructor
 - PARAMETERS:
 - RESULT:
@@ -393,14 +449,14 @@ double CBlobGetBreadth::operator()(CBlob &blob)
 */
 double CBlobGetDistanceFromPoint::operator()(CBlob &blob)
 {
-	double xmitjana, ymitjana;
-	CBlobGetXCenter getXCenter;
-	CBlobGetYCenter getYCenter;
+    double xmitjana, ymitjana;
+    CBlobGetXCenter getXCenter;
+    CBlobGetYCenter getYCenter;
 
-	xmitjana = m_x - getXCenter( blob );
-	ymitjana = m_y - getYCenter( blob );
+    xmitjana = m_x - getXCenter( blob );
+    ymitjana = m_y - getYCenter( blob );
 
-	return sqrt((xmitjana*xmitjana)+(ymitjana*ymitjana));
+    return sqrt((xmitjana*xmitjana)+(ymitjana*ymitjana));
 }
 
 /**
@@ -417,12 +473,12 @@ double CBlobGetDistanceFromPoint::operator()(CBlob &blob)
 */
 double CBlobGetXYInside::operator()(CBlob &blob)
 {
-	if( blob.GetExternalContour()->GetContourPoints() )
-	{
-		return cvPointPolygonTest( blob.GetExternalContour()->GetContourPoints(), m_p,0) >= 0;
-	}
+    if( blob.GetExternalContour()->GetContourPoints() )
+    {
+        return cvPointPolygonTest( blob.GetExternalContour()->GetContourPoints(), m_p,0) >= 0;
+    }
 
-	return 0;
+    return 0;
 }
 #ifdef BLOB_OBJECT_FACTORY
 
@@ -434,7 +490,7 @@ double CBlobGetXYInside::operator()(CBlob &blob)
 - RESULTAT:
 	- Modifica l'objecte fabricaOperadorsBlob
 - RESTRICCIONS:
-	- Només es registraran els operadors de blob.h. Si se'n volen afegir, cal afegir-los amb 
+	- Només es registraran els operadors de blob.h. Si se'n volen afegir, cal afegir-los amb
 	  el mètode Register de la fàbrica.
 - AUTOR: rborras
 - DATA DE CREACIÓ: 2006/05/18
@@ -442,60 +498,60 @@ double CBlobGetXYInside::operator()(CBlob &blob)
 */
 void RegistraTotsOperadors( t_OperadorBlobFactory &fabricaOperadorsBlob )
 {
-	// blob shape
-	fabricaOperadorsBlob.Register( CBlobGetArea().GetNom(), Type2Type<CBlobGetArea>());
-	fabricaOperadorsBlob.Register( CBlobGetBreadth().GetNom(), Type2Type<CBlobGetBreadth>());
-	fabricaOperadorsBlob.Register( CBlobGetCompactness().GetNom(), Type2Type<CBlobGetCompactness>());
-	fabricaOperadorsBlob.Register( CBlobGetElongation().GetNom(), Type2Type<CBlobGetElongation>());
-	fabricaOperadorsBlob.Register( CBlobGetExterior().GetNom(), Type2Type<CBlobGetExterior>());
-	fabricaOperadorsBlob.Register( CBlobGetLength().GetNom(), Type2Type<CBlobGetLength>());
-	fabricaOperadorsBlob.Register( CBlobGetPerimeter().GetNom(), Type2Type<CBlobGetPerimeter>());
-	fabricaOperadorsBlob.Register( CBlobGetRoughness().GetNom(), Type2Type<CBlobGetRoughness>());
+    // blob shape
+    fabricaOperadorsBlob.Register( CBlobGetArea().GetNom(), Type2Type<CBlobGetArea>());
+    fabricaOperadorsBlob.Register( CBlobGetBreadth().GetNom(), Type2Type<CBlobGetBreadth>());
+    fabricaOperadorsBlob.Register( CBlobGetCompactness().GetNom(), Type2Type<CBlobGetCompactness>());
+    fabricaOperadorsBlob.Register( CBlobGetElongation().GetNom(), Type2Type<CBlobGetElongation>());
+    fabricaOperadorsBlob.Register( CBlobGetExterior().GetNom(), Type2Type<CBlobGetExterior>());
+    fabricaOperadorsBlob.Register( CBlobGetLength().GetNom(), Type2Type<CBlobGetLength>());
+    fabricaOperadorsBlob.Register( CBlobGetPerimeter().GetNom(), Type2Type<CBlobGetPerimeter>());
+    fabricaOperadorsBlob.Register( CBlobGetRoughness().GetNom(), Type2Type<CBlobGetRoughness>());
 
-	// blob color
-	fabricaOperadorsBlob.Register( CBlobGetMean(NULL).GetNom(), Type2Type<CBlobGetMean>());
-	fabricaOperadorsBlob.Register( CBlobGetStdDev(NULL).GetNom(), Type2Type<CBlobGetStdDev>());
+    // blob color
+    fabricaOperadorsBlob.Register( CBlobGetMean(NULL).GetNom(), Type2Type<CBlobGetMean>());
+    fabricaOperadorsBlob.Register( CBlobGetStdDev(NULL).GetNom(), Type2Type<CBlobGetStdDev>());
 
-	// extern pixels
-	fabricaOperadorsBlob.Register( CBlobGetExternPerimeterRatio().GetNom(), Type2Type<CBlobGetExternPerimeterRatio>());
-	fabricaOperadorsBlob.Register( CBlobGetExternHullPerimeterRatio().GetNom(), Type2Type<CBlobGetExternHullPerimeterRatio>());
-	fabricaOperadorsBlob.Register( CBlobGetExternPerimeter().GetNom(), Type2Type<CBlobGetExternPerimeter>());
-	
+    // extern pixels
+    fabricaOperadorsBlob.Register( CBlobGetExternPerimeterRatio().GetNom(), Type2Type<CBlobGetExternPerimeterRatio>());
+    fabricaOperadorsBlob.Register( CBlobGetExternHullPerimeterRatio().GetNom(), Type2Type<CBlobGetExternHullPerimeterRatio>());
+    fabricaOperadorsBlob.Register( CBlobGetExternPerimeter().GetNom(), Type2Type<CBlobGetExternPerimeter>());
 
-	// hull 
-	fabricaOperadorsBlob.Register( CBlobGetHullPerimeter().GetNom(), Type2Type<CBlobGetHullPerimeter>());
-	fabricaOperadorsBlob.Register( CBlobGetHullArea().GetNom(), Type2Type<CBlobGetHullArea>());
-	
 
-	// elipse info
-	fabricaOperadorsBlob.Register( CBlobGetMajorAxisLength().GetNom(), Type2Type<CBlobGetMajorAxisLength>());
-	fabricaOperadorsBlob.Register( CBlobGetMinorAxisLength().GetNom(), Type2Type<CBlobGetMinorAxisLength>());
-	fabricaOperadorsBlob.Register( CBlobGetAxisRatio().GetNom(), Type2Type<CBlobGetAxisRatio>());
-	fabricaOperadorsBlob.Register( CBlobGetOrientation().GetNom(), Type2Type<CBlobGetOrientation>());
-	fabricaOperadorsBlob.Register( CBlobGetOrientationCos().GetNom(), Type2Type<CBlobGetOrientationCos>());
-	fabricaOperadorsBlob.Register( CBlobGetAreaElipseRatio().GetNom(), Type2Type<CBlobGetAreaElipseRatio>());
+    // hull
+    fabricaOperadorsBlob.Register( CBlobGetHullPerimeter().GetNom(), Type2Type<CBlobGetHullPerimeter>());
+    fabricaOperadorsBlob.Register( CBlobGetHullArea().GetNom(), Type2Type<CBlobGetHullArea>());
 
-	// min an max
-	fabricaOperadorsBlob.Register( CBlobGetMaxX().GetNom(), Type2Type<CBlobGetMaxX>());
-	fabricaOperadorsBlob.Register( CBlobGetMaxY().GetNom(), Type2Type<CBlobGetMaxY>());
-	fabricaOperadorsBlob.Register( CBlobGetMinX().GetNom(), Type2Type<CBlobGetMinX>());
-	fabricaOperadorsBlob.Register( CBlobGetMinY().GetNom(), Type2Type<CBlobGetMinY>());
 
-	fabricaOperadorsBlob.Register( CBlobGetMaxXatMaxY().GetNom(), Type2Type<CBlobGetMaxXatMaxY>());
-	fabricaOperadorsBlob.Register( CBlobGetMaxYatMinX().GetNom(), Type2Type<CBlobGetMaxYatMinX>());
-	fabricaOperadorsBlob.Register( CBlobGetMinXatMinY().GetNom(), Type2Type<CBlobGetMinXatMinY>());
-	fabricaOperadorsBlob.Register( CBlobGetMinYatMaxX().GetNom(), Type2Type<CBlobGetMinYatMaxX>());
+    // elipse info
+    fabricaOperadorsBlob.Register( CBlobGetMajorAxisLength().GetNom(), Type2Type<CBlobGetMajorAxisLength>());
+    fabricaOperadorsBlob.Register( CBlobGetMinorAxisLength().GetNom(), Type2Type<CBlobGetMinorAxisLength>());
+    fabricaOperadorsBlob.Register( CBlobGetAxisRatio().GetNom(), Type2Type<CBlobGetAxisRatio>());
+    fabricaOperadorsBlob.Register( CBlobGetOrientation().GetNom(), Type2Type<CBlobGetOrientation>());
+    fabricaOperadorsBlob.Register( CBlobGetOrientationCos().GetNom(), Type2Type<CBlobGetOrientationCos>());
+    fabricaOperadorsBlob.Register( CBlobGetAreaElipseRatio().GetNom(), Type2Type<CBlobGetAreaElipseRatio>());
 
-	// coordinate info
-	fabricaOperadorsBlob.Register( CBlobGetXYInside().GetNom(), Type2Type<CBlobGetXYInside>());
-	fabricaOperadorsBlob.Register( CBlobGetDiffY().GetNom(), Type2Type<CBlobGetDiffY>());
-	fabricaOperadorsBlob.Register( CBlobGetDiffX().GetNom(), Type2Type<CBlobGetDiffX>());
-	fabricaOperadorsBlob.Register( CBlobGetXCenter().GetNom(), Type2Type<CBlobGetXCenter>());
-	fabricaOperadorsBlob.Register( CBlobGetYCenter().GetNom(), Type2Type<CBlobGetYCenter>());
-	fabricaOperadorsBlob.Register( CBlobGetDistanceFromPoint().GetNom(), Type2Type<CBlobGetDistanceFromPoint>());
+    // min an max
+    fabricaOperadorsBlob.Register( CBlobGetMaxX().GetNom(), Type2Type<CBlobGetMaxX>());
+    fabricaOperadorsBlob.Register( CBlobGetMaxY().GetNom(), Type2Type<CBlobGetMaxY>());
+    fabricaOperadorsBlob.Register( CBlobGetMinX().GetNom(), Type2Type<CBlobGetMinX>());
+    fabricaOperadorsBlob.Register( CBlobGetMinY().GetNom(), Type2Type<CBlobGetMinY>());
 
-	// moments
-	fabricaOperadorsBlob.Register( CBlobGetMoment().GetNom(), Type2Type<CBlobGetMoment>());
+    fabricaOperadorsBlob.Register( CBlobGetMaxXatMaxY().GetNom(), Type2Type<CBlobGetMaxXatMaxY>());
+    fabricaOperadorsBlob.Register( CBlobGetMaxYatMinX().GetNom(), Type2Type<CBlobGetMaxYatMinX>());
+    fabricaOperadorsBlob.Register( CBlobGetMinXatMinY().GetNom(), Type2Type<CBlobGetMinXatMinY>());
+    fabricaOperadorsBlob.Register( CBlobGetMinYatMaxX().GetNom(), Type2Type<CBlobGetMinYatMaxX>());
+
+    // coordinate info
+    fabricaOperadorsBlob.Register( CBlobGetXYInside().GetNom(), Type2Type<CBlobGetXYInside>());
+    fabricaOperadorsBlob.Register( CBlobGetDiffY().GetNom(), Type2Type<CBlobGetDiffY>());
+    fabricaOperadorsBlob.Register( CBlobGetDiffX().GetNom(), Type2Type<CBlobGetDiffX>());
+    fabricaOperadorsBlob.Register( CBlobGetXCenter().GetNom(), Type2Type<CBlobGetXCenter>());
+    fabricaOperadorsBlob.Register( CBlobGetYCenter().GetNom(), Type2Type<CBlobGetYCenter>());
+    fabricaOperadorsBlob.Register( CBlobGetDistanceFromPoint().GetNom(), Type2Type<CBlobGetDistanceFromPoint>());
+
+    // moments
+    fabricaOperadorsBlob.Register( CBlobGetMoment().GetNom(), Type2Type<CBlobGetMoment>());
 
 }
 

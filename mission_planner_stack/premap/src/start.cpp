@@ -17,12 +17,13 @@ using namespace premap_module;
 using namespace ros;
 using namespace std;
 const char* ESTIMATED_POSE=topics::NAV_POSE_ESTIMATED,
-*SERVICE_NAME=topics::PREMAP_LOCATION_SERVICE;
+            *SERVICE_NAME=topics::PREMAP_LOCATION_SERVICE;
 
 Point2f* returnArray (int &n,std::string file_name);
 int main(int argc,char**argv)
 {
     init(argc,argv,"map_node");
+
     if(argc<2)
     {
         cout<<argv[0]<<endl;
@@ -30,6 +31,7 @@ int main(int argc,char**argv)
         ROS_ERROR("sry no argument given to load xml file");
         return 0;
     }
+
     NodeHandle n;
     int _nmarker;
     Point2f* prtm=returnArray (_nmarker,argv[1]);

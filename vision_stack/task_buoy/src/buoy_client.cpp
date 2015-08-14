@@ -19,6 +19,7 @@ int main(int argc, char ** argv)
     ROS_INFO("Sending goal - DETECT_BUOY.");
     _client.sendGoal(_goal);
     bool _actionStatus = _client.waitForResult(ros::Duration(300.0));
+
     if(_actionStatus == true)
     {
         actionlib::SimpleClientGoalState _state = _client.getState();
@@ -29,10 +30,12 @@ int main(int argc, char ** argv)
         ROS_INFO("buoy_client : Action did not finish within the specified time.");
         _client.cancelGoal();
     }
-   ROS_INFO("Sending goal - ALIGN_BUOY"); 
+
+    ROS_INFO("Sending goal - ALIGN_BUOY");
     _goal.order = ALIGN_BUOY;
     _client.sendGoal(_goal);
     _actionStatus = _client.waitForResult(ros::Duration(300.0));
+
     if(_actionStatus == true)
     {
         actionlib::SimpleClientGoalState _state = _client.getState();

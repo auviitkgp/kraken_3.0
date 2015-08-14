@@ -18,7 +18,8 @@
 ** Namespaces
 *****************************************************************************/
 
-namespace gui_template {
+namespace gui_template
+{
 
 using namespace Qt;
 
@@ -27,8 +28,8 @@ using namespace Qt;
 *****************************************************************************/
 
 MainWindow::MainWindow(int argc, char** argv, QWidget *parent)
-	: QMainWindow(parent)
-	, qnode(argc,argv)
+    : QMainWindow(parent)
+    , qnode(argc,argv)
 {
     ui.setupUi(this); // Calling this incidentally connects all ui's triggers to on_...() callbacks in this class.
 
@@ -37,7 +38,7 @@ MainWindow::MainWindow(int argc, char** argv, QWidget *parent)
     /*********************
     ** Auto Start
     **********************/
-    
+
 }
 
 MainWindow::~MainWindow() {}
@@ -55,7 +56,8 @@ MainWindow::~MainWindow() {}
 ** Implementation [Menu]
 *****************************************************************************/
 
-void MainWindow::on_actionAbout_triggered() {
+void MainWindow::on_actionAbout_triggered()
+{
     QMessageBox::about(this, tr("About ..."),tr("<h2>PACKAGE_NAME Test Program 0.10</h2><p>Copyright Yujin Robot</p><p>This package needs an about description.</p>"));
 }
 
@@ -63,7 +65,8 @@ void MainWindow::on_actionAbout_triggered() {
 ** Implementation [Configuration]
 *****************************************************************************/
 
-void MainWindow::ReadSettings() {
+void MainWindow::ReadSettings()
+{
     /*QSettings settings("Qt-Ros Package", "App");
     restoreGeometry(settings.value("geometry").toByteArray());
     restoreState(settings.value("windowState").toByteArray());
@@ -84,7 +87,8 @@ void MainWindow::ReadSettings() {
     }*/
 }
 
-void MainWindow::WriteSettings() {
+void MainWindow::WriteSettings()
+{
     /*QSettings settings("Qt-Ros Package", "App");
     settings.setValue("master_url",ui.line_edit_master->text());
     settings.setValue("host_url",ui.line_edit_host->text());
@@ -98,7 +102,7 @@ void MainWindow::WriteSettings() {
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-	QMainWindow::closeEvent(event);
+    QMainWindow::closeEvent(event);
 }
 
 }  // namespace App

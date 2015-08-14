@@ -31,19 +31,25 @@ void thruster4callback(const kraken_msgs::thrusterData4ThrusterConstPtr &msg)
 
 
     for(int j=0; j<6 ; j++)
+    {
         _output.data[j] = offset;
+    }
 
     for(int i = 0; i<4 ; i++ )
     {
         inData[i] = msg->data[i];
         store = uint8_t((converter*inData[i]>0xE6-0x80?(0xE6-0x80):converter*inData[i])+offset);
-	store = uint8_t((converter*inData[i]<0x19-0x80?(0x19-0x80):converter*inData[i])+offset);
+        store = uint8_t((converter*inData[i]<0x19-0x80?(0x19-0x80):converter*inData[i])+offset);
 
         if (store > max)
+        {
             store = max;
+        }
 
         if (store < min)
+        {
             store = min;
+        }
 
         _output.data[i] = store;
     }
@@ -58,20 +64,27 @@ void thruster6callback(const kraken_msgs::thrusterData6ThrusterConstPtr msg)
 
 
     for(int j=0; j<6 ; j++)
+    {
         _output.data[j] = offset;
+    }
 
     for(int i = 0; i<6 ; i++ )
     {
         inData[i] = msg->data[i];
-	ROS_INFO("indata[%d] : %f",i,inData[i]);
+        ROS_INFO("indata[%d] : %f",i,inData[i]);
         store = uint8_t((converter*inData[i]>(0xE6-0x80)?(0xE6):converter*inData[i]+0x80));
-	store = uint8_t((converter*inData[i]<(0x19-0x80)?(0x19):converter*inData[i]+0x80));
-	ROS_INFO("store : %d",store);
+        store = uint8_t((converter*inData[i]<(0x19-0x80)?(0x19):converter*inData[i]+0x80));
+        ROS_INFO("store : %d",store);
+
         if (store > max)
+        {
             store = max;
+        }
 
         if (store < min)
+        {
             store = min;
+        }
 
         _output.data[i] = store;
     }
@@ -92,7 +105,7 @@ int main(int argc,char** argv)
 
 
     ros::Rate looprate(10);
-    
+
     while(ros::ok())
     {
         _pub.publish(_output);
@@ -100,6 +113,6 @@ int main(int argc,char** argv)
         looprate.sleep();
     }
 
-return 0;
+    return 0;
 }
 

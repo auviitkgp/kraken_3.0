@@ -15,6 +15,7 @@ Mat _image;
 void imageCallBack(const sensor_msgs::ImageConstPtr &_msg)
 {
     cv_bridge::CvImagePtr _imagePtr;
+
     try
     {
         _imagePtr = cv_bridge::toCvCopy(_msg, "bgr8");
@@ -23,6 +24,7 @@ void imageCallBack(const sensor_msgs::ImageConstPtr &_msg)
     {
         ROS_ERROR("vgatedetect : Could not convert from '%s' to 'bgr8'.", _msg->encoding.c_str());
     }
+
     _image = _imagePtr->image;
 }
 
@@ -59,7 +61,7 @@ Point2i rotatePoint(const Point2i &v1, const Point2i &v2, float angle)
 
 int main(int argc, char ** argv)
 {
-	ros::init(argc, argv, "vgatedetect");
+    ros::init(argc, argv, "vgatedetect");
 
     ros::NodeHandle _n;
     image_transport::ImageTransport _it(_n);
@@ -76,7 +78,9 @@ int main(int argc, char ** argv)
     while(ros::ok())
     {
         if(_image.empty())
+        {
             ROS_ERROR("vgatedetect : The image is empty");
+        }
         else
         {
             cvtColor(_image, _imageHSV, CV_BGR2HSV_FULL);
@@ -92,6 +96,7 @@ int main(int argc, char ** argv)
             for( int i = 0; i < _lines.size(); i++ )
             {
                 line(_image, Point2i(_lines[i][0], _lines[i][1]), Point2i(_lines[i][2], _lines[i][3]), Scalar(255,255,0),3,8);
+
                 if(i==0)
                 {
                     _coordinate[0].x = _lines[i][0];			//taking min x
@@ -110,36 +115,43 @@ int main(int argc, char ** argv)
                         _coordinate[0].x = _lines[i][0];
                         _coordinate[0].y = _lines[i][1];
                     }
+
                     if(_lines[i][2] > _coordinate[1].x)
                     {
                         _coordinate[1].x = _lines[i][2];
                         _coordinate[1].y = _lines[i][3];
                     }
+
                     if(_lines[i][0] > _coordinate[1].x)
                     {
                         _coordinate[1].x = _lines[i][0];
                         _coordinate[1].y = _lines[i][1];
                     }
+
                     if(_lines[i][2] < _coordinate[0].x)
                     {
                         _coordinate[0].x = _lines[i][2];
                         _coordinate[0].y = _lines[i][3];
                     }
+
                     if(_lines[i][1] < _coordinate[2].y)
                     {
                         _coordinate[2].x = _lines[i][0];
                         _coordinate[2].y = _lines[i][1];
                     }
+
                     if(_lines[i][3] > _coordinate[3].y)
                     {
                         _coordinate[3].x = _lines[i][2];
                         _coordinate[3].y = _lines[i][3];
                     }
+
                     if(_lines[i][1] > _coordinate[3].y)
                     {
                         _coordinate[3].x = _lines[i][0];
                         _coordinate[3].y = _lines[i][1];
                     }
+
                     if(_lines[i][3] < _coordinate[2].y)
                     {
                         _coordinate[2].x = _lines[i][2];
@@ -147,7 +159,9 @@ int main(int argc, char ** argv)
                     }
                 }
             }
+
             float angle = angleWrtY(_coordinate[0], _coordinate[2]);
+
             if((angle < 25) ||(angle > 155) ) // Check the angle range
             {
                 _coordinate[2] = rotatePoint(_coordinate[0], _coordinate[2], -PI/4);
@@ -162,11 +176,16 @@ int main(int argc, char ** argv)
             _rodB.x=(_coordinate[0].x + _coordinate[2].x)/2;
             _rodB.y=(_coordinate[0].y + _coordinate[2].y)/2;
             imshow("vgatedetect : Final Image", _image);
+
             if(waitKey(33) == 27)
+            {
                 break;
+            }
         }
+
         _looprate.sleep();
         ros::spinOnce();
     }
-	return 0;
+
+    return 0;
 }

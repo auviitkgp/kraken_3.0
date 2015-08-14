@@ -3,9 +3,9 @@
 
 namespace kraken_core
 {
-    
-  void KrakenPose::write(std::ostream &out)
-  {
+
+void KrakenPose::write(std::ostream &out)
+{
     out<<"_px : " <<_pose[_px]<<std::endl;
     out<<"_py : " <<_pose[_py]<<std::endl;
     out<<"_pz : " <<_pose[_pz]<<std::endl;
@@ -15,5 +15,5 @@ namespace kraken_core
     out<<"_ax : " <<_pose[_ax]<<std::endl;
     out<<"_ay : " <<_pose[_ay]<<std::endl;
     out<<"_az : " <<_pose[_az]<<std::endl;
-  }
+}
 }
