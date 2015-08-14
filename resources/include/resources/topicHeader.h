@@ -1,12 +1,13 @@
-/** All topic names will be named here. And everywhere wherever we use topic names include this header file and 
+/** All topic names will be named here. And everywhere wherever we use topic names include this header file and
 use the names from here */
 
 #ifndef TOPICS_HEADER_H
-#define TOPICS_HEADER_H 
+#define TOPICS_HEADER_H
 
 #include <iostream>
 
-namespace topics{
+namespace topics
+{
 //---simulator topics
 
 extern const char* SIMULATOR_THRUSTER4_TO_FORCE;

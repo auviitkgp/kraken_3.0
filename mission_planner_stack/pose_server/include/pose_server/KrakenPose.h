@@ -3,9 +3,9 @@
 #include <fstream>
 namespace kraken_core
 {
-  static const int countState = 15;
-  enum _state
-  {
+static const int countState = 15;
+enum _state
+{
     _px=0,
     _py,
     _pz,
@@ -25,35 +25,35 @@ namespace kraken_core
     _w_roll,
     _w_pitch,
     _w_yaw
-  };
-  class KrakenPose
-  {
-    private:
-      /*
-       * Vehicle state. For index see the enum
-       */
-      float _pose[countState];
-    public:
-      /*
-       * Constructor
-       */
-      KrakenPose()
-      {
-        for(int i=0;i<countState;i++)
+};
+class KrakenPose
+{
+private:
+    /*
+     * Vehicle state. For index see the enum
+     */
+    float _pose[countState];
+public:
+    /*
+     * Constructor
+     */
+    KrakenPose()
+    {
+        for(int i=0; i<countState; i++)
         {
-            _pose[i]=0; 
+            _pose[i]=0;
         }
-      }
-      inline float* getData()
-      {
+    }
+    inline float* getData()
+    {
         return &_pose[0];
-      }
-      /*
-       * Write vehicle pose to stream
-       */
-      void write(std::ostream &out);
-  };
-  
+    }
+    /*
+     * Write vehicle pose to stream
+     */
+    void write(std::ostream &out);
+};
+
 } // end kraken_core
 
 #endif // KRAKENPOSE_H

@@ -15,7 +15,8 @@
 
 
 
-namespace premap_module {
+namespace premap_module
+{
 
 #define MAX_X 100
 #define MAX_Y 100
@@ -31,7 +32,8 @@ namespace premap_module {
 using namespace std;
 using namespace cv;
 using namespace ros;
-class Map{
+class Map
+{
 public:
     //stores Markers points for each task MARKER[0] gives marker position for task1
     Point2f *MARKERS;
@@ -47,7 +49,7 @@ public:
     NodeHandle &_node_handle;
     ServiceServer _server;
     Map(NodeHandle &,Point2f*,int);
-    ~Map(){}
+    ~Map() {}
     //Callback from subsricption to /kraken/estimated_pose
     void updateVehiclePosition(const kraken_msgs::krakenPoseConstPtr &est_pose_msg);
 
