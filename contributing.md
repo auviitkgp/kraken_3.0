@@ -1,7 +1,7 @@
 ## Contributing Guidelines
 
-- Code must be beautified with the `hooks/formatAll.sh` script, before committing to the repository.
-- We use [ArtisticStyle](http://astyle.sourceforge.net/) for code beautification.
+- Code must be formatted with the `hooks/formatAll.sh` script, before committing to the repository.
+- We use [ArtisticStyle](http://astyle.sourceforge.net/) for code formatting.
 	- Download the package from [SourceForge](http://sourceforge.net/projects/astyle)
 	- Installation guideliens are provided [here](http://astyle.sourceforge.net/install.html)
 - Code guide at a glance:
