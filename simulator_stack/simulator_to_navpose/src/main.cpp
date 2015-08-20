@@ -7,8 +7,8 @@
 #include "underwater_sensor_msgs/DVL.h"
 #include "underwater_sensor_msgs/Pressure.h"
 #include "kraken_msgs/krakenPose.h"
-#include "geometry_msgs/PoseStamped.h".h"
-#include "geometry_msgs/TwistStamped.h".h"
+#include "geometry_msgs/PoseStamped.h"
+#include "geometry_msgs/TwistStamped.h"
 #include "pose_server/KrakenPose.h"
 const double PI=3.14;
 class NavPub
