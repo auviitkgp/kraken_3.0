@@ -174,6 +174,12 @@ def dvlCallback(dvl):
 
 	# print dvl.data
 
+	roll = dvl.data[0]
+	pitch = dvl.data[1]
+	yaw = dvl.data[2]
+
+	print "DVL: ", roll, pitch, yaw
+
 	if DEBUG:
 
 		print "Entered DVL callback!"
@@ -187,8 +193,7 @@ def dvlCallback(dvl):
 	vy = -1 * dvl.data[4]
 	vz = -1 * dvl.data[5]
 
-
-        print "DVL: ", round(vx, 2), round(vy, 2), round(vz, 2)
+        # print "DVL: ", round(vx, 2), round(vy, 2), round(vz, 2)
 
         if DEBUG:
 
@@ -262,7 +267,7 @@ def publishStateAndPosition(state_matrix):
 	pos_y = state_matrix.getvalue(2, 1)
 	pos_z = state_matrix.getvalue(3, 1)
 
-        print round(pos_x, 2), round(pos_y, 2), round(pos_z, 2), round(vx, 2), round(vy, 2), round(vz, 2)
+        # print round(pos_x, 2), round(pos_y, 2), round(pos_z, 2), round(vx, 2), round(vy, 2), round(vz, 2)
 
 	present_position = positionData()
 	present_state = stateData()

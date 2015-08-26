@@ -20,8 +20,8 @@
 
 float converter = 1.0;
 uint8_t offset = 0x80;
-uint8_t max = 0xE6;   //Maximum forward thrust
-uint8_t min = 0x19;   //Maximum backward thrust
+uint8_t max = 0xCD;   //Maximum forward thrust
+uint8_t min = 0x32;   //Maximum backward thrust
 kraken_msgs::seabotix _output;
 
 void thruster4callback(const kraken_msgs::thrusterData4ThrusterConstPtr &msg)
@@ -37,8 +37,9 @@ void thruster4callback(const kraken_msgs::thrusterData4ThrusterConstPtr &msg)
     {
         inData[i] = msg->data[i];
 	ROS_INFO("indata[%d] : %f",i,inData[i]);
-        store = uint8_t((converter*inData[i]>0xE6-0x80?(0xE6-0x80):converter*inData[i])+offset);
-	store = uint8_t((converter*inData[i]<0x19-0x80?(0x19-0x80):converter*inData[i])+offset);
+        store = uint8_t((converter*inData[i]>0xCD-0x80?(0xCD-0x80):converter*inData[i])+offset);
+	store = uint8_t((converter*inData[i]<0x32-0x80?(0x32-0x80):converter*inData[i])+offset);
+		// OFFSET - 1 FOR REVERSE SPEED (0 SPEED FOR REVERSE THRUST = 0X7f = 0X80 - 1) 
 	ROS_INFO("store : %d",store);
         if (store > max)
             store = max;
@@ -54,6 +55,18 @@ void thruster4callback(const kraken_msgs::thrusterData4ThrusterConstPtr &msg)
 
 void thruster6callback(const kraken_msgs::thrusterData6ThrusterConstPtr msg)
 {
+
+/*
+HOTFIX by Aniket in May, 2015
+
+Due to thruster remapping, the if else constructs
+have to be introduced here, so as to ensure that
+the other packages that depend on this convention:
+
+thruster data array[4] -> surge left
+thruster data array[5] -> surge right
+
+*/
     float inData[6] = {0.0,0.0,0.0,0.0,0.0,0.0};
     uint8_t store;
 
@@ -65,8 +78,8 @@ void thruster6callback(const kraken_msgs::thrusterData6ThrusterConstPtr msg)
     {
         inData[i] = msg->data[i];
 	ROS_INFO("indata[%d] : %f",i,inData[i]);
-        store = uint8_t((converter*inData[i]>(0xE6-0x80)?(0xE6-0x80):converter*inData[i]+offset));
-	store = uint8_t((converter*inData[i]<(0x19-0x80)?(0x19-0x80):converter*inData[i]+offset));
+        store = uint8_t((converter*inData[i]>(0xCD-0x80)?(0xCD):converter*inData[i]+offset));
+	store = uint8_t((converter*inData[i]<(0x32-0x7F)?(0x32):converter*inData[i]+offset-1));
 	ROS_INFO("store : %d",store);
         if (store > max)
             store = max;
@@ -74,8 +87,21 @@ void thruster6callback(const kraken_msgs::thrusterData6ThrusterConstPtr msg)
         if (store < min)
             store = min;
 
-        _output.data[i] = store;
-    }
+	if(i == 4)
+
+		_output.data[1] = store;
+
+	else
+
+		if (i == 5)
+
+			_output.data[4] = store;
+
+		else
+
+			_output.data[i] = store;
+ 
+   }
 
 }
 
@@ -92,7 +118,7 @@ int main(int argc,char** argv)
 //    Serial arduino;
 
 
-    ros::Rate looprate(20);
+    ros::Rate looprate(10);
     
     while(ros::ok())
     {

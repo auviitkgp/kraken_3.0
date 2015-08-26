@@ -26,10 +26,14 @@ goal = float(sys.argv[1])
 
 base_yaw = 0.0
 FIRST_ITERATION = True
+factor=0.5
+Kp_left = 0.95
+Kd_left = 0.035
+Ki_left = 0.0005
 
-Kp_left = 1.25
-Kd_left = 0.0
-Ki_left = 0.0
+Kp_right = -0.95
+Kd_right = -0.035
+Ki_right = -0.0005
 
 # Kp_left = 1.27;
 # Kd_left = 0.046;
@@ -67,7 +71,7 @@ def abrpyCB(abrpy):
 	errorP = numpy.arctan2(sin(errorP),cos(errorP))
 	errorP = errorP * 180 / 3.14
 	print "yaw: ", round(yaw, 2), "errorP: ", round(errorP, 2)
-	errorI = errorP + prevError
+	errorI = errorP + errorI
 	errorD = errorP - prevError
 
 if __name__ == '__main__':
@@ -88,7 +92,7 @@ if __name__ == '__main__':
 		thruster6Data.data[2] = 0.0
 		thruster6Data.data[3] = 0.0
 		thruster6Data.data[4] = Kp_left*errorP + Kd_left*errorD + Ki_left*errorI
-		thruster6Data.data[5] = -1*thruster6Data.data[4]
+		thruster6Data.data[5] = (Kp_right*errorP + Kd_right*errorD + Ki_right*errorI)
 
 		thruster4Data.data[0] = thruster6Data.data[0]
 		thruster4Data.data[1] = thruster6Data.data[1]

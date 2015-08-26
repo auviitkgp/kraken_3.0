@@ -1,4 +1,4 @@
-#ZZ!/usr/bin/env python
+#!/usr/bin/env python
 
 import os
 PKG = 'seabotix'
@@ -15,7 +15,7 @@ from resources import topicHeader
 
 dataString = ''
 
-import os
+import os	
 import signal
 
 sb = serial.Serial('/dev/ttyACM0', 9600)
@@ -28,21 +28,20 @@ def stopThrustersNow(signal, frame):
 
     print "Stopping thrusters now!"
     print os.getcwd()
-    data = [[0x60,0x80,0x50],  #depth Back
-	    [0x52,0x80,0x50],  #Surge Left
-	    [0x5A,0x80,0x50],  #depth Front
-  	    [0x50,0x80,0x50],  
-	    [0x5C,0x80,0x50],  #Surge Right
-        [0x5E,0x80,0x50]]
+    data = [[0x60,0x80,0x64],  #depth Back
+	    [0x50,0x80,0x64],  #Surge Left
+	    [0x5A,0x80,0x64],  #depth Front 	    
+	    [0x52,0x80,0x64],  
+	    [0x5C,0x80,0x64],  #Surge Right 
+	    [0x5E,0x80,0x64]
+	   ]
     global sb
     print "Cycle Started"
     for i in range(0,6):
         for j in range(0,3):
-            sb.write(str(chr(int(data[i][j]))))
-    	#print "Single Thuster Data-point completed." # Total 18 data-points
-		
-    print "All thrusters stopped"
-    
+            sb.write(chr(data[i][j]))
+    	print "Thruster",(i+1),"stopped"
+
     sb.close()
     exit()
 
@@ -58,13 +57,13 @@ def initSerial():
 	    print 'Error in opening port'
     
 #data to be sent to Arduino
-data = [[0x5A,0,0x64],
-	[0x60,0,0x64],
-	[0x50,0,0x64],
-	[0x5E,0,0x64],
-	[0x52,0,0x64],
-	[0x5C,0,0x64]]
-
+data =	   [[0x60,0,0x64],  #depth Back
+	    [0x50,0,0x64],  #Surge Left
+	    [0x5A,0,0x64],  #depth Front 	    
+	    [0x52,0,0x64],  
+	    [0x5C,0,0x64],  #Surge Right 
+	    [0x5E,0,0x64]
+	   ]
 def seabotixCB(dataI):
     global data
     
@@ -117,12 +116,11 @@ if __name__ == '__main__':
     #print speed
     
     
-    print sb.readline()
     while not rospy.is_shutdown():
         for i in range(0,6):
             for j in range(0,3):
-                sb.write(str(chr(int(data[i][j]))))
-			#print sb.readline()
+                sb.write(chr(data[i][j]))
+	    print "Thruster ", (i+1)
 	    r.sleep()
         
     

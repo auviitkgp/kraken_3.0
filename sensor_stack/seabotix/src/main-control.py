@@ -18,9 +18,9 @@ import time
 goal = 0.
 first_iteration = True
 threshold= 0.0
-Kp_left = 0.07;
-Kd_left = 0.07;
-Ki_left = 0.00001;
+Kp_left = 0.1
+Kd_left = 0.00
+Ki_left = 0.0000
 
 Kp_depth = 0.16
 Kd_depth = 0.1
@@ -139,8 +139,8 @@ if __name__ == '__main__':
 		thruster6Data.data[2] = 0.0
 		thruster6Data.data[3] = 0.0
 
-		thruster6Data.data[4] = Kp_left*errorP + Kd_left*errorD + Ki_left*errorI  + thrust_input
-		thruster6Data.data[5] =  -1 * (Kp_left*errorP + Kd_left*errorD + (Ki_left+0.7)*errorI) + thrust_input
+		thruster6Data.data[4] =    (Kp_left*errorP + Kd_left*errorD + Ki_left*errorI) + thrust_input
+		thruster6Data.data[5] = -1*(Kp_left*errorP + Kd_left*errorD + Ki_left*errorI) + thrust_input
 
 		thruster6Data.data[0] = 0. # Kp_depth*errorP2 + Kd_depth*errorD2 + Ki_depth*errorI2
 		thruster6Data.data[1] = 0. # thruster6Data.data[0]

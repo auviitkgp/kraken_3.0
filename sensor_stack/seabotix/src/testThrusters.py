@@ -9,10 +9,6 @@
 
 # It does so using a while loop.
 
-# TODO:
-
-# - Write a bash script to start this up directly from the repo root.
-
 PKG = 'seabotix'
 
 from time import sleep
@@ -39,19 +35,17 @@ def stopThrustersNow(signal, frame):
     print "Stopping thrusters now!"
     print os.getcwd()
     data = [[0x60,0x80,0x64],  #depth Back
-	    [0x52,0x80,0x64],  #Surge Left
-	    [0x5A,0x80,0x64],  #depth Front
-  	    [0x50,0x80,0x64],  
-	    [0x5C,0x80,0x64],  #Surge Right
-        [0x5E,0x80,0x64]]
+	    [0x50,0x80,0x64],  #Surge Left
+	    [0x5A,0x80,0x64],  #depth Front	    
+            [0x52,0x80,0x64],  
+            [0x5C,0x80,0x64],  #Surge Right  
+	    [0x5E,0x80,0x64]]
     global sb
     print "Cycle Started"
     for i in range(0,6):
         for j in range(0,3):
-            sb.write(str(chr(int(data[i][j]))))
-    	print "Single Thuster Data-point completed." # Total 18 data-points
-		
-    print "All thrusters stopped"
+            sb.write(chr(data[i][j]))
+    	print "Thruster",(i+1),"stopped"	
     
     sb.close()
     exit()
@@ -81,12 +75,14 @@ if __name__ == '__main__':
     # speed = [0X62,0X62,0X62,0X62,0X62,0X62]   5A  and 60 for depth and 
     # speedMax = [0X64,0X64,0X64,0X64,0X64,0X64] n   52 and 5C are surge thrusters
 
-    data = [[0x60,0xAA,0x50],  #depth Back
-	    [0x52,0xB0,0x50],  #Surge Left
-	    [0x5A,0xAA,0x50],  #depth Front
-  	    [0x50,0x80,0x50],  
-	    [0x5C,0xAA,0x50],  #Surge Right
-        [0x5E,0x62,0x50]]
+    data = [
+	    [0x60,0xAA,0x64],  #depth Back
+	    [0x50,0xAA,0x64],  #Surge Left
+	    [0x5A,0xCD,0x64],  #depth Front
+	    [0x52,0xAA,0x64],  
+            [0x5C,0xAA,0x64],  #Surge Right 
+            [0x5E,0xAA,0x64]
+	   ]
 
     # add[0] = 50
     # add[1] = '56'
@@ -97,17 +93,17 @@ if __name__ == '__main__':
     # add[4] = '60'
     # add[5] = '5C'
   
-    r = rospy.Rate(1)
+    r = rospy.Rate(10)
     
-    print "Entering While Loop"
+    # print "Entering While Loop"
+    #print sb.readline()
     while not rospy.is_shutdown():
-        print "Cycle Started"
+        print "Cycle Started :"
         for i in range(0,6):
             for j in range(0,3):
-                sb.write(str(chr(int(data[i][j]))))
-                print "Single Thuster Data-point completed." # Total 18 data-points
-		
-        print "Cycle Ended."	
+                sb.write(chr(data[i][j]))
+	    print "Thruster ",(i+1)
+		                
         r.sleep()
         
     sb.close()
