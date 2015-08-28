@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 '''
 Publishing the absolute Roll, Pitch and Yaw
 
@@ -20,7 +22,6 @@ Publishing the absolute Roll, Pitch and Yaw
 
 import roslib;roslib.load_manifest('absolute_rpy_publisher')
 import rospy
-import rospy
 import time
 
 from resources import topicHeader
@@ -41,15 +42,22 @@ def imuCallback(imu):
 	pitch = imu.data[1]
 	yaw   = imu.data[2]
 
+	# print roll, pitch, yaw
 	# Fix the roll, pitch by subtracting it from 360
 
 	roll  = 360 - roll
 	pitch = 360 - pitch
 
+	roll = roll % 360
+	pitch = pitch % 360
+	yaw = yaw % 360
+
 	abrpy       = absoluteRPY()
 	abrpy.roll  = roll
 	abrpy.pitch = pitch
 	abrpy.yaw   = yaw
+
+	print roll, pitch, yaw
 
 	absolute_rpy_publisher.publish(abrpy)
 
