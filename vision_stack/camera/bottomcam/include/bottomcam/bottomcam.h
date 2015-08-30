@@ -10,10 +10,11 @@
 
 class Camera
 {
+private:
+    int cameraNo;
 public:
     Camera(int camNo=0);
     cv::VideoCapture cam;
-    int cameraNo;
     bool camOpen;
 
     // Getter functions

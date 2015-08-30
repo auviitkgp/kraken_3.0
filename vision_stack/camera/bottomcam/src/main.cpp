@@ -13,6 +13,12 @@ void msgCallback(const std_msgs::String::ConstPtr& msg)
             std::cout << "Camera " << camMsg << " opened successfully.";
             camObj.setCameraNo(camMsg);
         }
+        else
+        {
+            std::cout << "Unable to open camera" << "\n";
+            std::cout << "Exiting";
+            ros::shutdown();
+        }
     }
     else
         if (camMsg != camObj.getCurrentCameraNo() && camObj.isOpen())
@@ -46,7 +52,14 @@ int main(int argc, char** argv)
     {
         int _cameraNo = atoi(argv[1]);
         camObj.setCameraNo(_cameraNo);
-        _this_cam.open(_cameraNo);
+
+        if (!_this_cam.open(_cameraNo))
+        {
+            std::cout << "Not able to open camera" << "\n";
+            std::cout << "Exiting";
+            ros::shutdown();
+        }
+
         camObj.setCameraState(true);
     }
     else
