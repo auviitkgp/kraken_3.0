@@ -1,0 +1,4 @@
+<launch>
+	<node name="imu_sparton" pkg="sparton" type="sparton.py" />
+	<node name="dvl_nqdvl" pkg="nqDVL" type="nqDVL.py" />
+</launch>
