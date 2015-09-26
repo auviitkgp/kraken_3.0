@@ -22,6 +22,7 @@ Publishing the absolute Roll, Pitch and Yaw
 
 import roslib;roslib.load_manifest('absolute_rpy_publisher')
 import rospy
+import sys
 import time
 
 from resources import topicHeader
@@ -30,6 +31,14 @@ import kraken_msgs
 import kraken_msgs
 from kraken_msgs.msg._imuData import imuData
 from kraken_msgs.msg._absoluteRPY import absoluteRPY
+
+verbose_flag = False
+for i in sys.argv:
+
+    if i == '--verbose' or i == '--debug':
+
+        verbose_flag = True
+        break
 
 # print topicHeader.SENSOR_IMU
 # print topicHeader.ABSOLUTE_RPY
@@ -57,16 +66,23 @@ def imuCallback(imu):
 	abrpy.pitch = pitch
 	abrpy.yaw   = yaw
 
-	print roll, pitch, yaw
+        rospy.logdebug('Roll: %s, Pitch: %s, Yaw: %s', roll, pitch, yaw)
 
-	absolute_rpy_publisher.publish(abrpy)
+        absolute_rpy_publisher.publish(abrpy)
 
 	# Store this in a message and publish it
+
+if verbose_flag:
+
+    rospy.init_node('absolute_rpy_publisher', log_level=rospy.DEBUG)
+
+else:
+
+    rospy.init_node('absolute_rpy_publisher')
 
 absolute_rpy_publisher = rospy.Publisher(name=topicHeader.ABSOLUTE_RPY, data_class=absoluteRPY, queue_size=10)
 
 rospy.Subscriber(name=topicHeader.SENSOR_IMU, data_class=imuData, callback=imuCallback)
 
-rospy.init_node('absolute_roll_pitch_yaw_publisher')
 
 rospy.spin()
