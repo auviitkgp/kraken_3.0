@@ -3,6 +3,7 @@ import roslib;roslib.load_manifest('thruster_remap_g500')
 
 import rospy
 import kraken_msgs
+import geometry_msgs.msg as gs
 from kraken_msgs.msg._forceData6Thruster import forceData6Thruster
 from kraken_msgs.msg._forceData4Thruster import forceData4Thruster
 
@@ -11,8 +12,10 @@ from resources import topicHeader
 from std_srvs.srv import Empty
 
 thrusters_topic="/g500/thrusters_input"
-
+pose_topic ='/g500/pose'
 pub = rospy.Publisher(thrusters_topic, Float64MultiArray,queue_size=10)
+pose_pub= rospy.Publisher(topicHeader.SIMULATOR_POSE, gs.Pose,queue_size=10)
+
 
 rospy.wait_for_service('/dynamics/reset')
 reset=rospy.ServiceProxy('/dynamics/reset', Empty)
@@ -42,11 +45,16 @@ def remapandpublish4(data):
 	pub.publish(msg)
 
 
+def publish_pose(data):
+	pose_pub.publish(data)
 
+
+rospy.init_node('remapper', anonymous=False)
 
 rospy.Subscriber(topicHeader.SIMULATOR_MODEL_FORCE_DATA_6_THRUSTERS, forceData6Thruster, remapandpublish)
 rospy.Subscriber(topicHeader.SIMULATOR_MODEL_FORCE_DATA_4_THRUSTERS, forceData4Thruster, remapandpublish4)
-rospy.init_node('remapper', anonymous=False)
+rospy.Subscriber(pose_topic,gs.Pose,publish_pose)
+
 
 
 rospy.spin()

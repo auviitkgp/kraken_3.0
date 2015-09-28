@@ -7,7 +7,6 @@
 
 	<arg name="scene" default="cirs.xml" />
 	<node name="uwsim" pkg="uwsim" type="uwsim" args="--configfile $(arg scene)" output="screen" respawn="false" >
-		<remap from="/g500/pose" to="/kraken/pose"/>
 		<remap from="/g500/imu" to="/kraken/sensor/imu"/>
 		<remap from="/g500/dvl" to="/kraken/sensor/dvl"/>
 	</node>
