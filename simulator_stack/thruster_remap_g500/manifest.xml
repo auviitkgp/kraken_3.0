@@ -1,0 +1,17 @@
+<package>
+  <description brief="thruster_remap_g500">
+
+     thruster_remap_g500
+
+  </description>
+  <author>Kalyan Kumar</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/thruster_remap_g500</url>
+  <depend package="rospy"/>
+  <depend package="kraken_msgs"/>
+  <depend package="resources"/>
+
+</package>
+
+
