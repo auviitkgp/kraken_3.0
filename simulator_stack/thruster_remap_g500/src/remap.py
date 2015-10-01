@@ -82,7 +82,13 @@ def remapDvlAndPublish(dataIn):
 	newDvlData = dvlData()
 	newDvlData.data = [0] * 10
 
-	newDvlData.data[5] = dataIn.depth
+	newDvlData.data[7] = dataIn.depth
+
+	## vx, vy and vz
+
+	newDvlData.data[3] = dataIn.bi_x_axis
+	newDvlData.data[4] = dataIn.bi_y_axis
+	newDvlData.data[5] = dataIn.bi_z_axis
 
 	dvl_pub.publish(newDvlData)
 
