@@ -12,14 +12,16 @@ from resources import topicHeader
 from std_srvs.srv import Empty
 
 import numpy as np
-from kraken_msgs.msg import imuData
+from kraken_msgs.msg import imuData, dvlData
 from tf.transformations import euler_from_quaternion
 from sensor_msgs.msg import Imu
+from underwater_sensor_msgs.msg import DVL
 
 thrusters_topic="/g500/thrusters_input"
 pose_topic ='/g500/pose'
 pub = rospy.Publisher(thrusters_topic, Float64MultiArray, queue_size=10)
 imu_pub= rospy.Publisher(topicHeader.SENSOR_IMU, imuData, queue_size=10)
+dvl_pub= rospy.Publisher(topicHeader.SENSOR_DVL, dvlData, queue_size=10)
 pose_pub= rospy.Publisher(topicHeader.SIMULATOR_POSE, gs.Pose, queue_size=10)
 
 rospy.wait_for_service('/dynamics/reset')
@@ -72,6 +74,18 @@ def remapImuAndPublish(dataIn):
 
 	imu_pub.publish(newImuData)
 
+def remapDvlAndPublish(dataIn):
+	'''
+	Convert the message underwater_sensor_msgs/DVL to kraken_msgs/DvlData
+	'''
+
+	newDvlData = dvlData()
+	newDvlData.data = [0] * 10
+
+	newDvlData.data[5] = dataIn.depth
+
+	dvl_pub.publish(newDvlData)
+
 def publish_pose(data):
 	pose_pub.publish(data)
 
@@ -79,10 +93,9 @@ def publish_pose(data):
 rospy.init_node('remapper', anonymous=False)
 
 rospy.Subscriber('/g500/imu', Imu, remapImuAndPublish)
+rospy.Subscriber('/g500/dvl', DVL, remapDvlAndPublish)
 rospy.Subscriber(topicHeader.SIMULATOR_MODEL_FORCE_DATA_6_THRUSTERS, forceData6Thruster, remapandpublish)
 rospy.Subscriber(topicHeader.SIMULATOR_MODEL_FORCE_DATA_4_THRUSTERS, forceData4Thruster, remapandpublish4)
 rospy.Subscriber(pose_topic,gs.Pose,publish_pose)
-
-
 
 rospy.spin()
