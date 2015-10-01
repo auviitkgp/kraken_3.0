@@ -54,14 +54,21 @@ def remapImuAndPublish(dataIn):
 	Converts the message from sensors_msgs/Imu to kraken_msgs/imuData
 	'''
 
+	newImuData = imuData()
+	newImuData.data = [0] * 13
+
+	## Roll, pitch and yaw
 	orientation = dataIn.orientation
 	rpy = np.array(euler_from_quaternion([orientation.x, orientation.y, orientation.z, orientation.w])) * 180 / np.pi
 
-	newImuData = imuData()
-	newImuData.data = [0] * 13
 	newImuData.data[0] = rpy[0]
 	newImuData.data[1] = rpy[1]
 	newImuData.data[2] = rpy[2]
+
+	## ax, ay, az
+	newImuData.data[3] = dataIn.linear_acceleration.x
+	newImuData.data[4] = dataIn.linear_acceleration.y
+	newImuData.data[5] = dataIn.linear_acceleration.z
 
 	imu_pub.publish(newImuData)
 
