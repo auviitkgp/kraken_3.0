@@ -5,13 +5,20 @@ PKG = 'seabotix'
 import roslib; roslib.load_manifest(PKG)
 import serial
 import rospy
+import sys
 from kraken_msgs.msg import thrusterData6Thruster
 from kraken_msgs.msg import thrusterData4Thruster
 from kraken_msgs.msg import imuData
+from kraken_msgs.msg import absoluteRPY
 from resources import topicHeader
 
 yaw = 0.0
-goal = 150.0
+
+if len(sys.argv) < 2:
+	print 'You must give your desired Yaw as the first argument.'
+	exit(0)
+
+goal = float(sys.argv[1])
 
 Kp_left = 1.27;
 Kd_left = 0.016;
@@ -33,7 +40,7 @@ def imuCB(dataIn):
 	global errorD
 	global prevError
 
-	yaw = dataIn.data[2]
+        yaw = dataIn.yaw
 
 	prevError = errorP
 	errorP = goal - yaw
@@ -48,9 +55,9 @@ def imuCB(dataIn):
 if __name__ == '__main__':
 	thruster4Data=thrusterData4Thruster();
 	thruster6Data=thrusterData6Thruster();
-	
+
 	rospy.init_node('Control', anonymous=True)
-	sub = rospy.Subscriber(topicHeader.SENSOR_IMU, imuData, imuCB)
+	sub = rospy.Subscriber(topicHeader.ABSOLUTE_RPY, absoluteRPY, imuCB)
 	pub4 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER4, thrusterData4Thruster, queue_size = 2)
 	pub6 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER6, thrusterData6Thruster, queue_size = 2)
 
@@ -73,8 +80,5 @@ if __name__ == '__main__':
 
 		#pub4.publish(thruster4Data)
 		pub6.publish(thruster6Data)
-		
-
-		r.sleep()
 
 

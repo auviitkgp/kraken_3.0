@@ -7,6 +7,10 @@ import geometry_msgs.msg as gs
 from kraken_msgs.msg._forceData6Thruster import forceData6Thruster
 from kraken_msgs.msg._forceData4Thruster import forceData4Thruster
 
+from kraken_msgs.msg._thrusterData4Thruster import thrusterData4Thruster
+from kraken_msgs.msg._thrusterData6Thruster import thrusterData6Thruster
+
+
 from std_msgs.msg import Float64MultiArray
 from resources import topicHeader
 from std_srvs.srv import Empty
@@ -31,11 +35,11 @@ def remapandpublish(data):
 	new_thrusters=[0]*5
 
 	msg = Float64MultiArray()
-	new_thrusters[0]=data.data[1]
-	new_thrusters[1]=data.data[0]
-	new_thrusters[2]=-data.data[5]
-	new_thrusters[3]=-data.data[4]
-	new_thrusters[4]=-data.data[2]-data.data[3]
+	new_thrusters[0]=data.data[4]
+	new_thrusters[1]=data.data[5]
+	new_thrusters[2]=data.data[0]
+	new_thrusters[3]=data.data[1]
+	new_thrusters[4]=0 #-data.data[2]-data.data[3]
 
 	msg.data=new_thrusters
 	pub.publish(msg)
@@ -100,8 +104,8 @@ rospy.init_node('remapper', anonymous=False)
 
 rospy.Subscriber('/g500/imu', Imu, remapImuAndPublish)
 rospy.Subscriber('/g500/dvl', DVL, remapDvlAndPublish)
-rospy.Subscriber(topicHeader.SIMULATOR_MODEL_FORCE_DATA_6_THRUSTERS, forceData6Thruster, remapandpublish)
-rospy.Subscriber(topicHeader.SIMULATOR_MODEL_FORCE_DATA_4_THRUSTERS, forceData4Thruster, remapandpublish4)
+rospy.Subscriber(topicHeader.CONTROL_PID_THRUSTER4, thrusterData4Thruster, remapandpublish4)
+rospy.Subscriber(topicHeader.CONTROL_PID_THRUSTER6, thrusterData6Thruster, remapandpublish)
 rospy.Subscriber(pose_topic,gs.Pose,publish_pose)
 
 rospy.spin()
