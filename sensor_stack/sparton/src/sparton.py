@@ -258,7 +258,6 @@ if __name__ == '__main__':
     global gy
     global gz
     global temp
-
     """
     pubData = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
     
