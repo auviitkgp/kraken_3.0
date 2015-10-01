@@ -7,11 +7,11 @@
 
 	<arg name="scene" default="cirs.xml" />
 	<node name="uwsim" pkg="uwsim" type="uwsim" args="--configfile $(arg scene)" output="screen" respawn="false" >
-		<remap from="/g500/imu" to="/kraken/sensor/imu"/>
+		
 		<remap from="/g500/dvl" to="/kraken/sensor/dvl"/>
 	</node>
 	<arg name="thrusters_topic" default="/g500/thrusters_input" />
-	
+
 	<node name="keyboard_command" pkg="underwater_vehicle_dynamics" type="keyboard.py" args="$(arg thrusters_topic)" output="screen" respawn="false"/>
     <node name="remap" pkg="thruster_remap_g500" type="remap.py" />
 </launch>
