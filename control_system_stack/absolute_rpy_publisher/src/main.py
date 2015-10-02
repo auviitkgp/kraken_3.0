@@ -6,7 +6,7 @@ Publishing the absolute Roll, Pitch and Yaw
 - Axes :-
 
   - x -> Along the vehicle, pointing from the backplate to the front plate.
-  - y -> Perpendicular to the vehicle; Points from the left surge thruster, 
+  - y -> Perpendicular to the vehicle; Points from the left surge thruster,
          towards the right surge thruster.
   - z -> Normal to the vehicle; From the top of the hull, towards the DVL;
 
@@ -26,19 +26,12 @@ import sys
 import time
 
 from resources import topicHeader
+from resources import tools
 
 import kraken_msgs
 import kraken_msgs
 from kraken_msgs.msg._imuData import imuData
 from kraken_msgs.msg._absoluteRPY import absoluteRPY
-
-verbose_flag = False
-for i in sys.argv:
-
-    if i == '--verbose' or i == '--debug':
-
-        verbose_flag = True
-        break
 
 # print topicHeader.SENSOR_IMU
 # print topicHeader.ABSOLUTE_RPY
@@ -72,17 +65,10 @@ def imuCallback(imu):
 
 	# Store this in a message and publish it
 
-if verbose_flag:
-
-    rospy.init_node('absolute_rpy_publisher', log_level=rospy.DEBUG)
-
-else:
-
-    rospy.init_node('absolute_rpy_publisher')
+rospy.init_node('absolute_rpy_publisher', log_level=(rospy.DEBUG if tools.getVerboseTag(sys.argv) else rospy.INFO))
 
 absolute_rpy_publisher = rospy.Publisher(name=topicHeader.ABSOLUTE_RPY, data_class=absoluteRPY, queue_size=10)
 
 rospy.Subscriber(name=topicHeader.SENSOR_IMU, data_class=imuData, callback=imuCallback)
-
 
 rospy.spin()
