@@ -32,14 +32,25 @@ rospy.wait_for_service('/dynamics/reset')
 reset=rospy.ServiceProxy('/dynamics/reset', Empty)
 
 def remapandpublish(data):
+	'''
+	Mapping of simulator thrusters and their locations:
+	Simulator thruster[0] - Right
+	Simulator thruster[1] - Left
+	Simulator thruster[2] - forward
+	Simulator thruster[3] - Back
+	Simulator thruster[4] - Sway
+
+	forward Thrust - positive, Backward - Negative
+	Upward Thrust  - positive, Downward - Negative
+	'''
 	new_thrusters=[0]*5
 
 	msg = Float64MultiArray()
-	new_thrusters[0]=data.data[4]
-	new_thrusters[1]=data.data[5]
-	new_thrusters[2]=data.data[0]
-	new_thrusters[3]=data.data[1]
-	new_thrusters[4]=0 #-data.data[2]-data.data[3]
+	new_thrusters[0]= data.data[5]
+ 	new_thrusters[1]= data.data[4]
+	new_thrusters[2]= data.data[0]
+	new_thrusters[3]= data.data[1]
+	new_thrusters[4]= 0 #-data.data[2]-data.data[3]
 
 	msg.data=new_thrusters
 	pub.publish(msg)
