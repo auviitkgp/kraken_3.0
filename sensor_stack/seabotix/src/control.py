@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-1. positive Thrust is along positive X , i.e, forward direction
+1. positive Force on vehicle is along positive X , i.e, forward direction
 2. Rotation along the positive axes are considerd to be positive
 """
 
@@ -13,6 +13,7 @@ import rospy
 import sys
 import numpy as np
 
+from std_msgs.msg import Float32MultiArray
 from kraken_msgs.msg import thrusterData6Thruster
 from kraken_msgs.msg import thrusterData4Thruster
 from kraken_msgs.msg import imuData
@@ -49,13 +50,6 @@ Ki_right = -0.0005
 # Kd_right = -0.016;
 # Ki_right = -0.00;
 
-# Kp_left = 1.27;
-# Kd_left = 0.016;
-# Ki_left = 0.00;
-
-# Kp_right = -1.27;
-# Kd_right = -0.016;
-# Ki_right = -0.00;
 
 errorI = 0.0
 errorP = 0.0
@@ -79,19 +73,25 @@ def imuCB(dataIn):
 		FIRST_ITERATION = False
 
 	prevError = errorP
-	errorP = base_yaw + goal - yaw
+	errorP = (base_yaw + goal - yaw)*3.14/180
+	errorP = np.arctan2(sin(errorP),cos(errorP))*180/3.14
+	errorI = errorP + errorI
+	errorD = errorP - prevError
 
-	##### Not needed here since imu data is already absoulute
-	# errorP = errorP * 3.14 / 180
-	# errorP = np.arctan2(sin(errorP),cos(errorP))
-	# errorP = errorP * 180 / 3.14
+	msg = Float32MultiArray()
+	PlotData = [0]*3
+	PlotData[0] = goal
+	PlotData[1] = yaw
+	PlotData[2] = errorP
+	msg.data=PlotData
+	pub.publish(msg)
+
 	rospy.loginfo("--------")
 	rospy.loginfo("Current Yaw : %s",round(yaw,3))
 	rospy.loginfo("Error : %s",round(errorP,3))
 	rospy.loginfo("Thruster data L : %s",thruster6Data.data[4])
 	rospy.loginfo("Thruster data R : %s",thruster6Data.data[5])
-	errorI = errorP + errorI
-	errorD = errorP - prevError
+
 
 
 
@@ -107,6 +107,7 @@ if __name__ == '__main__':
 	sub = rospy.Subscriber(topicHeader.ABSOLUTE_RPY, absoluteRPY, imuCB)
 	pub4 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER4, thrusterData4Thruster, queue_size = 2)
 	pub6 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER6, thrusterData6Thruster, queue_size = 2)
+	pub = rospy.Publisher('ControlPlot', Float32MultiArray, queue_size=10)
 
 	r = rospy.Rate(10)
 
