@@ -69,7 +69,6 @@ rospy.init_node('absolute_rpy_publisher', log_level=(rospy.DEBUG if tools.getVer
 
 absolute_rpy_publisher = rospy.Publisher(name=topicHeader.ABSOLUTE_RPY, data_class=absoluteRPY, queue_size=10)
 
-
 rospy.Subscriber(name=topicHeader.SENSOR_IMU, data_class=imuData, callback=imuCallback)
 
 rospy.spin()

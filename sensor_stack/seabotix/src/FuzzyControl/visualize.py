@@ -24,7 +24,7 @@ def visualize_mf(b, inputs):
     ax1.plot(inputs[1], b[1][4], 'y', linewidth=1.5, label= '+ve Medium')
     ax1.set_title('Del_Error')
     # ax1.legend()
-  
+
     ax2.plot(inputs[2], b[2][0], 'g', linewidth=1.5, label= '-ve Medium')
     ax2.plot(inputs[2], b[2][1], 'r', linewidth=1.5, label= '-ve small')
     ax2.plot(inputs[2], b[2][2], 'c', linewidth=1.5, label= 'zero')
@@ -57,7 +57,7 @@ def visualize_output(b, inputs, output, out_final, aggregated):
     ax3.fill_between(inputs[2], output0, output[4], facecolor='c', alpha=0.7)
     ax3.plot(inputs[2], b[2][4], 'y', linewidth=0.5, linestyle='--')
     ax3.set_title('Output membership activity')
-   
+
     ax4.plot(inputs[2], b[2][0], 'g', linewidth=0.5, linestyle='--', )
     ax4.plot(inputs[2], b[2][1], 'r', linewidth=0.5, linestyle='--', )
     ax4.plot(inputs[2], b[2][2], 'c', linewidth=0.5, linestyle='--', )
