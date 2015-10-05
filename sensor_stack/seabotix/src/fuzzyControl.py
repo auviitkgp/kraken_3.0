@@ -7,6 +7,7 @@ import serial
 import rospy
 import sys
 import numpy as np
+import std_msgs.msg
 
 from kraken_msgs.msg import thrusterData6Thruster
 from kraken_msgs.msg import thrusterData4Thruster
@@ -127,6 +128,8 @@ def imuCB(dataIn):
     yawData.DesiredVal = (goal + base_yaw)%360
     yawData.CurrentVal = yaw
     yawData.Error = YAW.error
+    yawData.header = std_msgs.msg.Header()
+    yawData.header.stamp = rospy.Time.now() # Note you need to call rospy.init_node() before this will work
     pub.publish(yawData)
 
 
