@@ -8,11 +8,11 @@ import rospy
 import sys
 import numpy as np
 
-from std_msgs.msg import Float32MultiArray
 from kraken_msgs.msg import thrusterData6Thruster
 from kraken_msgs.msg import thrusterData4Thruster
 from kraken_msgs.msg import imuData
 from kraken_msgs.msg import absoluteRPY
+from kraken_msgs.msg import controllerResult
 from resources import topicHeader
 from math import *
 from FuzzyControl.fuzzy import Fuzzy
@@ -124,14 +124,10 @@ def imuCB(dataIn):
     YAW.error = np.arctan2(sin(error),cos(error))*180/3.14
     YAW.delta_error = YAW.error - prevError
 
-
-    msg = Float32MultiArray()
-    PlotData = [0]*3
-    PlotData[0] = (goal + base_yaw)%360
-    PlotData[1] = yaw
-    PlotData[2] = YAW.error
-    msg.data=PlotData
-    pub.publish(msg)
+    yawData.DesiredVal = (goal + base_yaw)%360
+    yawData.CurrentVal = yaw
+    yawData.Error = YAW.error
+    pub.publish(yawData)
 
 
 	##### Not needed here since imu data is already absoulute
@@ -157,12 +153,13 @@ if __name__ == '__main__':
 
 	thruster4Data=thrusterData4Thruster();
 	thruster6Data=thrusterData6Thruster();
+	yawData = controllerResult();
 
 	rospy.init_node('main', anonymous=True)
 	sub = rospy.Subscriber(topicHeader.ABSOLUTE_RPY, absoluteRPY, imuCB)
 	pub4 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER4, thrusterData4Thruster, queue_size = 2)
 	pub6 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER6, thrusterData6Thruster, queue_size = 2)
-	pub = rospy.Publisher('FuzzyPlot', Float32MultiArray, queue_size=10)
+	pub = rospy.Publisher('FuzzyPlot', controllerResult, queue_size=10)
 	r = rospy.Rate(10)
 
 	while not rospy.is_shutdown():
