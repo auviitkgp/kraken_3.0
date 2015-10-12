@@ -13,5 +13,6 @@
   <depend package="std_msgs"/>
   <depend package="kraken_msgs"/>
   <depend package="resources"/>
+  <depend package="all_controllers"/>
 
 </package>

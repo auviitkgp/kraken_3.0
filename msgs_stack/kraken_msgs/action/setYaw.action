@@ -1,9 +1,10 @@
 # TODO: You can change the strucutre of this message if you need to.
 #goal definition
-int32 yaw
+float32 yaw
 ---
 # result definition
 float32 elapsed_time
 ---
 # feedback
-int32 feedback_yaw
+float32 feedback_yaw
+float32 Error
