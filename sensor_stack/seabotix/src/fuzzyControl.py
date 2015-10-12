@@ -3,104 +3,30 @@
 PKG = 'seabotix'
 
 import roslib; roslib.load_manifest(PKG)
-import serial
-import rospy
+
 import sys
 import numpy as np
+from math import *
+
 import std_msgs.msg
+import rospy
 
 from kraken_msgs.msg import thrusterData6Thruster
 from kraken_msgs.msg import thrusterData4Thruster
 from kraken_msgs.msg import imuData
 from kraken_msgs.msg import absoluteRPY
-from kraken_msgs.msg import controllerResult
 from resources import topicHeader
-from math import *
+from kraken_msgs.msg import setYawFeedback
+
+# from kraken_msgs.msg import controllerResult
+
 from FuzzyControl.fuzzy import Fuzzy
-#------------------------------------------------------------------
-# yapf: disable
-## Test case fuzzy subset for trimf
-f_ssets = [[ # error
-            [-60,-60,-30],   # -ve medium
-            [-60,-30 , 0],    # -ve small
-            [-30 , 0 , 30],   # zero
-            [ 0 , 30 , 60],   # +ve small
-            [ 30 ,60 , 60], # +ve medium
-           ],
-            # delta_error
-           [
-            [-60,-60,-30],   # -ve medium
-            [-60,-30 , 0],    # -ve small
-            [-30 , 0 , 30],   # zero
-            [ 0 , 30 , 60],   # +ve small
-            [ 30 ,60 , 60], # +ve medium
-           ],
-            # u
-           [
-            [-10,-10,-5],  # -ve medium
-            [-10,-5 , 0],  # -ve small
-            [-5 , 0 , 5],  # zero
-            [ 0 , 5 , 10], # +ve small
-            [ 5 ,10 , 10], # +ve medium
-           ]
-          ]
-# yapf: enable
-
-io_ranges = [  # range of e
-              [-180,180],
-               # range of d_e
-              [-180,180],
-               # range of u
-              [-10,10]
-            ]
-
-mf_types = ['trimf','trimf','trimf']
-
-#-------------------------------------------------------------------------------
-## fuzzy subset test case for gaussmf
-# f_ssets = [[ # error
-#             [-180,70], # -ve medium
-#             [-50,20], # -ve small
-#             [ 0 ,20], # zero
-#             [50 ,20], # +ve small
-#             [180 ,70], # +ve medium
-#            ],
-#             # delta_error
-#            [
-#             [-180,70], # -ve medium
-#             [-50,20], # -ve small
-#             [ 0 ,20], # zero
-#             [50 ,20], # +ve small
-#             [180 ,70], # +ve medium
-#            ],
-#             # u
-#            [
-#             [-3,2], # -ve medium
-#             [-1,2], # -ve small
-#             [ 0,1], # zero
-#             [ 1,2], # +ve small
-#             [ 3,2], # +ve medium
-#            ]
-#           ]
-# # yapf: enable
-#
-# io_ranges = [  # range of e
-#               [-180,180],
-#                # range of d_e
-#               [-180,180],
-#                # range of u
-#               [-10,10]
-#             ]
-#
-# mf_types = ['gaussmf','gaussmf','gaussmf']
-
-#---------------------------------------------------------------------------
+from FuzzyControl import fuzzyParams as Fparam
 
 if(len(sys.argv) < 2):
-
 	print "Enter yaw, to run this script."
 	exit()
-
+# Global variables
 yaw = 0.0
 goal = float(sys.argv[1])
 base_yaw = 0.0
@@ -109,78 +35,84 @@ prevError = 0.0
 
 
 def imuCB(dataIn):
+	"""
+	This is imu call back function.
 
-    global base_yaw
-    global prevError
-    global yaw
-    global FIRST_ITERATION
+	1. Updates the Current value of yaw - Current_yaw
+	2. Calculates error and delta_error based on 4 quadrant tangent = arctan2()
+	3. Debug messages
+	"""
 
-    yaw = dataIn.yaw
-    if  FIRST_ITERATION:
-		base_yaw = yaw
+	global base_yaw
+	global prevError
+	global yaw
+	global FIRST_ITERATION
+
+	Current_yaw = dataIn.yaw
+
+	if  FIRST_ITERATION:
+		base_yaw = Current_yaw
 		FIRST_ITERATION = False
-    prevError = YAW.error
 
-    error = (base_yaw + goal - yaw)* 3.14 / 180
-    YAW.error = np.arctan2(sin(error),cos(error))*180/3.14
-    YAW.delta_error = YAW.error - prevError
+	prevError = YAW.error
+	error = (base_yaw + goal - Current_yaw)* 3.14 / 180
+	YAW.error = np.arctan2(sin(error),cos(error))*180/3.14
+	YAW.delta_error = YAW.error - prevError
 
-    yawData.DesiredVal = (goal + base_yaw)%360
-    yawData.CurrentVal = yaw
-    yawData.Error = YAW.error
-    yawData.header = std_msgs.msg.Header()
-    yawData.header.stamp = rospy.Time.now() # Note you need to call rospy.init_node() before this will work
-    pub.publish(yawData)
-
-
-	##### Not needed here since imu data is already absoulute
-	# errorP = errorP * 3.14 / 180
-	# errorP = np.arctan2(sin(errorP),cos(errorP))
-	# errorP = errorP * 180 / 3.14
-    rospy.loginfo("--------")
-    rospy.loginfo("Current Yaw : %s",round(yaw,3))
-    rospy.loginfo("Error : %s",round(YAW.error,3))
-    rospy.loginfo("Eelta_error : %s",round(YAW.delta_error ,3))
-    rospy.loginfo("Thruster data L : %s",thruster6Data.data[4])
-    rospy.loginfo("Thruster data R : %s",thruster6Data.data[5])
-    rospy.loginfo("Goal : %s",goal)
+	yawData.Desired_yaw = (goal + base_yaw)%360
+	yawData.Current_yaw = Current_yaw
+	yawData.Error = YAW.error
+	# yawData.header = std_msgs.msg.Header()
+	# yawData.header.stamp = rospy.Time.now() # Note you need to call rospy.init_node() before this will work
 
 
-#thruster6Data.data = [0.0,0.0,0.0,0.0,0.0,0.0]
-#thruster4Data.data = [0.0, 0.0, 0.0, 0.0]
+	rospy.loginfo("--------")
+	rospy.loginfo("Current Yaw : %s",round(Current_yaw,3))
+	rospy.loginfo("Error : %s",round(YAW.error,3))
+	rospy.loginfo("Delta_error : %s",round(YAW.delta_error ,3))
+	rospy.loginfo("Goal : %s",goal)
+	rospy.loginfo("Thruster data L : %s",round(thruster6Data.data[4],3))
+	rospy.loginfo("Thruster data R : %s",round(thruster6Data.data[5],3))
 
 
 if __name__ == '__main__':
-	YAW = Fuzzy(mf_types, f_ssets)
-	YAW.io_ranges = io_ranges
+	"""
+     1. Declare YAW as a Fuzzy object and Declare it's membership function and it's Range.
+     2. Declares messages types for thruster4Data and thruster6Data
+	 3. calculate the thrust from fuzzy control and send to the thruster converter.
+    """
+	YAW = Fuzzy(Fparam.mf_types, Fparam.f_ssets)
+	YAW.io_ranges = Fparam.io_ranges
 
 	thruster4Data=thrusterData4Thruster();
 	thruster6Data=thrusterData6Thruster();
-	yawData = controllerResult();
+
+	yawData = setYawFeedback();
 
 	rospy.init_node('main', anonymous=True)
-	sub = rospy.Subscriber(topicHeader.ABSOLUTE_RPY, absoluteRPY, imuCB)
-	pub4 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER4, thrusterData4Thruster, queue_size = 2)
-	pub6 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER6, thrusterData6Thruster, queue_size = 2)
-	pub = rospy.Publisher('FuzzyPlot', controllerResult, queue_size=10)
+	rospy.Subscriber(topicHeader.ABSOLUTE_RPY, absoluteRPY, imuCB)
+	pub_thrusters4 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER4, thrusterData4Thruster, queue_size = 2)
+	pub_thrusters6 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER6, thrusterData6Thruster, queue_size = 2)
+
+	# pub = rospy.Publisher('FuzzyPlot', controllerResult, queue_size=10)
 	r = rospy.Rate(10)
 
 	while not rospy.is_shutdown():
 
+		thrust = YAW.run()
 		thruster6Data.data[0] = 0.0
 		thruster6Data.data[1] = 0.0
 		thruster6Data.data[2] = 0.0
 		thruster6Data.data[3] = 0.0
-
-		thruster6Data.data[4] =  YAW.run()   # Left Thruster
-		thruster6Data.data[5] = -YAW.run()   # Rigt Thruster
+		thruster6Data.data[4] =  thrust     # Left Thruster
+		thruster6Data.data[5] = -1 * thrust   # Rigt Thruster
 
 		thruster4Data.data[0] = thruster6Data.data[0]
 		thruster4Data.data[1] = thruster6Data.data[1]
 		thruster4Data.data[2] = thruster6Data.data[4]
 		thruster4Data.data[3] = thruster6Data.data[5]
 
-		#pub4.publish(thruster4Data)
-		pub6.publish(thruster6Data)
+		pub_thrusters4.publish(thruster4Data)
+		pub_thrusters6.publish(thruster6Data)
 
 		r.sleep()
