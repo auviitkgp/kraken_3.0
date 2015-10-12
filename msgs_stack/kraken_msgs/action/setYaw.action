@@ -1,4 +1,4 @@
-# TODO: You can change the strucutre of this message if you need to.
+# TODO: You can change the structure of this message if you need to.
 #goal definition
 float32 yaw
 ---
@@ -6,5 +6,6 @@ float32 yaw
 float32 elapsed_time
 ---
 # feedback
-float32 feedback_yaw
+float32 Desired_yaw
+float32 Current_yaw
 float32 Error

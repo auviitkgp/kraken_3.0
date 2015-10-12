@@ -16,7 +16,9 @@ from kraken_msgs.msg import setYawGoal
 
 def serverSentSomeFeedback(feedback_obj):
 
-    rospy.loginfo('Recieved feedback from the server: %f', feedback_obj.feedback_yaw)
+    rospy.loginfo('Recieved feedback from the server, Desired_yaw : %f', feedback_obj.Desired_yaw)
+    rospy.loginfo('Recieved feedback from the server, Current_yaw : %f', feedback_obj.Current_yaw)
+    rospy.loginfo('Recieved feedback from the server, Error : %f \n', feedback_obj.Error)
 
 def yawHasBeenSet(result_obj, goal):
 
@@ -26,7 +28,7 @@ def set_yaw_client(yaw_parameter):
 
     rospy.loginfo('Entered client function')
     # Creates the SimpleActionClient, passing the type of the action
-    # (FibonacciAction) to the constructor.
+
     client = actionlib.SimpleActionClient('setYaw', actionMessageSetYawAction)
 
     # Waits until the action server has started up and started
@@ -43,13 +45,13 @@ def set_yaw_client(yaw_parameter):
     client.wait_for_result()
 
     # Prints out the result of executing the action
-    return client.get_result()  # A FibonacciResult
+    return client.get_result()
 
 if __name__ == '__main__':
     try:
         # Initializes a rospy node so that the SimpleActionClient can
         # publish and subscribe over ROS.
-        rospy.init_node('fibonacci_client_py')
+        rospy.init_node('test_client_py')
         wanted_yaw = float(raw_input('Enter the yaw you need: '))
         result = set_yaw_client(wanted_yaw)
         print "Elapsed time:", ', ', result.elapsed_time

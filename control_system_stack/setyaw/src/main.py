@@ -4,13 +4,15 @@ import roslib
 PKG = 'setyaw'
 roslib.load_manifest(PKG)
 
-import rospy
-import actionlib
 import sys
 import numpy as np
-import std_msgs.msg
-
 import time
+from math import *
+
+import actionlib
+import std_msgs.msg
+import rospy
+from resources import topicHeader
 
 from kraken_msgs.msg import thrusterData6Thruster
 from kraken_msgs.msg import thrusterData4Thruster
@@ -21,58 +23,23 @@ from kraken_msgs.msg import setYawFeedback
 from kraken_msgs.msg import setYawResult
 from kraken_msgs.msg import setYawGoal
 
-# from kraken_msgs.msg import controllerResult
-from resources import topicHeader
-from math import *
 from all_controllers.fuzzy import Fuzzy
+from all_controllers import fuzzyParams as Fparam
 
-#global variables
+# Global variables
 base_yaw = 0.0
 FIRST_ITERATION = True
 prevError = 0.0
-present_yaw = -1
-client_goal = None
-#-------------------------------------------------------------------------------
-## Test case fuzzy subset for trimf
-f_ssets = [[ # error
-            [-60,-60,-30],   # -ve medium
-            [-60,-30 , 0],    # -ve small
-            [-30 , 0 , 30],   # zero
-            [ 0 , 30 , 60],   # +ve small
-            [ 30 ,60 , 60], # +ve medium
-           ],
-            # delta_error
-           [
-            [-60,-60,-30],   # -ve medium
-            [-60,-30 , 0],    # -ve small
-            [-30 , 0 , 30],   # zero
-            [ 0 , 30 , 60],   # +ve small
-            [ 30 ,60 , 60], # +ve medium
-           ],
-            # u
-           [
-            [-10,-10,-5],  # -ve medium
-            [-10,-5 , 0],  # -ve small
-            [-5 , 0 , 5],  # zero
-            [ 0 , 5 , 10], # +ve small
-            [ 5 ,10 , 10], # +ve medium
-           ]
-          ]
-# yapf: enable
-
-io_ranges = [  # range of e
-              [-180,180],
-               # range of d_e
-              [-180,180],
-               # range of u
-              [-10,10]
-            ]
-
-mf_types = ['trimf','trimf','trimf']
-#-------------------------------------------------------------------------------
+Current_yaw = -1
+Client_goal = None
 
 class SetYaw(object):
-    # create messages that are used to publish feedback/result
+    """ Creates messages that are used to publish feedback/result to client
+        feedback messages :
+            1. Current value of yaw
+
+        result   :
+    """
     _feedback = setYawFeedback()
     _result = setYawResult()
 
@@ -85,61 +52,91 @@ class SetYaw(object):
 
 
     def imuCB(self, dataIn):
-        global present_yaw
+        """
+        This is imu call back function.
+
+        1. Updates the Current value of yaw - Current_yaw
+        2. Calculates error and delta_error based on 4 quadrant tangent = arctan2()
+        3. Updates feedback to be sent to the client
+            - Desired_yaw
+            - Current_yaw
+            - Error
+        4. Debug messages
+        """
+        global Current_yaw
         global base_yaw
         global prevError
-        global client_goal
+        global Client_goal
         global FIRST_ITERATION
-        present_yaw = dataIn.yaw
-        self._feedback.feedback_yaw = present_yaw
-        if  FIRST_ITERATION:
-    		base_yaw = present_yaw
+
+        Current_yaw = dataIn.yaw
+
+        if  FIRST_ITERATION :
+    		base_yaw = Current_yaw
     		FIRST_ITERATION = False
+
         prevError = YAW.error
-        error = (base_yaw + client_goal.yaw - present_yaw)* 3.14 / 180
+        error = (base_yaw + Client_goal.yaw - Current_yaw)* 3.14 / 180
         YAW.error = np.arctan2(sin(error),cos(error))*180/3.14
         YAW.delta_error = YAW.error - prevError
 
+        # Update the feedbacks to be sent
+        self._feedback.Desired_yaw = (Client_goal.yaw + base_yaw)%360
+        self._feedback.Current_yaw = Current_yaw
+        self._feedback.Error = YAW.error
+
+        # Debug messages
         rospy.logdebug("--------")
-        rospy.logdebug("Current Yaw : %s",round(present_yaw,3))
+        rospy.logdebug("Current Yaw : %s",round(Current_yaw,3))
+        rospy.logdebug("Desired_yaw : %s",round(self._feedback.Desired_yaw,3))
         rospy.logdebug("Error : %s",round(YAW.error,3))
         rospy.logdebug("Delta_error : %s",round(YAW.delta_error ,3))
-        rospy.logdebug("Goal : %s",client_goal.yaw)
+        rospy.logdebug("Relative_Goal : %s",round(Client_goal.yaw,3))
 
 
 
     def execute_cb(self, goal):
+        """
+        1. Update the goal each time client sends a new goal
+        2. Wait for first imu data to be recieved, to calculate the error.
+        3. calculate the thrust from fuzzy control and send to the thruster converter.
+        4. publishes feedback back to the client
+            - Desired_yaw
+            - Current_yaw
+            - Error
+        """
 
-        global client_goal
-        sub = rospy.Subscriber(topicHeader.ABSOLUTE_RPY, absoluteRPY, self.imuCB)
+        global Client_goal
 
+        rospy.Subscriber(topicHeader.ABSOLUTE_RPY, absoluteRPY, self.imuCB)
         r = rospy.Rate(20)
-        client_goal = goal
-        while(present_yaw == -1):
+
+        # Update the goal
+        Client_goal = goal
+        while(Current_yaw == -1):
             r.sleep()
 
-        rospy.loginfo('I was asked to set yaw to %f', goal.yaw)
+        rospy.loginfo('I was asked to change yaw by %f', goal.yaw)
         initial_time = time.time()
         rospy.loginfo('Started setting yaw at %f', initial_time)
         success = True
-        rospy.loginfo('YAW.error : %s',abs(YAW.error) > 0.5)
+
+        rospy.logdebug('YAW.error : %s',abs(YAW.error) > 0.5)
         while abs(YAW.error) > 0.5 :
-        	print abs(YAW.error)
             # check that preempt has not been requested by the client
             # if self._as.is_preempt_requested():
                 # rospy.loginfo('%s: Preempted' % self._action_name)
                 # self._as.set_preempted()
                 # success = False
                 # break
-    		#publish thruster output to thruster
+
+            # calculate the thrust from fuzzy control
+    		thrust = YAW.run()
+
     		thruster6Data.data[0] = 0.0
     		thruster6Data.data[1] = 0.0
     		thruster6Data.data[2] = 0.0
     		thruster6Data.data[3] = 0.0
-    		rospy.loginfo('thrust')
-
-    		thrust = YAW.run()
-    		rospy.loginfo('thrust : %s',thrust)
     		thruster6Data.data[4] =  thrust   # Left Thruster
     		thruster6Data.data[5] = -1 * thrust   # Rigt Thruster
 
@@ -148,28 +145,28 @@ class SetYaw(object):
     		thruster4Data.data[2] = thruster6Data.data[4]
     		thruster4Data.data[3] = thruster6Data.data[5]
 
-    		rospy.loginfo("Thruster data L : %s",thruster6Data.data[4])
-    		rospy.loginfo("Thruster data R : %s",thruster6Data.data[5])
+    		rospy.logdebug("Thruster data L : %s",thruster6Data.data[4])
+    		rospy.logdebug("Thruster data R : %s",thruster6Data.data[5])
 
+            # publish thrust values to thruster converter
     		pub_thrusters4.publish(thruster4Data)
     		pub_thrusters6.publish(thruster6Data)
+
             # publish the feedback
     		self._as.publish_feedback(self._feedback)
     		r.sleep()
 
-        # Block Ends
-
-        # TODO: When the yaw has been set for the vehicle, you need to send a
-        # result back to the server. This is how you do it.
-
-        self._result.elapsed_time = time.time()
+        self._result.elapsed_time = time.time() - initial_time
         rospy.loginfo('%s: Succeeded' % self._action_name)
         self._as.set_succeeded(self._result)
 
 if __name__ == '__main__':
-
-	YAW = Fuzzy(mf_types, f_ssets)
-	YAW.io_ranges = io_ranges
+	"""
+	 1. Declare YAW as a Fuzzy object and Declare it's membership function and it's Range.
+	 2. Declares messages types for thruster4Data and thruster6Data
+	"""
+	YAW = Fuzzy(Fparam.mf_types, Fparam.f_ssets)
+	YAW.io_ranges = Fparam.io_ranges
 
 	thruster4Data=thrusterData4Thruster();
 	thruster6Data=thrusterData6Thruster();
