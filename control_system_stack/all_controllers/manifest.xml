@@ -1,0 +1,17 @@
+<package>
+  <description brief="all_controllers">
+
+     all_controllers
+
+  </description>
+  <author>Aniket</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/all_controllers</url>
+  <depend package="rospy"/>
+  <depend package="kraken_msgs"/>
+  <depend package="std_msgs"/>
+
+</package>
+
+
