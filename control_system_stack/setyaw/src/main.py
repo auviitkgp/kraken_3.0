@@ -37,8 +37,9 @@ class SetYaw(object):
     """ Creates messages that are used to publish feedback/result to client
         feedback messages :
             1. Current value of yaw
-
-        result   :
+            2. Desired_yaw
+            3. Error
+        result   : elapsed_time
     """
     _feedback = setYawFeedback()
     _result = setYawResult()
@@ -85,13 +86,34 @@ class SetYaw(object):
         self._feedback.Current_yaw = Current_yaw
         self._feedback.Error = YAW.error
 
+        # calculate the thrust from fuzzy control
+        thrust = YAW.run()
+
+        thruster6Data.data[0] = 0.0
+        thruster6Data.data[1] = 0.0
+        thruster6Data.data[2] = 0.0
+        thruster6Data.data[3] = 0.0
+        thruster6Data.data[4] =  thrust       # Left Thruster
+        thruster6Data.data[5] = -1 * thrust   # Rigt Thruster
+
+        thruster4Data.data[0] = thruster6Data.data[0]
+        thruster4Data.data[1] = thruster6Data.data[1]
+        thruster4Data.data[2] = thruster6Data.data[4]
+        thruster4Data.data[3] = thruster6Data.data[5]
+
+        # publish thrust values to thruster converter
+        pub_thrusters4.publish(thruster4Data)
+        pub_thrusters6.publish(thruster6Data)
+
         # Debug messages
-        rospy.logdebug("--------")
-        rospy.logdebug("Current Yaw : %s",round(Current_yaw,3))
-        rospy.logdebug("Desired_yaw : %s",round(self._feedback.Desired_yaw,3))
-        rospy.logdebug("Error : %s",round(YAW.error,3))
-        rospy.logdebug("Delta_error : %s",round(YAW.delta_error ,3))
-        rospy.logdebug("Relative_Goal : %s",round(Client_goal.yaw,3))
+        # rospy.logdebug("--------")
+        # rospy.logdebug("Current Yaw : %s",round(Current_yaw,3))
+        # rospy.logdebug("Desired_yaw : %s",round(self._feedback.Desired_yaw,3))
+        rospy.loginfo("Error : %s",round(YAW.error,3))
+        # rospy.logdebug("Delta_error : %s",round(YAW.delta_error ,3))
+        # rospy.logdebug("Relative_Goal : %s",round(Client_goal.yaw,3))
+        # rospy.logdebug("Thruster data L : %s",thruster6Data.data[4])
+        # rospy.logdebug("Thruster data R : %s",thruster6Data.data[5])
 
 
 
@@ -107,12 +129,17 @@ class SetYaw(object):
         """
 
         global Client_goal
+        global FIRST_ITERATION
+        global Current_yaw
+
+        # Update the goal
+        Client_goal = goal
+        FIRST_ITERATION = True
+        Current_yaw = -1
 
         rospy.Subscriber(topicHeader.ABSOLUTE_RPY, absoluteRPY, self.imuCB)
         r = rospy.Rate(20)
 
-        # Update the goal
-        Client_goal = goal
         while(Current_yaw == -1):
             r.sleep()
 
@@ -121,7 +148,7 @@ class SetYaw(object):
         rospy.loginfo('Started setting yaw at %f', initial_time)
         success = True
 
-        rospy.logdebug('YAW.error : %s',abs(YAW.error) > 0.5)
+        rospy.loginfo('YAW.error : %s',abs(YAW.error) > 0.5)
         while abs(YAW.error) > 0.5 :
             # check that preempt has not been requested by the client
             # if self._as.is_preempt_requested():
@@ -129,28 +156,6 @@ class SetYaw(object):
                 # self._as.set_preempted()
                 # success = False
                 # break
-
-            # calculate the thrust from fuzzy control
-    		thrust = YAW.run()
-
-    		thruster6Data.data[0] = 0.0
-    		thruster6Data.data[1] = 0.0
-    		thruster6Data.data[2] = 0.0
-    		thruster6Data.data[3] = 0.0
-    		thruster6Data.data[4] =  thrust   # Left Thruster
-    		thruster6Data.data[5] = -1 * thrust   # Rigt Thruster
-
-    		thruster4Data.data[0] = thruster6Data.data[0]
-    		thruster4Data.data[1] = thruster6Data.data[1]
-    		thruster4Data.data[2] = thruster6Data.data[4]
-    		thruster4Data.data[3] = thruster6Data.data[5]
-
-    		rospy.logdebug("Thruster data L : %s",thruster6Data.data[4])
-    		rospy.logdebug("Thruster data R : %s",thruster6Data.data[5])
-
-            # publish thrust values to thruster converter
-    		pub_thrusters4.publish(thruster4Data)
-    		pub_thrusters6.publish(thruster6Data)
 
             # publish the feedback
     		self._as.publish_feedback(self._feedback)
