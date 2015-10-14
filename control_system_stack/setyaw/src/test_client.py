@@ -16,8 +16,8 @@ from kraken_msgs.msg import setYawGoal
 
 def serverSentSomeFeedback(feedback_obj):
 
-    rospy.loginfo('Recieved feedback from the server, Desired_yaw : %f', feedback_obj.Desired_yaw)
-    rospy.loginfo('Recieved feedback from the server, Current_yaw : %f', feedback_obj.Current_yaw)
+    rospy.logdebug('Recieved feedback from the server, Desired_yaw : %f', feedback_obj.Desired_yaw)
+    rospy.logdebug('Recieved feedback from the server, Current_yaw : %f', feedback_obj.Current_yaw)
     rospy.loginfo('Recieved feedback from the server, Error : %f \n', feedback_obj.Error)
 
 def yawHasBeenSet(result_obj, goal):
