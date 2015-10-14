@@ -13,6 +13,7 @@ import actionlib
 import std_msgs.msg
 import rospy
 from resources import topicHeader
+from resources import tools
 
 from kraken_msgs.msg import thrusterData6Thruster
 from kraken_msgs.msg import thrusterData4Thruster
@@ -106,14 +107,14 @@ class SetYaw(object):
         pub_thrusters6.publish(thruster6Data)
 
         # Debug messages
-        # rospy.logdebug("--------")
-        # rospy.logdebug("Current Yaw : %s",round(Current_yaw,3))
-        # rospy.logdebug("Desired_yaw : %s",round(self._feedback.Desired_yaw,3))
-        rospy.loginfo("Error : %s",round(YAW.error,3))
-        # rospy.logdebug("Delta_error : %s",round(YAW.delta_error ,3))
-        # rospy.logdebug("Relative_Goal : %s",round(Client_goal.yaw,3))
-        # rospy.logdebug("Thruster data L : %s",thruster6Data.data[4])
-        # rospy.logdebug("Thruster data R : %s",thruster6Data.data[5])
+        rospy.logdebug("--------")
+        rospy.logdebug("Current Yaw : %s",round(Current_yaw,3))
+        rospy.logdebug("Desired_yaw : %s",round(self._feedback.Desired_yaw,3))
+        rospy.logdebug("Error : %s",round(YAW.error,3))
+        rospy.logdebug("Delta_error : %s",round(YAW.delta_error ,3))
+        rospy.logdebug("Relative_Goal : %s",round(Client_goal.yaw,3))
+        rospy.logdebug("Thruster data L : %s",thruster6Data.data[4])
+        rospy.logdebug("Thruster data R : %s",thruster6Data.data[5])
 
 
 
@@ -158,8 +159,10 @@ class SetYaw(object):
                 # break
 
             # publish the feedback
-    		self._as.publish_feedback(self._feedback)
-    		r.sleep()
+            self._feedback.header = std_msgs.msg.Header()
+            self._feedback.header.stamp = rospy.Time.now()
+            self._as.publish_feedback(self._feedback)
+            r.sleep()
 
         self._result.elapsed_time = time.time() - initial_time
         rospy.loginfo('%s: Succeeded' % self._action_name)
@@ -180,6 +183,6 @@ if __name__ == '__main__':
 	pub_thrusters6 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER6, thrusterData6Thruster, queue_size = 2)
 
 
-	rospy.init_node('setYaw')
-	SetYaw(rospy.get_name())
+	rospy.init_node('setyaw-action-server', log_level=(rospy.DEBUG if tools.getVerboseTag(sys.argv) else rospy.INFO))
+	SetYaw('setYaw')
 	rospy.spin()
