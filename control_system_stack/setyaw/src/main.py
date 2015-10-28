@@ -13,6 +13,7 @@ import actionlib
 import std_msgs.msg
 import rospy
 from resources import topicHeader
+# tools to get verbose
 from resources import tools
 
 from kraken_msgs.msg import thrusterData6Thruster
@@ -36,20 +37,47 @@ Client_goal = None
 
 class SetYaw(object):
     """ Creates messages that are used to publish feedback/result to client
-        feedback messages :
-            1. Current value of yaw
-            2. Desired_yaw
-            3. Error
-        result   : elapsed_time
+        Messages :
+          *  _feedback :
+                1. Current value of yaw
+                2. Desired_yaw
+                3. Error
+          *  _result  :
+                1. elapsed_time
+          *  YawFeedback :
+                - Same as _feedback
+          *  thruster4Data :
+                - thrusterData4Thruster
+          *  thruster6Data :
+                - thrusterData6Thruster
+        Publishers :
+          *  pub_thrusters4 : publish as 4 thruster model on thruster converter
+          *  pub_thrusters4 : publish as 6 thruster model on thruster converter
+          *  pub_yawFeedback : Publish on 'YawFeedback' topic for plotting feedback
+          *  sub_ABSrpy : Subscribe absolute rpy from absoluteRPY publisher
+
     """
+
+    # Initializing the messages to be used
     _feedback = setYawFeedback()
     _result = setYawResult()
+    YawFeedback = setYawFeedback()
+    thruster4Data=thrusterData4Thruster()
+    thruster6Data=thrusterData6Thruster()
 
     def __init__(self, name):
+
         self._action_name = name
         self._as = actionlib.SimpleActionServer(
             self._action_name, actionMessageSetYawAction, execute_cb=self.execute_cb, auto_start=False)
         self._as.start()
+
+        # Declare all Publisher and Subscribers here :
+        self.pub_thrusters4 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER4, thrusterData4Thruster, queue_size = 2)
+        self.pub_thrusters6 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER6, thrusterData6Thruster, queue_size = 2)
+        self.pub_yawFeedback = rospy.Publisher('YawFeedback',setYawFeedback, queue_size = 2)
+        self.sub_ABSrpy = rospy.Subscriber(topicHeader.ABSOLUTE_RPY, absoluteRPY, self.imuCB)
+
         rospy.loginfo('Server has started. Waiting for a goal.')
 
 
@@ -63,7 +91,8 @@ class SetYaw(object):
             - Desired_yaw
             - Current_yaw
             - Error
-        4. Debug messages
+        4. Update the data to be published on all the topics and publish contoller output and feedback to be plotted
+        5. Debug messages
         """
         global Current_yaw
         global base_yaw
@@ -73,62 +102,68 @@ class SetYaw(object):
 
         Current_yaw = dataIn.yaw
 
+        # Get the updated base_yaw, when a new goal is recieved
         if  FIRST_ITERATION :
     		base_yaw = Current_yaw
     		FIRST_ITERATION = False
 
-        prevError = YAW.error
-        error = (base_yaw + Client_goal.yaw - Current_yaw)* 3.14 / 180
-        YAW.error = np.arctan2(sin(error),cos(error))*180/3.14
-        YAW.delta_error = YAW.error - prevError
+        # Goal flag to restrict, publishing the data only when goal is available
+        rospy.logdebug("Goal flag : %s",Client_goal != None)
 
-        # Update the feedbacks to be sent
-        self._feedback.Desired_yaw = (Client_goal.yaw + base_yaw)%360
-        self._feedback.Current_yaw = Current_yaw
-        self._feedback.Error = YAW.error
+        if Client_goal != None :
 
-        # Update the feedbacks to published and plotted
-        YawFeedback.Desired_yaw = self._feedback.Desired_yaw
-        YawFeedback.Current_yaw = self._feedback.Current_yaw
-        YawFeedback.Error = self._feedback.Error
-        YawFeedback.header = std_msgs.msg.Header()
-        YawFeedback.header.stamp = rospy.Time.now()
+            prevError = YAW.error
+            error = (base_yaw + Client_goal.yaw - Current_yaw)* 3.14 / 180
+            YAW.error = np.arctan2(sin(error),cos(error))*180/3.14
+            YAW.delta_error = YAW.error - prevError
 
-        # calculate the thrust from fuzzy control
-        thrust = YAW.run()
+            # Update the feedbacks to be sent
+            self._feedback.Desired_yaw = (Client_goal.yaw + base_yaw)%360
+            self._feedback.Current_yaw = Current_yaw
+            self._feedback.Error = YAW.error
 
-        thruster6Data.data[0] = 0.0
-        thruster6Data.data[1] = 0.0
-        thruster6Data.data[2] = 0.0
-        thruster6Data.data[3] = 0.0
-        thruster6Data.data[4] =  thrust       # Left Thruster
-        thruster6Data.data[5] = -1 * thrust   # Rigt Thruster
-        thruster6Data.header = std_msgs.msg.Header()
-        thruster6Data.header.stamp = rospy.Time.now()
+            # Update the feedbacks to published and plotted
+            self.YawFeedback.Desired_yaw = self._feedback.Desired_yaw
+            self.YawFeedback.Current_yaw = self._feedback.Current_yaw
+            self.YawFeedback.Error = self._feedback.Error
+            self.YawFeedback.header = std_msgs.msg.Header()
+            self.YawFeedback.header.stamp = rospy.Time.now()
 
-        thruster4Data.data[0] = thruster6Data.data[0]
-        thruster4Data.data[1] = thruster6Data.data[1]
-        thruster4Data.data[2] = thruster6Data.data[4]
-        thruster4Data.data[3] = thruster6Data.data[5]
-        thruster4Data.header = std_msgs.msg.Header()
-        thruster4Data.header.stamp = rospy.Time.now()
+            # calculate the controller output from fuzzy control
+            ControlOutput = YAW.run()
 
+            # 6 Thruster model
+            self.thruster6Data.data[0] = 0.0
+            self.thruster6Data.data[1] = 0.0
+            self.thruster6Data.data[2] = 0.0
+            self.thruster6Data.data[3] = 0.0
+            self.thruster6Data.data[4] =  ControlOutput       # Left Thruster
+            self.thruster6Data.data[5] = -1 * ControlOutput   # Rigt Thruster
+            self.thruster6Data.header  = std_msgs.msg.Header()
+            self.thruster6Data.header.stamp = rospy.Time.now()
 
-        # publish thrust values to thruster converter
-        pub_thrusters4.publish(thruster4Data)
-        pub_thrusters6.publish(thruster6Data)
-        pub_yawFeedback.publish(YawFeedback)
+            # 4 Thruster model
+            self.thruster4Data.data[0] = self.thruster6Data.data[0]
+            self.thruster4Data.data[1] = self.thruster6Data.data[1]
+            self.thruster4Data.data[2] = self.thruster6Data.data[4]
+            self.thruster4Data.data[3] = self.thruster6Data.data[5]
+            self.thruster4Data.header  = std_msgs.msg.Header()
+            self.thruster4Data.header.stamp = rospy.Time.now()
 
+            # publish controller output values to thruster converter
+            self.pub_thrusters4.publish(self.thruster4Data)
+            self.pub_thrusters6.publish(self.thruster6Data)
+            self.pub_yawFeedback.publish(self.YawFeedback)
 
-        # Debug messages
-        rospy.logdebug("--------")
-        rospy.logdebug("Current Yaw : %s",round(Current_yaw,3))
-        rospy.logdebug("Desired_yaw : %s",round(self._feedback.Desired_yaw,3))
-        rospy.logdebug("Error : %s",round(YAW.error,3))
-        rospy.logdebug("Delta_error : %s",round(YAW.delta_error ,3))
-        rospy.logdebug("Relative_Goal : %s",round(Client_goal.yaw,3))
-        rospy.logdebug("Thruster data L : %s",thruster6Data.data[4])
-        rospy.logdebug("Thruster data R : %s",thruster6Data.data[5])
+            # Debug messages
+            rospy.logdebug("--------")
+            rospy.logdebug("Current Yaw : %s",round(Current_yaw,3))
+            rospy.logdebug("Desired_yaw : %s",round(self._feedback.Desired_yaw,3))
+            rospy.logdebug("Error : %s",round(YAW.error,3))
+            rospy.logdebug("Delta_error : %s",round(YAW.delta_error ,3))
+            rospy.logdebug("Relative_Goal : %s",round(Client_goal.yaw,3))
+            rospy.logdebug("Thruster data L : %s",self.thruster6Data.data[4])
+            rospy.logdebug("Thruster data R : %s",self.thruster6Data.data[5])
 
 
 
@@ -152,9 +187,9 @@ class SetYaw(object):
         FIRST_ITERATION = True
         Current_yaw = -1
 
-        rospy.Subscriber(topicHeader.ABSOLUTE_RPY, absoluteRPY, self.imuCB)
         r = rospy.Rate(20)
 
+        # wait to receive starting value of yaw
         while(Current_yaw == -1):
             r.sleep()
 
@@ -183,19 +218,10 @@ class SetYaw(object):
 if __name__ == '__main__':
 	"""
 	 1. Declare YAW as a Fuzzy object and Declare it's membership function and it's Range.
-	 2. Declares messages types for thruster4Data and thruster6Data
+     2. Calls the class setyaw constructor
 	"""
 	YAW = Fuzzy(Fparam.mf_types, Fparam.f_ssets)
 	YAW.io_ranges = Fparam.io_ranges
-
-	thruster4Data=thrusterData4Thruster();
-	thruster6Data=thrusterData6Thruster();
-	YawFeedback = setYawFeedback();
-
-	pub_thrusters4 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER4, thrusterData4Thruster, queue_size = 2)
-	pub_thrusters6 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER6, thrusterData6Thruster, queue_size = 2)
-	pub_yawFeedback = rospy.Publisher('YawFeedback',setYawFeedback, queue_size = 2)
-
 
 	rospy.init_node('setyaw_action_server', log_level=(rospy.DEBUG if tools.getVerboseTag(sys.argv) else rospy.INFO))
 	SetYaw('setYaw')
