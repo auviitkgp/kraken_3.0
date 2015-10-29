@@ -11,6 +11,7 @@
   <depend package="roscpp"/>
   <depend package="actionlib"/>
   <depend package="actionmsg"/>
+  <depend package="kraken_msgs"/>
   <depend package="blob"/>
   <depend package="image_transport"/>
   <depend package="cv_bridge"/>
