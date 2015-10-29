@@ -3,6 +3,8 @@
 PKG = 'setyaw'
 import roslib; roslib.load_manifest(PKG)
 import rospy
+import sys
+import signal
 
 # Brings in the SimpleActionClient
 import actionlib
@@ -14,6 +16,10 @@ from kraken_msgs.msg import setYawFeedback
 from kraken_msgs.msg import setYawResult
 from kraken_msgs.msg import setYawGoal
 
+global client
+global preempt
+preempt = False
+
 def serverSentSomeFeedback(feedback_obj):
 
     rospy.logdebug('Recieved feedback from the server, Desired_yaw : %f', feedback_obj.Desired_yaw)
@@ -22,10 +28,11 @@ def serverSentSomeFeedback(feedback_obj):
 
 def yawHasBeenSet(result_obj, goal):
 
-    rospy.loginfo('Done! The server said that the yaw has been set!')
+    if not preempt :
+        rospy.loginfo('Done! The server said that the yaw has been set!')
 
 def set_yaw_client(yaw_parameter):
-
+    global client
     rospy.loginfo('Entered client function')
     # Creates the SimpleActionClient, passing the type of the action
 
@@ -47,13 +54,25 @@ def set_yaw_client(yaw_parameter):
     # Prints out the result of executing the action
     return client.get_result()
 
+# For ctrl + c handling
+def signal_handler(signal, frame):
+    global client
+    global preempt
+    preempt = True
+    print '\nYou pressed Ctrl+C!'
+    # Preempt call
+    client.cancel_goal()
+    sys.exit(0)
+
 if __name__ == '__main__':
     try:
         # Initializes a rospy node so that the SimpleActionClient can
         # publish and subscribe over ROS.
         rospy.init_node('test_client_py')
+        signal.signal(signal.SIGINT, signal_handler)
         wanted_yaw = float(raw_input('Enter the yaw you need: '))
         result = set_yaw_client(wanted_yaw)
         print "Elapsed time:", ', ', result.elapsed_time
+
     except rospy.ROSInterruptException:
         print "program interrupted before completion"
