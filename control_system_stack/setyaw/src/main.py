@@ -150,11 +150,6 @@ class SetYaw(object):
             self.thruster4Data.header  = std_msgs.msg.Header()
             self.thruster4Data.header.stamp = rospy.Time.now()
 
-            # publish controller output values to thruster converter
-            self.pub_thrusters4.publish(self.thruster4Data)
-            self.pub_thrusters6.publish(self.thruster6Data)
-            self.pub_yawFeedback.publish(self.YawFeedback)
-
             # Debug messages
             rospy.logdebug("--------")
             rospy.logdebug("Current Yaw : %s",round(Current_yaw,3))
@@ -201,19 +196,32 @@ class SetYaw(object):
         rospy.loginfo('YAW.error : %s',abs(YAW.error) > 0.5)
         while abs(YAW.error) > 0.5 :
             # check that preempt has not been requested by the client
-            # if self._as.is_preempt_requested():
-                # rospy.loginfo('%s: Preempted' % self._action_name)
-                # self._as.set_preempted()
-                # success = False
-                # break
+            if self._as.is_preempt_requested():
+                rospy.loginfo('%s: Preempted' % self._action_name)
+                self._as.set_preempted()
+                success = False
+
+                # Set the thrust values to 0, to stop the thrusters
+                self.thruster6Data.data = [0,0,0,0,0,0]
+                self.thruster4Data.data = [0,0,0,0]
+                self.pub_thrusters6.publish(self.thruster6Data)
+                self.pub_thrusters4.publish(self.thruster4Data)
+
+                break
 
             # publish the feedback
             self._as.publish_feedback(self._feedback)
+
+            # publish controller output values to thruster converter
+            self.pub_thrusters4.publish(self.thruster4Data)
+            self.pub_thrusters6.publish(self.thruster6Data)
+            self.pub_yawFeedback.publish(self.YawFeedback)
             r.sleep()
 
-        self._result.elapsed_time = time.time() - initial_time
-        rospy.loginfo('%s: Succeeded' % self._action_name)
-        self._as.set_succeeded(self._result)
+        if success :
+            self._result.elapsed_time = time.time() - initial_time
+            rospy.loginfo('%s: Succeeded' % self._action_name)
+            self._as.set_succeeded(self._result)
 
 if __name__ == '__main__':
 	"""
