@@ -1,5 +1,6 @@
 #include <ros/ros.h>
 #include <actionmsg/buoyAction.h>
+#include <kraken_msgs/scanAction.h>
 #include <actionlib/client/simple_action_client.h>
 #include <actionlib/client/terminal_state.h>
 #include <task_buoy/resultheader.h>
@@ -11,6 +12,7 @@
 
 typedef actionlib::SimpleActionClient<actionmsg::buoyAction> Client;
 typedef actionlib::SimpleActionClient<kraken_msgs::setYawAction> Client1;
+typedef actionlib::SimpleActionClient<kraken_msgs::scanAction> Client2;
 
 double current_yaw;
 
@@ -27,6 +29,14 @@ int main(int argc, char ** argv)
     ros::Subscriber sub = n.subscribe(topics::ABSOLUTE_RPY, 1000, getyawCallback);
 
     // Start Service
+    Client2 scan_start("scanning_server", true);
+    ROS_INFO("Scanning client has started ... Waiting for the server to start");
+    scan_start.waitForServer();
+    ROS_INFO("Scanning server has started");
+    kraken_msgs::scanGoal _goal2;
+    _goal2.speed = -1;
+    ROS_INFO("Sending angular speed for the bot to rotate at.");
+    scan_start.sendGoal(_goal2);
 
     Client detect_client("buoy", true);
     ROS_INFO("buoy_client has started ... Waiting for the server to start");
@@ -40,7 +50,7 @@ int main(int argc, char ** argv)
 
     if(_actionStatus == true)
     {
-        // Stop Service
+    	scan_start.cancelGoal();
 
         actionlib::SimpleClientGoalState _state = detect_client.getState();
         ROS_INFO("buoy_client : Action finished - %s",_state.toString().c_str());

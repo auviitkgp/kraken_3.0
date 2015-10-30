@@ -87,6 +87,7 @@ class scanningServer(object):
         3. Update the data to be published on all the topics and publish contoller output and feedback to be plotted
         4. Debug messages
         """
+        """
         global Current_yaw
         global base_yaw
         global FIRST_ITERATION
@@ -94,12 +95,12 @@ class scanningServer(object):
         Current_yaw = dataIn.yaw
 
         # Get the updated base_yaw, when a new goal is recieved
-        if  FIRST_ITERATION :
+        if  FIRST_ITERATION:
     		base_yaw = Current_yaw
     		FIRST_ITERATION = False
 
-            # 6 Thruster model
-            self.thruster6Data.data = [0 ,0 ,0 ,0 ,-5 ,5]
+            # 6 Thruster model 
+            self.thruster6Data.data = [0, 0, 0, 0, -5, 5]
             self.thruster6Data.header  = std_msgs.msg.Header()
             self.thruster6Data.header.stamp = rospy.Time.now()
 
@@ -113,6 +114,7 @@ class scanningServer(object):
             rospy.logdebug("Current Yaw : %s",round(Current_yaw,3))
             rospy.logdebug("Thruster data L : %s",self.thruster6Data.data[4])
             rospy.logdebug("Thruster data R : %s",self.thruster6Data.data[5])
+        """
 
 
 
@@ -123,7 +125,10 @@ class scanningServer(object):
         3. sends constant thrust to the thruster converter.
         4. publishes feedback back to the client
         """
+        _speed = goal.speed
+        rospy.loginfo("I was asked to rotate at speed %s", _speed)
 
+        """
         global FIRST_ITERATION
         global Current_yaw
 
@@ -169,6 +174,8 @@ class scanningServer(object):
             self._result.elapsed_time = time.time() - initial_time
             rospy.loginfo('%s: Succeeded' % self._action_name)
             self._as.set_succeeded(self._result)
+
+        """
 
 if __name__ == '__main__':
 	"""
