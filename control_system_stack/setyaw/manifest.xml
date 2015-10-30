@@ -1,0 +1,18 @@
+<package>
+  <description brief="setyaw">
+
+     setyaw
+
+  </description>
+  <author>Siddharth</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/setyaw</url>
+  <depend package="actionlib"/>
+  <depend package="rospy"/>
+  <depend package="std_msgs"/>
+  <depend package="kraken_msgs"/>
+  <depend package="resources"/>
+  <depend package="all_controllers"/>
+
+</package>

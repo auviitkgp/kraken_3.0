@@ -1,0 +1,14 @@
+  # TODO: You can change the structure of this message if you need to.
+# goal definition
+Header header
+float32 yaw
+---
+# result definition
+Header header
+float32 elapsed_time
+---
+# feedback
+Header header
+float32 Desired_yaw
+float32 Current_yaw
+float32 Error
