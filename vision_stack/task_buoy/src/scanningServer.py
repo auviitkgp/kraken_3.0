@@ -20,13 +20,10 @@ from kraken_msgs.msg import thrusterData6Thruster
 from kraken_msgs.msg import thrusterData4Thruster
 from kraken_msgs.msg import absoluteRPY
 
-from kraken_msgs.msg import setYawAction as actionMessageSetYawAction
-from kraken_msgs.msg import setYawFeedback
-from kraken_msgs.msg import setYawResult
-from kraken_msgs.msg import setYawGoal
-
-from all_controllers.fuzzy import Fuzzy
-from all_controllers import fuzzyParams as Fparam
+from kraken_msgs.msg import scanAction as actionMessagescanAction
+from kraken_msgs.msg import scanFeedback
+from kraken_msgs.msg import scanResult
+from kraken_msgs.msg import scanGoal
 
 # Global variables
 base_yaw = 0.0
@@ -57,8 +54,8 @@ class scanningServer(object):
     """
 
     # Initializing the messages to be used
-    _feedback = setYawFeedback()
-    _result = setYawResult()
+    _feedback = scanFeedback()
+    _result = scanResult()
     thruster4Data=thrusterData4Thruster()
     thruster6Data=thrusterData6Thruster()
 
@@ -66,13 +63,13 @@ class scanningServer(object):
 
         self._action_name = name
         self._as = actionlib.SimpleActionServer(
-            self._action_name, actionMessageSetYawAction, execute_cb=self.execute_cb, auto_start=False)
+            self._action_name, actionMessagescanAction, execute_cb=self.execute_cb, auto_start=False)
         self._as.start()
 
         # Declare all Publisher and Subscribers here :
         self.pub_thrusters4 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER4, thrusterData4Thruster, queue_size = 2)
         self.pub_thrusters6 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER6, thrusterData6Thruster, queue_size = 2)
-        self.pub_yawFeedback = rospy.Publisher('YawFeedback',setYawFeedback, queue_size = 2)
+        self.pub_yawFeedback = rospy.Publisher('YawFeedback',scanFeedback, queue_size = 2)
         self.sub_ABSrpy = rospy.Subscriber(topicHeader.ABSOLUTE_RPY, absoluteRPY, self.imuCB)
 
         rospy.loginfo('Server has started. Waiting for a goal.')
