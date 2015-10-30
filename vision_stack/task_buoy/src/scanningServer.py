@@ -117,6 +117,8 @@ class scanningServer(object):
             rospy.loginfo('%s: Succeeded' % self._action_name)
             self._as.set_succeeded(self._result)
 
+        """
+
 if __name__ == '__main__':
 	"""
      1. Calls the class searchBuoy constructor
