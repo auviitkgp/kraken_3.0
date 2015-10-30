@@ -1,4 +1,5 @@
 #goal
+int32 direction		# +1 for Clockwise and -1 for Counter-clockwise
 float32 speed
 
 ---
