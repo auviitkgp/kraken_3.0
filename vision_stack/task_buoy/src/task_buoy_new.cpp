@@ -34,6 +34,7 @@ int main(int argc, char ** argv)
     scan_start.waitForServer();
     ROS_INFO("Scanning server has started");
     kraken_msgs::scanGoal _goal2;
+    _goal2.direction = -1;
     _goal2.speed = -1;
     ROS_INFO("Sending angular speed for the bot to rotate at.");
     scan_start.sendGoal(_goal2);

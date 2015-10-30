@@ -125,6 +125,14 @@ class scanningServer(object):
         _speed = goal.speed
         rospy.loginfo("I was asked to rotate at speed %s", _speed)
 
+        _direction = goal.direction
+        if _direction==1:
+            rospy.loginfo("I was asked to rotate in clockwise direction")
+        else:
+            rospy.loginfo("I was asked to rotate in counter clockwise direction")
+
+        # rospy.loginfo("I was asked to rotate in" + " " if _direction == 1.0 else " counter-" + "clockwise direction")
+
         """
         global FIRST_ITERATION
         global Current_yaw
