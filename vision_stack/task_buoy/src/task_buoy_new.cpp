@@ -10,6 +10,8 @@
 #include <kraken_msgs/absoluteRPY.h>
 #include <kraken_msgs/setYawAction.h>
 
+#include <signal.h>
+
 typedef actionlib::SimpleActionClient<actionmsg::buoyAction> Client;
 typedef actionlib::SimpleActionClient<kraken_msgs::setYawAction> Client1;
 typedef actionlib::SimpleActionClient<kraken_msgs::scanAction> Client2;
@@ -21,9 +23,16 @@ void getyawCallback(const kraken_msgs::absoluteRPY& msg)
     current_yaw = msg.yaw;
 }
 
+void my_handler(sig_t s){
+           printf("Caught signal %d\n",s);
+           exit(1);
+
+}
+
 int main(int argc, char ** argv)
 {
     ros::init(argc, argv, "buoy_node");
+    signal (SIGINT,my_handler);
 
     ros::NodeHandle n;
     ros::Subscriber sub = n.subscribe(topics::ABSOLUTE_RPY, 1000, getyawCallback);
