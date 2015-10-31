@@ -32,7 +32,7 @@ void my_handler(sig_t s){
 int main(int argc, char ** argv)
 {
     ros::init(argc, argv, "buoy_node");
-    signal (SIGINT,my_handler);
+    //signal (SIGINT,my_handler);
 
     ros::NodeHandle n;
     ros::Subscriber sub = n.subscribe(topics::ABSOLUTE_RPY, 1000, getyawCallback);
