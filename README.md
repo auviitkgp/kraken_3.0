@@ -19,11 +19,19 @@ You would need a [ROSbuild workspace](http://wiki.ros.org/catkin/Tutorials/using
 
 - To run yaw control you need to run the following commands
 
-```
-apt-get install python-numpy python-scipy python-matplotlib ipython 
-apt-get install python-notebook python-pandas python-sympy python-nose
-pip install scikit-fuzzy
-```
+  ```
+  $ apt-get install python-numpy python-scipy python-matplotlib ipython 
+  $ apt-get install python-notebook python-pandas python-sympy python-nose
+  $ pip install scikit-fuzzy
+  ```
+  
+  If the `setyaw` package does not run even after successfuly installation of the above packages,
+  open an issue [here](https://github.com/auviitkgp/kraken_3.0/issues/new).
+  
+- The **Artistic Style** package for running the `formatAll.sh` hook.
+  
+  **TODO**
+
 
 ## Launching the simulator : Start visualisation
 
