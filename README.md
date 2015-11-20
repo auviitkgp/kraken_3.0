@@ -25,12 +25,16 @@ You would need a [ROSbuild workspace](http://wiki.ros.org/catkin/Tutorials/using
   $ pip install scikit-fuzzy
   ```
   
-  If the `setyaw` package does not run even after successfuly installation of the above packages,
+  If the `setyaw` package does not run even after successful installation of the above packages,
   open an issue [here](https://github.com/auviitkgp/kraken_3.0/issues/new).
   
 - The **Artistic Style** package for running the `formatAll.sh` hook.
   
   **TODO**
+
+- `rsync`
+
+	**TODO**
 
 
 ## Launching the simulator : Start visualisation
