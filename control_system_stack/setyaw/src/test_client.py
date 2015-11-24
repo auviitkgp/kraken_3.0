@@ -59,7 +59,9 @@ def signal_handler(signal, frame):
     global client
     global preempt
     preempt = True
-    print '\nYou pressed Ctrl+C!'
+    rospy.loginfo('You pressed Ctrl+C!')
+    rospy.loginfo('Goal has been preempted.')
+    rospy.loginfo('Client will exit now')
     # Preempt call
     client.cancel_goal()
     sys.exit(0)
