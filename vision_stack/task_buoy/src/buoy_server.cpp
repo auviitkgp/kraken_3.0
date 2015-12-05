@@ -4,51 +4,76 @@
 
 #include <resources/topicHeader.h>
 
+int ***_allVals;
+
 Buoy::Buoy(std::string name) : _it(_n), _s(_n, name, boost::bind(&Buoy::executeCB, this, _1), false), _actionName(name)
 {
     _sub = _it.subscribe(topics::CAMERA_FRONT_RAW_IMAGE, 1, &Buoy::imageCallBack, this);
     _pub = _it.advertise(topics::CAMERA_FRONT_BUOY_IMAGE, 1);
-    ifstream _thresholdVal("threshold.th");
+    // ifstream _thresholdVal("threshold.th");
 
-    if(_thresholdVal.is_open())
+    // if(_thresholdVal.is_open())
+    // {
+    //     for(int i = 0; i < 3; i++)
+    //     {
+    //         _thresholdVal >> _lowerThreshRed1[i];
+    //     }
+
+    //     for(int i = 0; i < 3; i++)
+    //     {
+    //         _thresholdVal >> _upperThreshRed1[i];
+    //     }
+
+    //     for(int i = 0; i < 3; i++)
+    //     {
+    //         _thresholdVal >> _lowerThreshRed2[i];
+    //     }
+
+    //     for(int i = 0; i < 3; i++)
+    //     {
+    //         _thresholdVal >> _upperThreshRed2[i];
+    //     }
+
+    //     for(int i = 0; i < 3; i++)
+    //     {
+    //         _thresholdVal >> _lowerThreshGreen[i];
+    //     }
+
+    //     for(int i = 0; i < 3; i++)
+    //     {
+    //         _thresholdVal >> _upperThreshGreen[i];
+    //     }
+    // }
+    // else
+    // {
+    //     ROS_ERROR("Unable to open threshold file.");
+    //     ros::shutdown();
+    // }
+
+    fstream f;
+    f.open("/home/naresh/jade_workspace/sandbox/kraken_3.0/vision_stack/task_buoy/final_stored_array_rgb.txt",ios::in);
+    if (f)
     {
-        for(int i = 0; i < 3; i++)
+        for(int i=0;i<256;i++)
         {
-            _thresholdVal >> _lowerThreshRed1[i];
-        }
-
-        for(int i = 0; i < 3; i++)
-        {
-            _thresholdVal >> _upperThreshRed1[i];
-        }
-
-        for(int i = 0; i < 3; i++)
-        {
-            _thresholdVal >> _lowerThreshRed2[i];
-        }
-
-        for(int i = 0; i < 3; i++)
-        {
-            _thresholdVal >> _upperThreshRed2[i];
-        }
-
-        for(int i = 0; i < 3; i++)
-        {
-            _thresholdVal >> _lowerThreshGreen[i];
-        }
-
-        for(int i = 0; i < 3; i++)
-        {
-            _thresholdVal >> _upperThreshGreen[i];
+            for (int j=0;j<256;j++)
+            {
+                for (int k=0;k<256;k++)
+                {
+                    if (!f.eof())
+                        f>>_allVals[i][j][k];
+                }
+            }
         }
     }
     else
     {
-        ROS_ERROR("Unable to open threshold file.");
+        ROS_ERROR("Unable to open values file.");
         ros::shutdown();
     }
 
     _kernelDilateErode = getStructuringElement(MORPH_RECT, Size(3,3));
+    //elementEx = getStructuringElement(MORPH_RECT, Size(7,7));
     _finalImage.encoding = "mono8";
     _s.start();
 }
@@ -150,16 +175,46 @@ bool Buoy::detectBuoy()
 {
     if(!_image.empty())
     {
-        cvtColor(_image, _imageHSV, CV_BGR2HSV);
-        inRange(_imageHSV,_lowerThreshRed1,_upperThreshRed1, _imageBW);
-        inRange(_imageHSV,_lowerThreshRed2,_upperThreshRed2, _imageBWRed);
-        add(_imageBW, _imageBWRed, _imageBW);
-        inRange(_imageHSV,_lowerThreshGreen,_upperThreshGreen, _imageBWGreen);
-        add(_imageBW, _imageBWGreen, _imageBW);
+        // cvtColor(_image, _imageHSV, CV_BGR2HSV);
+        // inRange(_imageHSV,_lowerThreshRed1,_upperThreshRed1, _imageBW);
+        // inRange(_imageHSV,_lowerThreshRed2,_upperThreshRed2, _imageBWRed);
+        // add(_imageBW, _imageBWRed, _imageBW);
+        // inRange(_imageHSV,_lowerThreshGreen,_upperThreshGreen, _imageBWGreen);
+        // add(_imageBW, _imageBWGreen, _imageBW);
+        int k;
+        imshow("_imagetest1", _image);
+        for (int j=0; j< _image.rows; j++)
+        { 
+            for (int i=0; i< _image.cols; i++)
+            {
+                k = _allVals[_image.at<Vec3b>(j,i).val[0]][_image.at<Vec3b>(j,i).val[1]][_image.at<Vec3b>(j,i).val[2]];
+                if (k==1)
+                {
+                    _image.at<Vec3b>(j,i).val[0] = 0;
+                    _image.at<Vec3b>(j,i).val[1] = 255;
+                    _image.at<Vec3b>(j,i).val[2] = 255;
+                }
+                if (k==0)
+                {
+                    _image.at<Vec3b>(j,i).val[0] = 0;
+                    _image.at<Vec3b>(j,i).val[1] = 0;
+                    _image.at<Vec3b>(j,i).val[2] = 255;
+                }
+                if (k==2)
+                {
+                    _image.at<Vec3b>(j,i).val[0] = 0;
+                    _image.at<Vec3b>(j,i).val[1] = 0;
+                    _image.at<Vec3b>(j,i).val[2] = 0;
+                }
+            }
+        }
+        imshow("_imagetest", _image);
+        cvtColor(_image, _imageBW, CV_BGR2GRAY);
         imshow("_imageBW", _imageBW);
-        waitKey(33);
+        waitKey(33);    
         medianBlur(_imageBW, _imageBW, 3);
         erode(_imageBW, _imageBW, _kernelDilateErode);
+        //morphologyEx( _imageBW, _imageBW, MORPH_OPEN, elementEx );
         CBlobResult _blobs,_blobsClutter;
         CBlob * _currentBlob;
         IplImage _imageBWipl = _imageBW;
@@ -262,6 +317,15 @@ Buoy::~Buoy()
 
 int main(int argc, char ** argv)
 {
+    _allVals = new int**[256];
+    for(int i = 0; i < 256; i++)
+    {
+        _allVals[i] = new int*[256];
+        for(int j = 0; j < 256; j++)
+        {
+            _allVals[i][j] = new int[256];
+        }
+    }
     ros::init(argc, argv, "buoy_server");
     Buoy _buoyserver("buoy");
     ros::spin();
