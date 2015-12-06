@@ -34,7 +34,7 @@ sb = serial.Serial('/dev/ttyACM0', 9600)
 # serial config
 sb.stopbits = 1
 
-def stopThrustersNow(s, f):
+def stopThrustersNow(s=None, f=None):
 
     print "Stopping thrusters now!"
     os.system("python stopKraken.py")
@@ -79,17 +79,21 @@ if __name__ == '__main__':
     # add[4] = '60'
     # add[5] = '5C'
     print len(sys.argv)  
-    r = rospy.Rate((int(sys.argv[1])) if (len(sys.argv) > 1) else 10)
-    
+    # r = rospy.Rate((int(sys.argv[1])) if (len(sys.argv) > 1) else 10)
+    r = rospy.Rate(8)
     print "Entering While Loop"
-    while not rospy.is_shutdown():
+    # while not rospy.is_shutdown():
+    i = 0
+    while i < 32:
         print "Cycle Started"
         for i in range(0,6):
             for j in range(0,3):
                 sb.write(str(chr(int(data[i][j]))))
                 print "Single Thuster Data-point completed." # Total 18 data-points
 		
-        print "Cycle Ended."	
+        print "Cycle Ended."
+	i += 1
         r.sleep()
         
     sb.close()
+    # stopThrustersNow()

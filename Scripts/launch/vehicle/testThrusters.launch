@@ -1,0 +1,8 @@
+<launch>
+<!--
+<node name="imu_sparton" pkg="sparton" type="sparton.py" />
+<node name="dvl_nqdvl" pkg="nqDVL" type="nqDVL.py" />
+<node name="absolute_roll_pitch_yaw_publisher" pkg="absolute_rpy_publisher" type="main.py" />
+-->
+<node name="test_thrusters" pkg="seabotix" type="testThrusters.py" />
+</launch>
