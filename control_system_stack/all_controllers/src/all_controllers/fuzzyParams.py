@@ -15,11 +15,11 @@ f_ssets = [[ # error
            ],
             # u
            [
-            [-10,-10,-5],  # -ve medium
-            [-10,-5 , 0],  # -ve small
-            [-5 , 0 , 5],  # zero
-            [ 0 , 5 , 10], # +ve small
-            [ 5 ,10 , 10], # +ve medium
+            [-102,-75,-25],  # -ve medium
+            [-75,-25 , 0],  # -ve small
+            [-50 , 0 , 50],  # zero
+            [ 0 , 75 , ], # +ve small
+            [ 25 ,75 , 102], # +ve medium
            ]
           ]
 # yapf: enable
@@ -29,7 +29,7 @@ io_ranges = [  # range of e
                # range of d_e
               [-180,180],
                # range of u
-              [-10,10]
+              [-102,102]
             ]
 
 mf_types = ['trimf','trimf','trimf']

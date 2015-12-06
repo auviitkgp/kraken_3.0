@@ -89,8 +89,8 @@ def imuCB(dataIn):
 	rospy.loginfo("--------")
 	rospy.loginfo("Current Yaw : %s",round(yaw,3))
 	rospy.loginfo("Error : %s",round(errorP,3))
-	rospy.loginfo("Thruster data L : %s",thruster6Data.data[4])
-	rospy.loginfo("Thruster data R : %s",thruster6Data.data[5])
+	rospy.loginfo("Thruster data L : %s",thruster6Data.data[2])
+	rospy.loginfo("Thruster data R : %s",thruster6Data.data[3])
 
 
 
@@ -115,8 +115,8 @@ if __name__ == '__main__':
 
 		thruster6Data.data[0] = 0.0
 		thruster6Data.data[1] = 0.0
-		thruster6Data.data[2] = Kp_left*errorP + Kd_left*errorD + Ki_left*errorI
-		thruster6Data.data[3] = Kp_right*errorP + Kd_right*errorD + Ki_right*errorI
+		thruster6Data.data[2] = Kp_left*errorP + Kd_left*errorD + Ki_left*errorI  # Positive means forward movement
+		thruster6Data.data[3] = Kp_right*errorP + Kd_right*errorD + Ki_right*errorI # Negative means backward movement
 		thruster6Data.data[4] = 0.0
 		thruster6Data.data[5] = 0.0
 

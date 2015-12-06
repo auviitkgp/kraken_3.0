@@ -135,10 +135,10 @@ class SetYaw(object):
             # 6 Thruster model
             self.thruster6Data.data[0] = 0.0
             self.thruster6Data.data[1] = 0.0
-            self.thruster6Data.data[2] = 0.0
-            self.thruster6Data.data[3] = 0.0
-            self.thruster6Data.data[4] =  ControlOutput       # Left Thruster
-            self.thruster6Data.data[5] = -1 * ControlOutput   # Rigt Thruster
+            self.thruster6Data.data[2] = ControlOutput  # Left Thruster
+            self.thruster6Data.data[3] = -1 * ControlOutput # Rigt Thruster
+            self.thruster6Data.data[4] = 0.0     
+            self.thruster6Data.data[5] = 0.0     
             self.thruster6Data.header  = std_msgs.msg.Header()
             self.thruster6Data.header.stamp = rospy.Time.now()
 
