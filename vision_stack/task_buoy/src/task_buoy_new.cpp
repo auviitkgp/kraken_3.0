@@ -16,6 +16,29 @@ typedef actionlib::SimpleActionClient<actionmsg::buoyAction> Client;
 typedef actionlib::SimpleActionClient<kraken_msgs::setYawAction> Client1;
 typedef actionlib::SimpleActionClient<kraken_msgs::scanAction> Client2;
 
+bool dummy()
+{
+    char** dum_arg;
+    int x;
+    ros::init(x, dum_arg, "buoy_node");
+    return true;
+}
+
+bool res = dummy();
+
+Client detect_client("buoy", true);
+Client1 yaw_client("setYaw", true);
+Client2 scan_start("scanning_server", true);
+
+void my_handler(int s)
+{
+    printf("Caught Signal %d\n", s);
+    detect_client.cancelGoal();
+    yaw_client.cancelGoal();
+    scan_start.cancelGoal();
+    exit(1);
+}
+
 double current_yaw;
 
 void getyawCallback(const kraken_msgs::absoluteRPY& msg)
@@ -23,22 +46,13 @@ void getyawCallback(const kraken_msgs::absoluteRPY& msg)
     current_yaw = msg.yaw;
 }
 
-void my_handler(sig_t s){
-           printf("Caught signal %d\n",s);
-           exit(1);
-
-}
-
 int main(int argc, char ** argv)
 {
-    ros::init(argc, argv, "buoy_node");
-    //signal (SIGINT,my_handler);
+    signal (SIGINT,my_handler);
 
     ros::NodeHandle n;
     ros::Subscriber sub = n.subscribe(topics::ABSOLUTE_RPY, 1000, getyawCallback);
 
-    // Start Service
-    Client2 scan_start("scanning_server", true);
     ROS_INFO("Scanning client has started ... Waiting for the server to start");
     scan_start.waitForServer();
     ROS_INFO("Scanning server has started");
@@ -48,7 +62,6 @@ int main(int argc, char ** argv)
     ROS_INFO("Sending angular speed for the bot to rotate at.");
     scan_start.sendGoal(_goal2);
 
-    Client detect_client("buoy", true);
     ROS_INFO("buoy_client has started ... Waiting for the server to start");
     detect_client.waitForServer();
     ROS_INFO("buoy_server has started.");
@@ -56,7 +69,11 @@ int main(int argc, char ** argv)
     _goal.order = DETECT_BUOY;
     ROS_INFO("Sending goal - DETECT_BUOY.");
     detect_client.sendGoal(_goal);
-    bool _actionStatus = detect_client.waitForResult(ros::Duration(300.0));
+
+    // The duration given here should be the time taken by AUV to complete one full rotation.
+    // We need to consider the time taken by IP to scan the frame and decide on the rotational speed accordingly.
+
+    bool _actionStatus = detect_client.waitForResult(ros::Duration(300.0)); 
 
     if(_actionStatus == true)
     {
@@ -68,7 +85,6 @@ int main(int argc, char ** argv)
         // Get the yaw here and store it
         // Global variable is being set to yaw whenever callback function is called
 
-        Client1 yaw_client("setYaw", true);
         ROS_INFO("yaw_client has started ... Waiting for the server to start");
         yaw_client.waitForServer();
         ROS_INFO("yaw_server has started.");
@@ -76,13 +92,15 @@ int main(int argc, char ** argv)
         _goal1.yaw = current_yaw;
         ROS_INFO("Secding goal to set yaw at %f", current_yaw);
         yaw_client.sendGoal(_goal1);
-        _actionStatus = yaw_client.waitForResult();
+        //_actionStatus = yaw_client.waitForResult();
+        return 0;
 
     }
     else
     {
         ROS_INFO("buoy_client : No buoy found in the area");
         detect_client.cancelGoal();
+        scan_start.cancelGoal();
     }
 
     return 0;
