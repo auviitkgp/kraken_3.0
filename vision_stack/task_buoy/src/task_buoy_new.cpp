@@ -9,6 +9,7 @@
 #include <resources/topicHeader.h>
 #include <kraken_msgs/absoluteRPY.h>
 #include <kraken_msgs/setYawAction.h>
+#include <resources/tools.h>
 
 #include <signal.h>
 
@@ -48,6 +49,11 @@ void getyawCallback(const kraken_msgs::absoluteRPY& msg)
 
 int main(int argc, char ** argv)
 {
+	if(tools::getVerboseTag(argc, argv) && ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Debug))
+    {
+        ros::console::notifyLoggerLevelsChanged();
+    }
+
     signal (SIGINT,my_handler);
 
     ros::NodeHandle n;
