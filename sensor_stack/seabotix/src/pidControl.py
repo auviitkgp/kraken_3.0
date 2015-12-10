@@ -12,6 +12,8 @@ import serial
 import rospy
 import sys
 import numpy as np
+import signal
+import os
 
 from std_msgs.msg import Float32MultiArray
 from kraken_msgs.msg import thrusterData6Thruster
@@ -55,6 +57,11 @@ errorI = 0.0
 errorP = 0.0
 errorD = 0.0
 prevError = 0.0
+ctrl_c_pressed = False
+
+def stopThrustersNow(s, f):
+
+        ctrl_c_pressed = True
 
 def imuCB(dataIn):
 	global yaw
@@ -80,7 +87,7 @@ def imuCB(dataIn):
 
 	msg = Float32MultiArray()
 	PlotData = [0]*3
-	PlotData[0] = goal
+	Data[0] = goal
 	PlotData[1] = yaw
 	PlotData[2] = errorP
 	msg.data=PlotData
@@ -89,19 +96,17 @@ def imuCB(dataIn):
 	rospy.loginfo("--------")
 	rospy.loginfo("Current Yaw : %s",round(yaw,3))
 	rospy.loginfo("Error : %s",round(errorP,3))
-	rospy.loginfo("Thruster data L : %s",thruster6Data.data[4])
-	rospy.loginfo("Thruster data R : %s",thruster6Data.data[5])
-
-
-
+	rospy.loginfo("Thruster data L : %s",thruster6Data.data[2])
+	rospy.loginfo("Thruster data R : %s",thruster6Data.data[3])
 
 #thruster6Data.data = [0.0,0.0,0.0,0.0,0.0,0.0]
 #thruster4Data.data = [0.0, 0.0, 0.0, 0.0]
 
-
 if __name__ == '__main__':
 	thruster4Data=thrusterData4Thruster();
 	thruster6Data=thrusterData6Thruster();
+        
+        signal.signal(signal.SIGINT, stopThrustersNow)
 
 	rospy.init_node('Control', anonymous=True)
 	sub = rospy.Subscriber(topicHeader.ABSOLUTE_RPY, absoluteRPY, imuCB)
@@ -109,22 +114,35 @@ if __name__ == '__main__':
 	pub6 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER6, thrusterData6Thruster, queue_size = 2)
 	pub = rospy.Publisher('ControlPlot', Float32MultiArray, queue_size=10)
 
-	r = rospy.Rate(10)
+	r = rospy.Rate(float(os.environ['ROS_RATE']) if 'ROS_RATE' in os.environ else 8)
 
 	while not rospy.is_shutdown():
 
 		thruster6Data.data[0] = 0.0
 		thruster6Data.data[1] = 0.0
-		thruster6Data.data[2] = 0.0
-		thruster6Data.data[3] = 0.0
-
-		thruster6Data.data[4] = Kp_left*errorP + Kd_left*errorD + Ki_left*errorI
-		thruster6Data.data[5] = Kp_right*errorP + Kd_right*errorD + Ki_right*errorI
+		thruster6Data.data[2] = Kp_left*errorP + Kd_left*errorD + Ki_left*errorI  # Positive means forward movement
+		thruster6Data.data[3] = Kp_right*errorP + Kd_right*errorD + Ki_right*errorI # Negative means backward movement
+		thruster6Data.data[4] = 0.0
+		thruster6Data.data[5] = 0.0
 
 		thruster4Data.data[0] = thruster6Data.data[0]
 		thruster4Data.data[1] = thruster6Data.data[1]
 		thruster4Data.data[2] = thruster6Data.data[4]
 		thruster4Data.data[3] = thruster6Data.data[5]
+
+                if ctrl_c_pressed:
+
+                    thruster6Data.data[0] = 0.0
+                    thruster6Data.data[1] = 0.0
+                    thruster6Data.data[2] = 0.0
+                    thruster6Data.data[3] = 0.0
+                    thruster6Data.data[4] = 0.0
+                    thruster6Data.data[5] = 0.0
+
+                    thruster4Data.data[0] = 0.0
+                    thruster4Data.data[1] = 0.0
+                    thruster4Data.data[2] = 0.0
+                    thruster4Data.data[3] = 0.0
 
 		#pub4.publish(thruster4Data)
 		pub6.publish(thruster6Data)

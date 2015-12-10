@@ -112,10 +112,11 @@ class SetYaw(object):
 
         if Client_goal != None :
 
-            prevError = YAW.error
+            
             error = (base_yaw + Client_goal.yaw - Current_yaw)* 3.14 / 180
             YAW.error = np.arctan2(sin(error),cos(error))*180/3.14
             YAW.delta_error = YAW.error - prevError
+	    print "Yaw.error : ",YAW.error,"prevError : ",prevError, "Delta_error : ",YAW.delta_error
 
             # Update the feedbacks to be sent
             self._feedback.Desired_yaw = (Client_goal.yaw + base_yaw)%360
@@ -131,14 +132,15 @@ class SetYaw(object):
 
             # calculate the controller output from fuzzy control
             ControlOutput = YAW.run()
-
+	    prevError = YAW.error
+	    
             # 6 Thruster model
             self.thruster6Data.data[0] = 0.0
             self.thruster6Data.data[1] = 0.0
-            self.thruster6Data.data[2] = 0.0
-            self.thruster6Data.data[3] = 0.0
-            self.thruster6Data.data[4] =  ControlOutput       # Left Thruster
-            self.thruster6Data.data[5] = -1 * ControlOutput   # Rigt Thruster
+            self.thruster6Data.data[2] = ControlOutput  # Left Thruster
+            self.thruster6Data.data[3] = -1 * ControlOutput # Rigt Thruster
+            self.thruster6Data.data[4] = 0.0     
+            self.thruster6Data.data[5] = 0.0     
             self.thruster6Data.header  = std_msgs.msg.Header()
             self.thruster6Data.header.stamp = rospy.Time.now()
 
@@ -152,13 +154,13 @@ class SetYaw(object):
 
             # Debug messages
             rospy.logdebug("--------")
-            rospy.logdebug("Current Yaw : %s",round(Current_yaw,3))
-            rospy.logdebug("Desired_yaw : %s",round(self._feedback.Desired_yaw,3))
+            #rospy.logdebug("Current Yaw : %s",round(Current_yaw,3))
+            #rospy.logdebug("Desired_yaw : %s",round(self._feedback.Desired_yaw,3))
             rospy.logdebug("Error : %s",round(YAW.error,3))
             rospy.logdebug("Delta_error : %s",round(YAW.delta_error ,3))
-            rospy.logdebug("Relative_Goal : %s",round(Client_goal.yaw,3))
+            #rospy.logdebug("Relative_Goal : %s",round(Client_goal.yaw,3))
             rospy.logdebug("Thruster data L : %s",self.thruster6Data.data[4])
-            rospy.logdebug("Thruster data R : %s",self.thruster6Data.data[5])
+            #rospy.logdebug("Thruster data R : %s",self.thruster6Data.data[5])
 
 
 
@@ -182,7 +184,7 @@ class SetYaw(object):
         FIRST_ITERATION = True
         Current_yaw = -1
 
-        r = rospy.Rate(20)
+        r = rospy.Rate(10)
 
         # wait to receive starting value of yaw
         while(Current_yaw == -1):

@@ -7,6 +7,9 @@ from time import sleep
 import roslib; roslib.load_manifest(PKG)
 import serial
 
+import signal
+import os
+
 
 import rospy
 import struct
@@ -34,12 +37,13 @@ def initSerial():
 	    print 'Error in opening port'
     
 #data to be sent to Arduino
-data = [[0x5A,0,0x64],
-	[0x60,0,0x64],
-	[0x50,0,0x64],
-	[0x5E,0,0x64],
+data = [[0x5A,0,0x64],  #depth Front
+	[0x60,0,0x64],  # depth back
+	[0x50,0,0x64],  # surge left
+	[0x5C,0,0x64],  # surge right
 	[0x52,0,0x64],
-	[0x5C,0,0x64]]
+	[0x5E,0,0x64]]
+
 
 def seabotixCB(dataI):
     global data
@@ -82,21 +86,19 @@ if __name__ == '__main__':
     #add[4] = '60'
     #add[5] = '5C'
 
-  
-
-    r = rospy.Rate(10)
+    r = rospy.Rate(float(os.environ['ROS_RATE']) if 'ROS_RATE' in os.environ else 8)
     
     print 'running'
     
-    #print speed
+    # print speed
     
-    
-    print sb.readline()
+    # print sb.readline()
+
     while not rospy.is_shutdown():
 	for i in range(0,6):
 		for j in range(0,3):
 	    		sb.write(str(chr(int(data[i][j]))))
-			print sb.readline()
+			# print sb.readline()
 	
         r.sleep()
         
@@ -105,4 +107,4 @@ if __name__ == '__main__':
 
     print "Running seabotix.py"	
 
-    os.system("python src/t.py")
+    # os.system("python src/t.py")

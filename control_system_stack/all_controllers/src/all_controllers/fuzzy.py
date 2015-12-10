@@ -122,7 +122,7 @@ class Fuzzy(pid.PID):
         output = rule_base(b, f_mat)
         aggregated = np.fmax(output[0], np.fmax(output[1],np.fmax(output[2], np.fmax(output[3], output[4]))))
         out_final  = fuzz.defuzz(inputs[2], aggregated, 'centroid')
-        # print out_final
+        #print "out_final : %0.2f, Error : %0.2f Delta_e : %0.2f " % (out_final, self.error, self.delta_e)
 
         ''' plotting final output '''
         # visualize.visualize_output(b, inputs, output, out_final, aggregated)
