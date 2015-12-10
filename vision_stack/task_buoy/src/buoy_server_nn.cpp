@@ -52,16 +52,19 @@ Buoy::Buoy(std::string name) : _it(_n), _s(_n, name, boost::bind(&Buoy::executeC
 
     fstream f;
     f.open("/home/naresh/jade_workspace/sandbox/kraken_3.0/vision_stack/task_buoy/final_stored_array_rgb.txt",ios::in);
+
     if (f)
     {
-        for(int i=0;i<256;i++)
+        for(int i=0; i<256; i++)
         {
-            for (int j=0;j<256;j++)
+            for (int j=0; j<256; j++)
             {
-                for (int k=0;k<256;k++)
+                for (int k=0; k<256; k++)
                 {
                     if (!f.eof())
+                    {
                         f>>_allVals[i][j][k];
+                    }
                 }
             }
         }
@@ -183,23 +186,27 @@ bool Buoy::detectBuoy()
         // add(_imageBW, _imageBWGreen, _imageBW);
         int k;
         imshow("_imagetest1", _image);
+
         for (int j=0; j< _image.rows; j++)
-        { 
+        {
             for (int i=0; i< _image.cols; i++)
             {
                 k = _allVals[_image.at<Vec3b>(j,i).val[0]][_image.at<Vec3b>(j,i).val[1]][_image.at<Vec3b>(j,i).val[2]];
+
                 if (k==1)
                 {
                     _image.at<Vec3b>(j,i).val[0] = 0;
                     _image.at<Vec3b>(j,i).val[1] = 255;
                     _image.at<Vec3b>(j,i).val[2] = 255;
                 }
+
                 if (k==0)
                 {
                     _image.at<Vec3b>(j,i).val[0] = 0;
                     _image.at<Vec3b>(j,i).val[1] = 0;
                     _image.at<Vec3b>(j,i).val[2] = 255;
                 }
+
                 if (k==2)
                 {
                     _image.at<Vec3b>(j,i).val[0] = 0;
@@ -208,10 +215,11 @@ bool Buoy::detectBuoy()
                 }
             }
         }
+
         imshow("_imagetest", _image);
         cvtColor(_image, _imageBW, CV_BGR2GRAY);
         imshow("_imageBW", _imageBW);
-        waitKey(33);    
+        waitKey(33);
         medianBlur(_imageBW, _imageBW, 3);
         erode(_imageBW, _imageBW, _kernelDilateErode);
         //morphologyEx( _imageBW, _imageBW, MORPH_OPEN, elementEx );
@@ -318,14 +326,17 @@ Buoy::~Buoy()
 int main(int argc, char ** argv)
 {
     _allVals = new int**[256];
+
     for(int i = 0; i < 256; i++)
     {
         _allVals[i] = new int*[256];
+
         for(int j = 0; j < 256; j++)
         {
             _allVals[i][j] = new int[256];
         }
     }
+
     ros::init(argc, argv, "buoy_server");
     Buoy _buoyserver("buoy");
     ros::spin();
