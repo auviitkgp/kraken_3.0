@@ -7,6 +7,9 @@ from time import sleep
 import roslib; roslib.load_manifest(PKG)
 import serial
 
+import signal
+import os
+
 
 import rospy
 import struct
@@ -83,7 +86,7 @@ if __name__ == '__main__':
     #add[4] = '60'
     #add[5] = '5C'
 
-    r = rospy.Rate(float(os.environ['ROS_RATE']))
+    r = rospy.Rate(float(os.environ['ROS_RATE']) if 'ROS_RATE' in os.environ else 8)
     
     print 'running'
     
