@@ -9,6 +9,8 @@
   Thruster output is initialised as offset so as to keep consitency for both types
   of input data(4 thrusters and 6 thrusters)
 */
+#include <string>
+#include <cstdlib>
 #include <iostream>
 #include <stdlib.h>
 #include <ros/ros.h>
@@ -20,6 +22,7 @@
 #include <resources/tools.h>
 
 float converter = 1.0;
+uint8_t offset = 0x80;
 uint8_t offsetF = 0x80;
 uint8_t offsetB = 0x7F;
 uint8_t max = 0xE6;   //Maximum forward thrust
@@ -113,8 +116,19 @@ int main(int argc,char** argv)
 
 //    Serial arduino;
 
+    char* ptr_rat = getenv("ROS_RATE");
+    double temp_rate;
+    if(ptr_rat==NULL)
+        temp_rate = 8.0;
+    else
+    {
+        std::string str_rat(ptr_rat);
+        temp_rate = atof(str_rat.c_str());
+    }
 
-    ros::Rate looprate(8);
+		ROS_INFO("Running with the ros rate: %0.2f Hertz", temp_rate);
+
+    ros::Rate looprate(temp_rate);
 
     while(ros::ok())
     {
