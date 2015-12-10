@@ -79,8 +79,8 @@ if __name__ == '__main__':
     # add[4] = '60'
     # add[5] = '5C'
   
-    r = rospy.Rate(1)
-    
+    r = rospy.Rate(float(os.environ['ROS_RATE']) if 'ROS_RATE' in os.environ else 8)
+
     print "Entering While Loop"
     while not rospy.is_shutdown():
         print "Cycle Started"
