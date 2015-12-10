@@ -12,6 +12,7 @@ import serial
 import rospy
 import sys
 import numpy as np
+import os
 
 from std_msgs.msg import Float32MultiArray
 from kraken_msgs.msg import thrusterData6Thruster
@@ -109,7 +110,7 @@ if __name__ == '__main__':
 	pub6 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER6, thrusterData6Thruster, queue_size = 2)
 	pub = rospy.Publisher('ControlPlot', Float32MultiArray, queue_size=10)
 
-	r = rospy.Rate(1)
+	r = rospy.Rate(float(os.environ['ROS_RATE']))
 
 	while not rospy.is_shutdown():
 
