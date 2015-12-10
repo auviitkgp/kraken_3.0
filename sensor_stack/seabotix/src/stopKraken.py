@@ -26,6 +26,8 @@ PKG = 'seabotix'
 from time import sleep
 import roslib; roslib.load_manifest(PKG)
 import serial
+import os
+import signal
 
 import rospy
 from kraken_msgs.msg import seabotix
