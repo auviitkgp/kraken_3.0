@@ -9,6 +9,8 @@
   Thruster output is initialised as offset so as to keep consitency for both types
   of input data(4 thrusters and 6 thrusters)
 */
+#include <string>
+#include <cstdlib>
 #include <iostream>
 #include <stdlib.h>
 #include <ros/ros.h>
@@ -111,8 +113,17 @@ int main(int argc,char** argv)
 
 //    Serial arduino;
 
-
-    ros::Rate looprate(10);
+    char* ptr_rat = getenv("ROS_RATE");
+    double temp_rate;
+    if(ptr_rat==NULL)
+        temp_rate = 8.0;
+    else
+    {
+        std::string str_rat(ptr_rat);
+        temp_rate = atof(str_rat.c_str());
+    }
+    std::cout << temp_rate;
+    ros::Rate looprate(temp_rate);
 
     while(ros::ok())
     {
