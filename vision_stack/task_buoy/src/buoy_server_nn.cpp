@@ -5,53 +5,15 @@
 #include <resources/topicHeader.h>
 
 int ***_allVals;
+char* filepath;
 
 Buoy::Buoy(std::string name) : _it(_n), _s(_n, name, boost::bind(&Buoy::executeCB, this, _1), false), _actionName(name)
 {
     _sub = _it.subscribe(topics::CAMERA_FRONT_RAW_IMAGE, 1, &Buoy::imageCallBack, this);
     _pub = _it.advertise(topics::CAMERA_FRONT_BUOY_IMAGE, 1);
-    // ifstream _thresholdVal("threshold.th");
-
-    // if(_thresholdVal.is_open())
-    // {
-    //     for(int i = 0; i < 3; i++)
-    //     {
-    //         _thresholdVal >> _lowerThreshRed1[i];
-    //     }
-
-    //     for(int i = 0; i < 3; i++)
-    //     {
-    //         _thresholdVal >> _upperThreshRed1[i];
-    //     }
-
-    //     for(int i = 0; i < 3; i++)
-    //     {
-    //         _thresholdVal >> _lowerThreshRed2[i];
-    //     }
-
-    //     for(int i = 0; i < 3; i++)
-    //     {
-    //         _thresholdVal >> _upperThreshRed2[i];
-    //     }
-
-    //     for(int i = 0; i < 3; i++)
-    //     {
-    //         _thresholdVal >> _lowerThreshGreen[i];
-    //     }
-
-    //     for(int i = 0; i < 3; i++)
-    //     {
-    //         _thresholdVal >> _upperThreshGreen[i];
-    //     }
-    // }
-    // else
-    // {
-    //     ROS_ERROR("Unable to open threshold file.");
-    //     ros::shutdown();
-    // }
 
     fstream f;
-    f.open("/home/naresh/jade_workspace/sandbox/kraken_3.0/vision_stack/task_buoy/final_stored_array_rgb.txt",ios::in);
+    f.open(filepath,ios::in);
 
     if (f)
     {
@@ -325,6 +287,14 @@ Buoy::~Buoy()
 
 int main(int argc, char ** argv)
 {
+    if (argc < 2)
+    {
+        ROS_ERROR("You need to input the filepath to the RGB matrix file");
+        return 0;
+    }
+
+    filepath = argv[1];
+
     _allVals = new int**[256];
 
     for(int i = 0; i < 256; i++)
