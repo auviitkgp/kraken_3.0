@@ -49,7 +49,7 @@ private:
     vector<Point2f> _center;
     vector<float> _radius;
 
- // Variables for Decision Tree
+// Variables for Decision Tree
     //int helper[256][256][256];
     //int helper_red[256][256][256];
 

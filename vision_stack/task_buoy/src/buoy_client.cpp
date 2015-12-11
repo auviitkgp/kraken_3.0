@@ -10,10 +10,13 @@ typedef actionlib::SimpleActionClient<actionmsg::buoyAction> Client;
 int main(int argc, char ** argv)
 {
     ros::init(argc, argv, "buoy_client");
-		if (argc < 2) {
-			ROS_ERROR("You need to enter the buoy server node name. One of buoy_shape, buoy_nn or buoy_dt");
-			return 0;
-		}
+
+    if (argc < 2)
+    {
+        ROS_ERROR("You need to enter the buoy server node name. One of buoy_shape, buoy_nn or buoy_dt");
+        return 0;
+    }
+
     Client _client(argv[1], true);
     ROS_INFO("buoy_client started. Waiting for buoy_server.");
     _client.waitForServer();
