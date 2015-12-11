@@ -262,8 +262,8 @@ Buoy::~Buoy()
 
 int main(int argc, char ** argv)
 {
-    ros::init(argc, argv, "buoy_server");
-    Buoy _buoyserver("buoy");
+    ros::init(argc, argv, "buoy_server_nn");
+    Buoy _buoyserver("buoy_shape");
     ros::spin();
     return 0;
 }

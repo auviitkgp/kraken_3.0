@@ -48,6 +48,11 @@ private:
     vector<vector<Point> > _contoursPoly;
     vector<Point2f> _center;
     vector<float> _radius;
+
+// Variables for Decision Tree
+    //int helper[256][256][256];
+    //int helper_red[256][256][256];
+
 public:
     Buoy(std::string _name);
     void executeCB(const actionmsg::buoyGoalConstPtr &_goal);
