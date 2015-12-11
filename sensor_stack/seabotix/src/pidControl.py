@@ -61,6 +61,7 @@ ctrl_c_pressed = False
 
 def stopThrustersNow(s, f):
 
+        global ctrl_c_pressed
         ctrl_c_pressed = True
 
 def imuCB(dataIn):
@@ -114,7 +115,13 @@ if __name__ == '__main__':
 	pub6 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER6, thrusterData6Thruster, queue_size = 2)
 	pub = rospy.Publisher('ControlPlot', Float32MultiArray, queue_size=10)
 
-	r = rospy.Rate(float(os.environ['ROS_RATE']) if 'ROS_RATE' in os.environ else 8)
+        if rospy.has_param('/ros_rate'):
+            temp_rate = float(rospy.get_param('/rosrate'))
+        else:
+            temp_rate = 8
+
+	r = rospy.Rate(temp_rate)
+        rospy.loginfo('Running with ROS_RATE of %0.2f Hz', temp_rate)
 
 	while not rospy.is_shutdown():
 

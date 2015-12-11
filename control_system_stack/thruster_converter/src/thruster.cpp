@@ -116,9 +116,17 @@ int main(int argc,char** argv)
 
 //    Serial arduino;
 
-    char* ptr_rat = getenv("ROS_RATE");
+    //char* ptr_rat = getenv("ROS_RATE");
     double temp_rate;
+	std::string string_rate;
+		if (n.hasParam("/ros_rate")) {
+				n.getParam("/ros_rate", string_rate);
+				temp_rate = atof(string_rate.c_str());
+		} else {
+				temp_rate = 8;
+		}
 
+		/*
     if(ptr_rat==NULL)
     {
         temp_rate = 8.0;
@@ -128,6 +136,8 @@ int main(int argc,char** argv)
         std::string str_rat(ptr_rat);
         temp_rate = atof(str_rat.c_str());
     }
+		*/
+		
 
 		ROS_INFO("Running with the ros rate: %0.2f Hertz", temp_rate);
     ros::Rate looprate(temp_rate);
