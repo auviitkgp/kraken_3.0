@@ -306,9 +306,9 @@ int main(int argc, char ** argv)
             _allVals[i][j] = new int[256];
         }
     }
-
-    ros::init(argc, argv, "buoy_server");
-    Buoy _buoyserver("buoy");
+		ROS_INFO("Starting node");
+    ros::init(argc, argv, "buoy_server_nn");
+    Buoy _buoyserver("buoy_nn");
     ros::spin();
     return 0;
 }
