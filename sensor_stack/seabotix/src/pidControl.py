@@ -88,6 +88,7 @@ def imuCB(dataIn):
 
 	msg = Float32MultiArray()
 	PlotData = [0]*3
+	Data = [0]*3
 	Data[0] = goal
 	PlotData[1] = yaw
 	PlotData[2] = errorP
@@ -136,20 +137,12 @@ if __name__ == '__main__':
 		thruster4Data.data[1] = thruster6Data.data[1]
 		thruster4Data.data[2] = thruster6Data.data[4]
 		thruster4Data.data[3] = thruster6Data.data[5]
-
+		#print ctrl_c_pressed
                 if ctrl_c_pressed:
 
-                    thruster6Data.data[0] = 0.0
-                    thruster6Data.data[1] = 0.0
-                    thruster6Data.data[2] = 0.0
-                    thruster6Data.data[3] = 0.0
-                    thruster6Data.data[4] = 0.0
-                    thruster6Data.data[5] = 0.0
+		    thruster6Data.data = [0.0,0.0,0.0,0.0,0.0,0.0]
+		    thruster4Data.data = [0.0, 0.0, 0.0, 0.0]
 
-                    thruster4Data.data[0] = 0.0
-                    thruster4Data.data[1] = 0.0
-                    thruster4Data.data[2] = 0.0
-                    thruster4Data.data[3] = 0.0
 
 		#pub4.publish(thruster4Data)
 		pub6.publish(thruster6Data)
