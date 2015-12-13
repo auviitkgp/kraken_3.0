@@ -85,7 +85,10 @@ class scanningServer(object):
 
         # rospy.loginfo("I was asked to rotate in" + " " if _direction == 1.0 else " counter-" + "clockwise direction")
 
-        r = rospy.Rate(20)
+        if rospy.has_param('/ros_rate'):
+            r = float(rospy.get_param('/rosrate'))
+        else:
+            r = 20
 
         initial_time = time.time()
         success = True
