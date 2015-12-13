@@ -117,7 +117,7 @@ if __name__ == '__main__':
 	pub = rospy.Publisher('ControlPlot', Float32MultiArray, queue_size=10)
 
         if rospy.has_param('/ros_rate'):
-            temp_rate = float(rospy.get_param('/rosrate'))
+            temp_rate = float(rospy.get_param('/ros_rate'))
         else:
             temp_rate = 8
 
