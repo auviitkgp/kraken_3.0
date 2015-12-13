@@ -85,8 +85,16 @@ if __name__ == '__main__':
     #add[5] = '58'
     #add[4] = '60'
     #add[5] = '5C'
+    
+    default_rate = 8
+    temp_rate = -1
 
-    r = rospy.Rate(float(os.environ['ROS_RATE']) if 'ROS_RATE' in os.environ else 8)
+    if rospy.has_param('/ros_rate'):
+        temp_rate = float(rospy.get_param('/ros_rate'))
+    else:
+        temp_rate = default_rate
+
+    r = rospy.Rate(temp_rate)
     
     print 'running'
     

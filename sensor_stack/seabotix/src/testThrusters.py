@@ -6,13 +6,12 @@
 
 # It creates a handle for the serial port in the Arduino and then writes
 # the data to be fed to the thrusters directly to this serial port.
-
 # It does so using a while loop.
 
-# TODO:
-
-# - Ctrl+C handling
-# - Write a bash script to start this up directly from the repo root.
+# When this script is run, and then, Ctrl+C is pressed in the terminal, then
+# it sends a speed value of 0 to the arduino and closes the serial port
+# and exits the program. If the vehicle doesn't stop immediately, then, wait for
+# some time. (A little lag is normal, and expected)
 
 PKG = 'seabotix'
 
