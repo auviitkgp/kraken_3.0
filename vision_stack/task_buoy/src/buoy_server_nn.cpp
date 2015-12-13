@@ -157,7 +157,7 @@ bool Buoy::detectBuoy()
 
                 if (k==1)
                 {
-                    _image.at<Vec3b>(j,i).val[0] = 0;
+                    _image.at<Vec3b>(j,i).val[0] = 255;
                     _image.at<Vec3b>(j,i).val[1] = 255;
                     _image.at<Vec3b>(j,i).val[2] = 255;
                 }
@@ -166,7 +166,7 @@ bool Buoy::detectBuoy()
                 {
                     _image.at<Vec3b>(j,i).val[0] = 0;
                     _image.at<Vec3b>(j,i).val[1] = 0;
-                    _image.at<Vec3b>(j,i).val[2] = 255;
+                    _image.at<Vec3b>(j,i).val[2] = 0;
                 }
 
                 if (k==2)
@@ -177,14 +177,33 @@ bool Buoy::detectBuoy()
                 }
             }
         }
-
-        imshow("_imagetest", _image);
+        //imshow("NoProcess", _image);
+        
+        erode(_image, _image, _kernelDilateErode);
+        //imshow("_imagetest", _image);
         cvtColor(_image, _imageBW, CV_BGR2GRAY);
-        imshow("_imageBW", _imageBW);
         waitKey(33);
         medianBlur(_imageBW, _imageBW, 3);
-        erode(_imageBW, _imageBW, _kernelDilateErode);
+        //erode(_imageBW, _imageBW, _kernelDilateErode);
+        imshow("_imageBW", _imageBW);
+
+        Mat exp_img = _imageBW.clone();
+
+        findContours(exp_img.clone(), _contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
+        drawContours(exp_img, _contours, -1, CV_RGB(255, 255, 255), -1);
+        erode(exp_img, exp_img, _kernelDilateErode);
+        findContours(exp_img.clone(), _contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
+        drawContours(exp_img, _contours, -1, CV_RGB(255, 255, 255), -1);
+        imshow("FILLED", exp_img);
+        
+        Mat temp_img = exp_img.clone();
+        Canny(exp_img, exp_img, 50, 150);
+        imshow("Experiment", exp_img);
+
+        Mat src = temp_img.clone();
+        src = Scalar(0,0,0);
         //morphologyEx( _imageBW, _imageBW, MORPH_OPEN, elementEx );
+        /*
         CBlobResult _blobs,_blobsClutter;
         CBlob * _currentBlob;
         IplImage _imageBWipl = _imageBW;
@@ -199,7 +218,6 @@ bool Buoy::detectBuoy()
         }
 
         Mat _imageBW2 = _imageBW.clone();
-        Mat src;
         vector<Mat> channels;
         channels.push_back(_imageBW);
         channels.push_back(_imageBW);
@@ -233,12 +251,13 @@ bool Buoy::detectBuoy()
         cvtColor( src, src_gray, CV_BGR2GRAY );
         src = Scalar(0, 0, 0);
         GaussianBlur( src_gray, src_gray, Size(9, 9), 2, 2 );
-        imshow("src_gray", src_gray);
-        vector<Vec3f> circles;
+        //imshow("src_gray", src_gray);*/
+        vector<Vec3f> circles, circles1;
         /// Apply the Hough Transform to find the circles
-        HoughCircles( src_gray, circles, CV_HOUGH_GRADIENT, 1, src_gray.rows/16, 150, 25, 0, 0 );
+        HoughCircles( exp_img, circles, CV_HOUGH_GRADIENT, 1, exp_img.rows/16, 150, 25, 0, 0 );
+        //void HoughCircles(Input image, Output circles, int method, double dp, double minDist, double param1=100, double param2=100, int minRadius=0, int maxRadius=0 )
 
-        /// Draw the circles detected
+        // Draw the circles detected
         if(circles.size() == 0)
         {
             cout<<"NOTHING CIRCULAR" << endl;
@@ -248,14 +267,15 @@ bool Buoy::detectBuoy()
         {
             Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
             int radius = cvRound(circles[i][2]);
+            cout << "radius = " << radius << "\n";
             // circle center
-            circle( src, center, 3, Scalar(0, 255, 0), 3, 8, 0 );
+            circle( src, center, 3, Scalar(255, 255, 255), 3, 8, 0 );
             // circle outline
-            circle( src, center, radius, Scalar(0, 0, 255), 1, 8, 0 );
+            circle( src, center, radius, Scalar(255, 255, 255), 1, 8, 0 );
         }
 
         imshow("src", src);
-
+        
         if(_center.size() > 0)
         {
             return true;
