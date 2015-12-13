@@ -49,7 +49,7 @@ void getyawCallback(const kraken_msgs::absoluteRPY& msg)
 
 int main(int argc, char ** argv)
 {
-	if(tools::getVerboseTag(argc, argv) && ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Debug))
+    if(tools::getVerboseTag(argc, argv) && ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Debug))
     {
         ros::console::notifyLoggerLevelsChanged();
     }
@@ -80,11 +80,11 @@ int main(int argc, char ** argv)
     // We need to consider the time taken by IP to scan the frame and decide on the rotational speed accordingly.
     // We wait for 300 seconds.
 
-    bool _actionStatus = detect_client.waitForResult(ros::Duration(300.0)); 
+    bool _actionStatus = detect_client.waitForResult(ros::Duration(300.0));
 
     if(_actionStatus == true)
     {
-    	scan_start.cancelGoal();
+        scan_start.cancelGoal();
 
         actionlib::SimpleClientGoalState _state = detect_client.getState();
         ROS_DEBUG("buoy_client : Action finished - %s",_state.toString().c_str());
