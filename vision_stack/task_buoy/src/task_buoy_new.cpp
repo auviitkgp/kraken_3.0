@@ -78,6 +78,7 @@ int main(int argc, char ** argv)
 
     // The duration given here should be the time taken by AUV to complete one full rotation.
     // We need to consider the time taken by IP to scan the frame and decide on the rotational speed accordingly.
+    // We wait for 300 seconds.
 
     bool _actionStatus = detect_client.waitForResult(ros::Duration(300.0)); 
 
