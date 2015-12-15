@@ -185,7 +185,7 @@ bool Buoy::detectBuoy()
         waitKey(33);
         medianBlur(_imageBW, _imageBW, 3);
         //erode(_imageBW, _imageBW, _kernelDilateErode);
-        imshow("_imageBW", _imageBW);
+        //imshow("_imageBW", _image);
 
         Mat exp_img = _imageBW.clone();
 
@@ -202,6 +202,32 @@ bool Buoy::detectBuoy()
 
         Mat src = temp_img.clone();
         src = Scalar(0,0,0);
+
+        /*cv::SimpleBlobDetector blob_detector;
+        vector<cv::KeyPoint> keypoints, keypoints1;
+        blob_detector.detect(temp_img, keypoints);
+        int i=0, j=0;
+        for(;i<keypoints.size();i++)
+        {
+            cout << "HEEEE";
+            if(keypoints[i].size > keypoints[j].size)
+            {
+                j = i;
+                cout << j;
+            }
+        }
+        /*for(std::vector<cv::KeyPoint>::iterator blobIterator = keypoints.begin(); blobIterator != keypoints.end(); blobIterator++, j++)
+        {
+            if( blobIterator->size > max_size)
+            {
+                max_size = blobIterator->size;
+                i = j;
+            }
+        }
+        keypoints1.clear();
+        //keypoints1.push_back(keypoints[j]);
+        cv::drawKeypoints(temp_img, keypoints, src);
+        imshow("KeyPoint", src);
         //morphologyEx( _imageBW, _imageBW, MORPH_OPEN, elementEx );
         /*
         CBlobResult _blobs,_blobsClutter;
@@ -252,9 +278,10 @@ bool Buoy::detectBuoy()
         src = Scalar(0, 0, 0);
         GaussianBlur( src_gray, src_gray, Size(9, 9), 2, 2 );
         //imshow("src_gray", src_gray);*/
-        vector<Vec3f> circles, circles1;
+        vector<Vec3f> circles;
+        circles.clear();
         /// Apply the Hough Transform to find the circles
-        HoughCircles( exp_img, circles, CV_HOUGH_GRADIENT, 1, exp_img.rows/16, 150, 25, 0, 0 );
+        HoughCircles( temp_img, circles, CV_HOUGH_GRADIENT, 1, 1, 1, 15, 5, 1000 );
         //void HoughCircles(Input image, Output circles, int method, double dp, double minDist, double param1=100, double param2=100, int minRadius=0, int maxRadius=0 )
 
         // Draw the circles detected
@@ -269,9 +296,9 @@ bool Buoy::detectBuoy()
             int radius = cvRound(circles[i][2]);
             cout << "radius = " << radius << "\n";
             // circle center
-            circle( src, center, 3, Scalar(255, 255, 255), 3, 8, 0 );
+            circle( src, center, 3, Scalar(0, 255, 0), 3, 8, 0 );
             // circle outline
-            circle( src, center, radius, Scalar(255, 255, 255), 1, 8, 0 );
+            circle( src, center, radius, Scalar(0, 0, 255), 1, 8, 0 );
         }
 
         imshow("src", src);

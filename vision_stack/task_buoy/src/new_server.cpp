@@ -4,10 +4,40 @@
 
 #include <resources/topicHeader.h>
 
+int ***_allVals;
+char* filepath;
+
 Buoy::Buoy(std::string name) : _it(_n), _s(_n, name, boost::bind(&Buoy::executeCB, this, _1), false), _actionName(name)
 {
     _sub = _it.subscribe(topics::CAMERA_FRONT_RAW_IMAGE, 1, &Buoy::imageCallBack, this);
     _pub = _it.advertise(topics::CAMERA_FRONT_BUOY_IMAGE, 1);
+
+    fstream f;
+    f.open(filepath,ios::in);
+
+    if (f)
+    {
+        for(int i=0; i<256; i++)
+        {
+            for (int j=0; j<256; j++)
+            {
+                for (int k=0; k<256; k++)
+                {
+                    if (!f.eof())
+                    {
+                        f>>_allVals[i][j][k];
+                    }
+                }
+            }
+        }
+    }
+    else
+    {
+        ROS_ERROR("Unable to open values file.");
+        ros::shutdown();
+    }
+
+
     ifstream _thresholdVal("threshold.th");
 
     if(_thresholdVal.is_open())
@@ -150,12 +180,64 @@ bool Buoy::detectBuoy()
 {
     if(!_image.empty())
     {
+
+
         cvtColor(_image, _imageHSV, CV_BGR2HSV);
         inRange(_imageHSV,_lowerThreshRed1,_upperThreshRed1, _imageBW);
         inRange(_imageHSV,_lowerThreshRed2,_upperThreshRed2, _imageBWRed);
         add(_imageBW, _imageBWRed, _imageBW);
         inRange(_imageHSV,_lowerThreshGreen,_upperThreshGreen, _imageBWGreen);
         add(_imageBW, _imageBWGreen, _imageBW);
+        int k;
+
+        for (int j=0; j< _image.rows; j++)
+        {
+            for (int i=0; i< _image.cols; i++)
+            {
+                k = _allVals[_image.at<Vec3b>(j,i).val[0]][_image.at<Vec3b>(j,i).val[1]][_image.at<Vec3b>(j,i).val[2]];
+
+                if (k==1)
+                {
+                    _image.at<Vec3b>(j,i).val[0] = 255;
+                    _image.at<Vec3b>(j,i).val[1] = 255;
+                    _image.at<Vec3b>(j,i).val[2] = 255;
+                }
+
+                if (k==0)
+                {
+                    _image.at<Vec3b>(j,i).val[0] = 0;
+                    _image.at<Vec3b>(j,i).val[1] = 0;
+                    _image.at<Vec3b>(j,i).val[2] = 0;
+                }
+
+                if (k==2)
+                {
+                    _image.at<Vec3b>(j,i).val[0] = 0;
+                    _image.at<Vec3b>(j,i).val[1] = 0;
+                    _image.at<Vec3b>(j,i).val[2] = 0;
+                }
+            }
+        }
+        
+        erode(_image, _image, _kernelDilateErode);
+        //imshow("_imagetest", _image);
+        cvtColor(_image, _image, CV_BGR2GRAY);
+        waitKey(33);
+        medianBlur(_image, _image, 3);
+        //erode(_imageBW, _imageBW, _kernelDilateErode);
+        //imshow("_imageBW", _image);
+
+        Mat exp_img = _image.clone();
+
+        findContours(exp_img.clone(), _contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
+        drawContours(exp_img, _contours, -1, CV_RGB(255, 255, 255), -1);
+        erode(exp_img, exp_img, _kernelDilateErode);
+        findContours(exp_img.clone(), _contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
+        drawContours(exp_img, _contours, -1, CV_RGB(255, 255, 255), -1);
+        imshow("FILLED", exp_img);
+        
+
+
         imshow("_imageBW", _imageBW);
         waitKey(33);
         medianBlur(_imageBW, _imageBW, 3);
@@ -213,7 +295,7 @@ bool Buoy::detectBuoy()
         imshow("src_gray", src_gray);
         vector<Vec3f> circles;
         /// Apply the Hough Transform to find the circles
-        HoughCircles( temp_img, circles, CV_HOUGH_GRADIENT, 1, temp_img.rows/16, 150, 25, 0, 0 );
+        HoughCircles( src_gray, circles, CV_HOUGH_GRADIENT, 1, src_gray.rows/16, 150, 25, 0, 0 );
 
         /// Draw the circles detected
         if(circles.size() == 0)
@@ -264,8 +346,31 @@ Buoy::~Buoy()
 
 int main(int argc, char ** argv)
 {
-    ros::init(argc, argv, "buoy_server_nn");
-    Buoy _buoyserver("buoy_shape");
+    if (argc < 2)
+    {
+        ROS_ERROR("You need to input the filepath to the RGB matrix file");
+        return 0;
+    }
+
+    filepath = argv[1];
+
+    _allVals = new int**[256];
+
+    for(int i = 0; i < 256; i++)
+    {
+        _allVals[i] = new int*[256];
+
+        for(int j = 0; j < 256; j++)
+        {
+            _allVals[i][j] = new int[256];
+        }
+    }
+
+    ROS_INFO("Starting node");
+
+
+    ros::init(argc, argv, "buoy_server_exp");
+    Buoy _buoyserver("buoy_exp");
     ros::spin();
     return 0;
 }
