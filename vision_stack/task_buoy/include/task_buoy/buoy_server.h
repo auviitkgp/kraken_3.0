@@ -40,7 +40,7 @@ private:
     Mat _image, _imageHSV, _imageBW, _imageBWRed, _imageBWGreen;
     Scalar _lowerThreshRed1, _lowerThreshRed2, _upperThreshRed1, _upperThreshRed2;
     Scalar _lowerThreshGreen, _upperThreshGreen;
-    Mat _kernelDilateErode;
+    Mat _kernelDilateErode,elementEx;
     std::string _actionName;
     cv_bridge::CvImage _finalImage;
     sensor_msgs::ImagePtr _finalImagemsg;
@@ -48,6 +48,11 @@ private:
     vector<vector<Point> > _contoursPoly;
     vector<Point2f> _center;
     vector<float> _radius;
+
+// Variables for Decision Tree
+    //int helper[256][256][256];
+    //int helper_red[256][256][256];
+
 public:
     Buoy(std::string _name);
     void executeCB(const actionmsg::buoyGoalConstPtr &_goal);
