@@ -145,7 +145,18 @@ void ControlServer::executePoseChange(const kraken_msgs::advancedControllerGoalC
 
     _controller.setSetPoint(_currPos);
     _controller.moveTest();
-    ros::Rate looprate(10);
+    double temp_rate;
+//  std::string string_rate;
+    if (n.hasParam("/ros_rate"))
+    {
+        n.getParam("/ros_rate", temp_rate);
+//      temp_rate = atof(string_rate.c_str());
+    }
+    else
+    {
+        temp_rate = 10;
+    }
+    ros::Rate looprate(temp_rate);
 
     kraken_msgs::advancedControllerFeedback feedback;
     kraken_msgs::advancedControllerResult result;
@@ -197,10 +208,21 @@ void ControlServer::executeOrientationChange(const kraken_msgs::controllerGoalCo
     _pose.data[kraken_core::_yaw] = msg->y;
     _controller.setSetPoint(_pose);
     _controller.moveTest();
-    ros::Rate looprate(10);
+
     kraken_msgs::controllerFeedback feedback;
     kraken_msgs::controllerResult result;
-
+    double temp_rate;
+//  std::string string_rate;
+    if (n.hasParam("/ros_rate"))
+    {
+        n.getParam("/ros_rate", temp_rate);
+//      temp_rate = atof(string_rate.c_str());
+    }
+    else
+    {
+        temp_rate = 10;
+    }
+    ros::Rate looprate(temp_rate);
     while(ros::ok())
     {
         if (_server2->isPreemptRequested() || !ros::ok())
