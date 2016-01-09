@@ -61,31 +61,31 @@ def readDVLdata():
 	global rawData
 	garbage = ''
 	rawData = ''
-	
+
 	while not rospy.is_shutdown():
 		garbage = dvl.read(1)
-		
+
 		if (garbage != -1):
-			
+
 			if (garbage[0] == '$'):
 				garbage = dvl.read(1)
-				
+
 				if (garbage[0] == '#'):
 					break
-				
+
 		else:
 			print 'Unable to read'
 			return
-				
+
 	while True :
 		rawdata = '$#'
 		garbage = dvl.read(1)
-		
+
 		if (garbage != -1):
 			rawData += garbage
-			
 
-		
+
+
 		if (garbage[0] == '$'):
 			rawData += garbage
 			while(garbage[0] != '\r'):
@@ -93,14 +93,14 @@ def readDVLdata():
 				rawdata += garbage
 			break
 
-	
+
 def getVal(rawdata):
 	global pubData
 	floatData = []
 	data = rawdata.split('\r')
 	for i in range(1,len(data)-1):
 		datal = (data[i]).split(',')
-		
+
 		for j in range(1,len(datal)):
 			if (datal[j] == 'A'):
 				floatData += [1.0]
@@ -110,9 +110,9 @@ def getVal(rawdata):
 				floatData += [float(datal[j])]
 
 	print floatData,len(floatData)
-	
-	if(len(floatData) == 24):       
-		
+
+	if(len(floatData) == 24):
+
 	#print (floatData)
 
 		pubData.data[0] = floatData[1]   #roll
@@ -125,9 +125,9 @@ def getVal(rawdata):
 		pubData.data[7] = floatData[5]   #depth  (does not work in our model)
 		pubData.data[8] = floatData[4]   #temperature
 		pubData.data[9] = floatData[7	]   #Sound Velocity
-		
+
 if __name__ == '__main__':
-	
+
 
 	if (not dvl.isOpen):
 		dvl.open()
@@ -137,7 +137,7 @@ if __name__ == '__main__':
 	else:
 		print 'Error in opening port'
 #    while True :
-		
+
 #        k = ''
 #        while(k != '\r'):
 #            k = dvl.read(1)
@@ -145,26 +145,31 @@ if __name__ == '__main__':
 #                print 'got it'
 #            print k
 #        print 'out'
-	
-	r = rospy.Rate(5)
+
+	if rospy.has_param('/ros_rate'):
+		temp_rate = rospy.get_param('/ros_rate')
+	else:
+		temp_rate = 5
+
+	r = rospy.Rate(temp_rate)
 	count = 1
-#        k = ''    
+#        k = ''
 	while not rospy.is_shutdown():
-	   
+
 		readDVLdata()
-		#print 'data count : ',count 
+		#print 'data count : ',count
 		getVal(rawData)
 		#print ''
 		#count += 1
-		
+
 		#for i,a in enumerate(dataList):
 		#    print i,' : ',a
 		#rospy.loginfo(pub)
 		pub.publish(pubData)
-		
-	   
+
+
 		r.sleep()
-		
-	
-	
+
+
+
 	dvl.close()

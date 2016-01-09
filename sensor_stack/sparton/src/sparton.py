@@ -51,8 +51,8 @@ gz = 0.0
 temp = 0.0
 magError = 0.0
 ##
-    
- 
+
+
 def setBaud(rate):
     if (rate == 300):
         message = '$PSPA,BAUD=0\r\n'
@@ -72,7 +72,7 @@ def setBaud(rate):
         message = '$PSPA,BAUD=7\r\n'
     elif (rate == 115200) :
         message = '$PSPA,BAUD=8\r\n'
-    
+
     imu.write(message)
     garbage = ''
     total = ''
@@ -87,12 +87,12 @@ def temperature():
     garbage = ''
     total = ''
     data = []
-    global temp 
+    global temp
     while (garbage != '\r'):
         garbage = imu.read()
         total += garbage
     #print total
-    
+
     data = total.split(',')
     temp = float((data[1]).split('='))
 
@@ -102,63 +102,63 @@ def rpyt():
     garbage = ''
     total = ''
     data = []
-    
-    global roll 
-    global pitch 
-    global yaw 
-    global temp 
-    global magError 
-    
+
+    global roll
+    global pitch
+    global yaw
+    global temp
+    global magError
+
     while (garbage != '\r'):
         garbage = imu.read()
         total += garbage
     #print total
-    
+
     data = total.split(',')
-    
+
     yaw = float(data[5])
     pitch = float(data[8])
     roll = float(data[11])
     temp = float(data[14])
     magError = float(((data[17]).split('*'))[0])
-    
+
 def accelero():
     command = '$PSPA,A\r\n'
     imu.write(command)
     garbage = ''
     total = ''
     global ax
-    global ay 
-    global az 
-    
+    global ay
+    global az
+
     data = []
-    
+
     while (garbage != '\r'):
         garbage = imu.read()
         total += garbage
     #print total
-    
+
     data = total.split(',')
     #print data
     ax = float(((data[1]).split('='))[1])
     ay = float(((data[2]).split('='))[1])
     az = float(((((data[3]).split('='))[1]).split('*'))[0])
-    
+
 def gyro():
     command = '$PSPA,G\r\n'
     imu.write(command)
     garbage = ''
     total = ''
     data = []
-    global gx 
-    global gy 
+    global gx
+    global gy
     global gz
 
     while (garbage != '\r'):
         garbage = imu.read()
         total += garbage
     #print total
-    
+
     data = total.split(',')
     gx = float(((data[1]).split('='))[1])
     gy = float(((data[2]).split('='))[1])
@@ -170,15 +170,15 @@ def magneto():
     garbage = ''
     total = ''
     data = []
-    global mx 
-    global my 
+    global mx
+    global my
     global mz
 
     while (garbage != '\r'):
         garbage = imu.read()
         total += garbage
     #print total
-    
+
     data = total.split(',')
     mx = float(((data[1]).split('='))[1])
     my = float(((data[2]).split('='))[1])
@@ -197,12 +197,12 @@ def pitchRoll():
         garbage = imu.read()
         total += garbage
     #print total
-    
+
     data = total.split(',')
     ax = float(((data[1]).split('='))[1])
     ay = float(((data[2]).split('='))[1])
     az = float(((((data[3]).split('='))[1]).split('*'))[0])
- 
+
 def getData():
     global roll
     global pitch
@@ -218,14 +218,14 @@ def getData():
     global gz
     global temp
     global magError
-    
+
     accelero()
     gyro()
     magneto()
     rpyt()
-    
+
     allData = imuData()
-    
+
     allData.data[0] = roll
     allData.data[1] = pitch
     allData.data[2] = yaw
@@ -239,12 +239,12 @@ def getData():
     allData.data[10] = gy
     allData.data[11] = gz
     allData.data[12] = temp
-    
+
     return allData
-    
- 
+
+
 if __name__ == '__main__':
-    """    
+    """
     global roll
     global pitch
     global yaw
@@ -261,7 +261,7 @@ if __name__ == '__main__':
 
     """
     pubData = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
-    
+
     if (not imu.isOpen) :
 	imu.close()
         imu.open()
@@ -271,16 +271,21 @@ if __name__ == '__main__':
     else:
         print 'Error in opening port'
 
-    r = rospy.Rate(10)
+    if rospy.has_param('/ros_rate'):
+		temp_rate = rospy.get_param('/ros_rate')
+	else:
+		temp_rate = 10
+
+	r = rospy.Rate(temp_rate)
     count = 1
     while not rospy.is_shutdown():
 	#print imu.read()
         pubData = getData()
         pub.publish(pubData)
         #print roll,pitch,yaw,ax,ay,az,mx,my,mz,gx,gy,gz,temp
-        
+
         r.sleep()
-        
-    
-    
+
+
+
     imu.close()

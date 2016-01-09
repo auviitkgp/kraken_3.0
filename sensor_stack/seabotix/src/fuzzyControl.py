@@ -98,7 +98,12 @@ if __name__ == '__main__':
 	pub_thrusters6 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER6, thrusterData6Thruster, queue_size = 2)
 	pub_FuzzyPlot = rospy.Publisher('FuzzyPlot',setYawFeedback, queue_size = 2)
 
-	r = rospy.Rate(10)
+	if rospy.has_param('/ros_rate'):
+		temp_rate = rospy.get_param('/ros_rate')
+	else:
+		temp_rate = 10
+
+	r = rospy.Rate(temp_rate)
 
 	while not rospy.is_shutdown():
 

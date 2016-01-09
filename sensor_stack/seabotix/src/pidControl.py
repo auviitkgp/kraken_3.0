@@ -107,7 +107,7 @@ def imuCB(dataIn):
 if __name__ == '__main__':
 	thruster4Data=thrusterData4Thruster();
 	thruster6Data=thrusterData6Thruster();
-        
+
         signal.signal(signal.SIGINT, stopThrustersNow)
 
 	rospy.init_node('Control', anonymous=True)
@@ -116,10 +116,10 @@ if __name__ == '__main__':
 	pub6 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER6, thrusterData6Thruster, queue_size = 2)
 	pub = rospy.Publisher('ControlPlot', Float32MultiArray, queue_size=10)
 
-        if rospy.has_param('/ros_rate'):
-            temp_rate = float(rospy.get_param('/ros_rate'))
-        else:
-            temp_rate = 8
+    if rospy.has_param('/ros_rate'):
+		temp_rate = rospy.get_param('/ros_rate')
+	else:
+		temp_rate = 8
 
 	r = rospy.Rate(temp_rate)
         rospy.loginfo('Running with ROS_RATE of %0.2f Hz', temp_rate)

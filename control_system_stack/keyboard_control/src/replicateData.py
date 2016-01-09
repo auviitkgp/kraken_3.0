@@ -25,12 +25,17 @@ def thrustCB(data):
 def startModule():
 
 	thruster6Data=thrusterData6Thruster();
-	
+
 	# rospy.init_node('keep_thrusters_alive', anonymous=True)
 	sub = rospy.Subscriber(topicHeader.CONTROL_PID_THRUSTER6, thrusterData6Thruster, thrustCB)
 	pub6 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER6, thrusterData6Thruster, queue_size = 10)
 
-	r = rospy.Rate(10)
+	if rospy.has_param('/ros_rate'):
+            temp_rate = rospy.get_param('/ros_rate')
+        else:
+            temp_rate = 10
+
+	r = rospy.Rate(temp_rate)
 
 	while not rospy.is_shutdown():
 
@@ -42,7 +47,7 @@ def startModule():
 		thruster6Data.data[5] = recieved.data[5]
 
 		pub6.publish(thruster6Data)
-		
+
 		r.sleep()
 
 import thread

@@ -30,7 +30,7 @@ def getInfo():
     imu.write(modInfo)
 
 
-# Function to set all data as input    
+# Function to set all data as input
 def setAllMode():
     sensor_used = 0x0D
     payload = chr(0x00)  # MSB of sizeOf(payload)
@@ -50,7 +50,7 @@ def setAllMode():
     payload += chr(0x4B) # gy
     payload += chr(0x4C) # gz
     payload += chr(0x07) # temp
-    
+
     payload += chr(0x86) # MSB(crc16 of payload)
     payload += chr(0xB4) # LSB(crc16 of payload)
 
@@ -60,7 +60,7 @@ def setAllMode():
 def hexToFloat(hexData):
     strData = ''
     #strData = hexData.encode('hex')
-    
+
     intData = numpy.frombuffer(hexData,numpy.uint8)
     for i in range(0,4):
         data = (hex(intData[i]))[2:5]
@@ -69,12 +69,12 @@ def hexToFloat(hexData):
         elif (len(data) == 0):
             strData += '00'
         strData += data
-    
+
     floatData = struct.unpack('!f',strData.decode('hex'))[0]
     print floatData
     return floatData
 
-    
+
 # Function to send request for data
 def getData():
     payload = chr(0x00)
@@ -85,22 +85,22 @@ def getData():
     imu.write(payload)
     response = imu.read(71)
     return response
-    
-# Function to get float32 values from response of IMU    
+
+# Function to get float32 values from response of IMU
 def getValue(response):
     extract = response[4:-2]       # initial 4 and last 2 bytes are useless
 #    print response,len(response)
 #    print len(extract)
-    
+
     dataArray = imuData()
-    
+
     for i in range(0,65,5):
         #print numpy.frombuffer(extract[i+1:i+5], numpy.uint8))
         dataArray.data[i/5] = hexToFloat(extract[i+1:i+5])
     return dataArray
 
 
-    
+
 if __name__ == '__main__':
 
     imu.open()
@@ -109,16 +109,21 @@ if __name__ == '__main__':
         print 'Serial port opened successfully'
     else:
         print 'Error in opening port'
-    
+
     getInfo()
     response = imu.read(13)
     print response[3:-2]
-    
+
     pubData = [0.0,1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0,10.0,11.0,12.0]
     setAllMode()
     count = 0     # variable to check frequency
-    pubData = imuData()   
-    r = rospy.Rate(50)
+    pubData = imuData()
+    if rospy.has_param('/ros_rate'):
+		temp_rate = rospy.get_param('/ros_rate')
+	else:
+		temp_rate = 50
+
+	r = rospy.Rate(temp_rate)
     while not rospy.is_shutdown():
         print 'data count : ',count
         res = getData()
@@ -126,14 +131,14 @@ if __name__ == '__main__':
         pubData.data[0]*=(2.0*3.14)/360
         pubData.data[1]*=(2.0*3.14)/360
         pubData.data[2]*=(2.0*3.14)/360
-        
-        
+
+
         #rospy.loginfo(pubData)
         pub.publish(pubData)
-        
+
         count = count + 1
         r.sleep()
-        
-    
-    
+
+
+
     imu.close()

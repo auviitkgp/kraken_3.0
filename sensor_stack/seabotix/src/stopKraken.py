@@ -18,7 +18,7 @@ PKG = 'seabotix'
 # TODO:
 
 # - Check how the thrusters work
-#     If only publishing once is enough, then the while loop is redundant, 
+#     If only publishing once is enough, then the while loop is redundant,
 #     and we can stop the loop after publishing once.
 # - Write a bash script to start this up directly from the repo root.
 
@@ -45,17 +45,17 @@ def initSerial():
 
     if (sb.isOpen) :
         print 'Serial port opened successfully'
-    
+
     else:
 	    print 'Error in opening port'
-    
+
 if __name__ == '__main__':
 
     initSerial()
-   
+
     rospy.init_node('stopKraken', anonymous=True)
-    
-    # count = 0     # variable to check frequency   
+
+    # count = 0     # variable to check frequency
     # add = [0X60,0X52,0X5A,0X50,0X5C,0X5E]
     # speed = [0X62,0X62,0X62,0X62,0X62,0X62]
     # speedMax = [0X64,0X64,0X64,0X64,0X64,0X64]
@@ -74,21 +74,27 @@ if __name__ == '__main__':
     # add[5] = '58'
     # add[4] = '60'
     # add[5] = '5C'
-    
-    r = rospy.Rate(float(os.environ['ROS_RATE']) if 'ROS_RATE' in os.environ else 8)
-    
+
+#   r = rospy.Rate(float(os.environ['ROS_RATE']) if 'ROS_RATE' in os.environ else 8)
+    if rospy.has_param('/ros_rate'):
+		temp_rate = rospy.get_param('/ros_rate')
+	else:
+		temp_rate = 10
+
+	r = rospy.Rate(temp_rate)
+
+
     print 'While Loop Started'
-    
+
     while not rospy.is_shutdown():
         print 'Cycle Started'
         for i in range(0,6):
             for j in range(0,3):
                 sb.write(str(chr(int(data[i][j]))))
 
-        print 'Cycle Ended'	    
+        print 'Cycle Ended'
         r.sleep()
-        
+
     sb.close()
 
     print "Exited from the While Loop"
-    
