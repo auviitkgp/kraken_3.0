@@ -7,4 +7,5 @@
 
 	<node name="manual_control" pkg="manual_control" type="manual_control"/>
 
+	<rosparam command="load" file="$(find yaml)/ros_rate_param.yaml" />
 </launch>

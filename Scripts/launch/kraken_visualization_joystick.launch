@@ -4,7 +4,8 @@
 	<node name="uwsim_launcher_script" pkg="kraken_visualization" type="kraken_visualization_launcher"/>
 
 	<node name="joy_node" pkg="joy" type="joy_node"/>
-	
+
 	<node name="joystick_control" pkg="joystick_control" type="joystick_control"/>
 
+	<rosparam command="load" file="$(find yaml)/ros_rate_param.yaml" />
 </launch>

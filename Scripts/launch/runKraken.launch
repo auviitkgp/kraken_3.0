@@ -1,4 +1,4 @@
-<!-- WS=$ROS_WORKSPACE 
+<!-- WS=$ROS_WORKSPACE
 source /opt/ros/hydro/setup.bash
 export ROS_WORKSPACE=$WS
 export ROS_PACKAGE_PATH=$ROS_WORKSPACE:$ROS_PACKAGE_PATH
@@ -27,13 +27,13 @@ rosrun control_server client_action 3.0 -->
 
 
 <launch>
-	<node name="pose_server" pkg="pose_server" type="testkalman" > 
+	<node name="pose_server" pkg="pose_server" type="testkalman" >
 		<remap from="/kraken/nav/pose_estimated" to="nav_pose"/>
 	</node>
 	<!-- <node name="simu2kraken" pkg="simulator_to_kmsgs" type="simulator_to_kmsgs"/> -->
 	<node name="auv_model" pkg="simulator_physics_model" type="start_auv_model" args="0.0 0.0 0.0 0.0 0.0 0.0"/>
 	<node name="thruster" pkg="thruster_force_converter" type="converter" args="3"/>
-	<node name="control_node" pkg="control_server" type="controlServer" args="10 $(find control_server)/parameters/MoveBack.cp 
+	<node name="control_node" pkg="control_server" type="controlServer" args="10 $(find control_server)/parameters/MoveBack.cp
 		$(find control_server)/parameters/MoveForward.cp $(find control_server)/parameters/Pause.cp"/>
 	<node name="thruster_to_force" pkg="thruster_force_converter" type="converter"/>
 	<!-- <node name="pose_server" pkg="pose_server" type="server"/> -->
@@ -45,4 +45,6 @@ rosrun control_server client_action 3.0 -->
 	<include file="$(find Scripts)/launch/simulator.launch" />
 
 	<!-- <node name="server_pose" pkg="pose_server" type="PoseServer"/> -->
+
+	<rosparam command="load" file="$(find yaml)/ros_rate_param.yaml" />
 </launch>
