@@ -28,6 +28,7 @@ import roslib; roslib.load_manifest(PKG)
 import serial
 import os
 import signal
+import sys
 
 import rospy
 from kraken_msgs.msg import seabotix
@@ -60,10 +61,10 @@ if __name__ == '__main__':
     # speed = [0X62,0X62,0X62,0X62,0X62,0X62]
     # speedMax = [0X64,0X64,0X64,0X64,0X64,0X64]
     data = [[0x60,0x7F,0x64],
-	    [0x52,0x7F,0x64],
-	    [0x5A,0x7F,0x64],
-  	    [0x50,0x7F,0x64],
-	    [0x5C,0x7F,0x64],
+	        [0x52,0x7F,0x64],
+	        [0x5A,0x7F,0x64],
+  	        [0x50,0x7F,0x64],
+	        [0x5C,0x7F,0x64],
             [0x5E,0x7F,0x64]]
 
     # add[0] = 50
@@ -76,16 +77,16 @@ if __name__ == '__main__':
     # add[5] = '5C'
 
 #   r = rospy.Rate(float(os.environ['ROS_RATE']) if 'ROS_RATE' in os.environ else 8)
-    if rospy.has_param('/ros_rate'):
+	if rospy.has_param('/ros_rate'):
 		temp_rate = rospy.get_param('/ros_rate')
 	else:
-		temp_rate = 10
+		raise RuntimeError("ROSParam '/ros_rate' does not exist.")
+		rospy.signal_shutdown("ROSParam '/ros_rate' does not exist.")
+		sys.exit(0)
 
 	r = rospy.Rate(temp_rate)
 
-
     print 'While Loop Started'
-
     while not rospy.is_shutdown():
         print 'Cycle Started'
         for i in range(0,6):

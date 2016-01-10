@@ -69,7 +69,23 @@ int main(int argc, char** argv)
         ros::shutdown();
     }
 
-    ros::Rate _looprate(5);
+
+    double temp_rate;
+//  std::string string_rate;
+    if (_nh.hasParam("/ros_rate"))
+    {
+        _nh.getParam("/ros_rate", temp_rate);
+//      temp_rate = atof(string_rate.c_str());
+    }
+    else
+    {
+        std::runtime_error::runtime_error("ROSParam '/ros_rate' does not exist.");
+        ROS_ERROR("ROSParam '/ros_rate' does not exist.");
+        ros::shutdown();
+        return ;
+
+    }
+    ros::Rate _looprate(temp_rate);
 
     while(ros::ok())
     {

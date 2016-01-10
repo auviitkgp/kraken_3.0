@@ -6,6 +6,7 @@ import roslib; roslib.load_manifest(PKG)
 import serial
 import math
 import rospy
+import sys
 from kraken_msgs.msg import dvlData
 #import numpy
 
@@ -71,12 +72,17 @@ if __name__ == '__main__':
 
     count = 0     # variable to check frequency
 #    pubData = depthData()
-    if rospy.has_param('/ros_rate'):
+
+
+	if rospy.has_param('/ros_rate'):
 		temp_rate = rospy.get_param('/ros_rate')
 	else:
-		temp_rate = 50
+		raise RuntimeError("ROSParam '/ros_rate' does not exist.")
+		rospy.signal_shutdown("ROSParam '/ros_rate' does not exist.")
+		sys.exit(0)
 
 	r = rospy.Rate(temp_rate)
+
     while not rospy.is_shutdown():
         print 'data count : ',count
         getDepth()

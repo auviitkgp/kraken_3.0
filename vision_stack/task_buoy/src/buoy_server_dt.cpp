@@ -99,6 +99,7 @@ void Buoy::imageCallBack(const sensor_msgs::ImageConstPtr &_msg)
 
 void Buoy::executeCB(const actionmsg::buoyGoalConstPtr &_goal)
 {
+    ros::NodeHandle n;
     double temp_rate;
 //  std::string string_rate;
     if (n.hasParam("/ros_rate"))
@@ -108,7 +109,10 @@ void Buoy::executeCB(const actionmsg::buoyGoalConstPtr &_goal)
     }
     else
     {
-        temp_rate = 5;
+        std::runtime_error::runtime_error("ROSParam '/ros_rate' does not exist.");
+        ROS_ERROR("ROSParam '/ros_rate' does not exist.");
+        ros::shutdown();
+        return ;
     }
     ros::Rate looprate(temp_rate);
     bool success = true;

@@ -12,5 +12,4 @@
 
 	<node name="Thruster" pkg="seabotix" type="seabotix.py" />
 
-	<rosparam command="load" file="$(find yaml)/ros_rate_param.yaml" />
 </launch>

@@ -49,20 +49,20 @@ def initSerial():
 
     if (sb.isOpen) :
         print 'Serial port opened successfully'
-    
+
     else:
 	    print 'Error in opening port'
-   
+
 if __name__ == '__main__':
 
     signal.signal(signal.SIGINT, stopThrustersNow)
     initSerial()
 
     rospy.init_node('testThrusters', anonymous=True) # required for using rospy.Rate
-    
-    # count = 0     # variable to check frequency   
+
+    # count = 0     # variable to check frequency
     # add = [0X60,0X52,0X5A,0X50,0X5C,0X5E]
-    # speed = [0X62,0X62,0X62,0X62,0X62,0X62]   5A  and 60 for depth and 
+    # speed = [0X62,0X62,0X62,0X62,0X62,0X62]   5A  and 60 for depth and
     # speedMax = [0X64,0X64,0X64,0X64,0X64,0X64] n   52 and 5C are surge thrusters
 
     data = [[0x60,0xAA,0x64],  # Depth back
@@ -87,19 +87,19 @@ if __name__ == '__main__':
     # add[5] = '58'
     # add[4] = '60'
     # add[5] = '5C'
-    rate = 8
-    default_rate = 8
+    rate = 8.0
+#   default_rate = 8
     if len(sys.argv) >= 2:
-	try:
-	    rate = int(sys.argv[1])
-	except:
-	    rate = default_rate
-    else:
-        if rospy.has_param('/ros_rate'):
-	    rate = rospy.get_param('/ros_rate');
-	else:
-	    rate = default_rate
-  
+	    try:
+	        rate = float(sys.argv[1])
+        except:
+            if rospy.has_param('/ros_rate'):
+    	        rate = rospy.get_param('/ros_rate');
+            else:
+    	        raise RuntimeError("ROSParam '/ros_rate' does not exist.")
+                rospy.signal_shutdown("ROSParam '/ros_rate' does not exist.")
+        	    sys.exit(0)
+
     r = rospy.Rate(rate)
     rospy.loginfo("Running at ROS Rate of %0.2f Hz", rate);
 
@@ -117,10 +117,10 @@ if __name__ == '__main__':
 
 	if zero_speed_set:
             break
-		
+
         print "Cycle Ended."
 	i += 1
         r.sleep()
-        
+
     sb.close()
     # stopThrustersNow()

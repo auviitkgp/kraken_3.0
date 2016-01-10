@@ -27,7 +27,23 @@ int main(int argc, char ** argv)
     image_transport::Publisher _pub = _it.advertise(_topicname, 1);
     sensor_msgs::ImagePtr _publishImage;
     cv_bridge::CvImage _image;
-    ros::Rate _looprate(10);
+
+    double temp_rate;
+//  std::string string_rate;
+    if (_n.hasParam("/ros_rate"))
+    {
+        _n.getParam("/ros_rate", temp_rate);
+//      temp_rate = atof(string_rate.c_str());
+    }
+    else
+    {
+        std::runtime_error::runtime_error("ROSParam '/ros_rate' does not exist.");
+        ROS_ERROR("ROSParam '/ros_rate' does not exist.");
+        ros::shutdown();
+        return ;
+
+    }
+    ros::Rate _looprate(temp_rate);
 
     VideoCapture _camera(_videopath.c_str());
 
@@ -54,4 +70,3 @@ int main(int argc, char ** argv)
 
     return 0;
 }
-

@@ -271,12 +271,15 @@ if __name__ == '__main__':
     else:
         print 'Error in opening port'
 
-    if rospy.has_param('/ros_rate'):
+	if rospy.has_param('/ros_rate'):
 		temp_rate = rospy.get_param('/ros_rate')
 	else:
-		temp_rate = 10
+		raise RuntimeError("ROSParam '/ros_rate' does not exist.")
+		rospy.signal_shutdown("ROSParam '/ros_rate' does not exist.")
+		sys.exit(0)
 
 	r = rospy.Rate(temp_rate)
+
     count = 1
     while not rospy.is_shutdown():
 	#print imu.read()

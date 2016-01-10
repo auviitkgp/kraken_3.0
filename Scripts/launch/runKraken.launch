@@ -46,5 +46,4 @@ rosrun control_server client_action 3.0 -->
 
 	<!-- <node name="server_pose" pkg="pose_server" type="PoseServer"/> -->
 
-	<rosparam command="load" file="$(find yaml)/ros_rate_param.yaml" />
 </launch>

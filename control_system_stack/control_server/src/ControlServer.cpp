@@ -145,6 +145,7 @@ void ControlServer::executePoseChange(const kraken_msgs::advancedControllerGoalC
 
     _controller.setSetPoint(_currPos);
     _controller.moveTest();
+    ros::NodeHandle n;
     double temp_rate;
 //  std::string string_rate;
     if (n.hasParam("/ros_rate"))
@@ -154,7 +155,10 @@ void ControlServer::executePoseChange(const kraken_msgs::advancedControllerGoalC
     }
     else
     {
-        temp_rate = 10;
+        std::runtime_error::runtime_error("ROSParam '/ros_rate' does not exist.");
+        ROS_ERROR("ROSParam '/ros_rate' does not exist.");
+        ros::shutdown();
+        return ;
     }
     ros::Rate looprate(temp_rate);
 
@@ -211,6 +215,7 @@ void ControlServer::executeOrientationChange(const kraken_msgs::controllerGoalCo
 
     kraken_msgs::controllerFeedback feedback;
     kraken_msgs::controllerResult result;
+    ros::NodeHandle n;
     double temp_rate;
 //  std::string string_rate;
     if (n.hasParam("/ros_rate"))
@@ -220,7 +225,10 @@ void ControlServer::executeOrientationChange(const kraken_msgs::controllerGoalCo
     }
     else
     {
-        temp_rate = 10;
+        std::runtime_error::runtime_error("ROSParam '/ros_rate' does not exist.");
+        ROS_ERROR("ROSParam '/ros_rate' does not exist.");
+        ros::shutdown();
+        return ;
     }
     ros::Rate looprate(temp_rate);
     while(ros::ok())

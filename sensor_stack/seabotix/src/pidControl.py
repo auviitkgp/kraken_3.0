@@ -116,13 +116,17 @@ if __name__ == '__main__':
 	pub6 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER6, thrusterData6Thruster, queue_size = 2)
 	pub = rospy.Publisher('ControlPlot', Float32MultiArray, queue_size=10)
 
-    if rospy.has_param('/ros_rate'):
+
+	if rospy.has_param('/ros_rate'):
 		temp_rate = rospy.get_param('/ros_rate')
 	else:
-		temp_rate = 8
+		raise RuntimeError("ROSParam '/ros_rate' does not exist.")
+		rospy.signal_shutdown("ROSParam '/ros_rate' does not exist.")
+		sys.exit(0)
 
 	r = rospy.Rate(temp_rate)
-        rospy.loginfo('Running with ROS_RATE of %0.2f Hz', temp_rate)
+
+	rospy.loginfo('Running with ROS_RATE of %0.2f Hz', temp_rate)
 
 	while not rospy.is_shutdown():
 

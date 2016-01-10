@@ -7,5 +7,4 @@
 
 	<node name="joystick_control" pkg="joystick_control" type="joystick_control"/>
 
-	<rosparam command="load" file="$(find yaml)/ros_rate_param.yaml" />
 </launch>

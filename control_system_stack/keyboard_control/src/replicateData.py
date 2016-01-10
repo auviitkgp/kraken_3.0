@@ -31,9 +31,11 @@ def startModule():
 	pub6 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER6, thrusterData6Thruster, queue_size = 10)
 
 	if rospy.has_param('/ros_rate'):
-            temp_rate = rospy.get_param('/ros_rate')
-        else:
-            temp_rate = 10
+		temp_rate = rospy.get_param('/ros_rate')
+	else:
+		raise RuntimeError("ROSParam '/ros_rate' does not exist.")
+		rospy.signal_shutdown("ROSParam '/ros_rate' does not exist.")
+		sys.exit(0)
 
 	r = rospy.Rate(temp_rate)
 
