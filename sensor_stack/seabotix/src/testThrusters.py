@@ -90,15 +90,15 @@ if __name__ == '__main__':
     rate = 8.0
 #   default_rate = 8
     if len(sys.argv) >= 2:
-	    try:
+	try:
 	        rate = float(sys.argv[1])
         except:
             if rospy.has_param('/ros_rate'):
     	        rate = rospy.get_param('/ros_rate');
             else:
-    	        raise RuntimeError("ROSParam '/ros_rate' does not exist.")
-                rospy.signal_shutdown("ROSParam '/ros_rate' does not exist.")
-        	    sys.exit(0)
+		raise RuntimeError("ROSParam '/ros_rate' does not exist.")
+		rospy.signal_shutdown("ROSParam '/ros_rate' does not exist.")
+		sys.exit(0)
 
     r = rospy.Rate(rate)
     rospy.loginfo("Running at ROS Rate of %0.2f Hz", rate);
