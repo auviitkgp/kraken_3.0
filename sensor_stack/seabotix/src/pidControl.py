@@ -36,13 +36,13 @@ goal = float(sys.argv[1])
 base_yaw = 0.0
 FIRST_ITERATION = True
 factor=0.5
-Kp_left = 0.95
-Kd_left = 0.035
-Ki_left = 0.0005
+Kp_left = 0.9
+Kd_left = 0.5
+Ki_left = 0
 
-Kp_right = -0.95
-Kd_right = -0.035
-Ki_right = -0.0005
+Kp_right = -0.9
+Kd_right = -0.5
+Ki_right = -0
 
 # Kp_left = 1.27;
 # Kd_left = 0.046;

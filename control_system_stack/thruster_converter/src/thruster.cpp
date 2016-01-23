@@ -79,7 +79,7 @@ void thruster6callback(const kraken_msgs::thrusterData6ThrusterConstPtr msg)
         inData[i] = msg->data[i];
         ROS_DEBUG("indata[%d] : %f",i,inData[i]);
         store = uint8_t((converter*inData[i]>(0xE6-0x80)?(0xE6):converter*inData[i]+offsetF));
-        store = uint8_t((converter*inData[i]<(0x19-0x80)?(0x19):converter*inData[i]+offsetF));
+        store = uint8_t((converter*inData[i]<(0x19-0x80)?(0x19):converter*inData[i]+offsetB));
         ROS_DEBUG("store : %d",store);
 
         if (store > max)
@@ -148,6 +148,7 @@ int main(int argc,char** argv)
 
     while(ros::ok())
     {
+	printf("Output : %s", _output);
         _pub.publish(_output);
         ros::spinOnce();
         looprate.sleep();
