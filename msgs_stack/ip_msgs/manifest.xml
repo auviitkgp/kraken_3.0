@@ -10,7 +10,9 @@
   <url>http://ros.org/wiki/actionmsg</url>
   <depend package="actionlib"/>
   <depend package="actionlib_msgs"/>
-
+  <export>
+  	<cpp cflags="-I${prefix}/include/" lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -lresources"/>
+  </export>
 </package>
 
 
