@@ -1,4 +1,5 @@
 #include <ros/ros.h>
+#include <bits/stdc++.h>
 #include <task_buoy/buoy_server.h>
 #define PI 3.1414
 
@@ -6,6 +7,14 @@
 
 int ***_allVals;
 char* filepath;
+bool canCall=false;
+int p1,p2,p3,p4;
+RNG rng(12345);
+
+bool compar(const RotatedRect & a,const RotatedRect&b)
+{
+    return a.size.width*a.size.height >= b.size.width*b.size.height;
+}
 
 Buoy::Buoy(std::string name) : _it(_n), _s(_n, name, boost::bind(&Buoy::executeCB, this, _1), false), _actionName(name)
 {
@@ -57,6 +66,7 @@ void Buoy::imageCallBack(const sensor_msgs::ImageConstPtr &_msg)
     }
 
     _image = _imagePtr->image;
+    canCall=true;
 }
 
 void Buoy::executeCB(const actionmsg::buoyGoalConstPtr &_goal)
@@ -79,8 +89,13 @@ void Buoy::executeCB(const actionmsg::buoyGoalConstPtr &_goal)
                     success = false;
                     break;
                 }
+                if(!canCall){
+                    looprate.sleep();
+                    continue;
+                }
 
                 _detected = detectBuoy();
+                canCall=false;
                 _finalImage.image = _imageBW;
                 _finalImagemsg = _finalImage.toImageMsg();
                 _pub.publish(_finalImagemsg);
@@ -157,16 +172,16 @@ bool Buoy::detectBuoy()
 
                 if (k==1)
                 {
-                    _image.at<Vec3b>(j,i).val[0] = 255;
-                    _image.at<Vec3b>(j,i).val[1] = 255;
-                    _image.at<Vec3b>(j,i).val[2] = 255;
+                    _image.at<Vec3b>(j,i).val[0] = 0;
+                    _image.at<Vec3b>(j,i).val[1] = 0;
+                    _image.at<Vec3b>(j,i).val[2] = 0;
                 }
 
                 if (k==0)
                 {
-                    _image.at<Vec3b>(j,i).val[0] = 0;
-                    _image.at<Vec3b>(j,i).val[1] = 0;
-                    _image.at<Vec3b>(j,i).val[2] = 0;
+                    _image.at<Vec3b>(j,i).val[0] = 255;
+                    _image.at<Vec3b>(j,i).val[1] = 255;
+                    _image.at<Vec3b>(j,i).val[2] = 255;
                 }
 
                 if (k==2)
@@ -180,7 +195,7 @@ bool Buoy::detectBuoy()
         //imshow("NoProcess", _image);
         
         erode(_image, _image, _kernelDilateErode);
-        //imshow("_imagetest", _image);
+        imshow("_imagetest", _image);
         cvtColor(_image, _imageBW, CV_BGR2GRAY);
         waitKey(33);
         medianBlur(_imageBW, _imageBW, 3);
@@ -280,26 +295,56 @@ bool Buoy::detectBuoy()
         //imshow("src_gray", src_gray);*/
         vector<Vec3f> circles;
         circles.clear();
+
+        vector<vector<Point> > contours;
+        findContours(temp_img, contours, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0,0));
+        RotatedRect rotRecs[contours.size()];
+
+        for (int i = 0; i < contours.size(); i++) {
+            if(contours[i].size()>=5)
+                rotRecs[i] = fitEllipse(contours[i]);
+        }
+        sort(rotRecs,rotRecs+contours.size(),compar);
+        Mat threshold_output=temp_img.clone();
+        Mat drawing = Mat::zeros( threshold_output.size(), CV_8UC3 );
+        
+        for( int i = 0; i< 5; i++ )
+        {
+            if(rotRecs[i].size.width>0 && rotRecs[i].size.height>0){
+               Scalar color = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
+               // contour
+               // drawContours( drawing, contours, i, color, 1, 8, vector<Vec4i>(), 0, Point() );
+               // ellipse
+               if(fabs(rotRecs[i].size.width-rotRecs[i].size.height)<=p1)
+                ellipse( drawing, rotRecs[i], color, 2, 8 );
+           }
+           // rotated rectangle
+           // Point2f rect_points[4]; minRect[i].points( rect_points );
+           // for( int j = 0; j < 4; j++ )
+           //    line( drawing, rect_points[j], rect_points[(j+1)%4], color, 1, 8 );
+        }
+        imshow("drawing",drawing);
+
         /// Apply the Hough Transform to find the circles
-        HoughCircles( temp_img, circles, CV_HOUGH_GRADIENT, 1, 1, 1, 15, 5, 1000 );
+        // HoughCircles( temp_img, circles, CV_HOUGH_GRADIENT, p1, p2,p3,p4);//1, 15, 5, 1000 
         //void HoughCircles(Input image, Output circles, int method, double dp, double minDist, double param1=100, double param2=100, int minRadius=0, int maxRadius=0 )
 
         // Draw the circles detected
-        if(circles.size() == 0)
-        {
-            cout<<"NOTHING CIRCULAR" << endl;
-        }
+        // if(circles.size() == 0)
+        // {
+        //     cout<<"NOTHING CIRCULAR" << endl;
+        // }
 
-        for( size_t i = 0; i < circles.size(); i++ )
-        {
-            Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
-            int radius = cvRound(circles[i][2]);
-            cout << "radius = " << radius << "\n";
-            // circle center
-            circle( src, center, 3, Scalar(0, 255, 0), 3, 8, 0 );
-            // circle outline
-            circle( src, center, radius, Scalar(0, 0, 255), 1, 8, 0 );
-        }
+        // for( size_t i = 0; i < circles.size(); i++ )
+        // {
+        //     Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
+        //     int radius = cvRound(circles[i][2]);
+        //     cout << "radius = " << radius << "\n";
+        //     // circle center
+        //     circle( src, center, 3, Scalar(255, 255, 255), 3, 8, 0 );
+        //     // circle outline
+        //     circle( src, center, radius, Scalar(255, 255, 255), 1, 8, 0 );
+        // }
 
         imshow("src", src);
         
@@ -339,7 +384,8 @@ int main(int argc, char ** argv)
         ROS_ERROR("You need to input the filepath to the RGB matrix file");
         return 0;
     }
-
+    p1=atoi(argv[2]),p2=atoi(argv[3]);
+    p3=atoi(argv[4]),p4=atoi(argv[5]);
     filepath = argv[1];
 
     _allVals = new int**[256];
