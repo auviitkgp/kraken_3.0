@@ -13,7 +13,7 @@ int main(int argc, char ** argv)
 
     if (argc < 2)
     {
-        ROS_ERROR("You need to enter the buoy server node name. One of buoy_shape, buoy_nn or buoy_dt");
+        ROS_ERROR("You need to enter the buoy server node name. One of buoy_shape, buoy_nn, buoy_new or buoy_dt");
         return 0;
     }
 

@@ -157,7 +157,7 @@ bool Buoy::detectBuoy()
 
                 if (k==1)
                 {
-                    _image.at<Vec3b>(j,i).val[0] = 0;
+                    _image.at<Vec3b>(j,i).val[0] = 255;
                     _image.at<Vec3b>(j,i).val[1] = 255;
                     _image.at<Vec3b>(j,i).val[2] = 255;
                 }
@@ -166,7 +166,7 @@ bool Buoy::detectBuoy()
                 {
                     _image.at<Vec3b>(j,i).val[0] = 0;
                     _image.at<Vec3b>(j,i).val[1] = 0;
-                    _image.at<Vec3b>(j,i).val[2] = 255;
+                    _image.at<Vec3b>(j,i).val[2] = 0;
                 }
 
                 if (k==2)
@@ -177,44 +177,114 @@ bool Buoy::detectBuoy()
                 }
             }
         }
-
-        imshow("_imagetest", _image);
+        //imshow("NoProcess", _image);
+        
+        erode(_image, _image, _kernelDilateErode);
+        //imshow("_imagetest", _image);
         cvtColor(_image, _imageBW, CV_BGR2GRAY);
-        
+        waitKey(33);
         medianBlur(_imageBW, _imageBW, 3);
-        erode(_imageBW, _imageBW, _kernelDilateErode);
+        //erode(_imageBW, _imageBW, _kernelDilateErode);
+        //imshow("_imageBW", _image);
 
+        Mat exp_img = _imageBW.clone();
+
+        findContours(exp_img.clone(), _contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
+        drawContours(exp_img, _contours, -1, CV_RGB(255, 255, 255), -1);
+        erode(exp_img, exp_img, _kernelDilateErode);
+        findContours(exp_img.clone(), _contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
+        drawContours(exp_img, _contours, -1, CV_RGB(255, 255, 255), -1);
+        imshow("FILLED", exp_img);
         
+        Mat temp_img = exp_img.clone();
+        Canny(exp_img, exp_img, 50, 150);
+        imshow("Experiment", exp_img);
 
+        Mat src = temp_img.clone();
+        src = Scalar(0,0,0);
+
+        /*cv::SimpleBlobDetector blob_detector;
+        vector<cv::KeyPoint> keypoints, keypoints1;
+        blob_detector.detect(temp_img, keypoints);
+        int i=0, j=0;
+        for(;i<keypoints.size();i++)
+        {
+            cout << "HEEEE";
+            if(keypoints[i].size > keypoints[j].size)
+            {
+                j = i;
+                cout << j;
+            }
+        }
+        /*for(std::vector<cv::KeyPoint>::iterator blobIterator = keypoints.begin(); blobIterator != keypoints.end(); blobIterator++, j++)
+        {
+            if( blobIterator->size > max_size)
+            {
+                max_size = blobIterator->size;
+                i = j;
+            }
+        }
+        keypoints1.clear();
+        //keypoints1.push_back(keypoints[j]);
+        cv::drawKeypoints(temp_img, keypoints, src);
+        imshow("KeyPoint", src);
         //morphologyEx( _imageBW, _imageBW, MORPH_OPEN, elementEx );
-        
-        // _imageBW = Scalar(0, 0, 0);
+        /*
+        CBlobResult _blobs,_blobsClutter;
+        CBlob * _currentBlob;
+        IplImage _imageBWipl = _imageBW;
+        _blobs = CBlobResult(&_imageBWipl, NULL, 0);
+        _blobs.Filter(_blobs, B_INCLUDE, CBlobGetArea(), B_INSIDE, 50, 1000);
+        _imageBW = Scalar(0, 0, 0);
 
-        
-        
-        // Mat src;
-        // vector<Mat> channels;
+        for(int i = 0; i < _blobs.GetNumBlobs(); i++)
+        {
+            _currentBlob = _blobs.GetBlob(i);
+            _currentBlob->FillBlob(&_imageBWipl, Scalar(255));
+        }
 
-        // channels.push_back(Scalar(0, 0, 0));
-        // channels.push_back(Scalar(0, 0, 0));
-        // channels.push_back(Scalar(0, 0, 0));
-        // merge( channels, src);
-        
-        
-        // _imageBW = Scalar(0, 0, 0);
+        Mat _imageBW2 = _imageBW.clone();
+        vector<Mat> channels;
+        channels.push_back(_imageBW);
+        channels.push_back(_imageBW);
+        channels.push_back(_imageBW);
+        merge( channels, src);
+        _contours.clear();
+        medianBlur(_imageBW2, _imageBW2, 5);
+        findContours(_imageBW2, _contours, CV_RETR_CCOMP, CV_CHAIN_APPROX_SIMPLE);
+        Point2f _centerBuff;
+        float _radiusBuff;
+        vector<Point> _contoursPolyBuff;
+        _center.clear();
+        _radius.clear();
+        _contoursPoly.clear();
+        _imageBW = Scalar(0, 0, 0);
 
-        
+        for(int i=0; i < _contours.size(); i++)
+        {
+            if(contourArea(_contours[i])>50)
+            {
+                approxPolyDP(_contours[i],_contoursPolyBuff,3,true);
+                minEnclosingCircle((Mat)_contoursPolyBuff,_centerBuff,_radiusBuff);
+                circle(_imageBW,_centerBuff,_radiusBuff,Scalar(255), -1);
+                _center.push_back(_centerBuff);
+                _radius.push_back(_radiusBuff);
+                _contoursPoly.push_back(_contoursPolyBuff);
+            }
+        }
 
-        // Mat src_gray;
-        // cvtColor( src, src_gray, CV_BGR2GRAY );
-        // src = Scalar(0, 0, 0);
-        // GaussianBlur( src_gray, src_gray, Size(9, 9), 2, 2 );
-        // imshow("src_gray", src_gray);
+        Mat src_gray;
+        cvtColor( src, src_gray, CV_BGR2GRAY );
+        src = Scalar(0, 0, 0);
+        GaussianBlur( src_gray, src_gray, Size(9, 9), 2, 2 );
+        //imshow("src_gray", src_gray);*/
         vector<Vec3f> circles;
+        circles.clear();
         /// Apply the Hough Transform to find the circles
-        HoughCircles( _imageBW, circles, CV_HOUGH_GRADIENT, 2, _imageBW.rows/16, 150, 25, 5, 1000 );
+        HoughCircles( temp_img, circles, CV_HOUGH_GRADIENT, 1, 1, 1, 15, 5, 1000 );
+        //void HoughCircles(Input image, Output circles, int method, double dp, double minDist, double param1=100, double param2=100, int minRadius=0, int maxRadius=0 )
 
-        /// Draw the circles detected
+        // Draw the circles detected
         if(circles.size() == 0)
         {
             cout<<"NOTHING CIRCULAR" << endl;
@@ -224,15 +294,15 @@ bool Buoy::detectBuoy()
         {
             Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
             int radius = cvRound(circles[i][2]);
+            cout << "radius = " << radius << "\n";
             // circle center
-            circle( _imageBW, center, 3, Scalar(0, 255, 0), 3, 8, 0 );
+            circle( src, center, 3, Scalar(0, 255, 0), 3, 8, 0 );
             // circle outline
-            circle( _imageBW, center, radius, Scalar(0, 0, 255), 1, 8, 0 );
+            circle( src, center, radius, Scalar(0, 0, 255), 1, 8, 0 );
         }
 
-        // imshow("src", src);
-        imshow("_imageBW", _imageBW);
-        waitKey(33);
+        imshow("src", src);
+        
         if(_center.size() > 0)
         {
             return true;
