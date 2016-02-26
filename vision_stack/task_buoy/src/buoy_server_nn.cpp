@@ -11,6 +11,14 @@ bool canCall=false;
 int p1,p2,p3,p4;
 RNG rng(12345);
 
+vector<KalmanFilter> KFV;
+vector<Mat_<float> > measurement(5,Mat_<float>(2,1));
+
+bool comparxy(const RotatedRect & a,const RotatedRect&b)
+{
+    return a.center.x <= b.center.x;
+}
+
 bool compar(const RotatedRect & a,const RotatedRect&b)
 {
     return a.size.width*a.size.height >= b.size.width*b.size.height;
@@ -44,6 +52,25 @@ Buoy::Buoy(std::string name) : _it(_n), _s(_n, name, boost::bind(&Buoy::executeC
     {
         ROS_ERROR("Unable to open values file.");
         ros::shutdown();
+    }
+
+    KFV.assign(5, KalmanFilter(4, 2, 0));
+
+    for(int i=0;i<5;i++)
+    {
+
+        KFV[i].transitionMatrix = *(Mat_<float>(4, 4) << 1,0,1,0,   0,1,0,1,  0,0,1,0,  0,0,0,1);
+        measurement[i].setTo(Scalar(0));
+         
+        // init...
+        KFV[i].statePre.at<float>(0) = 0;
+        KFV[i].statePre.at<float>(1) = 0;
+        KFV[i].statePre.at<float>(2) = 0;
+        KFV[i].statePre.at<float>(3) = 0;
+        setIdentity(KFV[i].measurementMatrix);
+        setIdentity(KFV[i].processNoiseCov, Scalar::all(1e-4));
+        setIdentity(KFV[i].measurementNoiseCov, Scalar::all(1e-1));
+        setIdentity(KFV[i].errorCovPost, Scalar::all(.1));
     }
 
     _kernelDilateErode = getStructuringElement(MORPH_RECT, Size(3,3));
@@ -155,12 +182,6 @@ bool Buoy::detectBuoy()
 {
     if(!_image.empty())
     {
-        // cvtColor(_image, _imageHSV, CV_BGR2HSV);
-        // inRange(_imageHSV,_lowerThreshRed1,_upperThreshRed1, _imageBW);
-        // inRange(_imageHSV,_lowerThreshRed2,_upperThreshRed2, _imageBWRed);
-        // add(_imageBW, _imageBWRed, _imageBW);
-        // inRange(_imageHSV,_lowerThreshGreen,_upperThreshGreen, _imageBWGreen);
-        // add(_imageBW, _imageBWGreen, _imageBW);
         int k;
         imshow("_imagetest1", _image);
 
@@ -172,16 +193,16 @@ bool Buoy::detectBuoy()
 
                 if (k==1)
                 {
-                    _image.at<Vec3b>(j,i).val[0] = 0;
-                    _image.at<Vec3b>(j,i).val[1] = 0;
-                    _image.at<Vec3b>(j,i).val[2] = 0;
+                    _image.at<Vec3b>(j,i).val[0] = 255;
+                    _image.at<Vec3b>(j,i).val[1] = 255;
+                    _image.at<Vec3b>(j,i).val[2] = 255;
                 }
 
                 if (k==0)
                 {
-                    _image.at<Vec3b>(j,i).val[0] = 255;
-                    _image.at<Vec3b>(j,i).val[1] = 255;
-                    _image.at<Vec3b>(j,i).val[2] = 255;
+                    _image.at<Vec3b>(j,i).val[0] = 0;
+                    _image.at<Vec3b>(j,i).val[1] = 0;
+                    _image.at<Vec3b>(j,i).val[2] = 0;
                 }
 
                 if (k==2)
@@ -192,16 +213,13 @@ bool Buoy::detectBuoy()
                 }
             }
         }
-        //imshow("NoProcess", _image);
         
         erode(_image, _image, _kernelDilateErode);
         imshow("_imagetest", _image);
         cvtColor(_image, _imageBW, CV_BGR2GRAY);
         waitKey(33);
         medianBlur(_imageBW, _imageBW, 3);
-        //erode(_imageBW, _imageBW, _kernelDilateErode);
-        //imshow("_imageBW", _image);
-
+        
         Mat exp_img = _imageBW.clone();
 
         findContours(exp_img.clone(), _contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
@@ -218,81 +236,6 @@ bool Buoy::detectBuoy()
         Mat src = temp_img.clone();
         src = Scalar(0,0,0);
 
-        /*cv::SimpleBlobDetector blob_detector;
-        vector<cv::KeyPoint> keypoints, keypoints1;
-        blob_detector.detect(temp_img, keypoints);
-        int i=0, j=0;
-        for(;i<keypoints.size();i++)
-        {
-            cout << "HEEEE";
-            if(keypoints[i].size > keypoints[j].size)
-            {
-                j = i;
-                cout << j;
-            }
-        }
-        /*for(std::vector<cv::KeyPoint>::iterator blobIterator = keypoints.begin(); blobIterator != keypoints.end(); blobIterator++, j++)
-        {
-            if( blobIterator->size > max_size)
-            {
-                max_size = blobIterator->size;
-                i = j;
-            }
-        }
-        keypoints1.clear();
-        //keypoints1.push_back(keypoints[j]);
-        cv::drawKeypoints(temp_img, keypoints, src);
-        imshow("KeyPoint", src);
-        //morphologyEx( _imageBW, _imageBW, MORPH_OPEN, elementEx );
-        /*
-        CBlobResult _blobs,_blobsClutter;
-        CBlob * _currentBlob;
-        IplImage _imageBWipl = _imageBW;
-        _blobs = CBlobResult(&_imageBWipl, NULL, 0);
-        _blobs.Filter(_blobs, B_INCLUDE, CBlobGetArea(), B_INSIDE, 50, 1000);
-        _imageBW = Scalar(0, 0, 0);
-
-        for(int i = 0; i < _blobs.GetNumBlobs(); i++)
-        {
-            _currentBlob = _blobs.GetBlob(i);
-            _currentBlob->FillBlob(&_imageBWipl, Scalar(255));
-        }
-
-        Mat _imageBW2 = _imageBW.clone();
-        vector<Mat> channels;
-        channels.push_back(_imageBW);
-        channels.push_back(_imageBW);
-        channels.push_back(_imageBW);
-        merge( channels, src);
-        _contours.clear();
-        medianBlur(_imageBW2, _imageBW2, 5);
-        findContours(_imageBW2, _contours, CV_RETR_CCOMP, CV_CHAIN_APPROX_SIMPLE);
-        Point2f _centerBuff;
-        float _radiusBuff;
-        vector<Point> _contoursPolyBuff;
-        _center.clear();
-        _radius.clear();
-        _contoursPoly.clear();
-        _imageBW = Scalar(0, 0, 0);
-
-        for(int i=0; i < _contours.size(); i++)
-        {
-            if(contourArea(_contours[i])>50)
-            {
-                approxPolyDP(_contours[i],_contoursPolyBuff,3,true);
-                minEnclosingCircle((Mat)_contoursPolyBuff,_centerBuff,_radiusBuff);
-                circle(_imageBW,_centerBuff,_radiusBuff,Scalar(255), -1);
-                _center.push_back(_centerBuff);
-                _radius.push_back(_radiusBuff);
-                _contoursPoly.push_back(_contoursPolyBuff);
-            }
-        }
-
-        Mat src_gray;
-        cvtColor( src, src_gray, CV_BGR2GRAY );
-        src = Scalar(0, 0, 0);
-        GaussianBlur( src_gray, src_gray, Size(9, 9), 2, 2 );
-        //imshow("src_gray", src_gray);*/
         vector<Vec3f> circles;
         circles.clear();
 
@@ -300,29 +243,57 @@ bool Buoy::detectBuoy()
         findContours(temp_img, contours, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0,0));
         RotatedRect rotRecs[contours.size()];
 
-        for (int i = 0; i < contours.size(); i++) {
+        for (int i = 0; i < contours.size(); i++)
+        {
             if(contours[i].size()>=5)
                 rotRecs[i] = fitEllipse(contours[i]);
         }
         sort(rotRecs,rotRecs+contours.size(),compar);
         Mat threshold_output=temp_img.clone();
         Mat drawing = Mat::zeros( threshold_output.size(), CV_8UC3 );
-        
+
+        for( int i = 0; i< 5 && i<contours.size(); i++ )
+        {
+            if(rotRecs[i].size.width>0 && rotRecs[i].size.height>0)
+            {
+                Scalar color = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
+                if(fabs(rotRecs[i].size.width-rotRecs[i].size.height)<=p1)
+                    ellipse( drawing, rotRecs[i], color, 2, 8 );
+            }
+        }
+
+        if(5<=contours.size())
+            sort(rotRecs, rotRecs+5, comparxy);
+        std::vector<Point> stPV(5);
+        for(int i=0;i<5 && i<contours.size();i++)
+        {
+            Mat prediction = KFV[i].predict();
+            Point predictPt(prediction.at<float>(0),prediction.at<float>(1));
+                         
+            // Get mouse point
+            measurement[i](0) = rotRecs[i].center.x;
+            measurement[i](1) = rotRecs[i].center.y;
+                         
+            Point measPt(measurement[i](0),measurement[i](1));
+             
+            // The "correct" phase that is going to use the predicted value and our measurement[i]
+            Mat estimated = KFV[i].correct(measurement[i]);
+            Point stP(estimated.at<float>(0),estimated.at<float>(1));
+            stPV[i] = stP;
+        }
+
+
         for( int i = 0; i< 5; i++ )
         {
-            if(rotRecs[i].size.width>0 && rotRecs[i].size.height>0){
-               Scalar color = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
-               // contour
-               // drawContours( drawing, contours, i, color, 1, 8, vector<Vec4i>(), 0, Point() );
-               // ellipse
-               if(fabs(rotRecs[i].size.width-rotRecs[i].size.height)<=p1)
-                ellipse( drawing, rotRecs[i], color, 2, 8 );
-           }
-           // rotated rectangle
-           // Point2f rect_points[4]; minRect[i].points( rect_points );
-           // for( int j = 0; j < 4; j++ )
-           //    line( drawing, rect_points[j], rect_points[(j+1)%4], color, 1, 8 );
+            Point center = stPV[i];//(cvRound(circles[i][0]), cvRound(circles[i][1]));
+            // int radius = 5;
+            // cout << "radius = " << radius << "\n";
+            // circle center
+            circle( drawing, center, 5, Scalar(255, 255, 255), 3, 8, 0 );
+            // circle outline
+            // circle( src, center, radius, Scalar(255, 255, 255), 1, 8, 0 );
         }
+
         imshow("drawing",drawing);
 
         /// Apply the Hough Transform to find the circles
