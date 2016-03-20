@@ -148,7 +148,6 @@ int main(int argc,char** argv)
 
     while(ros::ok())
     {
-	printf("Output : %s", _output);
         _pub.publish(_output);
         ros::spinOnce();
         looprate.sleep();
