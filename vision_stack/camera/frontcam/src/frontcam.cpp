@@ -61,6 +61,7 @@ int main(int argc, char** argv)
     }
     else
     {
+        ROS_ERROR("You must pass in an integer (0 or 1). 0 -> Front camera, 1 -> Bottom camera");
         ros::shutdown();
     }
 
