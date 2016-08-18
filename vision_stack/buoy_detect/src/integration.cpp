@@ -29,8 +29,8 @@ point;
 Mat image[15];
 Mat colour_detect[15];
 vw_detect *detector;
-ros::NodeHandle nh;
-image_transport::ImageTransport it(nh);
+ros::NodeHandle *nh;
+image_transport::ImageTransport *it;
 image_transport::Publisher *ml_pub, *final_pub;
 
 color_enum getColor(int x, int y, Mat image)
@@ -127,26 +127,29 @@ int main(int argc, char** argv)
         ROS_ERROR("Requires the path to vw hash");
     }
     ros::init(argc, argv, "buoy_detect integrator");
-
+    ros::NodeHandle nodeHandle;
+    image_transport::ImageTransport imageTransport(nodeHandle);
+    nh = &nodeHandle;
+    it = &imageTransport;
     vw_detect detector1(argv[1]);
     detector = &detector1;
 
-    image_transport::Subscriber sub = it.subscribe("topics::CAMERA_FRONT_RAW_IMAGE", 1, imageCallback);
+    image_transport::Subscriber sub = it->subscribe("topics::CAMERA_FRONT_RAW_IMAGE", 1, imageCallback);
     kraken_msgs::center_color center_color_object;
-    ros::Publisher result = nh.advertise<kraken_msgs::center_color> ("CENTER_COLOR_IMAGE", 1);
-    image_transport::Publisher ml_image_pub = it.advertise(topics::CAMERA_FRONT_ML_IMAGE, 1);
-    image_transport::Publisher final_image_pub = it.advertise(topics::CAMERA_FRONT_FINAL_IMAGE, 1);
+    ros::Publisher result = nh->advertise<kraken_msgs::center_color> ("CENTER_COLOR_IMAGE", 1);
+    image_transport::Publisher ml_image_pub = it->advertise(topics::CAMERA_FRONT_ML_IMAGE, 1);
+    image_transport::Publisher final_image_pub = it->advertise(topics::CAMERA_FRONT_FINAL_IMAGE, 1);
     ml_pub = &ml_image_pub;
     final_pub = &final_image_pub;
 
     ros::Rate loop_rate(10);
 
-    while (nh.ok())
+    while (nodeHandle.ok())
     {
         ros::spinOnce();
         loop_rate.sleep();
     }
-
+    nodeHandle.shutdown();
     return 0;
 }
 
