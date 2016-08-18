@@ -1,0 +1,12 @@
+<package><description brief="buoy_detect">
+
+     buoy_detect
+  </description><author>Dyutimoy</author>
+<license>BSD</license>
+<review status="unreviewed" notes=""/>
+<url>http://ros.org/wiki/bouy_detect</url>
+<depend package="roscpp"/>
+<depend package="kraken_msgs"/>
+<depend package="image_transport"/>
+<depend package="cv_bridge"/>
+<depend package="resources"/></package>

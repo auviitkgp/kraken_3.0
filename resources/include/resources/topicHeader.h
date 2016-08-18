@@ -100,6 +100,7 @@ extern const char* CAMERA_BOTTOM_VGATE_IMAGE;
 /kraken/front_camera/theora/parameter_descriptions
 /kraken/front_camera/theora/parameter_updates
 /kraken/front_camera_info
+/kraken/front_camera/ml_image
 */
 extern const char* CAMERA_FRONT_RAW_IMAGE;
 extern const char* CAMERA_FRONT_COMPRESSED;
@@ -116,6 +117,13 @@ extern const char* CAMERA_FRONT_INFO;
 extern const char* CAMERA_FRONT_BUOY_IMAGE;
 
 extern const char* CAMERA_CAM_SWITCH;
+
+extern const char* CAMERA_FRONT_ML_IMAGE;
+extern const char* CAMERA_FRONT_FINAL_IMAGE;
+
+//center
+
+extern const char* CAMERA_CENTER_COLOR;
 
 //navigation
 extern const char* NAV_POSE_ESTIMATED;

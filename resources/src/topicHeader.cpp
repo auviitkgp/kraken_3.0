@@ -109,4 +109,10 @@ const char* CAMERA_FRONT_INFO="/kraken/front_camera_info";
 const char* CAMERA_FRONT_BUOY_IMAGE="/kraken/front_camera/buoy_image";
 
 const char* CAMERA_CAM_SWITCH="/kraken/camera/camera_switch";
+
+const char* CAMERA_FRONT_ML_IMAGE="/kraken/front_camera/ml_image";
+const char* CAMERA_FRONT_FINAL_IMAGE="/kraken/front_camera/final_image";
+
+//center and color topics
+const char* CAMERA_CENTER_COLOR="/kraken/front_camera/center_color";
 }
