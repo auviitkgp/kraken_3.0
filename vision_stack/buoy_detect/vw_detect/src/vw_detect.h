@@ -41,9 +41,10 @@ public:
     vw_detect(char *path_to_hash, int n = 4);
     ~vw_detect();
     void wait_for_completion();
+    void predict_block(cv::Mat, cv::Mat, int, int);
 private:
     ctpl::thread_pool pool;
-    void predict_block(cv::Mat, cv::Mat, int, int);
+    
 
     /*
     static void write_to_input(cv::Mat, int in_handle);
