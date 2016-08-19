@@ -52,9 +52,9 @@ color_enum getColor(int x, int y, Mat image)
 
 void imageCallback(const sensor_msgs::ImageConstPtr& msg)
 {
-    cv_bridge::CvImagePtr cv_ptr;
+    
     Mat temp1, temp2;
-
+    cv_bridge::CvImagePtr cv_ptr;
     try
     {
         cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
@@ -82,11 +82,11 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
     detector->getPredictions(image[0], colour_detect[0]);
     temp1.deallocate();
     temp2.deallocate();
-    cv_bridge::CvImagePtr cv_ptr_ml;
-    cv_bridge::CvImagePtr cv_ptr_final;
+
     detector->wait_for_completion();
-    cv_ptr_ml->image = colour_detect[0];
-    ml_pub->publish(cv_ptr_ml->toImageMsg());
+    
+    cv_ptr->image = colour_detect[0];
+    ml_pub->publish(cv_ptr->toImageMsg());
 
     //main code (vw detect + region growing)
 
@@ -116,8 +116,8 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
     {
         growhandle.start_grow(eroded, final_image, edgeMap, seed_points[i].x, seed_points[i].y, seed_points[i].color);
     }
-    cv_ptr_final->image = final_image;
-    final_pub->publish(cv_ptr_final->toImageMsg());
+    cv_ptr->image = final_image;
+    final_pub->publish(cv_ptr->toImageMsg());
 }
 
 int main(int argc, char** argv)
@@ -126,7 +126,7 @@ int main(int argc, char** argv)
     {
         ROS_ERROR("Requires the path to vw hash");
     }
-    ros::init(argc, argv, "buoy_detect integrator");
+    ros::init(argc, argv, "buoy_detect_integrator");
     ros::NodeHandle nodeHandle;
     image_transport::ImageTransport imageTransport(nodeHandle);
     nh = &nodeHandle;
@@ -134,9 +134,9 @@ int main(int argc, char** argv)
     vw_detect detector1(argv[1]);
     detector = &detector1;
 
-    image_transport::Subscriber sub = it->subscribe("topics::CAMERA_FRONT_RAW_IMAGE", 1, imageCallback);
+    image_transport::Subscriber sub = it->subscribe(topics::CAMERA_FRONT_RAW_IMAGE, 1, imageCallback);
     kraken_msgs::center_color center_color_object;
-    ros::Publisher result = nh->advertise<kraken_msgs::center_color> ("CENTER_COLOR_IMAGE", 1);
+    ros::Publisher result = nh->advertise<kraken_msgs::center_color> (topics::CAMERA_CENTER_COLOR, 1);
     image_transport::Publisher ml_image_pub = it->advertise(topics::CAMERA_FRONT_ML_IMAGE, 1);
     image_transport::Publisher final_image_pub = it->advertise(topics::CAMERA_FRONT_FINAL_IMAGE, 1);
     ml_pub = &ml_image_pub;
