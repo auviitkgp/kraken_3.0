@@ -11,8 +11,12 @@
 
 #include <vw_detect.h>
 #include <grow.h>
+
+#include <chrono>
 using namespace std;
 using namespace cv;
+using namespace std::chrono;
+typedef std::chrono::high_resolution_clock clk;
 
 enum color_enum
 {
@@ -26,8 +30,8 @@ typedef struct point_
 }
 point;
 
-Mat image[15];
-Mat colour_detect[15];
+Mat image;
+Mat colour_detect;
 vw_detect *detector;
 ros::NodeHandle *nh;
 image_transport::ImageTransport *it;
@@ -53,19 +57,21 @@ color_enum getColor(int x, int y, Mat image)
 void imageCallback(const sensor_msgs::ImageConstPtr& msg)
 {
     
-    Mat temp1, temp2;
+//    Mat temp1, temp2;
     cv_bridge::CvImagePtr cv_ptr;
+    auto t1 = clk::now();
     try
     {
         cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
+        /*
         temp1 = image[14];
         temp2 = colour_detect[14];
         for (int i = 0; i <= 13; i++)
         {
             image[i + 1] = image[i];
             colour_detect[i + 1] = colour_detect[i];
-        }
-        image[0] = cv_ptr->image;
+        }*/
+        image = cv_ptr->image;
     }
     catch (cv_bridge::Exception& e)
     {
@@ -73,29 +79,32 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
         return;
     }
 
-    Mat newMat(image[0].rows, image[0].cols, CV_8UC3, Scalar(0, 0, 0));
-    colour_detect[0] = newMat;
+    Mat newMat(image.rows, image.cols, CV_8UC3, Scalar(0, 0, 0));
+    colour_detect = newMat;
     // filters to be used before detection is done
-    medianBlur(image[0], colour_detect[0], 5);
+    medianBlur(image, colour_detect, 5);
 
 
-    detector->getPredictions(image[0], colour_detect[0]);
-    temp1.deallocate();
-    temp2.deallocate();
-
+    detector->getPredictions(image, colour_detect);
+//    temp1.deallocate();
+//    temp2.deallocate();
+    auto t2 = clk::now();
     detector->wait_for_completion();
     
-    cv_ptr->image = colour_detect[0];
+    cv_ptr->image = colour_detect;
     ml_pub->publish(cv_ptr->toImageMsg());
-
+    auto t3 = clk::now();
     //main code (vw detect + region growing)
 
     Mat eroded;
-    erode(colour_detect[0], eroded, Mat(), Point(-1, -1), 2);
+    erode(colour_detect, eroded, Mat(), Point(-1, -1), 2);
+    
+    Mat gray;
+    cvtColor(eroded,gray,cv::COLOR_BGR2GRAY);
 
     vector < vector <Point> > contours;
-    findContours(eroded, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
-
+    findContours(gray, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
+    
     vector<point> seed_points;
     for (size_t i = 0; i < contours.size(); i++)
     {
@@ -116,8 +125,14 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
     {
         growhandle.start_grow(eroded, final_image, edgeMap, seed_points[i].x, seed_points[i].y, seed_points[i].color);
     }
+    
+    
     cv_ptr->image = final_image;
     final_pub->publish(cv_ptr->toImageMsg());
+    auto t4 = clk::now();
+    cout << "time re receive and queue : " << duration_cast<milliseconds>(t2 - t1).count() <<endl;
+    cout << "time waited in queue : " << duration_cast<milliseconds>(t3 - t2).count() << endl;
+    cout << "time for generating final image : " << duration_cast<milliseconds>(t4 - t3).count() << endl;
 }
 
 int main(int argc, char** argv)
