@@ -82,10 +82,11 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
     Mat newMat(image.rows, image.cols, CV_8UC3, Scalar(0, 0, 0));
     colour_detect = newMat;
     // filters to be used before detection is done
-    medianBlur(image, colour_detect, 5);
+    Mat filtered;
+    medianBlur(image, filtered , 5);
 
 
-    detector->getPredictions(image, colour_detect);
+    detector->getPredictions(filtered, colour_detect);
 //    temp1.deallocate();
 //    temp2.deallocate();
     auto t2 = clk::now();
@@ -97,11 +98,11 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
     //main code (vw detect + region growing)
 
     Mat eroded;
-    erode(colour_detect, eroded, Mat(), Point(-1, -1), 2);
+    erode(colour_detect, eroded, Mat(), Point(-1, -1), 1);
     
     Mat gray;
     cvtColor(eroded,gray,cv::COLOR_BGR2GRAY);
-
+/*
     vector < vector <Point> > contours;
     findContours(gray, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
     
@@ -129,8 +130,9 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
     
     cv_ptr->image = final_image;
     final_pub->publish(cv_ptr->toImageMsg());
-    auto t4 = clk::now();
-    cout << "time re receive and queue : " << duration_cast<milliseconds>(t2 - t1).count() <<endl;
+  
+ */  auto t4 = clk::now();
+    cout << "time to receive and queue : " << duration_cast<milliseconds>(t2 - t1).count() <<endl;
     cout << "time waited in queue : " << duration_cast<milliseconds>(t3 - t2).count() << endl;
     cout << "time for generating final image : " << duration_cast<milliseconds>(t4 - t3).count() << endl;
 }
