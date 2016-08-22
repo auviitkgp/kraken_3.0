@@ -1,9 +1,9 @@
 <launch>
-<include file="$(find Scripts)/launch/simulator/imuDvl.launch" />
-<node name="setyaw_action_server" pkg="setyaw" type="main.py" />
+    <include file="$(find Scripts)/launch/simulator/imuDvl.launch" />
+    <node name="setyaw_action_server" pkg="setyaw" type="main.py" />
 
-<!-- This will start the dependencies and the setyaw server. 
-You can start any client of this server, once this Launch file 
-has been executed.  -->
-
+    <!-- This will start the dependencies and the setyaw server.
+    You can start any client of this server, once this Launch file
+    has been executed.  -->
+    <rosparam command="load" file="$(find yaml)/ros_rate_param.yaml" />
 </launch>

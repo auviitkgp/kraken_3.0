@@ -112,7 +112,7 @@ class SetYaw(object):
 
         if Client_goal != None :
 
-            
+
             error = (base_yaw + Client_goal.yaw - Current_yaw)* 3.14 / 180
             YAW.error = np.arctan2(sin(error),cos(error))*180/3.14
             YAW.delta_error = YAW.error - prevError
@@ -133,14 +133,14 @@ class SetYaw(object):
             # calculate the controller output from fuzzy control
             ControlOutput = YAW.run()
 	    prevError = YAW.error
-	    
+
             # 6 Thruster model
             self.thruster6Data.data[0] = 0.0
             self.thruster6Data.data[1] = 0.0
             self.thruster6Data.data[2] = ControlOutput  # Left Thruster
             self.thruster6Data.data[3] = -1 * ControlOutput # Rigt Thruster
-            self.thruster6Data.data[4] = 0.0     
-            self.thruster6Data.data[5] = 0.0     
+            self.thruster6Data.data[4] = 0.0
+            self.thruster6Data.data[5] = 0.0
             self.thruster6Data.header  = std_msgs.msg.Header()
             self.thruster6Data.header.stamp = rospy.Time.now()
 
@@ -184,7 +184,14 @@ class SetYaw(object):
         FIRST_ITERATION = True
         Current_yaw = -1
 
-        r = rospy.Rate(10)
+	if rospy.has_param('/ros_rate'):
+		temp_rate = rospy.get_param('/ros_rate')
+	else:
+		raise RuntimeError("ROSParam '/ros_rate' does not exist.")
+		rospy.signal_shutdown("ROSParam '/ros_rate' does not exist.")
+		sys.exit(0)
+
+	r = rospy.Rate(temp_rate)
 
         # wait to receive starting value of yaw
         while(Current_yaw == -1):

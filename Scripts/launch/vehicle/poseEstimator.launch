@@ -1,5 +1,7 @@
 <launch>
 
-<include file="$(find Scripts)/launch/vehicle/imuDvl.launch" />
+    <include file="$(find Scripts)/launch/vehicle/imuDvl.launch" />
+
+    <rosparam command="load" file="$(find yaml)/ros_rate_param.yaml" />
 
 </launch>

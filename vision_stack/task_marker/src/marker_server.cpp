@@ -55,7 +55,22 @@ void Marker::imageCallBack(const sensor_msgs::ImageConstPtr &_msg)
 
 void Marker::executeCB(const ip_msgs::markerGoalConstPtr &_goal)
 {
-    ros::Rate looprate(10);
+    ros::NodeHandle n;
+    double temp_rate;
+//  std::string string_rate;
+    if (n.hasParam("/ros_rate"))
+    {
+        n.getParam("/ros_rate", temp_rate);
+//      temp_rate = atof(string_rate.c_str());
+    }
+    else
+    {
+        std::runtime_error::runtime_error("ROSParam '/ros_rate' does not exist.");
+        ROS_ERROR("ROSParam '/ros_rate' does not exist.");
+        ros::shutdown();
+        return ;
+    }
+    ros::Rate looprate(temp_rate);
     bool success = true;
 
     switch(_goal->order)
