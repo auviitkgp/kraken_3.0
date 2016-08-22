@@ -56,8 +56,8 @@ color_enum getColor(int x, int y, Mat image)
 
 void imageCallback(const sensor_msgs::ImageConstPtr& msg)
 {
-    
-//    Mat temp1, temp2;
+
+    //    Mat temp1, temp2;
     cv_bridge::CvImagePtr cv_ptr;
     auto t1 = clk::now();
     try
@@ -83,58 +83,62 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
     colour_detect = newMat;
     // filters to be used before detection is done
     Mat filtered;
-    medianBlur(image, filtered , 5);
+    medianBlur(image, filtered, 5);
 
 
     detector->getPredictions(filtered, colour_detect);
-//    temp1.deallocate();
-//    temp2.deallocate();
-    auto t2 = clk::now();
+    //    temp1.deallocate();
+    //    temp2.deallocate();
+
     detector->wait_for_completion();
-    
+
     cv_ptr->image = colour_detect;
     ml_pub->publish(cv_ptr->toImageMsg());
-    auto t3 = clk::now();
+    auto t2 = clk::now();
     //main code (vw detect + region growing)
 
     Mat eroded;
     erode(colour_detect, eroded, Mat(), Point(-1, -1), 1);
-    
+
     Mat gray;
-    cvtColor(eroded,gray,cv::COLOR_BGR2GRAY);
-/*
-    vector < vector <Point> > contours;
-    findContours(gray, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
+    cvtColor(eroded, gray, cv::COLOR_BGR2GRAY);
+    /*
+        vector < vector <Point> > contours;
+        findContours(gray, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
     
-    vector<point> seed_points;
-    for (size_t i = 0; i < contours.size(); i++)
-    {
-        Moments mu;
-        mu = moments(contours[i]);
-        point current;
-        //calculating the centers of the contours
-        current.x = mu.m10 / mu.m00; //(cvGetSpatialMoment(&moments, 1, 0) / cvGetSpatialMoment(&moments, 0, 0));
-        current.y = mu.m01 / mu.m00; //(cvGetSpatialMoment(&moments, 0, 1) / cvGetSpatialMoment(&moments, 0, 0));
-        current.color = getColor(current.x, current.y, eroded);
-        seed_points.push_back(current);
-    }
-    Mat final_image(eroded.rows, eroded.cols, CV_8UC3), edgeMap(eroded.rows, eroded.cols, CV_8UC3);
-    eroded.copyTo(final_image);
-    grow growhandle;
-    growhandle.setThresholds(15, 15);
-    for (size_t i = 0; i < seed_points.size(); i++)
-    {
-        growhandle.start_grow(eroded, final_image, edgeMap, seed_points[i].x, seed_points[i].y, seed_points[i].color);
-    }
+        vector<point> seed_points;
+        for (size_t i = 0; i < contours.size(); i++)
+        {
+            Moments mu;
+            mu = moments(contours[i]);
+            point current;
+            //calculating the centers of the contours
+            current.x = mu.m10 / mu.m00; //(cvGetSpatialMoment(&moments, 1, 0) / cvGetSpatialMoment(&moments, 0, 0));
+            current.y = mu.m01 / mu.m00; //(cvGetSpatialMoment(&moments, 0, 1) / cvGetSpatialMoment(&moments, 0, 0));
+            current.color = getColor(current.x, current.y, eroded);
+            seed_points.push_back(current);
+        }
+        Mat final_image(eroded.rows, eroded.cols, CV_8UC3), edgeMap(eroded.rows, eroded.cols, CV_8UC3);
+        eroded.copyTo(final_image);
+        grow growhandle;
+        growhandle.setThresholds(15, 15);
+        for (size_t i = 0; i < seed_points.size(); i++)
+        {
+            growhandle.start_grow(eroded, final_image, edgeMap, seed_points[i].x, seed_points[i].y, seed_points[i].color);
+        }
     
     
-    cv_ptr->image = final_image;
-    final_pub->publish(cv_ptr->toImageMsg());
+        cv_ptr->image = final_image;
+        final_pub->publish(cv_ptr->toImageMsg());
   
- */  auto t4 = clk::now();
-    cout << "time to receive and queue : " << duration_cast<milliseconds>(t2 - t1).count() <<endl;
-    cout << "time waited in queue : " << duration_cast<milliseconds>(t3 - t2).count() << endl;
-    cout << "time for generating final image : " << duration_cast<milliseconds>(t4 - t3).count() << endl;
+     */
+    vector<Vec3f> circles;
+    HoughCircles(eroded, circles, CV_HOUGH_GRADIENT, 1, eroded.rows / 8, 200, 100, 0, 0);
+    
+    auto t3 = clk::now();
+    ROS_DEBUG("time to publish vw prediction : %d\n", duration_cast<milliseconds>(t2 - t1).count());
+    ROS_DEBUG("time waited in queue :  %d\n", duration_cast<milliseconds>(t3 - t2).count());
+    ROS_DEBUG("time for generating final image :  %d\n", duration_cast<milliseconds>(t4 - t3).count());
 }
 
 int main(int argc, char** argv)

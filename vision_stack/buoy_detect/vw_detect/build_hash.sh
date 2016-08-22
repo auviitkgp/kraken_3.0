@@ -1,7 +1,7 @@
 #!/bin/bash
 vw -d "$*" --oaa 4 -c -f model.vw
 if [ ! -f vw_in.txt ]; then
-  for h in {0..255}
+  for h in {0..180}
   do
     for s in {0..255}
      do

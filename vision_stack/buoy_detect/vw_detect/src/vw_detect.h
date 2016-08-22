@@ -34,8 +34,9 @@ class vw_detect
 {
 public:
     int n_threads;
-    //    vector< vector < vector <uint_least8_t> > > hash_table ((size_t)256, vector< vector<uint_least8_t> >((size_t)256, vector<uint_least8_t>((size_t)256))) ;
-    v3d hash_table = v3d(256, v2d(256, v1d(256)));
+    //OpenCV uses  H: 0 - 180, S: 0 - 255, V: 0 - 255 ;
+    //http://stackoverflow.com/questions/10948589/choosing-correct-hsv-values-for-opencv-thresholding-with-inranges
+    v3d hash_table = v3d(181, v2d(256, v1d(256)));
     void vw_detect_init(char*);
     void getPredictions(cv::Mat, cv::Mat);
     bool is_idle();
