@@ -1,0 +1,9 @@
+<launch>
+
+<include file="$(find Scripts)/launch/vehicle/imuDvl.launch" />
+
+<node name="thruster_converter" pkg="thruster_converter" type="thruster_convert" />
+
+<node name="write_to_arduino" pkg="seabotix" type="seabotix.py" />
+
+</launch>
