@@ -37,7 +37,8 @@ void vw_detect::vw_detect_init(char *path_to_hash)
         cerr << "Cannot open file";
         return;
     }
-    for (int h = 0; h <= 180; h++)
+    //http://stackoverflow.com/questions/16685707/why-is-the-range-of-hue-0-180-in-opencv
+    for (int h = 0; h < 180; h++)
     {
         for (int s = 0; s < 256; s++)
         {

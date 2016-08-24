@@ -1,7 +1,8 @@
 #!/bin/bash
 vw -d "$*" --oaa 4 -c -f model.vw
 if [ ! -f vw_in.txt ]; then
-  for h in {0..180}
+#http://stackoverflow.com/questions/16685707/why-is-the-range-of-hue-0-180-in-opencv
+  for h in {0..179}
   do
     for s in {0..255}
      do
