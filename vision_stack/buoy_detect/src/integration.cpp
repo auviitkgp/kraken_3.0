@@ -26,6 +26,7 @@ enum color_enum
 typedef struct point_
 {
     int x, y;
+    double r;
     color_enum color;
 }
 point;
@@ -36,6 +37,7 @@ vw_detect *detector;
 ros::NodeHandle *nh;
 image_transport::ImageTransport *it;
 image_transport::Publisher *ml_pub, *final_pub;
+ros::Publisher *result_pub;
 
 color_enum getColor(int x, int y, Mat image)
 {
@@ -102,43 +104,129 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
 
     Mat gray;
     cvtColor(eroded, gray, cv::COLOR_BGR2GRAY);
-    /*
-        vector < vector <Point> > contours;
-        findContours(gray, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
-    
-        vector<point> seed_points;
-        for (size_t i = 0; i < contours.size(); i++)
-        {
-            Moments mu;
-            mu = moments(contours[i]);
-            point current;
-            //calculating the centers of the contours
-            current.x = mu.m10 / mu.m00; //(cvGetSpatialMoment(&moments, 1, 0) / cvGetSpatialMoment(&moments, 0, 0));
-            current.y = mu.m01 / mu.m00; //(cvGetSpatialMoment(&moments, 0, 1) / cvGetSpatialMoment(&moments, 0, 0));
-            current.color = getColor(current.x, current.y, eroded);
-            seed_points.push_back(current);
-        }
-        Mat final_image(eroded.rows, eroded.cols, CV_8UC3), edgeMap(eroded.rows, eroded.cols, CV_8UC3);
-        eroded.copyTo(final_image);
-        grow growhandle;
-        growhandle.setThresholds(15, 15);
-        for (size_t i = 0; i < seed_points.size(); i++)
-        {
-            growhandle.start_grow(eroded, final_image, edgeMap, seed_points[i].x, seed_points[i].y, seed_points[i].color);
-        }
-    
-    
-        cv_ptr->image = final_image;
-        final_pub->publish(cv_ptr->toImageMsg());
-  
-     */
+
     vector<Vec3f> circles;
-    HoughCircles(eroded, circles, CV_HOUGH_GRADIENT, 1, eroded.rows / 8, 200, 100, 0, 0);
-    
+    HoughCircles(gray, circles, CV_HOUGH_GRADIENT, 1, eroded.rows / 8, 200, 100, 0, 0);
+
     auto t3 = clk::now();
-    ROS_DEBUG("time to publish vw prediction : %d\n", duration_cast<milliseconds>(t2 - t1).count());
-    ROS_DEBUG("time waited in queue :  %d\n", duration_cast<milliseconds>(t3 - t2).count());
-    ROS_DEBUG("time for generating final image :  %d\n", duration_cast<milliseconds>(t4 - t3).count());
+
+    vector<point> yellow_detected, red_detected, green_detected;
+    for (size_t i = 0; i < circles.size(); i++)
+    {
+        point current;
+        current.x = circles[i][0];
+        current.y = circles[i][1];
+        current.r = circles[i][2];
+        current.color = getColor(current.x, current.y, eroded);
+
+        switch (current.color)
+        {
+        case yellow:
+            yellow_detected.push_back(current);
+            break;
+        case red:
+            red_detected.push_back(current);
+            break;
+        case green:
+            green_detected.push_back(current);
+            break;
+        default:
+            ROS_ERROR("A wild 'weird' buoy appeared");
+        }
+        Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
+        int radius = cvRound(circles[i][2]);
+        // draw the circle center
+        circle(eroded, center, 3, Scalar(255, 255, 255), -1, 8, 0);
+        // draw the circle outline
+        circle(eroded, center, radius, Scalar(255, 255, 255), 3, 8, 0);
+    }
+    kraken_msgs::center_color center_color_object;
+
+    if (yellow_detected.size() > 1)
+    {
+        double deciding_factor_max = 0, index = 0;
+        for (size_t i = 0; i < yellow_detected.size(); i++)
+        {
+            if (yellow_detected[i].r * yellow_detected[i].y > deciding_factor_max)
+            {
+                index = i;
+                deciding_factor_max = yellow_detected[i].r * yellow_detected[i].y;
+            }
+        }
+        center_color_object.yellow = 1;
+        center_color_object.Y_x = yellow_detected[index].x;
+        center_color_object.Y_y = yellow_detected[index].y;
+        center_color_object.Y_radius = yellow_detected[index].r;
+    }
+    else if (yellow_detected.size() == 1)
+    {
+        center_color_object.yellow = 1;
+        center_color_object.Y_x = yellow_detected[0].x;
+        center_color_object.Y_y = yellow_detected[0].y;
+        center_color_object.Y_radius = yellow_detected[0].r;
+    }
+    else
+        center_color_object.yellow = 0;
+
+    if (red_detected.size() > 1)
+    {
+        double deciding_factor_max = 0, index = 0;
+        for (size_t i = 0; i < red_detected.size(); i++)
+        {
+            if (red_detected[i].r * red_detected[i].y > deciding_factor_max)
+            {
+                index = i;
+                deciding_factor_max = red_detected[i].r * red_detected[i].y;
+            }
+        }
+        center_color_object.red = 1;
+        center_color_object.R_x = red_detected[index].x;
+        center_color_object.R_y = red_detected[index].y;
+        center_color_object.R_radius = red_detected[index].r;
+    }
+    else if (red_detected.size() == 1)
+    {
+        center_color_object.red = 1;
+        center_color_object.R_x = red_detected[0].x;
+        center_color_object.R_y = red_detected[0].y;
+        center_color_object.R_radius = red_detected[0].r;
+    }
+    else
+        center_color_object.red = 0;
+
+    if (green_detected.size() > 1)
+    {
+        double deciding_factor_max = 0, index = 0;
+        for (size_t i = 0; i < green_detected.size(); i++)
+        {
+            if (green_detected[i].r * green_detected[i].y > deciding_factor_max)
+            {
+                index = i;
+                deciding_factor_max = green_detected[i].r * green_detected[i].y;
+            }
+        }
+        center_color_object.green = 1;
+        center_color_object.G_x = green_detected[index].x;
+        center_color_object.G_y = green_detected[index].y;
+        center_color_object.G_radius = green_detected[index].r;
+    }
+    else if (green_detected.size() == 1)
+    {
+        center_color_object.green = 1;
+        center_color_object.G_x = green_detected[0].x;
+        center_color_object.G_y = green_detected[0].y;
+        center_color_object.G_radius = green_detected[0].r;
+    }
+    else
+        center_color_object.green = 0;
+    auto t4 = clk::now();
+    result_pub->publish(center_color_object);
+    cv_ptr->image = eroded;
+    final_pub->publish(cv_ptr->toImageMsg());
+    ROS_DEBUG("time to publish vw prediction : %d\n", (int) duration_cast<milliseconds>(t2 - t1).count());
+    ROS_DEBUG("time waited in queue :  %d\n", (int) duration_cast<milliseconds>(t3 - t2).count());
+    ROS_DEBUG("time for generating final image :  %d\n", (int) duration_cast<milliseconds>(t4 - t3).count());
+
 }
 
 int main(int argc, char** argv)
@@ -156,13 +244,13 @@ int main(int argc, char** argv)
     detector = &detector1;
 
     image_transport::Subscriber sub = it->subscribe(topics::CAMERA_FRONT_RAW_IMAGE, 1, imageCallback);
-    kraken_msgs::center_color center_color_object;
+
     ros::Publisher result = nh->advertise<kraken_msgs::center_color> (topics::CAMERA_CENTER_COLOR, 1);
     image_transport::Publisher ml_image_pub = it->advertise(topics::CAMERA_FRONT_ML_IMAGE, 1);
     image_transport::Publisher final_image_pub = it->advertise(topics::CAMERA_FRONT_FINAL_IMAGE, 1);
     ml_pub = &ml_image_pub;
     final_pub = &final_image_pub;
-
+    result_pub = &result;
     ros::Rate loop_rate(10);
 
     while (nodeHandle.ok())

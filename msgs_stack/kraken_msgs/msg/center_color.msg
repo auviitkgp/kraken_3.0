@@ -10,6 +10,6 @@ int64 R_y
 int64 G_x
 int64 G_y
 
-int64 Y_radius
-int64 R_radius
-int64 G_radius
+float64 Y_radius
+float64 R_radius
+float64 G_radius
