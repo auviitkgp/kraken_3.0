@@ -257,35 +257,38 @@ def getOrientation():
 
 def getOrientationCovariance():
 
-    global roll
-    global pitch
-    global yaw
+    # global roll
+    # global pitch
+    # global yaw
 
-    cov_mat = 
+    cov_mat = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
 
     return cov_mat
 
 def getAngularVelocityCovariance():
 
-    global gx
-    global gy
-    global gz
+    # global gx
+    # global gy
+    # global gz
 
-    cov_mat = 
+    cov_mat = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
 
     return cov_mat
 
 
 def getLinearAccelerationCovariance():
 
-    global ax
-    global ay
-    global az
+    # global ax
+    # global ay
+    # global az
 
-    cov_mat = 
+    cov_mat = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
 
     return cov_mat
 
+class Vector(object):
+    def __init__(self, sequence):
+        self._internal_list = list(sequence)
 
 def new_msg_format():
 
@@ -311,11 +314,11 @@ def new_msg_format():
 
     msg = imuData_new()
 
-    msg.orientation = 
+    msg.orientation = quaternion
     msg.orientation_covariance = getOrientationCovariance()
-    msg.angular_velocity =  
+    msg.angular_velocity = Vector([gx,gy,gz])
     msg.angular_velocity_covariance = getAngularVelocityCovariance() 
-    msg.linear_acceleration =   
+    msg.linear_acceleration = Vector([ax,ay,az])
     msg.linear_acceleration_covariance = getLinearAccelerationCovariance()
 
     return msg
