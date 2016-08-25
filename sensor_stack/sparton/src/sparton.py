@@ -6,15 +6,18 @@ import roslib; roslib.load_manifest(PKG)
 import serial
 import math
 import struct
-import numpy
+import numpy as np
 import rospy
 import sys
 import os
 from kraken_msgs.msg import imuData
+from kraken_msgs.msg import imuData_new
+
 
 from resources import topicHeader
 
-pub = rospy.Publisher(topicHeader.SENSOR_IMU, imuData, queue_size = 2)
+pub1 = rospy.Publisher(topicHeader.SENSOR_IMU, imuData, queue_size = 2)
+pub2 = rospy.Publisher(topicHeader.SENSOR_IMU+"_new", imuData_new, queue_size = 2)
 rospy.init_node('imudata', anonymous=True)
 ## Code to find port automatically
 find = os.popen('dmesg | grep FTDI')
@@ -24,9 +27,9 @@ portName = '/dev/'+(num[1].split('\n'))[0]
 ##
 '''
 if (len(sys.argv) == 2):
-	num = str(sys.argv[1])
+    num = str(sys.argv[1])
 else:
-	num = '0'
+    num = '0'
 '''
 imu = serial.Serial(portName, 115200)
 
@@ -241,9 +244,84 @@ def getData():
     allData.data[12] = temp
     
     return allData
+
+def getOrientation():
+
+    global roll
+    global pitch
+    global yaw
+
+    quaternion = 
+
+    return quaternion
+
+def getOrientationCovariance():
+
+    global roll
+    global pitch
+    global yaw
+
+    cov_mat = 
+
+    return cov_mat
+
+def getAngularVelocityCovariance():
+
+    global gx
+    global gy
+    global gz
+
+    cov_mat = 
+
+    return cov_mat
+
+
+def getLinearAccelerationCovariance():
+
+    global ax
+    global ay
+    global az
+
+    cov_mat = 
+
+    return cov_mat
+
+
+def new_msg_format():
+
+    global roll
+    global pitch
+    global yaw
+    global ax
+    global ay
+    global az
+    global mx
+    global my
+    global mz
+    global gx
+    global gy
+    global gz
+    global temp
+    global magError
     
- 
+    accelero()
+    gyro()
+    magneto()
+    rpyt()
+
+    msg = imuData_new()
+
+    msg.orientation = 
+    msg.orientation_covariance = getOrientationCovariance()
+    msg.angular_velocity =  
+    msg.angular_velocity_covariance = getAngularVelocityCovariance() 
+    msg.linear_acceleration =   
+    msg.linear_acceleration_covariance = getLinearAccelerationCovariance()
+
+    return msg
+
 if __name__ == '__main__':
+
     """    
     global roll
     global pitch
@@ -258,12 +336,16 @@ if __name__ == '__main__':
     global gy
     global gz
     global temp
+    """
 
+    """    
+    Why haven't we initialised pubData as imuData() ?
     """
     pubData = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
+    new_msg = imuData_new()
     
     if (not imu.isOpen) :
-	imu.close()
+        imu.close()
         imu.open()
 
     if (imu.isOpen) :
@@ -272,12 +354,12 @@ if __name__ == '__main__':
         print 'Error in opening port'
 
     r = rospy.Rate(10)
-    count = 1
     while not rospy.is_shutdown():
-	#print imu.read()
+        #print imu.read()
         pubData = getData()
-        pub.publish(pubData)
-        #print roll,pitch,yaw,ax,ay,az,mx,my,mz,gx,gy,gz,temp
+        new_msg = new_msg_format()
+        pub1.publish(pubData)
+        pub2.publish(new_msg)
         
         r.sleep()
         
