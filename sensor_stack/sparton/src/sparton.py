@@ -12,6 +12,7 @@ import sys
 import os
 from kraken_msgs.msg import imuData
 from kraken_msgs.msg import imuData_new
+from geometry_msgs.msg import Vector3
 
 
 from resources import topicHeader
@@ -286,9 +287,17 @@ def getLinearAccelerationCovariance():
 
     return cov_mat
 
-class Vector(object):
-    def __init__(self, sequence):
-        self._internal_list = list(sequence)
+def getQuaternion():
+
+    # global roll
+    # global pitch
+    # global yaw
+
+    quaternion = Quaternion()
+
+    # Get quaternion from roll , pitch , yaw.
+
+    return quaternion
 
 def new_msg_format():
 
@@ -314,11 +323,11 @@ def new_msg_format():
 
     msg = imuData_new()
 
-    msg.orientation = quaternion
+    msg.orientation = getQuaternion()
     msg.orientation_covariance = getOrientationCovariance()
-    msg.angular_velocity = Vector([gx,gy,gz])
+    msg.angular_velocity = Vector3([gx,gy,gz])
     msg.angular_velocity_covariance = getAngularVelocityCovariance() 
-    msg.linear_acceleration = Vector([ax,ay,az])
+    msg.linear_acceleration = Vector3([ax,ay,az])
     msg.linear_acceleration_covariance = getLinearAccelerationCovariance()
 
     return msg
