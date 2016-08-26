@@ -11,11 +11,13 @@ import rospy
 import sys
 import os
 from kraken_msgs.msg import imuData
-from kraken_msgs.msg import imuData_new
+
+# No need to use the below import, use the import in line 18 instead.
+#from kraken_msgs.msg import imuData_new
+
+from sensor_msgs.msg import Imu
 from kraken_msgs.msg import magnetoTemp
 from geometry_msgs.msg import Vector3 , Quaternion
-
-
 from resources import topicHeader
 
 pub1 = rospy.Publisher(topicHeader.SENSOR_IMU, imuData, queue_size = 2)
@@ -331,7 +333,9 @@ def new_msg_format():
     magneto()
     rpyt()
 
-    msg1 = imuData_new()
+    #msg1 = imuData_new()
+    
+    msg1 = Imu()
     msg2 = magnetoTemp()
 
     msg1.orientation = getQuaternion()
