@@ -12,7 +12,8 @@ import sys
 import os
 from kraken_msgs.msg import imuData
 from kraken_msgs.msg import imuData_new
-from geometry_msgs.msg import Vector3
+from kraken_msgs.msg import magnetoTemp
+from geometry_msgs.msg import Vector3 , Quaternion
 
 
 from resources import topicHeader
@@ -35,11 +36,11 @@ else:
 imu = serial.Serial(portName, 115200)
 
 
-## DVL config
+# DVL config
 imu.stopbits = 2
-##
+#
 
-## Variables
+# Variables
 roll = 0.0
 pitch = 0.0
 yaw = 0.0
@@ -289,15 +290,24 @@ def getLinearAccelerationCovariance():
 
 def getQuaternion():
 
-    # global roll
-    # global pitch
-    # global yaw
+    global roll
+    global pitch
+    global yaw
 
-    quaternion = Quaternion()
-
+    # roll, pitch, yaw should be in radians.
     # Get quaternion from roll , pitch , yaw.
 
-    return quaternion
+    c1 = math.cos(yaw/2)
+    s1 = math.sin(yaw/2)
+    c2 = math.cos(pitch/2)
+    s2 = math.sin(pitch/2)
+    c3 = math.cos(roll/2)
+    s3 = math.sin(roll/2)
+    w = c1*c2*c3 - s1*s2*s3
+    x = c1*c2*s3 + s1*s2*c3
+    y = s1*c2*c3 + c1*s2*s3
+    z = c1*s2*c3 - s1*c2*s3
+    return Quaternion(w,x,y,z)
 
 def new_msg_format():
 
@@ -321,40 +331,24 @@ def new_msg_format():
     magneto()
     rpyt()
 
-    msg = imuData_new()
+    msg1 = imuData_new()
+    msg2 = magnetoTemp()
 
-    msg.orientation = getQuaternion()
-    msg.orientation_covariance = getOrientationCovariance()
-    msg.angular_velocity = Vector3([gx,gy,gz])
-    msg.angular_velocity_covariance = getAngularVelocityCovariance() 
-    msg.linear_acceleration = Vector3([ax,ay,az])
-    msg.linear_acceleration_covariance = getLinearAccelerationCovariance()
+    msg1.orientation = getQuaternion()
+    msg1.orientation_covariance = getOrientationCovariance()
+    msg1.angular_velocity = Vector3(gx,gy,gz)
+    msg1.angular_velocity_covariance = getAngularVelocityCovariance() 
+    msg1.linear_acceleration = Vector3(ax,ay,az)
+    msg1.linear_acceleration_covariance = getLinearAccelerationCovariance()
 
-    return msg
+    msg2.magnetometer = Vector3(mx,my,mz)
+    msg2.temperature = temp
+
+    return msg1 , msg2
 
 if __name__ == '__main__':
 
-    """    
-    global roll
-    global pitch
-    global yaw
-    global ax
-    global ay
-    global az
-    global mx
-    global my
-    global mz
-    global gx
-    global gy
-    global gz
-    global temp
-    """
-
-    """    
-    Why haven't we initialised pubData as imuData() ?
-    """
-    pubData = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
-    new_msg = imuData_new()
+    #Init not necessary : pubData = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
     
     if (not imu.isOpen) :
         imu.close()
@@ -366,15 +360,14 @@ if __name__ == '__main__':
         print 'Error in opening port'
 
     r = rospy.Rate(10)
+    
     while not rospy.is_shutdown():
-        #print imu.read()
+
         pubData = getData()
-        new_msg = new_msg_format()
+        new_msg1 , new_msg2 = new_msg_format()
         pub1.publish(pubData)
-        pub2.publish(new_msg)
-        
+        pub2.publish(new_msg1)
+        pub2.publish(new_msg2)
         r.sleep()
-        
-    
-    
+
     imu.close()

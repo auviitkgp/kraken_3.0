@@ -1,0 +1,3 @@
+Header header
+geometry_msgs/Vector3 magnetometer
+float64 temperature
