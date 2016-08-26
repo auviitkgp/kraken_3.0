@@ -10,18 +10,19 @@ import numpy as np
 import rospy
 import sys
 import os
-from kraken_msgs.msg import imuData
+import tf
 
 # No need to use the below import, use the import in line 18 instead.
 #from kraken_msgs.msg import imuData_new
 
 from sensor_msgs.msg import Imu
+from kraken_msgs.msg import imuData
 from kraken_msgs.msg import magnetoTemp
 from geometry_msgs.msg import Vector3 , Quaternion
 from resources import topicHeader
 
 pub1 = rospy.Publisher(topicHeader.SENSOR_IMU, imuData, queue_size = 2)
-pub2 = rospy.Publisher(topicHeader.SENSOR_IMU+"_new", imuData_new, queue_size = 2)
+pub2 = rospy.Publisher(topicHeader.SENSOR_IMU_NEW, imuData_new, queue_size = 2)
 rospy.init_node('imudata', anonymous=True)
 ## Code to find port automatically
 find = os.popen('dmesg | grep FTDI')
@@ -290,26 +291,27 @@ def getLinearAccelerationCovariance():
 
     return cov_mat
 
-def getQuaternion():
+# Use inbuilt function `tf transform` instead
+# def getQuaternion():
 
-    global roll
-    global pitch
-    global yaw
+#     global roll
+#     global pitch
+#     global yaw
 
-    # roll, pitch, yaw should be in radians.
-    # Get quaternion from roll , pitch , yaw.
+#     # roll, pitch, yaw should be in radians.
+#     # Get quaternion from roll , pitch , yaw.
 
-    c1 = math.cos(yaw/2)
-    s1 = math.sin(yaw/2)
-    c2 = math.cos(pitch/2)
-    s2 = math.sin(pitch/2)
-    c3 = math.cos(roll/2)
-    s3 = math.sin(roll/2)
-    w = c1*c2*c3 - s1*s2*s3
-    x = c1*c2*s3 + s1*s2*c3
-    y = s1*c2*c3 + c1*s2*s3
-    z = c1*s2*c3 - s1*c2*s3
-    return Quaternion(w,x,y,z)
+#     c1 = math.cos(yaw/2)
+#     s1 = math.sin(yaw/2)
+#     c2 = math.cos(pitch/2)
+#     s2 = math.sin(pitch/2)
+#     c3 = math.cos(roll/2)
+#     s3 = math.sin(roll/2)
+#     w = c1*c2*c3 - s1*s2*s3
+#     x = c1*c2*s3 + s1*s2*c3
+#     y = s1*c2*c3 + c1*s2*s3
+#     z = c1*s2*c3 - s1*c2*s3
+#     return Quaternion(w,x,y,z)
 
 def new_msg_format():
 
@@ -338,7 +340,12 @@ def new_msg_format():
     msg1 = Imu()
     msg2 = magnetoTemp()
 
-    msg1.orientation = getQuaternion()
+
+    quaternion = tf.transformations.quaternion_from_euler(roll, pitch, yaw)
+    msg1.orientation.x = quaternion[0]
+    msg1.orientation.y = quaternion[1]
+    msg1.orientation.z = quaternion[2]
+    msg1.orientation.w = quaternion[3]
     msg1.orientation_covariance = getOrientationCovariance()
     msg1.angular_velocity = Vector3(gx,gy,gz)
     msg1.angular_velocity_covariance = getAngularVelocityCovariance() 
