@@ -20,7 +20,7 @@
 #include <string>
 #include <iostream>
 #include <stdint.h>
-#include "ctpl_stl.h"
+#include "ctpl.h"
 #include <vector>
 
 
@@ -38,22 +38,16 @@ public:
     //http://stackoverflow.com/questions/10948589/choosing-correct-hsv-values-for-opencv-thresholding-with-inranges
     v3d hash_table = v3d(181, v2d(256, v1d(256)));
     void vw_detect_init(char*);
-    void getPredictions(cv::Mat, cv::Mat);
+    void getPredictions(cv::Mat, cv::Mat&);
     bool is_idle();
     void clean_up();
     vw_detect(char *path_to_hash, int n = 4);
     ~vw_detect();
     void wait_for_completion();
-    void predict_block(cv::Mat, cv::Mat, int, int);
+    void predict_block(cv::Mat, cv::Mat&, int, int);
 private:
     ctpl::thread_pool pool;
 
-
-    /*
-    static void write_to_input(cv::Mat, int in_handle);
-    static void read_from_output(cv::Mat, int out_handle);
-
-     */
 };
 
 #endif /* VW_TEST_H */

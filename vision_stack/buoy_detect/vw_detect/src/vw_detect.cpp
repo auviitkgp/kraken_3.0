@@ -15,7 +15,7 @@
 #include <fcntl.h>
 #include <iostream>
 #include <stdint.h>
-#include "ctpl_stl.h"
+#include "ctpl.h"
 #include <unistd.h>
 
 using namespace std;
@@ -23,13 +23,6 @@ using namespace cv;
 
 void vw_detect::vw_detect_init(char *path_to_hash)
 {
-    /*
-    ifstream in_file(path_to_hash);
-    if (in_file.is_open())
-    {
-        
-    }
-     */
     char buff[256];
     int file_handle = open(path_to_hash, O_RDONLY);
     if (file_handle == -1)
@@ -57,7 +50,7 @@ void vw_detect::vw_detect_init(char *path_to_hash)
 
 }
 
-void vw_detect::getPredictions(Mat original, Mat prediction)
+void vw_detect::getPredictions(Mat original, Mat &prediction)
 {
     Mat hsv_image;
     cvtColor(original, hsv_image, CV_BGR2HSV);
@@ -78,7 +71,7 @@ bool vw_detect::is_idle()
     return (pool.n_idle() == pool.size());
 }
 
-void vw_detect::predict_block(Mat hsv_image, Mat prediction, int start, int end)
+void vw_detect::predict_block(Mat hsv_image, Mat &prediction, int start, int end)
 {
     for (int i = start; i <= end; i++)
     {

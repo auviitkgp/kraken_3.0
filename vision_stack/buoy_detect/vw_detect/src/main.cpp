@@ -16,8 +16,6 @@
 using namespace std;
 using namespace cv;
 
-
-
 int main(int argc, char** argv)
 {
 
@@ -30,14 +28,17 @@ int main(int argc, char** argv)
     Mat image;
     Mat denoised;
     image = imread(argv[1], CV_LOAD_IMAGE_COLOR); // Read the file
-//    fastNlMeansDenoisingColored(image, denoised, 2);
+    //    fastNlMeansDenoisingColored(image, denoised, 2);
     medianBlur(image, denoised, 5);
     Mat prediction(image.rows, image.cols, CV_8UC3, Scalar(0, 0, 0));
-   
 
-    vw_detect new_vw(argv[2],4);
-    
-    new_vw.getPredictions(denoised,prediction);
+
+    vw_detect new_vw(argv[2], 4);
+
+    //    new_vw.getPredictions(denoised,prediction);
+    Mat hsv_image;
+    cvtColor(denoised, hsv_image, CV_BGR2HSV);
+    new_vw.predict_block(hsv_image, prediction, 0, denoised.rows - 1);
     new_vw.wait_for_completion();
 
     imshow("Original Image", image);

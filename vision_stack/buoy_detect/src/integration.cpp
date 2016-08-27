@@ -89,9 +89,9 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
 
 
     detector->getPredictions(filtered, colour_detect);
-    //    temp1.deallocate();
-    //    temp2.deallocate();
-
+    //    Mat hsv_image;
+    //    cvtColor(filtered, hsv_image, CV_BGR2HSV);
+    //    detector->predict_block(hsv_image, colour_detect, 0, filtered.rows - 1);
     detector->wait_for_completion();
 
     cv_ptr->image = colour_detect;
