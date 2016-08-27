@@ -250,42 +250,39 @@ def getData():
     
     return allData
 
-def getOrientation():
-
-    global roll
-    global pitch
-    global yaw
-
-    quaternion = 
-
-    return quaternion
-
 def getOrientationCovariance():
 
     # global roll
     # global pitch
     # global yaw
 
-    rospy.get_param('OrientationCov_mat')
-    return OrientationCov_mat
+    if rospy.has_param('OrientationCov_mat')
+        cov_mat = rospy.get_param('OrientationCov_mat')
+    else:
+        cov_mat = [0.0] * 9
+    return cov_mat
 
 def getAngularVelocityCovariance():
 
     # global gx
     # global gy
     # global gz
-    rospy.get_param('AngularVelCov_mat')
-    return AngularVelCov_mat
-
+    if rospy.has_param('AngularVelCov_mat'):
+        cov_mat = rospy.get_param('AngularVelCov_mat')
+    else:
+        cov_mat = [0.0] * 9
+    return cov_mat
 
 def getLinearAccelerationCovariance():
 
     # global ax
     # global ay
     # global az
-
-    rospy.get_param('LinearAccelerationCov_mat')
-    return LinearAccelerationCov_mat
+    if rospy.has_param('LinearAccelerationCov_mat'):
+        cov_mat = rospy.get_param('LinearAccelerationCov_mat')
+    else:
+        cov_mat = [0.0] * 9
+    return cov_mat
 
 # Use inbuilt function `tf transform` instead
 # def getQuaternion():
@@ -338,10 +335,7 @@ def new_msg_format():
 
 
     quaternion = tf.transformations.quaternion_from_euler(roll, pitch, yaw)
-    msg1.orientation.x = quaternion[0]
-    msg1.orientation.y = quaternion[1]
-    msg1.orientation.z = quaternion[2]
-    msg1.orientation.w = quaternion[3]
+    msg1.orientation = Quaternion(quaternion[0],quaternion[1],quaternion[2],quaternion[3])
     msg1.orientation_covariance = getOrientationCovariance()
     msg1.angular_velocity = Vector3(gx,gy,gz)
     msg1.angular_velocity_covariance = getAngularVelocityCovariance() 
@@ -355,7 +349,7 @@ def new_msg_format():
 
 if __name__ == '__main__':
 
-    #Init not necessary : pubData = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
+    pubData = [0.0] * 13
     
     if (not imu.isOpen) :
         imu.close()
