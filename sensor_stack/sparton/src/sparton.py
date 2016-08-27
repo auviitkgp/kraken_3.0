@@ -266,9 +266,8 @@ def getOrientationCovariance():
     # global pitch
     # global yaw
 
-    cov_mat = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
-
-    return cov_mat
+    rospy.set_param('OrientationCov_mat', [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0])
+    return OrientationCov_mat
 
 def getAngularVelocityCovariance():
 
@@ -276,9 +275,8 @@ def getAngularVelocityCovariance():
     # global gy
     # global gz
 
-    cov_mat = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
-
-    return cov_mat
+    rospy.set_param('AngularVelCov_mat', [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0])
+    return AngularVelCov_mat
 
 
 def getLinearAccelerationCovariance():
@@ -287,9 +285,8 @@ def getLinearAccelerationCovariance():
     # global ay
     # global az
 
-    cov_mat = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
-
-    return cov_mat
+    rospy.set_param('LinearAccelerationCov_mat', [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0])
+    return LinearAccelerationCov_mat
 
 # Use inbuilt function `tf transform` instead
 # def getQuaternion():
