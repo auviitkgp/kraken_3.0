@@ -256,7 +256,7 @@ def getOrientationCovariance():
     # global pitch
     # global yaw
 
-    if rospy.has_param('OrientationCov_mat')
+    if rospy.has_param('OrientationCov_mat'):
         cov_mat = rospy.get_param('OrientationCov_mat')
     else:
         cov_mat = [0.0] * 9
