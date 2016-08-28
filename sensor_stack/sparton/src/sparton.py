@@ -6,15 +6,24 @@ import roslib; roslib.load_manifest(PKG)
 import serial
 import math
 import struct
-import numpy
+import numpy as np
 import rospy
 import sys
 import os
+import tf
+
+# No need to use the below import, use the import in line 18 instead.
+#from kraken_msgs.msg import imuData_new
+
+from sensor_msgs.msg import Imu
 from kraken_msgs.msg import imuData
+from kraken_msgs.msg import magnetoTemp
+from geometry_msgs.msg import Vector3 , Quaternion
+from resources import topicHeader as th
+pub1 = rospy.Publisher(th.SENSOR_IMU, imuData, queue_size = 2)
+pub2 = rospy.Publisher(th.SENSOR_IMU_NEW, Imu, queue_size = 2)
+#pub3 = rospy.Publisher(topic name, magnetoTemp, queue_size = 2)
 
-from resources import topicHeader
-
-pub = rospy.Publisher(topicHeader.SENSOR_IMU, imuData, queue_size = 2)
 rospy.init_node('imudata', anonymous=True)
 ## Code to find port automatically
 find = os.popen('dmesg | grep FTDI')
@@ -24,18 +33,18 @@ portName = '/dev/'+(num[1].split('\n'))[0]
 ##
 '''
 if (len(sys.argv) == 2):
-	num = str(sys.argv[1])
+    num = str(sys.argv[1])
 else:
-	num = '0'
+    num = '0'
 '''
 imu = serial.Serial(portName, 115200)
 
 
-## DVL config
+# DVL config
 imu.stopbits = 2
-##
+#
 
-## Variables
+# Variables
 roll = 0.0
 pitch = 0.0
 yaw = 0.0
@@ -241,10 +250,65 @@ def getData():
     allData.data[12] = temp
     
     return allData
-    
- 
-if __name__ == '__main__':
-    """    
+
+def getOrientationCovariance():
+
+    # global roll
+    # global pitch
+    # global yaw
+
+    if rospy.has_param('OrientationCov_mat'):
+        cov_mat = rospy.get_param('OrientationCov_mat')
+    else:
+        cov_mat = [0.0] * 9
+    return cov_mat
+
+def getAngularVelocityCovariance():
+
+    # global gx
+    # global gy
+    # global gz
+    if rospy.has_param('AngularVelCov_mat'):
+        cov_mat = rospy.get_param('AngularVelCov_mat')
+    else:
+        cov_mat = [0.0] * 9
+    return cov_mat
+
+def getLinearAccelerationCovariance():
+
+    # global ax
+    # global ay
+    # global az
+    if rospy.has_param('LinearAccelerationCov_mat'):
+        cov_mat = rospy.get_param('LinearAccelerationCov_mat')
+    else:
+        cov_mat = [0.0] * 9
+    return cov_mat
+
+# Use inbuilt function `tf transform` instead
+# def getQuaternion():
+
+#     global roll
+#     global pitch
+#     global yaw
+
+#     # roll, pitch, yaw should be in radians.
+#     # Get quaternion from roll , pitch , yaw.
+
+#     c1 = math.cos(yaw/2)
+#     s1 = math.sin(yaw/2)
+#     c2 = math.cos(pitch/2)
+#     s2 = math.sin(pitch/2)
+#     c3 = math.cos(roll/2)
+#     s3 = math.sin(roll/2)
+#     w = c1*c2*c3 - s1*s2*s3
+#     x = c1*c2*s3 + s1*s2*c3
+#     y = s1*c2*c3 + c1*s2*s3
+#     z = c1*s2*c3 - s1*c2*s3
+#     return Quaternion(w,x,y,z)
+
+def new_msg_format():
+
     global roll
     global pitch
     global yaw
@@ -258,12 +322,38 @@ if __name__ == '__main__':
     global gy
     global gz
     global temp
+    global magError
+    
+    accelero()
+    gyro()
+    magneto()
+    rpyt()
 
-    """
-    pubData = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
+    #msg1 = imuData_new()
+    
+    msg1 = Imu()
+    msg2 = magnetoTemp()
+
+
+    quaternion = tf.transformations.quaternion_from_euler(roll, pitch, yaw)
+    msg1.orientation = Quaternion(quaternion[0],quaternion[1],quaternion[2],quaternion[3])
+    msg1.orientation_covariance = getOrientationCovariance()
+    msg1.angular_velocity = Vector3(gx,gy,gz)
+    msg1.angular_velocity_covariance = getAngularVelocityCovariance() 
+    msg1.linear_acceleration = Vector3(ax,ay,az)
+    msg1.linear_acceleration_covariance = getLinearAccelerationCovariance()
+
+    msg2.magnetometer = Vector3(mx,my,mz)
+    msg2.temperature = temp
+
+    return msg1 , msg2
+
+if __name__ == '__main__':
+
+    pubData = [0.0] * 13
     
     if (not imu.isOpen) :
-	imu.close()
+        imu.close()
         imu.open()
 
     if (imu.isOpen) :
@@ -272,15 +362,14 @@ if __name__ == '__main__':
         print 'Error in opening port'
 
     r = rospy.Rate(10)
-    count = 1
+    
     while not rospy.is_shutdown():
-	#print imu.read()
+
         pubData = getData()
-        pub.publish(pubData)
-        #print roll,pitch,yaw,ax,ay,az,mx,my,mz,gx,gy,gz,temp
-        
+        new_msg1 , new_msg2 = new_msg_format()
+        pub1.publish(pubData)
+        pub2.publish(new_msg1)
+        pub2.publish(new_msg2)
         r.sleep()
-        
-    
-    
+
     imu.close()
