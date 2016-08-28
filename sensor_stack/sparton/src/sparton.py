@@ -19,10 +19,11 @@ from sensor_msgs.msg import Imu
 from kraken_msgs.msg import imuData
 from kraken_msgs.msg import magnetoTemp
 from geometry_msgs.msg import Vector3 , Quaternion
-from resources import topicHeader
+from resources import topicHeader as th
+pub1 = rospy.Publisher(th.SENSOR_IMU, imuData, queue_size = 2)
+pub2 = rospy.Publisher(th.SENSOR_IMU_NEW, Imu, queue_size = 2)
+#pub3 = rospy.Publisher(topic name, magnetoTemp, queue_size = 2)
 
-pub1 = rospy.Publisher(topicHeader.SENSOR_IMU, imuData, queue_size = 2)
-pub2 = rospy.Publisher(topicHeader.SENSOR_IMU_NEW, imuData_new, queue_size = 2)
 rospy.init_node('imudata', anonymous=True)
 ## Code to find port automatically
 find = os.popen('dmesg | grep FTDI')
