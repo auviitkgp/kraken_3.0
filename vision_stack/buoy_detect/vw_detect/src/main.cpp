@@ -35,10 +35,10 @@ int main(int argc, char** argv)
 
     vw_detect new_vw(argv[2], 4);
 
-    //    new_vw.getPredictions(denoised,prediction);
-    Mat hsv_image;
-    cvtColor(denoised, hsv_image, CV_BGR2HSV);
-    new_vw.predict_block(hsv_image, prediction, 0, denoised.rows - 1);
+    new_vw.getPredictions(denoised, prediction);
+    //    Mat hsv_image;
+    //    cvtColor(denoised, hsv_image, CV_BGR2HSV);
+    //    new_vw.predict_block(hsv_image, prediction, 0, denoised.rows - 1);
     new_vw.wait_for_completion();
 
     imshow("Original Image", image);

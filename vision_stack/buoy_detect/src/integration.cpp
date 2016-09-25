@@ -88,10 +88,10 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
     medianBlur(image, filtered, 5);
 
 
-    detector->getPredictions(filtered, colour_detect);
-    //    Mat hsv_image;
-    //    cvtColor(filtered, hsv_image, CV_BGR2HSV);
-    //    detector->predict_block(hsv_image, colour_detect, 0, filtered.rows - 1);
+//    detector->getPredictions(filtered, colour_detect);
+    Mat hsv_image;
+    cvtColor(filtered, hsv_image, CV_BGR2HSV);
+    detector->predict_block(hsv_image, colour_detect, 0, filtered.rows - 1);
     detector->wait_for_completion();
 
     cv_ptr->image = colour_detect;
