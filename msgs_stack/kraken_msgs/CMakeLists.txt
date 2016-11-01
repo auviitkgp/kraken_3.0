@@ -33,6 +33,9 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
 #uncomment if you have defined messages
+add_action_files(
+	DIRECTORY action
+)
 add_message_files(
 	DIRECTORY msg
   # TODO: List your msg files here
