@@ -1,0 +1,44 @@
+<package>
+  <name>mission_planner</name>
+  <version>1.0.0</version>
+  <description>mission_planner</description>
+  <maintainer email="teamauv@teamauv.local">Prudhvi</maintainer>
+
+  <license>BSD</license>
+
+  <url type="website">http://ros.org/wiki/mission_planner</url>
+  <!-- <url type="bugtracker"></url> -->
+
+  <author>Prudhvi</author>
+
+  <!-- Dependencies which this package needs to build itself. -->
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <!-- Dependencies needed to compile this package. -->
+  <build_depend>roscpp</build_depend>
+  <build_depend>rospy</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>kraken_msgs</build_depend>
+  <build_depend>ip_msgs</build_depend>
+  <build_depend>premap</build_depend>
+  <build_depend>resources</build_depend>
+
+  <!-- Dependencies needed after this package is compiled. -->
+  <run_depend>roscpp</run_depend>
+  <run_depend>rospy</run_depend>
+  <run_depend>std_msgs</run_depend>
+  <run_depend>kraken_msgs</run_depend>
+  <run_depend>ip_msgs</run_depend>
+  <run_depend>premap</run_depend>
+  <run_depend>resources</run_depend>
+
+  <!-- Dependencies needed only for running tests. -->
+  <!-- <test_depend>roscpp</test_depend> -->
+  <!-- <test_depend>rospy</test_depend> -->
+  <!-- <test_depend>std_msgs</test_depend> -->
+  <!-- <test_depend>kraken_msgs</test_depend> -->
+  <!-- <test_depend>ip_msgs</test_depend> -->
+  <!-- <test_depend>premap</test_depend> -->
+  <!-- <test_depend>resources</test_depend> -->
+
+</package>
