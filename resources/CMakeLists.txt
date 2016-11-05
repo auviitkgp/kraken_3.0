@@ -64,5 +64,5 @@ catkin_package(
     DEPENDS roscpp rospy std_msgs
     CATKIN_DEPENDS # TODO
     INCLUDE_DIRS include # TODO include
-    LIBRARIES $(PROJECT_NAME)  # TODO
+    LIBRARIES # TODO
 )
