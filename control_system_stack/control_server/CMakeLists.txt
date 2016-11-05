@@ -1,10 +1,10 @@
-# Catkin User Guide: http://www.ros.org/doc/groovy/api/catkin/html/user_guide/user_guide.html
+## Catkin User Guide: http://www.ros.org/doc/groovy/api/catkin/html/user_guide/user_guide.html
 # Catkin CMake Standard: http://www.ros.org/doc/groovy/api/catkin/html/user_guide/standards.html
 cmake_minimum_required(VERSION 2.8.3)
 project(control_server)
 # Load catkin and all dependencies required for this package
 # TODO: remove all from COMPONENTS that are not catkin packages.
-find_package(catkin REQUIRED COMPONENTS roscpp controller_basic kraken_msgs simulator_physics_model pose_server actionlib actionlib_msgs resources)
+find_package(catkin REQUIRED COMPONENTS roscpp controller_basic kraken_msgs pose_server actionlib actionlib_msgs resources)
 
 # include_directories(include ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS})
 # CATKIN_MIGRATION: removed during catkin migration
@@ -32,44 +32,50 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
 #uncomment if you have defined messages
 #add_message_files(
-  FILES
+  # FILES
   # TODO: List your msg files here
-)
+#)
 #uncomment if you have defined services
-add_service_files(
-  FILES
+#add_service_files(
+  # FILES
   # TODO: List your msg files here
-)
+#)
 
 #common commands for building c++ executables and libraries
 #add_library(${PROJECT_NAME} src/example.cpp)
+#here
 #target_link_libraries(${PROJECT_NAME} another_library)
 #
 # CATKIN_MIGRATION: removed during catkin migration
 # rosbuild_add_boost_directories()
 #find_package(Boost REQUIRED COMPONENTS thread)
-include_directories(${Boost_INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
+include_directories(include ${Boost_INCLUDE_DIRS})
+#here
+#target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
 #add_executable(example examples/example.cpp)
+#here
 #target_link_libraries(example ${PROJECT_NAME})
 add_library(AuvController src/AuvController.cpp)
 add_library(ControlServer src/ControlServer.cpp)
-target_link_libraries(ControlServer AuvController)
+#here
+#target_link_libraries(ControlServer AuvController)
 add_executable(controlServer src/main.cpp)
-target_link_libraries(controlServer AuvController ControlServer)
+#here
+#target_link_libraries(controlServer AuvController ControlServer)
 add_executable(client src/test.cpp)
-target_link_libraries(client AuvController)
+#here
+#target_link_libraries(client AuvController)
 add_executable(client_action src/test_action_lib.cpp)
 ## Generate added messages and services with any dependencies listed here
-generate_messages(
+#generate_messages(
     #TODO DEPENDENCIES geometry_msgs std_msgs
-)
+#)
 
 # catkin_package parameters: http://ros.org/doc/groovy/api/catkin/html/dev_guide/generated_cmake_api.html#catkin-package
 # TODO: fill in what other packages will need to use this package
 catkin_package(
-    DEPENDS roscpp controller_basic kraken_msgs simulator_physics_model pose_server actionlib actionlib_msgs resources
+    DEPENDS roscpp controller_basic kraken_msgs pose_server actionlib actionlib_msgs resources
     CATKIN_DEPENDS # TODO
-    INCLUDE_DIRS # TODO include
+    INCLUDE_DIRS include # TODO include
     LIBRARIES # TODO
 )

@@ -1,4 +1,4 @@
-# Catkin User Guide: http://www.ros.org/doc/groovy/api/catkin/html/user_guide/user_guide.html
+## Catkin User Guide: http://www.ros.org/doc/groovy/api/catkin/html/user_guide/user_guide.html
 # Catkin CMake Standard: http://www.ros.org/doc/groovy/api/catkin/html/user_guide/standards.html
 cmake_minimum_required(VERSION 2.8.3)
 project(controller_basic)
@@ -30,40 +30,39 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 #set the default path for built libraries to the "lib" directory
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
-
-rosbuild_find_ros_package(dynamic_reconfigure)
-include(${dynamic_reconfigure_PACKAGE_PATH}/cmake/cfgbuild.cmake)
-gencfg()
 #uncomment if you have defined messages
 #add_message_files(
-  FILES
+  # FILES
   # TODO: List your msg files here
-)
+#)
 #uncomment if you have defined services
 #add_service_files(
-  FILES
+  # FILES
   # TODO: List your msg files here
-)
+#)
 
 #common commands for building c++ executables and libraries
 #add_library(${PROJECT_NAME} src/example.cpp)
+#here
 #target_link_libraries(${PROJECT_NAME} another_library)
 #
 # CATKIN_MIGRATION: removed during catkin migration
 # rosbuild_add_boost_directories()
 #find_package(Boost REQUIRED COMPONENTS thread)
-include_directories(${Boost_INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
+include_directories(include ${Boost_INCLUDE_DIRS})
+#here
+#target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
 #add_executable(example examples/example.cpp)
+#here
 #target_link_libraries(example ${PROJECT_NAME})
 add_library(PIDController src/PIDController.cpp)
 add_library(StateController src/StateController.cpp)
 add_library(ControlParameters src/ControlParameters.cpp)
 add_executable(example src/main.cpp)
 ## Generate added messages and services with any dependencies listed here
-generate_messages(
+#generate_messages(
     #TODO DEPENDENCIES geometry_msgs std_msgs
-)
+#)
 
 # catkin_package parameters: http://ros.org/doc/groovy/api/catkin/html/dev_guide/generated_cmake_api.html#catkin-package
 # TODO: fill in what other packages will need to use this package

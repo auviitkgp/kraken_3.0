@@ -32,30 +32,33 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
 #uncomment if you have defined messages
 #add_message_files(
-  FILES
+#  # FILES
   # TODO: List your msg files here
-)
+#)
 #uncomment if you have defined services
 #add_service_files(
-  FILES
+  # FILES
   # TODO: List your msg files here
-)
+#)
 
 #common commands for building c++ executables and libraries
 #add_library(${PROJECT_NAME} src/example.cpp)
+#here
 #target_link_libraries(${PROJECT_NAME} another_library)
 #
 # CATKIN_MIGRATION: removed during catkin migration
 # rosbuild_add_boost_directories()
 #find_package(Boost REQUIRED COMPONENTS thread)
 include_directories(${Boost_INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
+#here
+#target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
 #add_executable(example examples/example.cpp)
+#here
 #target_link_libraries(example ${PROJECT_NAME})
 ## Generate added messages and services with any dependencies listed here
-generate_messages(
+#generate_messages(
     #TODO DEPENDENCIES geometry_msgs std_msgs
-)
+#)
 
 # catkin_package parameters: http://ros.org/doc/groovy/api/catkin/html/dev_guide/generated_cmake_api.html#catkin-package
 # TODO: fill in what other packages will need to use this package
