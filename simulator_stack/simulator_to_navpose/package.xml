@@ -1,0 +1,38 @@
+<package>
+  <name>simulator_to_navpose</name>
+  <version>1.0.0</version>
+  <description>simulator_to_navpose</description>
+  <maintainer email="teamauv@auviitkgp.local">Prudhvi</maintainer>
+
+  <license>BSD</license>
+
+  <url type="website">http://ros.org/wiki/simulator_to_navpose</url>
+  <!-- <url type="bugtracker"></url> -->
+
+  <author>Prudhvi</author>
+
+  <!-- Dependencies which this package needs to build itself. -->
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <!-- Dependencies needed to compile this package. -->
+  <build_depend>roscpp</build_depend>
+  <build_depend>kraken_msgs</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>resources</build_depend>
+  <build_depend>pose_server</build_depend>
+
+  <!-- Dependencies needed after this package is compiled. -->
+  <run_depend>roscpp</run_depend>
+  <run_depend>kraken_msgs</run_depend>
+  <run_depend>std_msgs</run_depend>
+  <run_depend>resources</run_depend>
+  <run_depend>pose_server</run_depend>
+
+  <!-- Dependencies needed only for running tests. -->
+  <!-- <test_depend>roscpp</test_depend> -->
+  <!-- <test_depend>kraken_msgs</test_depend> -->
+  <!-- <test_depend>std_msgs</test_depend> -->
+  <!-- <test_depend>resources</test_depend> -->
+  <!-- <test_depend>pose_server</test_depend> -->
+
+</package>

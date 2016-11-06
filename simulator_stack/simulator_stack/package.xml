@@ -1,0 +1,37 @@
+<package>
+  <name>simulator_stack</name>
+  <version>1.0.0</version>
+  <description>iKAt</description>
+  <maintainer email="teamauv@auviitkgp.local">Maintained by IIT Kharagpur AUV team</maintainer>
+
+  <license>BSD</license>
+
+  <url type="website">https://github.com/iit-kgp-auv-team/kraken_3.0/wiki</url>
+  <!-- <url type="bugtracker"></url> -->
+
+  <author>Maintained by IIT Kharagpur AUV team</author>
+
+  <!-- Dependencies which this package needs to build itself. -->
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <!-- Dependencies needed to compile this package. -->
+
+
+  <!-- Dependencies needed after this package is compiled. -->
+  <run_depend>simulator_to_kmsgs</run_depend>
+  <run_depend>thruster_remap_g500</run_depend>
+  <run_depend>kraken_visualization</run_depend>
+  <run_depend>joystick_control</run_depend>
+  <run_depend>thruster_force_converter</run_depend>
+  <run_depend>simulator_physics_model</run_depend>
+  <run_depend>simulator_to_navpose</run_depend>
+
+  <!-- Dependencies needed only for running tests. -->
+
+
+
+
+
+
+
+</package>
