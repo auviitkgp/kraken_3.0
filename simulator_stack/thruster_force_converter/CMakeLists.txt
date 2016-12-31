@@ -47,7 +47,6 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 # CATKIN_MIGRATION: removed during catkin migration
 # rosbuild_add_boost_directories()
 #find_package(Boost REQUIRED COMPONENTS thread)
-include_directories(${Boost_INCLUDE_DIRS} include)
 #add_executable(example examples/example.cpp)
 #target_link_libraries(example ${PROJECT_NAME})
 add_executable(converter src/main.cpp src/ForceConverter.cpp)
@@ -64,3 +63,6 @@ catkin_package(
 		INCLUDE_DIRS # TODO
     LIBRARIES # TODO
 )
+
+include_directories(${Boost_INCLUDE_DIRS} include ${catkin_INCLUDE_DIRS})
+add_dependencies(converter kraken_msgs_gencpp)

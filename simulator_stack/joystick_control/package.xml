@@ -18,7 +18,6 @@
   <build_depend>roscpp</build_depend>
   <build_depend>rospy</build_depend>
   <build_depend>kraken_msgs</build_depend>
-  <build_depend>simulator_physics_model</build_depend>
   <build_depend>joy</build_depend>
   <build_depend>resources</build_depend>
 
@@ -26,7 +25,6 @@
   <run_depend>roscpp</run_depend>
   <run_depend>rospy</run_depend>
   <run_depend>kraken_msgs</run_depend>
-  <run_depend>simulator_physics_model</run_depend>
   <run_depend>joy</run_depend>
   <run_depend>resources</run_depend>
 

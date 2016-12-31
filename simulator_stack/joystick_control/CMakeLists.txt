@@ -68,3 +68,8 @@ catkin_package(
 		INCLUDE_DIRS # TODO
     LIBRARIES # TODO
 )
+
+include_directories(${catkin_INCLUDE_DIRS})
+
+add_dependencies(joystick_control kraken_msgs_gencpp)
+add_dependencies(keyboard_control kraken_msgs_gencpp)
