@@ -3,7 +3,6 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(kraken_visualization)
 # Load catkin and all dependencies required for this package
-# TODO: remove all from COMPONENTS that are not catkin packages.
 find_package(catkin REQUIRED COMPONENTS urdf xacro uwsim)
 
 # include_directories(include ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS})

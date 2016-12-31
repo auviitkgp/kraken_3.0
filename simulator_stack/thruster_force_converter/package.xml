@@ -17,13 +17,11 @@
   <!-- Dependencies needed to compile this package. -->
   <build_depend>roscpp</build_depend>
   <build_depend>kraken_msgs</build_depend>
-  <build_depend>simulator_physics_model</build_depend>
   <build_depend>resources</build_depend>
 
   <!-- Dependencies needed after this package is compiled. -->
   <run_depend>roscpp</run_depend>
   <run_depend>kraken_msgs</run_depend>
-  <run_depend>simulator_physics_model</run_depend>
   <run_depend>resources</run_depend>
 
   <!-- Dependencies needed only for running tests. -->

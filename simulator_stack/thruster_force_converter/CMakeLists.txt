@@ -3,8 +3,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(thruster_force_converter)
 # Load catkin and all dependencies required for this package
-# TODO: remove all from COMPONENTS that are not catkin packages.
-find_package(catkin REQUIRED COMPONENTS roscpp kraken_msgs simulator_physics_model resources)
+find_package(catkin REQUIRED COMPONENTS roscpp kraken_msgs resources)
 
 # include_directories(include ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS})
 # CATKIN_MIGRATION: removed during catkin migration
@@ -48,8 +47,7 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 # CATKIN_MIGRATION: removed during catkin migration
 # rosbuild_add_boost_directories()
 #find_package(Boost REQUIRED COMPONENTS thread)
-include_directories(${Boost_INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
+include_directories(${Boost_INCLUDE_DIRS} include)
 #add_executable(example examples/example.cpp)
 #target_link_libraries(example ${PROJECT_NAME})
 add_executable(converter src/main.cpp src/ForceConverter.cpp)
@@ -61,8 +59,8 @@ add_executable(converter src/main.cpp src/ForceConverter.cpp)
 # catkin_package parameters: http://ros.org/doc/groovy/api/catkin/html/dev_guide/generated_cmake_api.html#catkin-package
 # TODO: fill in what other packages will need to use this package
 catkin_package(
-    DEPENDS roscpp kraken_msgs simulator_physics_model resources
+    DEPENDS roscpp kraken_msgs resources
     CATKIN_DEPENDS # TODO
-    INCLUDE_DIRS # TODO include
+		INCLUDE_DIRS # TODO
     LIBRARIES # TODO
 )

@@ -3,7 +3,6 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(pose_server_python)
 # Load catkin and all dependencies required for this package
-# TODO: remove all from COMPONENTS that are not catkin packages.
 find_package(catkin REQUIRED COMPONENTS rospy resources kraken_msgs std_msgs)
 
 # include_directories(include ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS})

@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(joystick_control)
 # Load catkin and all dependencies required for this package
 # TODO: remove all from COMPONENTS that are not catkin packages.
-find_package(catkin REQUIRED COMPONENTS roscpp rospy kraken_msgs simulator_physics_model joy resources)
+find_package(catkin REQUIRED COMPONENTS roscpp rospy kraken_msgs joy resources)
 
 # include_directories(include ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS})
 # CATKIN_MIGRATION: removed during catkin migration
@@ -51,7 +51,7 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 # rosbuild_add_boost_directories()
 #find_package(Boost REQUIRED COMPONENTS thread)
 include_directories(${Boost_INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
+#target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
 add_executable(joystick_control src/joystick_control.cpp)
 add_executable(keyboard_control src/keyboard_control.cpp)
 #target_link_libraries(example ${PROJECT_NAME})
@@ -63,8 +63,8 @@ add_executable(keyboard_control src/keyboard_control.cpp)
 # catkin_package parameters: http://ros.org/doc/groovy/api/catkin/html/dev_guide/generated_cmake_api.html#catkin-package
 # TODO: fill in what other packages will need to use this package
 catkin_package(
-    DEPENDS roscpp rospy kraken_msgs simulator_physics_model joy resources
+    DEPENDS roscpp rospy kraken_msgs joy resources
     CATKIN_DEPENDS # TODO
-    INCLUDE_DIRS # TODO include
+		INCLUDE_DIRS # TODO
     LIBRARIES # TODO
 )
