@@ -1,0 +1,38 @@
+<package>
+  <name>thruster_converter</name>
+  <version>1.0.0</version>
+  <description>thruster_converter</description>
+  <maintainer email="vishnu@auviitkgp.local">vds</maintainer>
+
+  <license>BSD</license>
+
+  <url type="website">http://ros.org/wiki/thruster_converter</url>
+  <!-- <url type="bugtracker"></url> -->
+
+  <author>vds</author>
+
+  <!-- Dependencies which this package needs to build itself. -->
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <!-- Dependencies needed to compile this package. -->
+  <build_depend>roscpp</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>kraken_msgs</build_depend>
+  <build_depend>SerialPort</build_depend>
+  <build_depend>resources</build_depend>
+
+  <!-- Dependencies needed after this package is compiled. -->
+  <run_depend>roscpp</run_depend>
+  <run_depend>std_msgs</run_depend>
+  <run_depend>kraken_msgs</run_depend>
+  <run_depend>SerialPort</run_depend>
+  <run_depend>resources</run_depend>
+
+  <!-- Dependencies needed only for running tests. -->
+  <!-- <test_depend>roscpp</test_depend> -->
+  <!-- <test_depend>std_msgs</test_depend> -->
+  <!-- <test_depend>kraken_msgs</test_depend> -->
+  <!-- <test_depend>SerialPort</test_depend> -->
+  <!-- <test_depend>resources</test_depend> -->
+
+</package>
