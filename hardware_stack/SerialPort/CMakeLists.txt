@@ -54,8 +54,10 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 add_library(${PROJECT_NAME} src/SerialPort.cpp)
 target_link_libraries(${PROJECT_NAME} log4cxx)
 add_executable(serialport_test src/test.cpp)
-target_link_libraries(serialport_test ${PROJECT_NAME})
-target_link_libraries(serialport_test ${catkin_LIBRARIES} resources)
+ target_link_libraries(serialport_test ${PROJECT_NAME} resources)
+ target_link_libraries(serialport_test ${catkin_LIBRARIES} resources)
+#target_link_libraries(serialport_test ${PROJECT_NAME} ${catkin_LIBRARIES} resources)
+#target_link_libraries(serialport_test  resources)
 ## Generate added messages and services with any dependencies listed here
 #generate_messages(
     #TODO DEPENDENCIES geometry_msgs std_msgs
@@ -67,6 +69,5 @@ catkin_package(
     DEPENDS roscpp resources
     CATKIN_DEPENDS roscpp resources # TODO
     INCLUDE_DIRS include # TODO include
-    LIBRARIES # TODO
+    LIBRARIES  # TODO
 )
-
