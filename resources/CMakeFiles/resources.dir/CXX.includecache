@@ -1,0 +1,26 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/dyutimoy/catkin_ws/src/kraken_3.0/resources/src/tools.cpp
+resources/tools.h
+/home/dyutimoy/catkin_ws/src/kraken_3.0/resources/src/resources/tools.h
+
+/home/dyutimoy/catkin_ws/src/kraken_3.0/resources/src/topicHeader.cpp
+resources/topicHeader.h
+/home/dyutimoy/catkin_ws/src/kraken_3.0/resources/src/resources/topicHeader.h
+
+include/resources/tools.h
+stdio.h
+-
+string.h
+-
+
+include/resources/topicHeader.h
+iostream
+-
+

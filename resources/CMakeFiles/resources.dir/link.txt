@@ -1,0 +1,1 @@
+/usr/bin/c++  -fPIC   -shared -Wl,-soname,libresources.so -o lib/libresources.so CMakeFiles/resources.dir/src/topicHeader.cpp.o CMakeFiles/resources.dir/src/tools.cpp.o 

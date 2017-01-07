@@ -1,0 +1,44 @@
+<package>
+  <name>vgateserver</name>
+  <version>1.0.0</version>
+  <description>vgateserver</description>
+  <maintainer email="Madhukar@teamauv.local">Madhukar</maintainer>
+
+  <license>BSD</license>
+
+  <url type="website">http://ros.org/wiki/vgateserver</url>
+  <!-- <url type="bugtracker"></url> -->
+
+  <author>Madhukar</author>
+
+  <!-- Dependencies which this package needs to build itself. -->
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <!-- Dependencies needed to compile this package. -->
+  <build_depend>roscpp</build_depend>
+  <build_depend>actionlib</build_depend>
+  <build_depend>cv_bridge</build_depend>
+  <build_depend>image_transport</build_depend>
+  <build_depend>blob</build_depend>
+  <build_depend>actionmsg</build_depend>
+  <build_depend>resources</build_depend>
+
+  <!-- Dependencies needed after this package is compiled. -->
+  <run_depend>roscpp</run_depend>
+  <run_depend>actionlib</run_depend>
+  <run_depend>cv_bridge</run_depend>
+  <run_depend>image_transport</run_depend>
+  <run_depend>blob</run_depend>
+  <run_depend>actionmsg</run_depend>
+  <run_depend>resources</run_depend>
+
+  <!-- Dependencies needed only for running tests. -->
+  <!-- <test_depend>roscpp</test_depend> -->
+  <!-- <test_depend>actionlib</test_depend> -->
+  <!-- <test_depend>cv_bridge</test_depend> -->
+  <!-- <test_depend>image_transport</test_depend> -->
+  <!-- <test_depend>blob</test_depend> -->
+  <!-- <test_depend>actionmsg</test_depend> -->
+  <!-- <test_depend>resources</test_depend> -->
+
+</package>
