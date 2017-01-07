@@ -10,6 +10,8 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 #set the default path for built libraries to the "lib" directory
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
+
 include_directories(${Boost_INCLUDE_DIRS} include ${catkin_INCLUDE_DIRS})
 
 add_executable(converter src/main.cpp src/ForceConverter.cpp)
