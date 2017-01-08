@@ -131,3 +131,8 @@ local.properties
 
 # TeXlipse plugin
 .texlipse
+
+build_isolated
+devel_isolated
+
+.catkin_workspace

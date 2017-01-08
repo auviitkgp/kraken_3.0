@@ -17,7 +17,7 @@ int main(int argc,char** argv)
         exit(0);
     }
 
-    kraken_simulator::ForceConverter converter(gain);
+    ForceConverter converter(gain);
     ros::spin();
     return 0;
 }

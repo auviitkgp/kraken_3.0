@@ -1,0 +1,32 @@
+<package>
+  <name>thruster_remap_g500</name>
+  <version>1.0.0</version>
+  <description>thruster_remap_g500</description>
+  <maintainer email="teamauv@auviitkgp.local">Kalyan Kumar</maintainer>
+
+  <license>BSD</license>
+
+  <url type="website">http://ros.org/wiki/thruster_remap_g500</url>
+  <!-- <url type="bugtracker"></url> -->
+
+  <author>Kalyan Kumar</author>
+
+  <!-- Dependencies which this package needs to build itself. -->
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <!-- Dependencies needed to compile this package. -->
+  <build_depend>rospy</build_depend>
+  <build_depend>kraken_msgs</build_depend>
+  <build_depend>resources</build_depend>
+
+  <!-- Dependencies needed after this package is compiled. -->
+  <run_depend>rospy</run_depend>
+  <run_depend>kraken_msgs</run_depend>
+  <run_depend>resources</run_depend>
+
+  <!-- Dependencies needed only for running tests. -->
+  <!-- <test_depend>rospy</test_depend> -->
+  <!-- <test_depend>kraken_msgs</test_depend> -->
+  <!-- <test_depend>resources</test_depend> -->
+
+</package>
