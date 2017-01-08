@@ -52,7 +52,7 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 #target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
 # add_executable(bottomcam src/bottomcam.cpp)
 add_executable(start_camera src/main.cpp src/bottomcam.cpp)
-target_link_libraries(start_camera ${catkin_LIBRARIES})
+target_link_libraries(start_camera ${catkin_LIBRARIES} resources)
 #target_link_libraries(example ${PROJECT_NAME})
 ## Generate added messages and services with any dependencies listed here
 #generate_messages(

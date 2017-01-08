@@ -48,7 +48,7 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 # CATKIN_MIGRATION: removed during catkin migration
 # rosbuild_add_boost_directories()
 #find_package(Boost REQUIRED COMPONENTS thread)
-include_directories(${Boost_INCLUDE_DIRS})
+#include_directories(${Boost_INCLUDE_DIRS})
 #target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
 add_executable(server_shape src/buoy_server_shape.cpp)
 add_executable(server_nn src/buoy_server_nn.cpp)
@@ -66,7 +66,13 @@ add_executable(new_client src/task_buoy_new.cpp)
 catkin_package(
     DEPENDS roscpp actionlib actionmsg kraken_msgs blob image_transport cv_bridge resources
     CATKIN_DEPENDS # TODO
-    INCLUDE_DIRS # TODO include
+    INCLUDE_DIRS include  # TODO include
     LIBRARIES # TODO
 )
-include_directories(${catkin_INCLUDE_DIRS})
+include_directories(include ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS})
+
+target_link_libraries(server_shape ${catkin_LIBRARIES} resources)
+target_link_libraries(server_nn ${catkin_LIBRARIES} resources)
+target_link_libraries(server_dt ${catkin_LIBRARIES} resources)
+target_link_libraries(buoy_client ${catkin_LIBRARIES} resources)
+target_link_libraries(new_client ${catkin_LIBRARIES} resources)

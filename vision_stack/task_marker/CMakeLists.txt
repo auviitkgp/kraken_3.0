@@ -48,7 +48,7 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 # CATKIN_MIGRATION: removed during catkin migration
 # rosbuild_add_boost_directories()
 #find_package(Boost REQUIRED COMPONENTS thread)
-include_directories(${Boost_INCLUDE_DIRS})
+#include_directories(${Boost_INCLUDE_DIRS})
 #target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
 #target_link_libraries(server ${PROJECT_NAME})
 add_executable(server src/marker_server.cpp)
@@ -63,7 +63,10 @@ add_executable(client src/marker_client.cpp)
 catkin_package(
     DEPENDS roscpp actionlib ip_msgs sensor_msgs image_transport cv_bridge blob resources
     CATKIN_DEPENDS # TODO
-    INCLUDE_DIRS # TODO include
+    INCLUDE_DIRS include # TODO include
     LIBRARIES # TODO
 )
-include_directories(${catkin_INCLUDE_DIRS})
+include_directories(include ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS})
+
+target_link_libraries(server ${catkin_LIBRARIES} resources)
+target_link_libraries(client ${catkin_LIBRARIES} resources)

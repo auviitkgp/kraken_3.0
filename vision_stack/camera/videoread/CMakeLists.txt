@@ -65,3 +65,5 @@ catkin_package(
     INCLUDE_DIRS # TODO include
     LIBRARIES # TODO
 )
+include_directories(include ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS})
+target_link_libraries(videoread ${catkin_LIBRARIES} resources)

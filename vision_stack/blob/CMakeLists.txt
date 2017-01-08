@@ -6,7 +6,7 @@ project(blob)
 # TODO: remove all from COMPONENTS that are not catkin packages.
 find_package(catkin REQUIRED COMPONENTS roscpp std_msgs)
 
-include_directories(include ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS})
+
 # CATKIN_MIGRATION: removed during catkin migration
 # cmake_minimum_required(VERSION 2.4.6)
 
@@ -82,6 +82,9 @@ target_link_libraries(testblob ${OpenCV_LIBRARIES})
 catkin_package(
     DEPENDS roscpp std_msgs
     CATKIN_DEPENDS # TODO
-    INCLUDE_DIRS # TODO include
+    INCLUDE_DIRS include # TODO include
     LIBRARIES # TODO
 )
+include_directories(include ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS})
+
+target_link_libraries(testblob ${catkin_LIBRARIES})

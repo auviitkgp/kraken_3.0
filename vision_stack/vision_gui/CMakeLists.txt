@@ -97,6 +97,7 @@ target_link_libraries(App ${QT_LIBRARIES} ${OpenCV_LIBS})
 catkin_package(
     DEPENDS roscpp cv_bridge blob resources
     CATKIN_DEPENDS # TODO
-    INCLUDE_DIRS # TODO include
+    INCLUDE_DIRS include # TODO include
     LIBRARIES # TODO
 )
+include_directories(include ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS})

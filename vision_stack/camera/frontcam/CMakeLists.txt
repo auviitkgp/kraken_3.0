@@ -7,6 +7,7 @@ project(frontcam)
 find_package(catkin REQUIRED COMPONENTS roscpp cv_bridge image_transport std_msgs resources)
 
 
+
 # CATKIN_MIGRATION: removed during catkin migration
 # cmake_minimum_required(VERSION 2.4.6)
 
@@ -51,7 +52,7 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 #include_directories(${Boost_INCLUDE_DIRS})
 #target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
 add_executable(frontcam src/frontcam.cpp)
-target_link_libraries(frontcam ${catkin_LIBRARIES})
+target_link_libraries(frontcam ${catkin_LIBRARIES} resources)
 ## Generate added messages and services with any dependencies listed here
 #generate_messages(
     #TODO DEPENDENCIES geometry_msgs std_msgs

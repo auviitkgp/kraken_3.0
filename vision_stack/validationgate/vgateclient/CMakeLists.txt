@@ -62,7 +62,9 @@ generate_messages(
 catkin_package(
     DEPENDS roscpp actionlib actionmsg resources
     CATKIN_DEPENDS # TODO
-    INCLUDE_DIRS # TODO include
+    INCLUDE_DIRS include # TODO include
     LIBRARIES # TODO
 )
-include_directories(${catkin_INCLUDE_DIRS})
+include_directories(include ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS})
+
+target_link_libraries(vgateclient ${catkin_LIBRARIES} resources)

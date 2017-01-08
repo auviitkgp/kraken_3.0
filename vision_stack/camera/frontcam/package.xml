@@ -33,6 +33,6 @@
   <!-- <test_depend>cv_bridge</test_depend> -->
   <!-- <test_depend>image_transport</test_depend> -->
   <!-- <test_depend>std_msgs</test_depend> -->
-  <!-- <test_depend>resources</test_depend> -->
+   <!--<test_depend>resources</test_depend> -->
 
 </package>

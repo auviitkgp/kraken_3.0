@@ -7,6 +7,7 @@
 # new environment variables
 
 # modified environment variables
-export CMAKE_PREFIX_PATH="/home/dyutimoy/catkin_ws/src/kraken_3.0/resources/devel:$CMAKE_PREFIX_PATH"
-export ROSLISP_PACKAGE_DIRECTORIES="/home/dyutimoy/catkin_ws/src/kraken_3.0/resources/devel/share/common-lisp"
-export ROS_PACKAGE_PATH="/home/dyutimoy/catkin_ws/src/kraken_3.0/resources:/opt/ros/kinetic/share:/opt/ros/kinetic/stacks"
+export CMAKE_PREFIX_PATH="/home/dyutimoy/catkin_ws/devel/.private/resources:$CMAKE_PREFIX_PATH"
+export PWD="/home/dyutimoy/catkin_ws/build/resources"
+export ROSLISP_PACKAGE_DIRECTORIES="/home/dyutimoy/catkin_ws/devel/.private/resources/share/common-lisp:$ROSLISP_PACKAGE_DIRECTORIES"
+export ROS_PACKAGE_PATH="/home/dyutimoy/catkin_ws/src/kraken_3.0/resources:$ROS_PACKAGE_PATH"
