@@ -38,8 +38,8 @@ catkin_package(
 
 include_directories(include ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS})
 
-target_link_libraries(server_shape ${catkin_LIBRARIES} resources)
-target_link_libraries(server_nn ${catkin_LIBRARIES} resources)
-target_link_libraries(server_dt ${catkin_LIBRARIES} resources)
-target_link_libraries(buoy_client ${catkin_LIBRARIES} resources)
-target_link_libraries(new_client ${catkin_LIBRARIES} resources)
+target_link_libraries(server_shape ${catkin_LIBRARIES} resources blob)
+target_link_libraries(server_nn ${catkin_LIBRARIES} resources blob)
+target_link_libraries(server_dt ${catkin_LIBRARIES} resources blob)
+target_link_libraries(buoy_client ${catkin_LIBRARIES} resources blob)
+target_link_libraries(new_client ${catkin_LIBRARIES} resources blob)

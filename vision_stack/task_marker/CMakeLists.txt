@@ -26,5 +26,5 @@ catkin_package(
 
 include_directories(include ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS})
 
-target_link_libraries(server ${catkin_LIBRARIES} resources)
+target_link_libraries(server ${catkin_LIBRARIES} resources blob)
 target_link_libraries(client ${catkin_LIBRARIES} resources)

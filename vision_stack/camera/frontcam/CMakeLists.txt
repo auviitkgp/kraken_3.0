@@ -8,6 +8,8 @@ find_package(catkin REQUIRED COMPONENTS roscpp cv_bridge image_transport std_msg
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 #set the default path for built libraries to the "lib" directory
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
+# ensure CMake creates the bin/ directory automatically
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
 add_executable(frontcam src/frontcam.cpp)
 
