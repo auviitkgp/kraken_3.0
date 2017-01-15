@@ -33,7 +33,7 @@ endif()
 
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/ )
 FIND_PACKAGE(Qt4 REQUIRED)
-#find_package(Qwt REQUIRED)
+find_library(qwt-qt4 REQUIRED)
 find_package( OpenCV REQUIRED )
 INCLUDE(${QT_USE_FILE})
 ADD_DEFINITIONS(-DQT_NO_KEYWORDS)
@@ -43,12 +43,6 @@ include_directories(include/${PROJECT_NAME}/ ${CMAKE_CURRENT_BINARY_DIR})
 # Ros Initialisation
 ##############################################################################
 
-
-# CATKIN_MIGRATION: removed during catkin migration
-# include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
-
-# CATKIN_MIGRATION: removed during catkin migration
-# rosbuild_init()
 
 #set the default path for built executables to the "bin" directory
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
@@ -85,19 +79,19 @@ file(GLOB_RECURSE QT_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} FOLLOW_SYMLINK
 # Binaries
 ##############################################################################
 
-add_executable(App ${QT_SOURCES} ${QT_RESOURCES_CPP} ${QT_FORMS_HPP} ${QT_MOC_HPP})
-target_link_libraries(App ${QT_LIBRARIES} ${OpenCV_LIBS})
-## Generate added messages and services with any dependencies listed here
-#generate_messages(
-#    #TODO DEPENDENCIES geometry_msgs std_msgs
-#)
+add_executable(App ${QT_SOURCES} ${QT_RESOURCES_CPP} ${QT_FORMS_HPP}
+	${QT_MOC_HPP})
+target_link_libraries(App 
+	${QT_LIBRARIES} 
+	${OpenCV_LIBRARIES} 
+	blob
+	${qwt-qt4_LIBRARIES})
+include_directories(include ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS}
+	${OpenCV_INCLUDE_DIRS})
 
-# catkin_package parameters: http://ros.org/doc/groovy/api/catkin/html/dev_guide/generated_cmake_api.html#catkin-package
-# TODO: fill in what other packages will need to use this package
 catkin_package(
     DEPENDS roscpp cv_bridge blob resources
     CATKIN_DEPENDS # TODO
     INCLUDE_DIRS include # TODO include
     LIBRARIES # TODO
 )
-include_directories(include ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS})

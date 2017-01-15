@@ -2,73 +2,40 @@
 # Catkin CMake Standard: http://www.ros.org/doc/groovy/api/catkin/html/user_guide/standards.html
 cmake_minimum_required(VERSION 2.8.3)
 project(task_buoy)
-# Load catkin and all dependencies required for this package
-# TODO: remove all from COMPONENTS that are not catkin packages.
-find_package(catkin REQUIRED COMPONENTS roscpp actionlib actionmsg kraken_msgs blob image_transport cv_bridge resources)
 
-# include_directories(include ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS})
-# CATKIN_MIGRATION: removed during catkin migration
-# cmake_minimum_required(VERSION 2.4.6)
-
-# CATKIN_MIGRATION: removed during catkin migration
-# include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
-
-# Set the build type.  Options are:
-#  Coverage       : w/ debug symbols, w/o optimization, w/ code-coverage
-#  Debug          : w/ debug symbols, w/o optimization
-#  Release        : w/o debug symbols, w/ optimization
-#  RelWithDebInfo : w/ debug symbols, w/ optimization
-#  MinSizeRel     : w/o debug symbols, w/ optimization, stripped binaries
-#set(ROS_BUILD_TYPE RelWithDebInfo)
-
-
-# CATKIN_MIGRATION: removed during catkin migration
-# rosbuild_init()
+find_package(catkin REQUIRED COMPONENTS roscpp 
+	actionlib 
+	actionmsg 
+	kraken_msgs 
+	blob 
+	image_transport 
+	cv_bridge 
+	resources)
 
 #set the default path for built executables to the "bin" directory
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 #set the default path for built libraries to the "lib" directory
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
-#uncomment if you have defined messages
-#add_message_files(
-#  FILES
-  # TODO: List your msg files here
-#)
-#uncomment if you have defined services
-#add_service_files(
-#  FILES
-  # TODO: List your msg files here
-#)
-
-#common commands for building c++ executables and libraries
-#add_library(${PROJECT_NAME} src/example.cpp)
-#target_link_libraries(${PROJECT_NAME} another_library)
-#
-# CATKIN_MIGRATION: removed during catkin migration
-# rosbuild_add_boost_directories()
-#find_package(Boost REQUIRED COMPONENTS thread)
-#include_directories(${Boost_INCLUDE_DIRS})
-#target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
 add_executable(server_shape src/buoy_server_shape.cpp)
 add_executable(server_nn src/buoy_server_nn.cpp)
 add_executable(server_dt src/buoy_server_dt.cpp)
 add_executable(buoy_client src/buoy_client.cpp)
 add_executable(new_client src/task_buoy_new.cpp)
-#target_link_libraries(example ${PROJECT_NAME})
-## Generate added messages and services with any dependencies listed here
-#generate_messages(
-    #TODO DEPENDENCIES geometry_msgs std_msgs
-#)
 
-# catkin_package parameters: http://ros.org/doc/groovy/api/catkin/html/dev_guide/generated_cmake_api.html#catkin-package
-# TODO: fill in what other packages will need to use this package
+add_dependencies(server_shape kraken_msgs_gencpp actionmsg_gencpp ip_msgs_gencpp)
+add_dependencies(server_nn kraken_msgs_gencpp actionmsg_gencpp ip_msgs_gencpp)
+add_dependencies(server_dt kraken_msgs_gencpp actionmsg_gencpp ip_msgs_gencpp)
+add_dependencies(buoy_client kraken_msgs_gencpp actionmsg_gencpp ip_msgs_gencpp)
+add_dependencies(new_client kraken_msgs_gencpp actionmsg_gencpp ip_msgs_gencpp)
+
 catkin_package(
     DEPENDS roscpp actionlib actionmsg kraken_msgs blob image_transport cv_bridge resources
     CATKIN_DEPENDS # TODO
     INCLUDE_DIRS include  # TODO include
     LIBRARIES # TODO
 )
+
 include_directories(include ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS})
 
 target_link_libraries(server_shape ${catkin_LIBRARIES} resources)
