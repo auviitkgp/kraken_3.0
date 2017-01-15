@@ -10,6 +10,8 @@ find_package(catkin REQUIRED COMPONENTS roscpp actionlib ip_msgs sensor_msgs ima
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 #set the default path for built libraries to the "lib" directory
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
+# ensure CMake creates the bin/ directory automatically
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
 add_executable(server src/marker_server.cpp)
 add_executable(client src/marker_client.cpp)

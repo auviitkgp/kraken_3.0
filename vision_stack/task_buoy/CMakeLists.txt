@@ -16,6 +16,8 @@ find_package(catkin REQUIRED COMPONENTS roscpp
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 #set the default path for built libraries to the "lib" directory
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
+# ensure CMake creates the bin/ directory automatically
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
 add_executable(server_shape src/buoy_server_shape.cpp)
 add_executable(server_nn src/buoy_server_nn.cpp)
