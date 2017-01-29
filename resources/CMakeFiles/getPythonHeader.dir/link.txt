@@ -1,1 +1,0 @@
-/usr/bin/c++      CMakeFiles/getPythonHeader.dir/src/getPythonHeader.cpp.o  -o bin/getPythonHeader -rdynamic 
