@@ -22,7 +22,7 @@ from geometry_msgs.msg import Vector3 , Quaternion
 from resources import topicHeader as th
 pub1 = rospy.Publisher(th.SENSOR_IMU, imuData, queue_size = 2)
 pub2 = rospy.Publisher(th.SENSOR_IMU_NEW, Imu, queue_size = 2)
-#pub3 = rospy.Publisher(topic name, magnetoTemp, queue_size = 2)
+pub3 = rospy.Publisher('/kraken/sensor/magneto', magnetoTemp, queue_size = 2)
 
 rospy.init_node('imudata', anonymous=True)
 ## Code to find port automatically
@@ -336,6 +336,7 @@ def new_msg_format():
 
 
     quaternion = tf.transformations.quaternion_from_euler(roll, pitch, yaw)
+    print 'Roll='+str(roll)+' Pitch='+str(pitch)+' Yaw='+str(yaw)
     msg1.orientation = Quaternion(quaternion[0],quaternion[1],quaternion[2],quaternion[3])
     msg1.orientation_covariance = getOrientationCovariance()
     msg1.angular_velocity = Vector3(gx,gy,gz)
@@ -369,7 +370,7 @@ if __name__ == '__main__':
         new_msg1 , new_msg2 = new_msg_format()
         pub1.publish(pubData)
         pub2.publish(new_msg1)
-        pub2.publish(new_msg2)
+        pub3.publish(new_msg2)
         r.sleep()
 
     imu.close()
