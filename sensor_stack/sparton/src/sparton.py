@@ -22,7 +22,7 @@ from geometry_msgs.msg import Vector3 , Quaternion
 from resources import topicHeader as th
 pub1 = rospy.Publisher(th.SENSOR_IMU, imuData, queue_size = 2)
 pub2 = rospy.Publisher(th.SENSOR_IMU_NEW, Imu, queue_size = 2)
-pub3 = rospy.Publisher('/kraken/sensor/magneto', magnetoTemp, queue_size = 2)
+pub3 = rospy.Publisher(th.SENSOR_IMU_MAGNETO, magnetoTemp, queue_size = 2)
 
 rospy.init_node('imudata', anonymous=True)
 ## Code to find port automatically
