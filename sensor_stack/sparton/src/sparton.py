@@ -11,10 +11,6 @@ import rospy
 import sys
 import os
 import tf
-
-# No need to use the below import, use the import in line 18 instead.
-#from kraken_msgs.msg import imuData_new
-
 from sensor_msgs.msg import Imu
 from kraken_msgs.msg import imuData
 from kraken_msgs.msg import magnetoTemp
@@ -42,7 +38,6 @@ imu = serial.Serial(portName, 115200)
 
 # DVL config
 imu.stopbits = 2
-#
 
 # Variables
 roll = 0.0
@@ -81,14 +76,12 @@ def setBaud(rate):
         message = '$PSPA,BAUD=7\r\n'
     elif (rate == 115200) :
         message = '$PSPA,BAUD=8\r\n'
-    
     imu.write(message)
     garbage = ''
     total = ''
     while (garbage != '\r'):
         garbage = imu.read()
         total += garbage
-    #print total
 
 def temperature():
     command = '$PSPA,TEMP\r\n'
@@ -99,9 +92,7 @@ def temperature():
     global temp 
     while (garbage != '\r'):
         garbage = imu.read()
-        total += garbage
-    #print total
-    
+        total += garbage   
     data = total.split(',')
     temp = float((data[1]).split('='))
 
@@ -111,20 +102,15 @@ def rpyt():
     garbage = ''
     total = ''
     data = []
-    
     global roll 
     global pitch 
     global yaw 
     global temp 
     global magError 
-    
     while (garbage != '\r'):
         garbage = imu.read()
-        total += garbage
-    #print total
-    
+        total += garbage    
     data = total.split(',')
-    
     yaw = float(data[5])
     pitch = float(data[8])
     roll = float(data[11])
@@ -139,14 +125,10 @@ def accelero():
     global ax
     global ay 
     global az 
-    
     data = []
-    
     while (garbage != '\r'):
         garbage = imu.read()
-        total += garbage
-    #print total
-    
+        total += garbage    
     data = total.split(',')
     #print data
     ax = float(((data[1]).split('='))[1])
@@ -162,12 +144,9 @@ def gyro():
     global gx 
     global gy 
     global gz
-
     while (garbage != '\r'):
         garbage = imu.read()
-        total += garbage
-    #print total
-    
+        total += garbage    
     data = total.split(',')
     gx = float(((data[1]).split('='))[1])
     gy = float(((data[2]).split('='))[1])
@@ -182,12 +161,9 @@ def magneto():
     global mx 
     global my 
     global mz
-
     while (garbage != '\r'):
         garbage = imu.read()
         total += garbage
-    #print total
-    
     data = total.split(',')
     mx = float(((data[1]).split('='))[1])
     my = float(((data[2]).split('='))[1])
@@ -201,12 +177,9 @@ def pitchRoll():
     data = []
     global pitch
     global roll
-
     while (garbage != '\r'):
         garbage = imu.read()
         total += garbage
-    #print total
-    
     data = total.split(',')
     ax = float(((data[1]).split('='))[1])
     ay = float(((data[2]).split('='))[1])
@@ -227,14 +200,11 @@ def getData():
     global gz
     global temp
     global magError
-    
     accelero()
     gyro()
     magneto()
     rpyt()
-    
     allData = imuData()
-    
     allData.data[0] = roll
     allData.data[1] = pitch
     allData.data[2] = yaw
@@ -248,15 +218,9 @@ def getData():
     allData.data[10] = gy
     allData.data[11] = gz
     allData.data[12] = temp
-    
     return allData
 
 def getOrientationCovariance():
-
-    # global roll
-    # global pitch
-    # global yaw
-
     if rospy.has_param('OrientationCov_mat'):
         cov_mat = rospy.get_param('OrientationCov_mat')
     else:
@@ -264,10 +228,6 @@ def getOrientationCovariance():
     return cov_mat
 
 def getAngularVelocityCovariance():
-
-    # global gx
-    # global gy
-    # global gz
     if rospy.has_param('AngularVelCov_mat'):
         cov_mat = rospy.get_param('AngularVelCov_mat')
     else:
@@ -275,40 +235,13 @@ def getAngularVelocityCovariance():
     return cov_mat
 
 def getLinearAccelerationCovariance():
-
-    # global ax
-    # global ay
-    # global az
     if rospy.has_param('LinearAccelerationCov_mat'):
         cov_mat = rospy.get_param('LinearAccelerationCov_mat')
     else:
         cov_mat = [0.0] * 9
     return cov_mat
 
-# Use inbuilt function `tf transform` instead
-# def getQuaternion():
-
-#     global roll
-#     global pitch
-#     global yaw
-
-#     # roll, pitch, yaw should be in radians.
-#     # Get quaternion from roll , pitch , yaw.
-
-#     c1 = math.cos(yaw/2)
-#     s1 = math.sin(yaw/2)
-#     c2 = math.cos(pitch/2)
-#     s2 = math.sin(pitch/2)
-#     c3 = math.cos(roll/2)
-#     s3 = math.sin(roll/2)
-#     w = c1*c2*c3 - s1*s2*s3
-#     x = c1*c2*s3 + s1*s2*c3
-#     y = s1*c2*c3 + c1*s2*s3
-#     z = c1*s2*c3 - s1*c2*s3
-#     return Quaternion(w,x,y,z)
-
 def new_msg_format():
-
     global roll
     global pitch
     global yaw
@@ -323,54 +256,38 @@ def new_msg_format():
     global gz
     global temp
     global magError
-    
     accelero()
     gyro()
     magneto()
     rpyt()
-
-    #msg1 = imuData_new()
-    
     msg1 = Imu()
     msg2 = magnetoTemp()
-
-
     quaternion = tf.transformations.quaternion_from_euler(roll, pitch, yaw)
-    print 'Roll='+str(roll)+' Pitch='+str(pitch)+' Yaw='+str(yaw)
     msg1.orientation = Quaternion(quaternion[0],quaternion[1],quaternion[2],quaternion[3])
     msg1.orientation_covariance = getOrientationCovariance()
     msg1.angular_velocity = Vector3(gx,gy,gz)
     msg1.angular_velocity_covariance = getAngularVelocityCovariance() 
     msg1.linear_acceleration = Vector3(ax,ay,az)
     msg1.linear_acceleration_covariance = getLinearAccelerationCovariance()
-
     msg2.magnetometer = Vector3(mx,my,mz)
     msg2.temperature = temp
-
     return msg1 , msg2
 
 if __name__ == '__main__':
-
     pubData = [0.0] * 13
-    
     if (not imu.isOpen) :
         imu.close()
         imu.open()
-
     if (imu.isOpen) :
         print 'Serial port opened successfully'
     else:
         print 'Error in opening port'
-
     r = rospy.Rate(10)
-    
     while not rospy.is_shutdown():
-
         pubData = getData()
         new_msg1 , new_msg2 = new_msg_format()
         pub1.publish(pubData)
         pub2.publish(new_msg1)
         pub3.publish(new_msg2)
         r.sleep()
-
     imu.close()
