@@ -13,10 +13,8 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
 include_directories(${Boost_INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES} ${catkin_LIBRARIES}
-  resources)
 catkin_package(
-    DEPENDS rospy std_msgs kraken_msgs std_msgs resources 
+    DEPENDS rospy std_msgs kraken_msgs std_msgs resources
     CATKIN_DEPENDS # TODO
     INCLUDE_DIRS # TODO include
     LIBRARIES # TODO

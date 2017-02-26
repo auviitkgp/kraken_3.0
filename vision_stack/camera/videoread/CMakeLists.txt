@@ -23,4 +23,5 @@ catkin_package(
 include_directories(include ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS}
 	${OpenCV_INCLUDE_DIRS})
 target_link_libraries(videoread ${catkin_LIBRARIES} resources
-	${OpenCV_INCLUDE_DIRS})
+	${OpenCV_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBRARIES})
