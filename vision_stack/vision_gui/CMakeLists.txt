@@ -25,7 +25,7 @@ FIND_PACKAGE(Qt4 REQUIRED)
 find_package( OpenCV REQUIRED )
 INCLUDE(${QT_USE_FILE})
 ADD_DEFINITIONS(-DQT_NO_KEYWORDS)
-include_directories(include/${PROJECT_NAME}/ ${CMAKE_CURRENT_BINARY_DIR})
+include_directories(include/${PROJECT_NAME}/ ${CMAKE_CURRENT_BINARY_DIR} task_bouy/include/ task_marker/include/)
 
 ##############################################################################
 # Ros Initialisation
