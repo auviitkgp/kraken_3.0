@@ -5,7 +5,6 @@
 #include <fstream>
 #include <stdio.h>
 #include <stdlib.h>
-
 #include <blob/blob.h>
 #include <blob/BlobResult.h>
 #include <blob/BlobContour.h>
@@ -13,6 +12,10 @@
 #include <blob/BlobOperators.h>
 #include <blob/ComponentLabeling.h>
 #include <blob/BlobProperties.h>
+#include <ros/ros.h>
+#include <ros/network.h>
+#include <cv_bridge/cv_bridge.h>
+#include <image_transport/image_transport.h>
 
 QString fn_video;
 
@@ -76,6 +79,7 @@ MyWindow::MyWindow(QWidget *parent) :
     filter_arg2 = B_LESS;
     filter_arg4 = B_INCLUDE;
     filter_arg5_area = 500;
+
 }
 
 void MyWindow::setThresh()
@@ -500,6 +504,48 @@ void MyWindow::on_closeCamera_clicked()
     ui->startCamera->setEnabled(false);
     ui->pauseCamera->setEnabled(false);
     ui->closeCamera->setEnabled(false);
+}
+
+void MyWindow::on_submitRosTopic_clicked()
+{
+    QString topic = ui->textRosTopic->text();
+    try
+    {
+        int argc = 0;
+        ros::init(argc,NULL,"vision_gui_rostopic");
+        ros::NodeHandle n;
+        std::cout <<"Correct ROS Topic input given."<< std::endl;
+        image_transport::ImageTransport it(n);
+        image_transport::Subscriber sub;
+        while(ros::ok())
+        {
+            sub = it.subscribe(topic.toUtf8().constData(), 1, &MyWindow::imageCallBack, this);
+            std::cout <<"ROS Loop"<< std::endl;
+        }
+        ros::shutdown();
+    }    
+    catch (ros::InvalidNameException& e)
+    {
+        std::cout <<"Incorrect ROS Topic input given : "<<topic.toUtf8().constData()<< std::endl;
+        ros::shutdown();
+    }
+}
+
+void MyWindow::imageCallBack(const sensor_msgs::ImageConstPtr &_msg)
+{
+    try
+    {
+        cv_bridge::CvImagePtr imagePtr = cv_bridge::toCvCopy(_msg, "bgr8");
+        std::cout <<"ROS Topic Subscription Callback." << std::endl;
+        camImage = imagePtr->image;
+        source_from_log = true;
+        video_being_processed = true;
+        setThresh();
+    }
+    catch (cv_bridge::Exception& e)
+    {
+        std::cout <<"ROS Topic input given : Could not convert from" << _msg->encoding.c_str() << std::endl;
+    }
 }
 
 void MyWindow::on_HValue_slider_valueChanged(int value)

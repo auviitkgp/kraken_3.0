@@ -24,6 +24,11 @@
 #include <cstring>
 #include <sstream>
 #include <QtCore>
+#include <ros/ros.h>
+#include <ros/network.h>
+#include <cv_bridge/cv_bridge.h>
+#include <image_transport/image_transport.h>
+
 class MyLabel : public QLabel
 {
 
@@ -59,6 +64,8 @@ public Q_SLOTS:
     void on_startCamera_clicked();
     void on_pauseCamera_clicked();
     void on_closeCamera_clicked();
+    void on_submitRosTopic_clicked();
+
     // slider callbacks
     void on_HValue_slider_valueChanged(int value);
     void on_SValue_slider_valueChanged(int value);
@@ -67,6 +74,7 @@ public Q_SLOTS:
     void on_SThreshValue_slider_valueChanged(int value);
     void on_VThreshValue_slider_valueChanged(int value);
     void on_colorImage_mouseDoubleClickEvent(QMouseEvent * ev);
+    void imageCallBack(const sensor_msgs::ImageConstPtr &_msg);
 
     /******** Filters ****************/
 
@@ -119,12 +127,17 @@ private:
     Ui::MainWindow *ui;
     bool camera_opend,video_being_processed;
     cv::Scalar start,end;
+    // ros::NodeHandle n;
+    // image_transport::ImageTransport it(n);
+    // image_transport::Subscriber sub;
+    // const sensor_msgs::ImageConstPtr &msg;
     std::string fileName;
     QTimer *timer;
     cv::Mat colorImage,displayImage,thImage,binaryImage,camImage;
     cv::VideoCapture cam;
     cv::Size image_size;
     MyLabel *colorLabel;
+    // sensor_msgs::ImageConstPtr msg;
     cv::Vec3b vec;
     bool getNextFrame(cv::Mat &img);
     void displayImages();
