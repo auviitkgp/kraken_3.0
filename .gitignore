@@ -131,3 +131,15 @@ local.properties
 
 # TeXlipse plugin
 .texlipse
+
+build_isolated
+devel_isolated
+
+.catkin_workspace
+
+# catkin_make_isolated
+# Things to be ignored from there
+catkin
+catkin_generated
+devel
+gtest

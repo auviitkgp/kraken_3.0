@@ -1,0 +1,41 @@
+<package>
+  <name>vision_stack</name>
+  <version>1.0.0</version>
+  <description>vision_stack</description>
+  <maintainer email="auviitkgp@teamauv.local">Maintained by IIT Kharagpur AUV team</maintainer>
+
+  <license>BSD</license>
+
+  <url type="website">https://github.com/iit-kgp-auv-team/kraken_3.0/wiki</url>
+  <!-- <url type="bugtracker"></url> -->
+
+  <author>Maintained by IIT Kharagpur AUV team</author>
+
+  <!-- Dependencies which this package needs to build itself. -->
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <!-- Dependencies needed to compile this package. -->
+
+
+  <!-- Dependencies needed after this package is compiled. -->
+  <run_depend>task_buoy</run_depend>
+  <run_depend>bottomcam</run_depend>
+  <run_depend>videoread</run_depend>
+  <run_depend>frontcam</run_depend>
+  <run_depend>task_marker</run_depend>
+  <run_depend>vgateserver</run_depend>
+  <run_depend>vgateclient</run_depend>
+  <run_depend>vgatedetect</run_depend>
+  <run_depend>vision_gui</run_depend>
+  <run_depend>blob</run_depend>
+  <run_depend>actionmsg</run_depend>
+
+  <!-- Dependencies needed only for running tests. -->
+
+
+
+
+
+
+
+</package>
