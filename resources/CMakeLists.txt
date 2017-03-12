@@ -21,8 +21,9 @@ target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
 add_executable(getPythonHeader src/getPythonHeader.cpp)
 
 catkin_package(
-    DEPENDS roscpp rospy std_msgs
-    CATKIN_DEPENDS # TODO
-    INCLUDE_DIRS include # TODO include
-    LIBRARIES # TODO
+    DEPENDS #
+    CATKIN_DEPENDS roscpp rospy std_msgs
+    INCLUDE_DIRS include
+    LIBRARIES resources
 )
+catkin_python_setup()
