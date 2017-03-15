@@ -16,7 +16,7 @@
   <depend package="image_transport"/>
   <depend package="cv_bridge"/>
   <depend package="resources"/>
-
+  <depend package="ip_msgs"/>
 </package>
 
 
