@@ -1,0 +1,1 @@
+Color.o: src/Color.cpp src/Color.hpp src/CIEDE2000.hpp
