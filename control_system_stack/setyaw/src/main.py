@@ -25,8 +25,9 @@ from kraken_msgs.msg import setYawFeedback
 from kraken_msgs.msg import setYawResult
 from kraken_msgs.msg import setYawGoal
 
-from all_controllers.fuzzy import Fuzzy
-from all_controllers import fuzzyParams as Fparam
+#from all_controllers.pid import PID
+# from all_controllers.fuzzy import Fuzzy
+# from all_controllers import fuzzyParams as Fparam
 
 # Global variables
 base_yaw = 0.0
@@ -34,6 +35,25 @@ FIRST_ITERATION = True
 prevError = 0.0
 Current_yaw = -1
 Client_goal = None
+
+import numpy as np
+
+class PID():
+
+	def __init__(self):
+
+		self.k = [0,0,0]
+		self.target = 0
+		self.c_data = 0
+		self.error = 0
+		self.delta_e = 0
+	def run(self):
+		print self.error
+		return 10*self.error+0.1*self.delta_e
+
+	def output(self):
+		print self.output
+
 
 class SetYaw(object):
     """ Creates messages that are used to publish feedback/result to client
@@ -112,7 +132,7 @@ class SetYaw(object):
 
         if Client_goal != None :
 
-            
+
             error = (base_yaw + Client_goal.yaw - Current_yaw)* 3.14 / 180
             YAW.error = np.arctan2(sin(error),cos(error))*180/3.14
             YAW.delta_error = YAW.error - prevError
@@ -133,14 +153,14 @@ class SetYaw(object):
             # calculate the controller output from fuzzy control
             ControlOutput = YAW.run()
 	    prevError = YAW.error
-	    
+
             # 6 Thruster model
             self.thruster6Data.data[0] = 0.0
             self.thruster6Data.data[1] = 0.0
             self.thruster6Data.data[2] = ControlOutput  # Left Thruster
             self.thruster6Data.data[3] = -1 * ControlOutput # Rigt Thruster
-            self.thruster6Data.data[4] = 0.0     
-            self.thruster6Data.data[5] = 0.0     
+            self.thruster6Data.data[4] = 0.0
+            self.thruster6Data.data[5] = 0.0
             self.thruster6Data.header  = std_msgs.msg.Header()
             self.thruster6Data.header.stamp = rospy.Time.now()
 
@@ -230,9 +250,9 @@ if __name__ == '__main__':
 	 1. Declare YAW as a Fuzzy object and Declare it's membership function and it's Range.
      2. Calls the class setyaw constructor
 	"""
-	YAW = Fuzzy(Fparam.mf_types, Fparam.f_ssets)
-	YAW.io_ranges = Fparam.io_ranges
-
+	# YAW = Fuzzy(Fparam.mf_types, Fparam.f_ssets)
+	# YAW.io_ranges = Fparam.io_ranges
+	YAW = PID()
 	rospy.init_node('setyaw_action_server', log_level=(rospy.DEBUG if tools.getVerboseTag(sys.argv) else rospy.INFO))
 	SetYaw('setYaw')
 	rospy.spin()
