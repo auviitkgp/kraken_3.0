@@ -39,12 +39,12 @@ void joyCB(const sensor_msgs::JoyConstPtr &msg)
 {
 
 
-    _force_sent.data[0] = OFFSET_VALUE + msg->axes[4] * SCALING_FACTOR * MAX_THRUST_FACTOR;
-    _force_sent.data[1] = OFFSET_VALUE + msg->axes[4] * SCALING_FACTOR * MAX_THRUST_FACTOR;
-    _force_sent.data[2] = OFFSET_VALUE - msg->axes[0] * 0.5 * SCALING_FACTOR * MAX_THRUST_FACTOR - msg->axes[3] * 0.5 * SCALING_FACTOR * MAX_THRUST_FACTOR;
-    _force_sent.data[3] = OFFSET_VALUE + msg->axes[0] * 0.5 * SCALING_FACTOR * MAX_THRUST_FACTOR - msg->axes[3] * 0.5 * SCALING_FACTOR * MAX_THRUST_FACTOR;
-    _force_sent.data[4] = OFFSET_VALUE + msg->axes[1] * 0.5 * SCALING_FACTOR * MAX_THRUST_FACTOR - msg->axes[0] * 0.5 * SCALING_FACTOR * MAX_THRUST_FACTOR;
-    _force_sent.data[5] = OFFSET_VALUE + msg->axes[1] * 0.5 * SCALING_FACTOR * MAX_THRUST_FACTOR + msg->axes[0] * 0.5 * SCALING_FACTOR * MAX_THRUST_FACTOR;
+    _force_sent.data[_force_sent.FRONT_Z ]  = OFFSET_VALUE + msg->axes[4] * SCALING_FACTOR * MAX_THRUST_FACTOR;
+    _force_sent.data[_force_sent.BACK_Z  ]  = OFFSET_VALUE + msg->axes[4] * SCALING_FACTOR * MAX_THRUST_FACTOR;
+    _force_sent.data[_force_sent.LEFT_X  ]  = OFFSET_VALUE - msg->axes[0] * 0.5 * SCALING_FACTOR * MAX_THRUST_FACTOR - msg->axes[3] * 0.5 * SCALING_FACTOR * MAX_THRUST_FACTOR;
+    _force_sent.data[_force_sent.RIGHT_X ]  = OFFSET_VALUE + msg->axes[0] * 0.5 * SCALING_FACTOR * MAX_THRUST_FACTOR - msg->axes[3] * 0.5 * SCALING_FACTOR * MAX_THRUST_FACTOR;
+    _force_sent.data[_force_sent.FRONT_Y ]  = OFFSET_VALUE + msg->axes[1] * 0.5 * SCALING_FACTOR * MAX_THRUST_FACTOR - msg->axes[0] * 0.5 * SCALING_FACTOR * MAX_THRUST_FACTOR;
+    _force_sent.data[_force_sent.BACK_Y  ]  = OFFSET_VALUE + msg->axes[1] * 0.5 * SCALING_FACTOR * MAX_THRUST_FACTOR + msg->axes[0] * 0.5 * SCALING_FACTOR * MAX_THRUST_FACTOR;
 
 }
 
