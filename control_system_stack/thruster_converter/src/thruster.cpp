@@ -92,7 +92,34 @@ void thruster6callback(const kraken_msgs::thrusterData6ThrusterConstPtr msg)
             store = min;
         }
 
-        _output.data[i] = store;
+				/*
+				 * HOTFIX on 19th May, 2015
+				 * By Aniket Bhushan
+				 *
+				 * The thrusters were remapped
+				 *
+				 * 2 - surge left
+				 * 4 - surge right
+				 *
+				 * To ensure that existing packages don't break, these values
+				 * have been changed here, as well.
+				 *
+				 * NO CHANGES are required in the EXISTING PACKAGES.
+				 */
+
+				if (i == 2)
+
+					_output.data[4] = store;
+
+				else
+
+					if (i == 4)
+
+						_output.data[2] = store;
+
+					else
+
+						_output.data[i] = store;
     }
 
 }
