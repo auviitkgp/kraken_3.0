@@ -1,0 +1,6 @@
+<launch>
+
+<node name="web_cam" pkg="web_video_server" type="web_video_server"  >
+  <rosparam command="load" file="/home/dyutimoy/catkin_ws/src/kraken_3.0/Scripts/launch/yaml/web_cam_4.yaml" />
+</node>
+</launch>
