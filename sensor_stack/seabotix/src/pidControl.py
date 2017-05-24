@@ -107,11 +107,11 @@ def imuCB(dataIn):
 if __name__ == '__main__':
 	thruster4Data=thrusterData4Thruster();
 	thruster6Data=thrusterData6Thruster();
-        
+
         signal.signal(signal.SIGINT, stopThrustersNow)
 
 	rospy.init_node('Control', anonymous=True)
-	sub = rospy.Subscriber(topicHeader.ABSOLUTE_RPY, absoluteRPY, imuCB)
+	sub = rospy.Subscriber(topicHeader.SENSOR_IMU, imuData, imuCB)
 	pub4 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER4, thrusterData4Thruster, queue_size = 2)
 	pub6 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER6, thrusterData6Thruster, queue_size = 2)
 	pub = rospy.Publisher('ControlPlot', Float32MultiArray, queue_size=10)

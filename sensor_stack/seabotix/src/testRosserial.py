@@ -17,12 +17,15 @@ import os
 
 from std_msgs.msg import Float32MultiArray
 from kraken_msgs.msg import thrusterData6Thruster
+#from kraken_msgs.msg import thrusterCmd
+#from kraken_msgs.msg import thrusterData
 from resources import topicHeader
 from math import *
 
 ctrl_c_pressed = False
 
 def stopThrustersNow(s, f):
+
 
         global ctrl_c_pressed
         ctrl_c_pressed = True
@@ -32,12 +35,14 @@ def stopThrustersNow(s, f):
 #thruster4Data.data = [0.0, 0.0, 0.0, 0.0]
 
 if __name__ == '__main__':
-	thruster6Data=thrusterData6Thruster();
-        
-        signal.signal(signal.SIGINT, stopThrustersNow)
+
+
+    thruster6Data  =    thrusterData6Thruster()
+
+    signal.signal(signal.SIGINT, stopThrustersNow)
 
 	rospy.init_node('Control', anonymous=True)
-	pub6 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER6, thrusterData6Thruster, queue_size = 2)
+	pub6 = rospy.Publisher(topicHeader.CONTROL_PID_THRUSTER6, thruster6Data, queue_size = 2)
 
         if rospy.has_param('/ros_rate'):
             temp_rate = float(rospy.get_param('/ros_rate'))
@@ -49,16 +54,23 @@ if __name__ == '__main__':
 
 	while not rospy.is_shutdown():
 
-		thruster6Data.data[0] = 00.0 # front
-		thruster6Data.data[1] = 00.0 # back
-		thruster6Data.data[2] = 00.0 # left
-		thruster6Data.data[3] = 00.0 # right
-		thruster6Data.data[4] = 00.0
-		thruster6Data.data[5] = 00.0
+        thruster6Data.data[thruster6Data.FRONT_Z]       = 00.0 # front
+		thruster6Data.data[thruster6Data.BACK_Z]        = 00.0 # back
+		thruster6Data.data[thruster6Data.LEFT_X]        = 00.0 # left
+		thruster6Data.data[thruster6Data.RIGHT_X]       = 00.0 # right
+		thruster6Data.data[thruster6Data.FRONT_Y]       = 00.0
+		thruster6Data.data[thruster6Data.BACK_Y]        = 00.0
+
 
 		#print ctrl_c_pressed
-                if ctrl_c_pressed:
+        if ctrl_c_pressed:
 
-		    thruster6Data.data = [0.0,0.0,0.0,0.0,0.0,0.0]
+		        thruster6Data.data[thruster6Data.FRONT_Z]     = 00.0 # front
+        		thruster6Data.data[thruster6Data.BACK_Z]      = 00.0 # back
+        		thruster6Data.data[thruster6Data.LEFT_X]      = 00.0 # left
+        		thruster6Data.data[thruster6Data.RIGHT_X]     = 00.0 # right
+        		thruster6Data.data[thruster6Data.FRONT_Y]     = 00.0
+        		thruster6Data.data[thruster6Data.BACK_Y]      = 00.0
 
-		pub6.publish(thruster6Data)
+
+		pub6.publish(output)
