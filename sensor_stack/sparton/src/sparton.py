@@ -22,7 +22,7 @@ from geometry_msgs.msg import Vector3 , Quaternion
 from resources import topicHeader as th
 pub1 = rospy.Publisher(th.SENSOR_IMU, imuData, queue_size = 2)
 pub2 = rospy.Publisher(th.SENSOR_IMU_NEW, Imu, queue_size = 2)
-#pub3 = rospy.Publisher(topic name, magnetoTemp, queue_size = 2)
+#pub3 = rospy.Publisher(th.SENSOR_IMU_MAGNETO, magnetoTemp, queue_size = 2)
 
 rospy.init_node('imudata', anonymous=True)
 ## Code to find port automatically
@@ -60,8 +60,8 @@ gz = 0.0
 temp = 0.0
 magError = 0.0
 ##
-    
- 
+
+
 def setBaud(rate):
     if (rate == 300):
         message = '$PSPA,BAUD=0\r\n'
@@ -81,7 +81,7 @@ def setBaud(rate):
         message = '$PSPA,BAUD=7\r\n'
     elif (rate == 115200) :
         message = '$PSPA,BAUD=8\r\n'
-    
+
     imu.write(message)
     garbage = ''
     total = ''
@@ -96,12 +96,12 @@ def temperature():
     garbage = ''
     total = ''
     data = []
-    global temp 
+    global temp
     while (garbage != '\r'):
         garbage = imu.read()
         total += garbage
     #print total
-    
+
     data = total.split(',')
     temp = float((data[1]).split('='))
 
@@ -111,63 +111,63 @@ def rpyt():
     garbage = ''
     total = ''
     data = []
-    
-    global roll 
-    global pitch 
-    global yaw 
-    global temp 
-    global magError 
-    
+
+    global roll
+    global pitch
+    global yaw
+    global temp
+    global magError
+
     while (garbage != '\r'):
         garbage = imu.read()
         total += garbage
     #print total
-    
+
     data = total.split(',')
-    
+
     yaw = float(data[5])
     pitch = float(data[8])
     roll = float(data[11])
     temp = float(data[14])
     magError = float(((data[17]).split('*'))[0])
-    
+
 def accelero():
     command = '$PSPA,A\r\n'
     imu.write(command)
     garbage = ''
     total = ''
     global ax
-    global ay 
-    global az 
-    
+    global ay
+    global az
+
     data = []
-    
+
     while (garbage != '\r'):
         garbage = imu.read()
         total += garbage
     #print total
-    
+
     data = total.split(',')
     #print data
     ax = float(((data[1]).split('='))[1])
     ay = float(((data[2]).split('='))[1])
     az = float(((((data[3]).split('='))[1]).split('*'))[0])
-    
+
 def gyro():
     command = '$PSPA,G\r\n'
     imu.write(command)
     garbage = ''
     total = ''
     data = []
-    global gx 
-    global gy 
+    global gx
+    global gy
     global gz
 
     while (garbage != '\r'):
         garbage = imu.read()
         total += garbage
     #print total
-    
+
     data = total.split(',')
     gx = float(((data[1]).split('='))[1])
     gy = float(((data[2]).split('='))[1])
@@ -179,15 +179,15 @@ def magneto():
     garbage = ''
     total = ''
     data = []
-    global mx 
-    global my 
+    global mx
+    global my
     global mz
 
     while (garbage != '\r'):
         garbage = imu.read()
         total += garbage
     #print total
-    
+
     data = total.split(',')
     mx = float(((data[1]).split('='))[1])
     my = float(((data[2]).split('='))[1])
@@ -206,12 +206,12 @@ def pitchRoll():
         garbage = imu.read()
         total += garbage
     #print total
-    
+
     data = total.split(',')
     ax = float(((data[1]).split('='))[1])
     ay = float(((data[2]).split('='))[1])
     az = float(((((data[3]).split('='))[1]).split('*'))[0])
- 
+
 def getData():
     global roll
     global pitch
@@ -227,14 +227,23 @@ def getData():
     global gz
     global temp
     global magError
-    
+
     accelero()
     gyro()
     magneto()
     rpyt()
-    
+
     allData = imuData()
-    
+
+    # print roll, pitch, yaw
+	# Fix the roll, pitch by subtracting it from 360
+	roll  = 360 - roll
+	pitch = 360 - pitch
+
+	roll = roll % 360
+	pitch = pitch % 360
+	yaw = yaw % 360
+
     allData.data[0] = roll
     allData.data[1] = pitch
     allData.data[2] = yaw
@@ -248,7 +257,7 @@ def getData():
     allData.data[10] = gy
     allData.data[11] = gz
     allData.data[12] = temp
-    
+
     return allData
 
 def getOrientationCovariance():
@@ -323,23 +332,31 @@ def new_msg_format():
     global gz
     global temp
     global magError
-    
+
     accelero()
     gyro()
     magneto()
     rpyt()
 
     #msg1 = imuData_new()
-    
+
     msg1 = Imu()
     msg2 = magnetoTemp()
+    # print roll, pitch, yaw
+    # Fix the roll, pitch by subtracting it from 360
 
+    roll  = 360 - roll
+    pitch = 360 - pitch
+
+    roll = roll % 360
+    pitch = pitch % 360
+    yaw = yaw % 360
 
     quaternion = tf.transformations.quaternion_from_euler(roll, pitch, yaw)
     msg1.orientation = Quaternion(quaternion[0],quaternion[1],quaternion[2],quaternion[3])
     msg1.orientation_covariance = getOrientationCovariance()
     msg1.angular_velocity = Vector3(gx,gy,gz)
-    msg1.angular_velocity_covariance = getAngularVelocityCovariance() 
+    msg1.angular_velocity_covariance = getAngularVelocityCovariance()
     msg1.linear_acceleration = Vector3(ax,ay,az)
     msg1.linear_acceleration_covariance = getLinearAccelerationCovariance()
 
@@ -351,7 +368,7 @@ def new_msg_format():
 if __name__ == '__main__':
 
     pubData = [0.0] * 13
-    
+
     if (not imu.isOpen) :
         imu.close()
         imu.open()
@@ -362,14 +379,14 @@ if __name__ == '__main__':
         print 'Error in opening port'
 
     r = rospy.Rate(10)
-    
+
     while not rospy.is_shutdown():
 
         pubData = getData()
         new_msg1 , new_msg2 = new_msg_format()
         pub1.publish(pubData)
         pub2.publish(new_msg1)
-        pub2.publish(new_msg2)
+        #pub2.publish(new_msg2)
         r.sleep()
 
     imu.close()

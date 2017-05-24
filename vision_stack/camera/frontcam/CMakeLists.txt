@@ -15,9 +15,10 @@ add_executable(frontcam src/frontcam.cpp)
 
 target_link_libraries(frontcam ${catkin_LIBRARIES} resources)
 
+add_dependencies(frontcam kraken_msgs_gencpp action_gencpp)
 catkin_package(
-    DEPENDS roscpp cv_bridge image_transport std_msgs resources
-    CATKIN_DEPENDS # TODO
+    DEPENDS #roscpp cv_bridge image_transport std_msgs resources
+    CATKIN_DEPENDS roscpp cv_bridge image_transport std_msgs resources
     INCLUDE_DIRS # TODO include
     LIBRARIES # TODO
 )
